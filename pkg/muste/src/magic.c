@@ -35,9 +35,11 @@ int muste_magic(char *argv)
 		}
 
 	results_line=r1+r;
-	i=sp_init(r1+r-1); if (i<0) return(-1);
+	i=sp_init(r1+r-1); if (i<0) { return(-1);
+}
 	dim=atoi(word[2]);
-	i=varaa_tilat(dim); if (i<0) return(-1);
+	i=varaa_tilat(dim); if (i<0) { return(-1);
+}
 	
 	if (dim%2==0)
 		{
@@ -55,8 +57,8 @@ int muste_magic(char *argv)
 	if (i>=0) { offs=atoi(spb[i])-1; }
 	if (offs<0 || offs>=(dim*dim))
 		{
-		if (strcmp(spb[i],"ALL")==0) offs=-1;
-		else
+		if (strcmp(spb[i],"ALL")==0) { offs=-1;
+		} else
 			{
 			muste_sprintf(sbuf,"\nERROR! OFFSET must be between 1 and %d!",dim*dim);
 			sur_print(sbuf); WAIT;
@@ -109,7 +111,8 @@ int muste_magic(char *argv)
 		i=is_magic(dim);	
 		if (i<0)
 			{
-			if (method==0) print_square(dim);
+			if (method==0) { print_square(dim);
+}
 			
 /*
 			muste_sprintf(sbuf,"Non magic! Offset=%d",j+1); print_line();
@@ -150,7 +153,8 @@ static void tyhjenna(int dim)
 	{
 	int i;
 	
-	for (i=0; i<dim*dim; i++) mamat[i]=0;
+	for (i=0; i<dim*dim; i++) { mamat[i]=0;
+}
 	return;
 	}
 		
@@ -165,12 +169,16 @@ static int magic_staircase(int dim) // Moran's method A, the staircase method
 		{	
 		a=x; b=y;
 		x++; y--; // Rule two, diagonally upwards
-		if (y<0) y=dim-1; if (x>=dim) x=0;
-		if (checknum(x,y)) putnum(x,y,count++);
-		else
+		if (y<0) { y=dim-1; 
+}if (x>=dim) { x=0;
+}
+		if (checknum(x,y)) { putnum(x,y,count++);
+		} else
 			{
 			x=a; y=b+1;
-			if (y>=dim) y=0; if (y<0) y=dim-1;
+			if (y>=dim) { y=0; 
+}if (y<0) { y=dim-1;
+}
 			putnum(x,y,count++);	
 			}
 		}
@@ -188,8 +196,12 @@ static int magic_pyramid(int dim) // Moran's method B, the pyramid method
 		for (j=0; j<dim; j++)
 			{
 			a=x+j; b=y-j;
-			if (a<0) a=dim+a; if (a>=dim) a=a-dim;
-			if (b<0) b=dim+b; if (b>=dim) b=b-dim;
+			if (a<0) { a=dim+a; 
+}if (a>=dim) { a=a-dim;
+}
+			if (b<0) { b=dim+b; 
+}if (b>=dim) { b=b-dim;
+}
 			putnum(a,b,count++);
 			}
 		x++; y++;	
@@ -208,12 +220,16 @@ static int magic_variation_staircase(int dim) // Moran's method C, Variation of 
 		{	
 		a=x; b=y;
 		x++; y--; // Rule two, diagonally upwards
-		if (y<0) y=dim-1; if (x>=dim) x=0;
-		if (checknum(x,y)) putnum(x,y,count++);
-		else
+		if (y<0) { y=dim-1; 
+}if (x>=dim) { x=0;
+}
+		if (checknum(x,y)) { putnum(x,y,count++);
+		} else
 			{
 			x=a+2; y=b;
-			if (x>=dim) x=x-dim; if (y<0) y=dim-1;
+			if (x>=dim) { x=x-dim; 
+}if (y<0) { y=dim-1;
+}
 			putnum(x,y,count++);	
 			}
 		}
@@ -243,14 +259,22 @@ static int magic_knights_move(int dim,int offs,int move) // Moran's method D, Th
 			case 7:	y-=1; x-=2; break; // 1 up 2 left
 			case 8:	y-=2; x-=1; break; // 2 up 1 left
 			}
-		if (x<0) x=dim+x; if (x>=dim) x=x-dim;
-		if (y<0) y=dim+y; if (y>=dim) y=y-dim;			
-		if (checknum(x,y)) putnum(x,y,count++);
-		else
+		if (x<0) { x=dim+x; 
+}if (x>=dim) { x=x-dim;
+}
+		if (y<0) { y=dim+y; 
+}if (y>=dim) { y=y-dim;			
+}
+		if (checknum(x,y)) { putnum(x,y,count++);
+		} else
 			{
 			x=a; y=b+1; // Blocked move one down
-			if (x<0) x=dim+x; if (x>=dim) x=x-dim;
-			if (y<0) y=dim+y; if (y>=dim) y=y-dim;			
+			if (x<0) { x=dim+x; 
+}if (x>=dim) { x=x-dim;
+}
+			if (y<0) { y=dim+y; 
+}if (y>=dim) { y=y-dim;			
+}
 			putnum(x,y,count++);	
 			}
 		}
@@ -268,7 +292,8 @@ static void putnum(int x, int y, int count)
 static int checknum(int x, int y)
 	{
 // Rprintf("\nx: %d, y: %d, offs: %d",x,y,y*dim+x);	
-	if (mamat[y*dim+x]) return(FALSE);
+	if (mamat[y*dim+x]) { return(FALSE);
+}
 	return(TRUE);
 	}
 
@@ -317,16 +342,23 @@ static int is_magic(int dim)
 			sumr+=mamat[j*dim+i];
 			sumc+=mamat[i*dim+j];
 			}
-		if (sumr!=constant) norow++;
-		if (sumr!=constant) nocol++;
+		if (sumr!=constant) { norow++;
+}
+		if (sumr!=constant) { nocol++;
+}
 		sumd1+=mamat[j*dim+j];
 		sumd2+=mamat[j*dim+dim-j-1];
 		}
-	if (sumd1!=constant) nodia++;
-	if (sumd2!=constant) nodia++;
-	if (norow>0) nomagic=-1;
-	if (nocol>0) nomagic=-10;
-	if (nodia>0) nomagic=-100; // Semi-magic (only cols and rows add up to magic sum)
+	if (sumd1!=constant) { nodia++;
+}
+	if (sumd2!=constant) { nodia++;
+}
+	if (norow>0) { nomagic=-1;
+}
+	if (nocol>0) { nomagic=-10;
+}
+	if (nodia>0) { nomagic=-100; // Semi-magic (only cols and rows add up to magic sum)
+}
 // ADD pandiagonal (all broken diagonals add up to magic sum)
 // ADD associative (all complementary pairs add up to same constant (n*n+1)
 // ADD ultramagic = pandiagonal and associative
@@ -366,13 +398,15 @@ static int magic_random(int dim)
 
 	ormat=(int *)muste_malloc((dim+2)*(dim+2)*sizeof(int));
 	if (ormat==NULL) { sur_print("\nNot enough memory!"); WAIT; return(-1); }	
-	for (i=0; i<dim*dim; i++) ormat[i]=i+1;
+	for (i=0; i<dim*dim; i++) { ormat[i]=i+1;
+}
 
 	spec_rnd_rndseed();
 		
 	shuffle(dim,ormat);
 
-	for (i=0; i<dim*dim; i++) mamat[i]=ormat[i];
+	for (i=0; i<dim*dim; i++) { mamat[i]=ormat[i];
+}
 	return(1);
 	}	
 

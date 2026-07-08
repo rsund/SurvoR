@@ -77,10 +77,13 @@ bbb=0;
             }
 */            
         s_init(argv[1]);
-        i=spec_init(r1+r-1); if (i<0) return;  // RS ADD
+        i=spec_init(r1+r-1); if (i<0) { return;  // RS ADD
+}
 
-        i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
-        if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);
+        i=hae_apu("prind",sbuf); if (i) { prind=atoi(sbuf);
+}
+        if ((i=spfind("PRIND"))>=0) { prind=atoi(spb[i]);
+}
 
         if (strncmp(info,"EPS ",4)==0)   /* child of PLOT */
             {
@@ -121,7 +124,8 @@ bbb=0;
             }
         sp_init(r1+r-1);
         nimea(psnimi,word[1],".PS");
-        i=2; if (g<3) i=1;
+        i=2; if (g<3) { i=1;
+}
         nimea(epsnimi,word[i],".EPS");
         if (muste_strcmpi(psnimi,epsnimi)==0)
             {
@@ -142,7 +146,8 @@ bbb=0;
             sur_print(sbuf); WAIT; return;
             }
 
-        i=lue(rivi); if (i<0) return;
+        i=lue(rivi); if (i<0) { return;
+}
         if (strncmp(rivi,"%! SURVO 84C",12)!=0)
             {
             muste_sprintf(sbuf,"\n%s is not a Survo PostScript file!",psnimi);
@@ -196,16 +201,20 @@ bbb=0;
             }
         fprintf(eps,"%s\n",version_comment);
         fprintf(eps,"%s\n",title);
-        if (*creator) fprintf(eps,"%s\n",creator);
+        if (*creator) { fprintf(eps,"%s\n",creator);
+}
         fprintf(eps,"%s\n",creation_date);
-        if (*bounding_box!='-') fprintf(eps,"%s\n",bounding_box);
-        if (*document_fonts) fprintf(eps,"%s\n",document_fonts);
+        if (*bounding_box!='-') { fprintf(eps,"%s\n",bounding_box);
+}
+        if (*document_fonts) { fprintf(eps,"%s\n",document_fonts);
+}
         fprintf(eps,"%s\n",end_comments);
 
         while (1)
             {
             i=lue(rivi); if (i<0) { eps_virhe("/survodict"); return; }
-            if (strncmp(rivi,"/survodict ",11)==0) break;
+            if (strncmp(rivi,"/survodict ",11)==0) { break;
+}
             }
         n=5;
         while (1)
@@ -215,8 +224,10 @@ bbb=0;
             i=lue(rivi); if (i<0) { eps_virhe("%SURVO 84C Graphics END"); return; }
             if (muste_strnicmp(rivi,"%SURVO ",6)==0)
                 {
-                if (strncmp(rivi,"%SURVO 84C Graphics END",23)==0) break;
-                if (strncmp(rivi,"%Survo Graphics END",19)==0) break;
+                if (strncmp(rivi,"%SURVO 84C Graphics END",23)==0) { break;
+}
+                if (strncmp(rivi,"%Survo Graphics END",19)==0) { break;
+}
                 }
             }
         fprintf(eps,"end\n");
@@ -229,8 +240,10 @@ void muste_eps(int argc, char *argv[]) // RS ADD Confirm that files are closed
 		ps=NULL;
 		eps=NULL;
 		muste_eps2(argc,argv);
-		if (ps!=NULL) muste_fclose(ps);
-		if (eps!=NULL) muste_fclose(eps);
+		if (ps!=NULL) { muste_fclose(ps);
+}
+		if (eps!=NULL) { muste_fclose(eps);
+}
 		}
 		
 
@@ -255,7 +268,8 @@ static char *ala_pois(char *s)
         char *p;
 
         p=s;
-        while (*p) { if (*p=='_')  *p=' '; ++p; }
+        while (*p) { if (*p=='_') {  *p=' '; 
+}++p; }
         return(s);
         }
 
@@ -268,10 +282,12 @@ static void specifications()
 
         strcpy(version_comment,"%!PS-Adobe-2.0 EPSF-2.0");
         i=spfind("VERSION_COMMENT");
-        if (i>=0) strcpy(version_comment,ala_pois(spb[i]));
+        if (i>=0) { strcpy(version_comment,ala_pois(spb[i]));
+}
         strcpy(title,"%%Title: Survo PostScript file");
         i=spfind("TITLE");
-        if (i>=0) strcpy(title+9,ala_pois(spb[i]));
+        if (i>=0) { strcpy(title+9,ala_pois(spb[i]));
+}
         *creator=EOS;
         i=spfind("CREATOR");
         if (i>=0) { strcpy(creator,"%%Creator: "); strcat(creator,ala_pois(spb[i])); }
@@ -279,7 +295,8 @@ static void specifications()
         strcpy(x,ctime(&aika)); x[24]=EOS;
         strcpy(creation_date,"%%CreationDate: "); strcat(creation_date,x);
         i=spfind("CREATION_DATE");
-        if (i>=0) strcpy(creation_date+16,ala_pois(spb[i]));
+        if (i>=0) { strcpy(creation_date+16,ala_pois(spb[i]));
+}
         strcpy(end_comments,"%%EndComments");
         *document_fonts=EOS;
         i=spfind("DOCUMENT_FONTS");
@@ -307,17 +324,21 @@ static int etsi(char *s,char *t)
         rewind(ps);
         while (!feof(ps))
             {
-            i=lue(rivi); if (i<0) return(-1);
-            if (strncmp(rivi,s,len)==0) break;
+            i=lue(rivi); if (i<0) { return(-1);
+}
+            if (strncmp(rivi,s,len)==0) { break;
+}
             }
-        if (feof(ps)) return(-1);
+        if (feof(ps)) { return(-1);
+}
         strcpy(t,rivi);
         return(1);
         }
 
 static int lue(char *rivi)
         {
-        if (feof(ps)) return(-1);
+        if (feof(ps)) { return(-1);
+}
         muste_fgets(rivi,LLENGTH-1,ps);
         return(1);
         }
@@ -332,7 +353,8 @@ static int add_page_comments()
 
         sp_init(r1+r-1);
         nimea(psnimi,word[1],".PS");
-        i=2; if (g<3) i=1;
+        i=2; if (g<3) { i=1;
+}
         nimea(epsnimi,word[i],".PS");
         if (muste_strcmpi(psnimi,epsnimi)==0)  /* epsnimi edelleen ps-tiedosto */
             {
@@ -353,7 +375,8 @@ static int add_page_comments()
             sur_print(sbuf); WAIT; return(-1);
             }
 
-        i=lue(rivi); if (i<0) return(-1);
+        i=lue(rivi); if (i<0) { return(-1);
+}
         if (strncmp(rivi,"%! SURVO 84C",12)!=0)
             {
             muste_sprintf(sbuf,"\n%s is not a SURVO 84C PostScript file!",psnimi);
@@ -371,16 +394,19 @@ static int add_page_comments()
             {
             i=lue(rivi); if (i<0) { eps_virhe("%PRINT:"); return(-1); }
             fputs(rivi,eps);
-            if (strncmp(rivi,"%PRINT:",7)==0) break;
+            if (strncmp(rivi,"%PRINT:",7)==0) { break;
+}
             }
         page_number=1;
         page_comment(page_number);
 
         while (1)
             {
-            i=lue(rivi); if (i<0) break;
+            i=lue(rivi); if (i<0) { break;
+}
             if (strncmp(rivi,"%HOME:",6)==0 || strncmp(rivi,"%SCALING:",9)==0)
-                { i=lue(rivi); if (i<0) break; continue; }
+                { i=lue(rivi); if (i<0) { break; 
+}continue; }
 
             if (strncmp(rivi,"%END:",5)==0)
                 {
@@ -432,7 +458,8 @@ static int join()
             }
 
         psnimi2=epsnimi;
-        i=spec_init(r1+r-1); if (i<0) return(-1);
+        i=spec_init(r1+r-1); if (i<0) { return(-1);
+}
         nimea(psnimi2,word[2],".PS");
         if (bbb==1) // 24.8.2009
           { strcpy(bb_nimi,etmpd); strcat(bb_nimi,"K.PS"); psnimi2=bb_nimi; }
@@ -454,10 +481,14 @@ static int join()
                 {
                 strcpy(x,spb[i]);
                 i=split(x,sana,5);
-                if (i>1) xhome2=atoi(sana[1]);
-                if (i>2) yhome2=atoi(sana[2]);
-                if (i>3) xscale2=atof(sana[3]);
-                if (i>4) yscale2=atof(sana[4]);
+                if (i>1) { xhome2=atoi(sana[1]);
+}
+                if (i>2) { yhome2=atoi(sana[2]);
+}
+                if (i>3) { xscale2=atof(sana[3]);
+}
+                if (i>4) { yscale2=atof(sana[4]);
+}
                 nimea(psnimi,sana[0],".PS");
                 }
 // Rprintf("\npsnimi=%s psnimi2=%s|",psnimi,psnimi2); getch();
@@ -493,16 +524,19 @@ static int join()
                 }
             while (1)
                 {
-                if (k==3) { fputs(rivi,eps); i=mahtuu(); if (i<0) return(-1); }
+                if (k==3) { fputs(rivi,eps); i=mahtuu(); if (i<0) { return(-1); 
+}}
                 lue(rivi);
                 if (feof(ps)) // 19.2.2002
                     {
                     muste_sprintf(sbuf,"\n%s not a valid Survo PS file!",psnimi);
                     sur_print(sbuf); WAIT; return(-1);
                     }
-                if (muste_strnicmp(rivi,"%SURVO ",7)==0) break;
+                if (muste_strnicmp(rivi,"%SURVO ",7)==0) { break;
+}
                 }
-            if (k==3) fputs(rivi,eps);
+            if (k==3) { fputs(rivi,eps);
+}
 
             fprintf(eps,"%%File %s\n",psnimi);
             fprintf(eps,"gsave\n");
@@ -534,10 +568,14 @@ static int join()
                     a1=atof(sana[4]); a2=yscale2*(a1-bb2[1]);
                     bb2[3]=a*(double)yhome2+a2;
 
-                    if (bb2[0]<bb[0]) bb[0]=bb2[0];
-                    if (bb2[1]<bb[1]) bb[1]=bb2[1];
-                    if (bb2[2]>bb[2]) bb[2]=bb2[2];
-                    if (bb2[3]>bb[3]) bb[3]=bb2[3];
+                    if (bb2[0]<bb[0]) { bb[0]=bb2[0];
+}
+                    if (bb2[1]<bb[1]) { bb[1]=bb2[1];
+}
+                    if (bb2[2]>bb[2]) { bb[2]=bb2[2];
+}
+                    if (bb2[3]>bb[3]) { bb[3]=bb2[3];
+}
                     }
 // (dmm:Point)=0.28346456692913
 
@@ -546,9 +584,11 @@ static int join()
                     muste_sprintf(sbuf,"\n%s not a valid Survo PS file!",psnimi);
                     sur_print(sbuf); WAIT; return(-1);
                     }
-                if (muste_strnicmp(rivi,"%SURVO ",7)==0) break;
+                if (muste_strnicmp(rivi,"%SURVO ",7)==0) { break;
+}
                 fputs(rivi,eps);
-                i=mahtuu(); if (i<0) return(-1);
+                i=mahtuu(); if (i<0) { return(-1);
+}
                 }
             fprintf(eps,"grestore\n");
             if (k<g-1) { muste_fclose(ps); ps=NULL; continue; }
@@ -556,7 +596,8 @@ static int join()
             while (1)
                 {
                 lue(rivi);
-                if (feof(ps)) break;
+                if (feof(ps)) { break;
+}
                 fputs(rivi,eps);
                 }
             }  /* k */
@@ -575,10 +616,12 @@ static int join()
         while (1)
             {
             lue(rivi);
-            if (feof(ps)) break;
+            if (feof(ps)) { break;
+}
             if (strncmp(rivi,"%%BoundingBox:",14)==0) // 24.8.2009
                 {
-                if (k==1) continue;
+                if (k==1) { continue;
+}
                 muste_sprintf(rivi,"%%%%BoundingBox: %g %g %g %g\n",
                                    bb[0],bb[1],bb[2],bb[3]);
                 k=1;
@@ -594,7 +637,8 @@ static int join()
 
 static int mahtuu()
         {
-        if (!ferror(eps)) return(1);
+        if (!ferror(eps)) { return(1);
+}
         sur_print("\nCannot save in the target file!"); WAIT; return(-1);
         }
 
@@ -624,7 +668,8 @@ static int psp_filter() // EPS PSP <eps1>,<eps2>
         sur_print(sbuf); WAIT; return(1);
         }
 
-    for (i=0; i<32; ++i) fgetc(ps);
+    for (i=0; i<32; ++i) { fgetc(ps);
+}
     for (i=0; i<4; ++i)
         {
         m=fgetc(ps);
@@ -636,14 +681,17 @@ static int psp_filter() // EPS PSP <eps1>,<eps2>
         { sur_print("Input file not valid: Bytes 32- should be %!PS");
           WAIT; return(1);
         }
-    for (i=0; i<4; ++i)
+    for (i=0; i<4; ++i) {
         fputc(xrivi[i],eps);
+}
 
     while (1)
         {
         lue_x(xrivi);
-        if (feof(ps)) break;
-        if (strncmp(xrivi,"%%Trailer",9)==0) break;
+        if (feof(ps)) { break;
+}
+        if (strncmp(xrivi,"%%Trailer",9)==0) { break;
+}
         fputs(xrivi,eps);
         }
     muste_fclose(ps);
@@ -653,7 +701,8 @@ static int psp_filter() // EPS PSP <eps1>,<eps2>
 
 static int lue_x(char *rivi)
         {
-        if (feof(ps)) return(-1);
+        if (feof(ps)) { return(-1);
+}
         muste_fgets(rivi,99999,ps);
         return(1);
         }

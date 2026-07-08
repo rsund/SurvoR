@@ -151,25 +151,32 @@ rem_pr("In this case it is assumed that means will be 0.");
             s_end(argv);
             return;
             }
-        i=spec_init(r1+r-1); if (i<0) return;
+        i=spec_init(r1+r-1); if (i<0) { return;
+}
 
         ind=atoi(word[5]);
-        if (ind==0) { i=load_X(word[1]); if (i<0) return; }
-        if (*word[2]=='*') msn=0; else msn=1;
-        if (*word[2]=='-') { msn=0; cov=1; } else cov=0;
+        if (ind==0) { i=load_X(word[1]); if (i<0) { return; 
+}}
+        if (*word[2]=='*') { msn=0; } else { msn=1;
+}
+        if (*word[2]=='-') { msn=0; cov=1; } else { cov=0;
+}
 
 
-        if (ind==1) { i=load_coefficients(); if (i<0) return; }
+        if (ind==1) { i=load_coefficients(); if (i<0) { return; 
+}}
         if (msn==0)
             {
             Y=(double *)muste_malloc(mX*sizeof(double));
             if (Y==NULL) { ei_tilaa(); return; }
-            for (i=0; i<mX; ++i) Y[i]=0.0;
+            for (i=0; i<mX; ++i) { Y[i]=0.0;
+}
             mY=mX;
             }
         else
             {
-            if (ind==0) { i=load_Y(word[2]); if (i<0) return; }
+            if (ind==0) { i=load_Y(word[2]); if (i<0) { return; 
+}}
             }
 
         if (msn && mX!=mY)
@@ -181,8 +188,10 @@ rem_pr("In this case it is assumed that means will be 0.");
         m=mX;
         n=atol(word[4]);
 
-        i=varaa_tilat(); if (i<0) return;
-        if (ind==0) { i=comp_coefficients(); if (i<0) return; }
+        i=varaa_tilat(); if (i<0) { return;
+}
+        if (ind==0) { i=comp_coefficients(); if (i<0) { return; 
+}}
         spec_rnd(); // 23.7.2011
 /********************
         i=spfind("RND");
@@ -205,11 +214,15 @@ rem_pr("In this case it is assumed that means will be 0.");
             }
 ***************************/
         prind=0;
-        i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
-        if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);
-        if (ind==0) { i=create_file(); if (i<0) return; }
+        i=hae_apu("prind",sbuf); if (i) { prind=atoi(sbuf);
+}
+        if ((i=spfind("PRIND"))>=0) { prind=atoi(spb[i]);
+}
+        if (ind==0) { i=create_file(); if (i<0) { return; 
+}}
 
-        i=sampling(); if (i<0) return;
+        i=sampling(); if (i<0) { return;
+}
 
         outseed();
         }
@@ -234,17 +247,22 @@ static int comp_coefficients()
         muste_sprintf(sbuf,"\nPrincipal components for %d variables ... ",m);
         sur_print(sbuf);
 
-        if (!cov)
+        if (!cov) {
             for (i=0; i<m; ++i)
                 {
-                if (fabs(X[i*(m+1)]-1.0)<1e-3) continue;
+                if (fabs(X[i*(m+1)]-1.0)<1e-3) { continue;
+}
                 not_corr_mat(); return(-1);
                 }
+}
 
         if (msn && !cov)
             {
-            for (i=0; i<m; ++i) d[i]=Y[i+mY];
-            for (i=0; i<m; ++i) for (j=0; j<m; ++j) X[i+m*j]*=d[i]*d[j];
+            for (i=0; i<m; ++i) { d[i]=Y[i+mY];
+}
+            for (i=0; i<m; ++i) { for (j=0; j<m; ++j) { X[i+m*j]*=d[i]*d[j];
+}
+}
             }
 
         eps=1e-16; tol=(1e-300)/eps;
@@ -256,9 +274,12 @@ static int comp_coefficients()
             WAIT; return(-1);
             }
         if (d[m-1]/d[0]<-1e-3) { not_corr_mat(); return(-1); }
-        for (i=0; i<m; ++i) d[i]=sqrt(fabs(d[i]));
-        for (j=0; j<m; ++j)
-            for (i=0; i<m; ++i) X[i+m*j]*=d[j];
+        for (i=0; i<m; ++i) { d[i]=sqrt(fabs(d[i]));
+}
+        for (j=0; j<m; ++j) {
+            for (i=0; i<m; ++i) { X[i+m*j]*=d[j];
+}
+}
 
         strcpy(x,etmpd); strcat(x,"MNCOEFF.M");
         text_labels(clabX,m,"COMP");
@@ -287,11 +308,13 @@ static int load_coefficients()
         char x[LLENGTH];
 
         strcpy(x,etmpd); strcat(x,"MNCOEFF.M");
-        i=load_X(x); if (i<0) return(-1);
+        i=load_X(x); if (i<0) { return(-1);
+}
         if (msn)
             {
             strcpy(x,etmpd); strcat(x,"MNMEAN.M");
-            i=load_Y(x); if (i<0) return(-1);
+            i=load_Y(x); if (i<0) { return(-1);
+}
             }
         return(1);
         }
@@ -315,9 +338,12 @@ static int create_file()
 
         namelength=64;
         i=spfind("NAMELENGTH");
-        if (i<0) i=spfind("NAMELEN");
-        if (i>=0) namelength=atoi(spb[i]);
-        if (namelength<8) namelength=8;
+        if (i<0) { i=spfind("NAMELEN");
+}
+        if (i>=0) { namelength=atoi(spb[i]);
+}
+        if (namelength<8) { namelength=8;
+}
 
         strcpy(common_type,"4A          ");
         namespace=muste_malloc(m*9);
@@ -331,13 +357,15 @@ static int create_file()
             }
         varlen=(int *)muste_malloc(m*sizeof(int));
         if (varlen==NULL) { ei_tilaa(); return(-1); }
-        for (i=0; i<m; ++i) varlen[i]=4;
+        for (i=0; i<m; ++i) { varlen[i]=4;
+}
         vartype=(char **)muste_malloc(m*sizeof(char **));
         if (vartype==NULL) { ei_tilaa(); return(-1); }
 
 
         filen=4*m;
-        for (i=0; i<m; ++i) vartype[i]=common_type;
+        for (i=0; i<m; ++i) { vartype[i]=common_type;
+}
         types=spfind("TYPES");
         if (types>=0)
             {
@@ -345,9 +373,11 @@ static int create_file()
             if (strlen(x)==1 && strchr("1248",*x)!=NULL)
                 {
                 *common_type=*x; filen=atoi(x)*m;
-                for (i=0; i<m; ++i) varlen[i]=atoi(x);
+                for (i=0; i<m; ++i) { varlen[i]=atoi(x);
+}
                 }
-            else { filen=etsi_tyypit(x); if (filen<0) return(-1); }
+            else { filen=etsi_tyypit(x); if (filen<0) { return(-1); 
+}}
             }
 
         extra_bytes=extra_fields=0;
@@ -355,14 +385,17 @@ static int create_file()
         if (i>=0)
             {
             strcpy(x,spb[i]); i=split(x,s,2);
-            if (i>0) extra_bytes=atoi(s[0]);
-            if (i>1) extra_fields=atoi(s[1]);
+            if (i>0) { extra_bytes=atoi(s[0]);
+}
+            if (i>1) { extra_fields=atoi(s[1]);
+}
             }
 
         i=fi_create(word[3],filen+extra_bytes,m+extra_fields,m,0L,
                namelength,12,0,0,NULL,varname,varlen,vartype);
 
-        if (i<0) return(-1);
+        if (i<0) { return(-1);
+}
 
 
         return(1);
@@ -376,7 +409,8 @@ static int etsi_tyypit(char *s)
         int typelen,filen;
 
         i=data_open(s,&dat2);
-        if (i<0) return(-1);
+        if (i<0) { return(-1);
+}
 
         if (dat2.type!=2)
             {
@@ -392,13 +426,16 @@ static int etsi_tyypit(char *s)
             strcpy(x,varname[i]);
             for (j=0; j<dat2.m; ++j)
                 {
-                if (strncmp(x,dat2.varname[j],8)==0) break;
+                if (strncmp(x,dat2.varname[j],8)==0) { break;
+}
                 }
-            if (j==dat2.m) return(-1);
+            if (j==dat2.m) { return(-1);
+}
             varlen[i]=dat2.d2.varlen[j]; filen+=varlen[i];
             strcpy(x,dat2.d2.vartype[j]);
-            j=strlen(x); if (j<typelen-1) strncat(x,space,typelen-1-j);
-                         else x[typelen]=EOS;
+            j=strlen(x); if (j<typelen-1) { strncat(x,space,typelen-1-j);
+                         } else { x[typelen]=EOS;
+}
             vartype[i]=typespace+i*typelen;
             strcpy(vartype[i],x);
             }
@@ -412,7 +449,8 @@ static int sampling()
         double a;
         int prind_gap,prind_count;
 
-        i=data_open(word[3],&dat); if (i<0) return(-1);
+        i=data_open(word[3],&dat); if (i<0) { return(-1);
+}
 // Rprintf("\ntype=%d|",dat.type); WAIT;
         if (dat.type!=2)
             {
@@ -438,7 +476,8 @@ static int sampling()
             if (prind_count==prind_gap)
                 {
                 prind_count=0;
-                if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); prind=1-prind; }
+                if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) { sur_getch(); 
+}prind=1-prind; }
                 }
 
             if (prind) { muste_sprintf(sbuf,"%d ",j+1); sur_print(sbuf); }
@@ -500,16 +539,20 @@ static int text_labels(char *lab,int n,char *text)
         int len;
 
         len=8;
-        if (*text=='"') t=text+1; else t=text;
-        p=strchr(t,'"'); if (p!=NULL) *p=EOS;
+        if (*text=='"') { t=text+1; } else { t=text;
+}
+        p=strchr(t,'"'); if (p!=NULL) { *p=EOS;
+}
 //        pit=strlen(t);
-        for (i=0; i<n*len; ++i) lab[i]=' ';
+        for (i=0; i<n*len; ++i) { lab[i]=' ';
+}
         for (i=0; i<n; ++i)
             {
             snprintf(label,32,"%s%d",t,i+1);
             for (j=0; j<len; ++j)
                 {
-                if (label[j]==EOS) break;
+                if (label[j]==EOS) { break;
+}
                 lab[i*len+j]=label[j];
                 }
             }

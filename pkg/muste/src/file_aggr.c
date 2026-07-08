@@ -149,10 +149,13 @@ static char *end_par(char *t,char **ppk,int u)
             {
             ++s;
             if (*s=='(') { ++n; continue; }
-            if (*s==')') { --n; if (u && n==0) break; if (!u && n<0) return(s-1); }
+            if (*s==')') { --n; if (u && n==0) { break; 
+}if (!u && n<0) { return(s-1); 
+}}
             if (!u)
                 {
-                if (n==0 && (*s=='*' || *s=='+')) return(s-1);
+                if (n==0 && (*s=='*' || *s=='+')) { return(s-1);
+}
                 }
             if (n==1)
                 {
@@ -172,7 +175,8 @@ static char *end_term(char *s)
         {
         char *pk;
 
-        if (*s=='(') return(end_par(s,&pk,1));
+        if (*s=='(') { return(end_par(s,&pk,1));
+}
         return(end_par(s,&pk,0));
         }
 
@@ -187,8 +191,10 @@ static char *end_prod(char *s)
         p=s;
         while (1)
             {
-            p=end_term(p); if (p==NULL) return(p);
-            if (*(p+1)!='*') break;
+            p=end_term(p); if (p==NULL) { return(p);
+}
+            if (*(p+1)!='*') { break;
+}
             p+=2;
             }
         return(p);
@@ -215,10 +221,13 @@ static int bool_mult(char *s,char *pt,char *qt,char *p,char *q)
         ++pt; i=0;
         while (pt<qt)
             {
-            p2=end_prod(pt); if (p2==NULL) return(-1);
-            if (p2>qt-1) p2=qt-1;
+            p2=end_prod(pt); if (p2==NULL) { return(-1);
+}
+            if (p2>qt-1) { p2=qt-1;
+}
             *y=EOS; strncat(y,pt,(int)(p2-pt)+1);
-            if (i) strcat(s,"+");
+            if (i) { strcat(s,"+");
+}
             strcat(s,y); strcat(s,"*"); strcat(s,x);
             pt=p2+2; ++i;
             }
@@ -238,13 +247,14 @@ static char *bool_neg(char *s,char *pt)
         char m[2];
 
         m[1]=EOS;
-        q=end_par(pt,&pk,1); if (q==NULL) return(q);
+        q=end_par(pt,&pk,1); if (q==NULL) { return(q);
+}
         switch (*pk)
             {
           case '(':
-            if (*(pt+1)=='!')  /* poista !! */
+            if (*(pt+1)=='!') {  /* poista !! */
                 strncat(s,pt+2,(int)(q-pt)-2);
-            else
+            } else
                 {
                 strcat(s,"!"); strncat(s,pt+1,(int)(q-pt)-1);
                 }
@@ -280,14 +290,16 @@ static int bool_norm(char *s)
         while (1)
             {
             ps=strchr(s,'(');
-            if (ps==NULL) break;
+            if (ps==NULL) { break;
+}
             strcpy(t,s);
             pt=strchr(t,'(');
             if (pt==t || *(pt-1)=='+')
                 {
                 *ps=EOS;
                 p=end_par(pt,&pk,1);
-                if (p==NULL) return(-1);
+                if (p==NULL) { return(-1);
+}
                 if (*(p+1)!='*' || *pk=='*')
                     {
                     strncat(s,pt+1,p-pt-1);
@@ -295,16 +307,20 @@ static int bool_norm(char *s)
                     }
                 else
                     {
-                    q=end_prod(p+2); if (q==NULL) return(-1);
-                    k=bool_mult(s,pt,p,p+2,q); if (k<0) return(-1);
+                    q=end_prod(p+2); if (q==NULL) { return(-1);
+}
+                    k=bool_mult(s,pt,p,p+2,q); if (k<0) { return(-1);
+}
                     strcat(s,q+1);
                     }
                 }
             else if (*(pt-1)=='!')
                 {
-                if ((int)(pt-t)>1) *(ps-1)=EOS; else *s=EOS;
+                if ((int)(pt-t)>1) { *(ps-1)=EOS; } else { *s=EOS;
+}
                 strcat(s,"(");
-                q=bool_neg(s,pt); if (q==NULL) return(-1);
+                q=bool_neg(s,pt); if (q==NULL) { return(-1);
+}
                 strcat(s,")");
                 strcat(s,q);
                 }
@@ -313,10 +329,13 @@ static int bool_norm(char *s)
                 q=pt-2;
                 while (q>t) { if (*q=='+') { ++q; break; } --q; }
                 *(s+(q-t))=EOS;
-                p2=end_term(pt); if (p2==NULL) return(-1);
+                p2=end_term(pt); if (p2==NULL) { return(-1);
+}
                 k=0; if (*(p2+1)=='*') { k=1; strcat(s,"("); }
-                i=bool_mult(s,pt,p2,q,pt-2); if (i<0) return(-1);
-                if (k) strcat(s,")");
+                i=bool_mult(s,pt,p2,q,pt-2); if (i<0) { return(-1);
+}
+                if (k) { strcat(s,")");
+}
                 strcat(s,p2+1);
                 }
             }
@@ -345,23 +364,27 @@ static int xy_compute(int taski,double *d,double *py)
 
                        /* N=d[1] SX=d[2] SY=d[3] SXX=d[4] SYY=d[5] SXY=d[6] */
         *py=MISSING8;
-        if (d[1]<2.0) return(1);
+        if (d[1]<2.0) { return(1);
+}
         switch (taski)
             {
           case XCORR:
             x2=d[1]*d[4]-d[2]*d[2];
             y2=d[1]*d[5]-d[3]*d[3];
-            if (fabs(x2)<1e-10 || fabs(y2)<1e-10) return(1);
+            if (fabs(x2)<1e-10 || fabs(y2)<1e-10) { return(1);
+}
             *py=(d[1]*d[6]-d[2]*d[3])/sqrt(x2*y2);
             break;
           case XSLOPE:
             x2=d[1]*d[4]-d[2]*d[2];
-            if (fabs(x2)<1e-10) return(1);
+            if (fabs(x2)<1e-10) { return(1);
+}
             *py=(d[1]*d[6]-d[2]*d[3])/x2;
             break;
           case XINTERCEPT:
             x2=d[1]*d[4]-d[2]*d[2];
-            if (fabs(x2)<1e-10) return(1);
+            if (fabs(x2)<1e-10) { return(1);
+}
             *py=(d[4]*d[3]-d[6]*d[2])/x2;
             break;
             }
@@ -373,13 +396,15 @@ static int xy_aggregate(long j,int i,double y,double *d)
         {
         double x;
 
-        if ((double)j==d[0]) return(1);
+        if ((double)j==d[0]) { return(1);
+}
         d[0]=(double)j;
-        if (x_var[i]==-2) x=d[1]+1.0;
-        else
+        if (x_var[i]==-2) { x=d[1]+1.0;
+        } else
             {
             data_load(&d1,j,x_var[i],&x);
-            if (x==MISSING8) return(1);
+            if (x==MISSING8) { return(1);
+}
             }
         ++d[1];
         d[2]+=x; d[3]+=y; d[4]+=x*x; d[5]+=y*y; d[6]+=x*y;
@@ -396,17 +421,20 @@ static int xy_stat1(int k,char *ppar)
             if (x_var==NULL) { tilanpuute(); return(-1); }
             }
 
-        i=strlen(ppar)-1; if (ppar[i]==')') ppar[i]=EOS;
-        if (muste_strcmpi(ppar,"ORDER")==0) i=-2;
-        else
+        i=strlen(ppar)-1; if (ppar[i]==')') { ppar[i]=EOS;
+}
+        if (muste_strcmpi(ppar,"ORDER")==0) { i=-2;
+        } else
             {
-            i=varfind(&d1,ppar); if (i<0) return(-1);
+            i=varfind(&d1,ppar); if (i<0) { return(-1);
+}
             }
         x_var[k]=i;
 
         for (i=0; i<k; ++i)
             {
-            if (!xy_statistics[task[i]]) continue;
+            if (!xy_statistics[task[i]]) { continue;
+}
 /*
 printf("\ni=%d",i);
 printf("\nkeyvar: %d %d",keyvar[k],keyvar[i]);
@@ -414,7 +442,8 @@ printf("\nx_var: %d %d",x_var[k],x_var[i]);
 printf("\ncondnr: %d %d",condnr[k],condnr[i]); getch();
 */
             if (keyvar[k]==keyvar[i] && x_var[k]==x_var[i] &&
-                condnr[k]==condnr[i]) break;
+                condnr[k]==condnr[i]) { break;
+}
             }
         if (i<k)
             {
@@ -431,12 +460,15 @@ static int trim_mean(double *hav,unsigned int m,double a,double *py)
         double sum;
 
         *py=MISSING8;
-        if (m==0) return(1);
+        if (m==0) { return(1);
+}
         k=a;
-        if (2*k>=m) return(1);
+        if (2*k>=m) { return(1);
+}
         sum=0.0;
-        for (i=k; i<m-k; ++i)
+        for (i=k; i<m-k; ++i) {
            sum+=hav[i];
+}
         *py=sum/(double)(m-2*k);
         return(1);
         }
@@ -465,7 +497,8 @@ static int sort_data(double *x,long *j,unsigned int n)
                         ind=0;
                         }
                     }
-                if (ind==1) break;
+                if (ind==1) { break;
+}
                 }
             }
         return(1);
@@ -474,7 +507,8 @@ static int sort_data(double *x,long *j,unsigned int n)
 
 static int del_ordfile()
         {
-        if (n_ordvar==0) return(1);
+        if (n_ordvar==0) { return(1);
+}
 /*      muste_sprintf(sbuf,"DEL %sSURVO.XXX",etmpd); system(sbuf); */
         muste_sprintf(sbuf,"%sSURVO.XXX",etmpd);
         remove(sbuf);
@@ -510,11 +544,14 @@ static int order_stat3(long n)
         double m_hav;
         long s_hav; // RS 17.1.2014
 
-        if (n_ordvar==0) return(1);
+        if (n_ordvar==0) { return(1);
+}
 
         muste_fclose(ordfile);
 
-        max=0L; for (i=0; i<n_ordkey; ++i) if (n_cases[i]>max) max=n_cases[i];
+        max=0L; for (i=0; i<n_ordkey; ++i) { if (n_cases[i]>max) { max=n_cases[i];
+}
+}
 
 // RS REM       if (hav==NULL) /* 16.12.1998 */
 //            hav=(double *)muste_malloc(max*sizeof(double));
@@ -555,38 +592,46 @@ WAIT;
 
             for (k=0; k<n_ordvar; ++k)
                 {
-                if (ordnr[k]!=i) continue;
-                if (m==0) y=MISSING8;
-                else
+                if (ordnr[k]!=i) { continue;
+}
+                if (m==0) { y=MISSING8;
+                } else
                     {
                     switch (task[ordvar[k]])
                         {
                       case XFRACTILE:
                         u=(unsigned int)(ordpar[k]*m);
-                        if (u>m-1) u=m-1;
+                        if (u>m-1) { u=m-1;
+}
                         y=hav[u];
                         break;
                       case XORDER:
                         h=ordpar[k];
-                        if (h<0) h=m+h+1;
-                        if (h<1 || h>m) y=MISSING8; else y=hav[h-1];
+                        if (h<0) { h=m+h+1;
+}
+                        if (h<1 || h>m) { y=MISSING8; } else { y=hav[h-1];
+}
                         break;
                       case XORDERN:
                         h=ordpar[k];
-                        if (h<0) h=m+h+1;
-                        if (h<1 || h>m) y=MISSING8; else y=hav[h-1];
+                        if (h<0) { h=m+h+1;
+}
+                        if (h<1 || h>m) { y=MISSING8; } else { y=hav[h-1];
+}
 
                         ii=ordvar[k];
                         if (keytype[ii]==0)
                             {
-                            if (y!=MISSING8)
+                            if (y!=MISSING8) {
                                 data_load(&d1,jhav[h-1],(int)ordpar2[k],&y);
+}
                             }
                         else
                             {
-                            if (y==MISSING8) *sy=EOS;
-                            else
+                            if (y==MISSING8) { *sy=EOS;
+                            } else {
                                 data_alpha_load(&d1,jhav[h-1],(int)ordpar2[k],sy);
+}
                             }
                         break;
 
@@ -605,36 +650,40 @@ WAIT;
                                 ++m_f;
                                 if (m_f>m_max) { m_max=m_f; m_hav=hav[m_i]; s_hav=jhav[m_i]; }
                                 }
-                            else m_f=1;
+                            else { m_f=1;
+}
                             }
                         y=m_hav; *sy=EOS;
 //                        if (keytype[ordvar[k]]==1) // RS 17.1.2014
                         if (vartype[ordvar[k]]=='S') // RS 2.2.2014
                         	{
-                        	if (y==MISSING8) *sy=EOS;
-                            else
+                        	if (y==MISSING8) { *sy=EOS;
+                            } else {
                                 data_alpha_load(&d1,s_hav,ordvar[k],sy);
+}
                         	}
 // Rprintf("\nmode(hash): %f, s_hav=%d, sy:|%s| ",y,s_hav,sy);                        
                         }
                     }
                 if (keytype[ordvar[k]]==0)
                     {
-                    if (y==MISSING8) fi_miss_save(&d2,n,ordvar[k]);
-                    else
+                    if (y==MISSING8) { fi_miss_save(&d2,n,ordvar[k]);
+                    } else
                         {
                         if (d2.vartype[ordvar[k]][0]=='S')
                             {
                             fi_value_to_string(&d2,ordvar[k],y,sy);
                             fi_save(&d2,n,ordvar[k],sy);
                             }
-                        else
+                        else {
                             fi_save(&d2,n,ordvar[k],&y);
+}
                         }
                     }
                 else
-                    if (*sy==EOS) fi_miss_save(&d2,n,ordvar[k]);
-                    else fi_save(&d2,n,ordvar[k],sy);
+                    if (*sy==EOS) { fi_miss_save(&d2,n,ordvar[k]);
+                    } else { fi_save(&d2,n,ordvar[k],sy);
+}
                 }
             }
         muste_fclose(ordfile);
@@ -653,12 +702,14 @@ static int cond_ok(int n)
             switch (condspace[n])
                 {
               case C_END: return(ok2);
-              case C_PLUS: if (ok2) return(1);
+              case C_PLUS: if (ok2) { return(1);
+}
                            ok2=1; neg=0; break;
               case C_NEG: neg=1; break;
 
            default:
-                    ok0=ok[condspace[n]]; if (neg) ok0=1-ok0; ok2*=ok0;
+                    ok0=ok[condspace[n]]; if (neg) { ok0=1-ok0; 
+}ok2*=ok0;
                     neg=0; break;
                 }
             ++n;
@@ -682,7 +733,8 @@ static int order_stat2(long j)
         char sy[LLENGTH];
 //        int k;
 
-        if (n_ordvar==0) return(1);
+        if (n_ordvar==0) { return(1);
+}
 /*
         Rprintf("\nordvar:");
         for (i=0; i<n_ordvar; ++i)
@@ -702,13 +754,14 @@ static int order_stat2(long j)
         for (i=0; i<n_ordkey; ++i)
             {
             if (ferror(ordfile)) { ord_error(); return(-1); } // RS ADD return
-            if (ordcond[i]!=-1 && cond_ok(ordcond[i])==0) continue;
+            if (ordcond[i]!=-1 && cond_ok(ordcond[i])==0) { continue;
+}
 
 // Rprintf("\nordkey[%d]: %d, ordvar[%d]: %d, vartype=%c",i,ordkey[i],i,ordvar[i],vartype[ordvar[i]]);
 
 //            if (keytype[ordkey[i]]==0) data_load(&d1,j,ordkey[i],&y);  // RS 16.1.2014                 
-            if (vartype[ordvar[i]]!='S') data_load(&d1,j,ordkey[i],&y);  // RS 2.2.2014  28.8.2014 first ordkey->ordvar               
-            else
+            if (vartype[ordvar[i]]!='S') { data_load(&d1,j,ordkey[i],&y);  // RS 2.2.2014  28.8.2014 first ordkey->ordvar               
+            } else
                 { 
                 data_alpha_load(&d1,j,ordkey[i],sy);
                 y=(double)hash((unsigned char *)sy); 
@@ -716,7 +769,8 @@ static int order_stat2(long j)
                         
 //            data_load(&d1,j,ordkey[i],&y);
             
-            if (y==MISSING8) continue;
+            if (y==MISSING8) { continue;
+}
 
 // Rprintf("\ny[%d]=%f",i,y);            
             
@@ -748,10 +802,13 @@ static int init_order_stat()
         {
         int i;
 
-        if (n_ordvar==0) return(1);
-        i=open_ordfile("wb"); if (i<0) return(-1);
+        if (n_ordvar==0) { return(1);
+}
+        i=open_ordfile("wb"); if (i<0) { return(-1);
+}
         n_rec=0L;
-        for (i=0; i<n_ordkey; ++i) n_cases[i]=0L;
+        for (i=0; i<n_ordkey; ++i) { n_cases[i]=0L;
+}
         return(1);
         }
 
@@ -759,7 +816,8 @@ static int split_loppusulku(char *x,char **osa,int max)
         {
         int i;
 
-        i=strlen(x); if (x[i-1]==')') x[i-1]=EOS;
+        i=strlen(x); if (x[i-1]==')') { x[i-1]=EOS;
+}
         return(split(x,osa,max));
         }
 
@@ -782,7 +840,8 @@ static int order_stat1(int k,int *ptasknro,char *ppar)
             if (ordnr==NULL) { tilanpuute(); return(-1); }
             maxord=MAXORD;
             i=spfind("MAXORD");
-            if (i>=0) maxord=atoi(spb[i]);
+            if (i>=0) { maxord=atoi(spb[i]);
+}
             ordkey=(int *)muste_malloc(maxord*sizeof(int));
             if (ordkey==NULL) { tilanpuute(); return(-1); }
             ordcond=(int *)muste_malloc(maxord*sizeof(int));
@@ -792,7 +851,8 @@ static int order_stat1(int k,int *ptasknro,char *ppar)
             }
 
         if (*ptasknro==XMEDIAN) { *ptasknro=XFRACTILE; par=0.5; }
-        else if (*ptasknro==XFRACTILE) par=atof(ppar);
+        else if (*ptasknro==XFRACTILE) { par=atof(ppar);
+}
         switch (*ptasknro)
             {
           case XFRACTILE:
@@ -814,7 +874,8 @@ static int order_stat1(int k,int *ptasknro,char *ppar)
                 WAIT; return(-1);
                 }
             par=atof(osa[0]);
-            i=varfind(&d1,osa[1]); if (i<0) return(-1);
+            i=varfind(&d1,osa[1]); if (i<0) { return(-1);
+}
             ordpar2[n_ordvar]=i;
             break;
           case XTMEAN:
@@ -830,11 +891,12 @@ static int order_stat1(int k,int *ptasknro,char *ppar)
 
         for (i=0; i<n_ordkey; ++i)
             {
-            if (ordkey[i]==keyvar[k] &&  ordcond[i]==condnr[k]) break;
+            if (ordkey[i]==keyvar[k] &&  ordcond[i]==condnr[k]) { break;
+}
             }
-        if (n_ordkey>0 && i<n_ordkey)
+        if (n_ordkey>0 && i<n_ordkey) {
             ordnr[n_ordvar]=i;
-        else
+        } else
             {
             if (n_ordkey>=maxord)
                 {
@@ -866,32 +928,39 @@ static int save_agg(long n)
               case XN: y=d[0]; break;
               case XSUM: y=d[0]; break;
               case XMEAN:
-                    if (d[0]==0.0) y=MISSING8;
-                    else y=d[1]/d[0];
+                    if (d[0]==0.0) { y=MISSING8;
+                    } else { y=d[1]/d[0];
+}
                     break;
               case XSTDDEV:
-                    if (d[0]<2.0) y=MISSING8;
-                    else y=sqrt((d[2]-d[1]*d[1]/d[0])/(d[0]-1));
+                    if (d[0]<2.0) { y=MISSING8;
+                    } else { y=sqrt((d[2]-d[1]*d[1]/d[0])/(d[0]-1));
+}
                     break;
-              case XMIN: if (d[0]>1e29) y=MISSING8; else y=d[0]; break;
-              case XMAX: if (d[0]<-1e29) y=MISSING8; else y=d[0]; break;
+              case XMIN: if (d[0]>1e29) { y=MISSING8; } else { y=d[0]; 
+}break;
+              case XMAX: if (d[0]<-1e29) { y=MISSING8; } else { y=d[0]; 
+}break;
               case XFIRST:
               case XLAST:
                     if (keytype[i]==0)
                         {
-                        if (d[0]==-1.0) y=MISSING8;
-                        else
+                        if (d[0]==-1.0) { y=MISSING8;
+                        } else {
                             data_load(&d1,(long)d[0],keyvar[i],&y);
+}
                         }
                     else
                         {
-                        if (d[0]==-1.0) *sy=EOS;
-                        else
+                        if (d[0]==-1.0) { *sy=EOS;
+                        } else {
                             data_alpha_load(&d1,(long)d[0],keyvar[i],sy);
+}
                         }
                     break;
               case XNMISS: y=d[0]; break;
-              case XSUMS: if (d[0]==0.0) y=d[1]; else y=MISSING8; break;
+              case XSUMS: if (d[0]==0.0) { y=d[1]; } else { y=MISSING8; 
+}break;
 
               case XCORR:
               case XSLOPE:
@@ -904,22 +973,24 @@ static int save_agg(long n)
 
             if (keytype[i]==0 || task[i]==XXVALUES) // RS 28.2.2013 ADD || task...
                 {
-                if (y==MISSING8) fi_miss_save(&d2,n,varnr[i]);
-                else
+                if (y==MISSING8) { fi_miss_save(&d2,n,varnr[i]);
+                } else
                     {
                     if (d2.vartype[i][0]=='S')
                         {
                         fi_value_to_string(&d2,i,y,sy); /* 31.12.1998 */
                         fi_save(&d2,n,varnr[i],sy);
                         }
-                    else
+                    else {
                         fi_save(&d2,n,varnr[i],&y);
+}
                     }
 
                 }
             else
-                if (*sy==EOS) fi_miss_save(&d2,n,varnr[i]);
-                else fi_save(&d2,n,varnr[i],sy);
+                if (*sy==EOS) { fi_miss_save(&d2,n,varnr[i]);
+                } else { fi_save(&d2,n,varnr[i],sy);
+}
             }
 
         i=order_stat3(n);
@@ -948,20 +1019,23 @@ static int load_aggvar(long j,char *s,double *px)
                     else
                         {
                         data_load(&d1,j,aggvars[i],px);
-                        if (*px==MISSING8) muste_sprintf(sbuf,"|MISSING|");
-                        else muste_sprintf(sbuf,"|%e|",*px);
+                        if (*px==MISSING8) { muste_sprintf(sbuf,"|MISSING|");
+                        } else { muste_sprintf(sbuf,"|%e|",*px);
+}
                         strcat(s,sbuf);
                         }                    
                     } 
 // Rprintf("\nmultipleaggvar[%d]: %s",(int)j,s);                           
                 }
-            else data_alpha_load(&d1,j,aggvar,s);
+            else { data_alpha_load(&d1,j,aggvar,s);
+}
             return(1);
             }
         else
             {
             data_load(&d1,j,aggvar,px);
-            if (*px==MISSING8) return(-1);
+            if (*px==MISSING8) { return(-1);
+}
             return(1);
             }
         }
@@ -979,17 +1053,20 @@ static int tutki_ehdot(long j)
             if (condtype[i]==0)
                 {
                 data_load(&d1,j,condvar[i],&x);
-                if (x==MISSING8 || x<condlimit1[i] || x>condlimit2[i])
+                if (x==MISSING8 || x<condlimit1[i] || x>condlimit2[i]) {
                     ok[i]=0;
-                else ok[i]=1;
+                } else { ok[i]=1;
+}
                 }
             else
                 {
                 data_alpha_load(&d1,j,condvar[i],t);
-                k=strlen(t)-1; while (k && t[k]==' ') t[k--]=EOS;
+                k=strlen(t)-1; while (k && t[k]==' ') { t[k--]=EOS;
+}
                 *s=','; s[1]=EOS; strcat(s,t); strcat(s,",");
-                if (strstr(condcases[i],s)==NULL) ok[i]=0;
-                else ok[i]=1;
+                if (strstr(condcases[i],s)==NULL) { ok[i]=0;
+                } else { ok[i]=1;
+}
                 }
             }
         return(1);
@@ -1027,7 +1104,8 @@ static int init_workspace2()
               case XCORR:
               case XSLOPE:
               case XINTERCEPT:
-                       for (k=0; k<7; ++k) d[k]=0.0; break;
+                       for (k=0; k<7; ++k) { d[k]=0.0; 
+}break;
               case XXVALUES:
                        d[0]=0.0; d[1]=1e100; // previous value
                        break;
@@ -1038,7 +1116,8 @@ static int init_workspace2()
 printf("\nworksize=%u\n",worksize);
 for (i=0; i<worksize; ++i) Rprintf("%g ",workspace[i]); getch();
 */
-        i=init_order_stat(); if (i<0) return(-1);
+        i=init_order_stat(); if (i<0) { return(-1);
+}
         return(1);
         }
 
@@ -1054,8 +1133,10 @@ static int aggregate()
         double *d;
 
 		agg_value0=0;
-        i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
-        i=spfind("PRIND"); if (i>=0) prind=atoi(spb[i]);
+        i=hae_apu("prind",sbuf); if (i) { prind=atoi(sbuf);
+}
+        i=spfind("PRIND"); if (i>=0) { prind=atoi(spb[i]);
+}
 
         new=1; n=0L; sur_print("\n");
         for (j=d1.l1; j<=d1.l2; ++j)
@@ -1065,20 +1146,25 @@ static int aggregate()
                 sur_print("\nCannot save more data in aggregated file!");
                 WAIT; return(-1);
                 }
-            if (unsuitable(&d1,j)) continue;
-            if (sur_kbhit()) { i=sur_getch(); if (i=='.') prind=1-prind; }
+            if (unsuitable(&d1,j)) { continue;
+}
+            if (sur_kbhit()) { i=sur_getch(); if (i=='.') { prind=1-prind; 
+}}
             if (prind)
                 { muste_sprintf(sbuf,"%d ",j); sur_print(sbuf); } // RS CHA ld -> d
             if (new)
                 {
                 i=init_workspace2();
-                i=load_aggvar(j,agg_string,&agg_value); if (i<0) continue;
-                if (aggtype=='S') strcpy(agg_string0,agg_string);
-                else agg_value0=agg_value;
+                i=load_aggvar(j,agg_string,&agg_value); if (i<0) { continue;
+}
+                if (aggtype=='S') { strcpy(agg_string0,agg_string);
+                } else { agg_value0=agg_value;
+}
                 }
             else
                 {
-                i=load_aggvar(j,agg_string,&agg_value); if (i<0) continue;
+                i=load_aggvar(j,agg_string,&agg_value); if (i<0) { continue;
+}
                 if (aggtype=='S')
                     {
                     if (strcmp(agg_string,agg_string0)!=0)
@@ -1090,10 +1176,12 @@ static int aggregate()
                         { ++n; save_agg(n); new=1; --j; continue; }
                     }
                 }
-            i=tutki_ehdot(j); if (i<0) return(-1);
+            i=tutki_ehdot(j); if (i<0) { return(-1);
+}
             for (i=0; i<nvar; ++i)
                 {
-                if (condnr[i]!=-1 && cond_ok(condnr[i])==0) continue;
+                if (condnr[i]!=-1 && cond_ok(condnr[i])==0) { continue;
+}
                 d=workspace+w[i];
                 if (keyvar[i]>=0)
                     {
@@ -1102,7 +1190,8 @@ static int aggregate()
                         data_load(&d1,j,keyvar[i],&y);                       
                         if (y==MISSING8)
                             {
-                            if (task[i]==XNMISS || task[i]==XSUMS) ++d[0];    /* (1) */
+                            if (task[i]==XNMISS || task[i]==XSUMS) { ++d[0];    /* (1) */
+}
                             continue;
                             }
                         }
@@ -1119,10 +1208,13 @@ static int aggregate()
                   case XSUM: d[0]+=y; break;
                   case XMEAN: ++d[0]; d[1]+=y; break;
                   case XSTDDEV: ++d[0]; d[1]+=y; d[2]+=y*y; break;
-                  case XMIN: if (y<d[0]) d[0]=y; break;
-                  case XMAX: if (y>d[0]) d[0]=y; break;
+                  case XMIN: if (y<d[0]) { d[0]=y; 
+}break;
+                  case XMAX: if (y>d[0]) { d[0]=y; 
+}break;
                   case XFIRST:
-                        if (d[0]==-1.0) d[0]=(double)j;
+                        if (d[0]==-1.0) { d[0]=(double)j;
+}
                         break;
                   case XLAST:
                         d[0]=(double)j;
@@ -1139,12 +1231,14 @@ static int aggregate()
                             {
                             y=(double)hash((unsigned char *)sy);                            
                             }                           
-                        if (y!=d[1]) ++d[0];
+                        if (y!=d[1]) { ++d[0];
+}
                         d[1]=y; break;
                   case XMISSING: break;
                     }
                 }
-            i=order_stat2(j); if (i<0) return(-1);
+            i=order_stat2(j); if (i<0) { return(-1);
+}
             
             new=0;
 /* Rprintf("\nw: %g %g",workspace[0],workspace[1]); getch();   */
@@ -1183,7 +1277,8 @@ static int space_split(char *rivi,char **sana,int max) // RS CHA short -> int
                                 {
                                 rivi[p]=EOS;
                                 ++g;
-                                if (g>=max) return(max);
+                                if (g>=max) { return(max);
+}
                                 edell=0;
                                 }
                         }
@@ -1196,7 +1291,8 @@ static int space_split(char *rivi,char **sana,int max) // RS CHA short -> int
                                 }
                         }
                 }
-        if (edell==1) ++g;
+        if (edell==1) { ++g;
+}
         return(g);
         }
 
@@ -1236,7 +1332,8 @@ static int varaa_tilat()
         if (keyvar==NULL) { tilanpuute(); return(-1); }
         keytype=(int *)muste_malloc(nvar*sizeof(int));
         if (keytype==NULL) { tilanpuute(); return(-1); }
-        u=nvar; if (u<20) u=20;
+        u=nvar; if (u<20) { u=20;
+}
         condstring=muste_malloc(256*u);
         if (condstring==NULL) { tilanpuute(); return(-1); }
         condnr=(int *)muste_malloc(nvar*sizeof(int));
@@ -1269,8 +1366,9 @@ static int create_aggfile()
 
         len=0;
         actsar=7;
-        if (multiple_aggvars) muste_sprintf(text,"Aggregated from data %s by %d variables",word[2],multiple_aggvars); // RS 5.9.2013
-        else muste_sprintf(text,"Aggregated from data %s by variable %s",word[2],word[4]);
+        if (multiple_aggvars) { muste_sprintf(text,"Aggregated from data %s by %d variables",word[2],multiple_aggvars); // RS 5.9.2013
+        } else { muste_sprintf(text,"Aggregated from data %s by variable %s",word[2],word[4]);
+}
         ptext[0]=text;
 
 //Rprintf("\n%s",text);
@@ -1317,10 +1415,13 @@ static int etsi_ehto(char *nimi,int n)
             {
             condtype[n]=0;  /* IND */
             condvar[n]=varfind(&d1,osa[0]);
-            if (condvar[n]<0) return(-1);
+            if (condvar[n]<0) { return(-1);
+}
             condlimit1[n]=condlimit2[n]=1.0;
-            if (k>1) condlimit1[n]=condlimit2[n]=atof(osa[1]);
-            if (k>2) condlimit2[n]=atof(osa[2]);
+            if (k>1) { condlimit1[n]=condlimit2[n]=atof(osa[1]);
+}
+            if (k>2) { condlimit2[n]=atof(osa[2]);
+}
             }
         else
             {
@@ -1328,7 +1429,8 @@ static int etsi_ehto(char *nimi,int n)
             p=strchr(x,':'); *p=EOS; // ++p;
             condtype[n]=1; /* CASES */
             condvar[n]=varfind(&d1,osa[0]);
-            if (condvar[n]<0) return(-1);
+            if (condvar[n]<0) { return(-1);
+}
             *p=',';
             strcat(p,",");
             condcases[n]=pcond;
@@ -1347,14 +1449,16 @@ static int tutki_ehto2(char *s)
 
         for (h=0; h<ncond; ++h)
             {
-            if (strcmp(condname[h],s)==0) break;
+            if (strcmp(condname[h],s)==0) { break;
+}
             }
         nro=h;
         if (h==ncond)
             {
             condname[h]=pcond;
             strcpy(pcond,s); pcond+=strlen(s)+1;
-            h=etsi_ehto(s,ncond); if (h<0) return(-1);
+            h=etsi_ehto(s,ncond); if (h<0) { return(-1);
+}
             ++ncond;
             }
         return(nro);
@@ -1375,14 +1479,16 @@ static int tutki_ehto(char *s,int i)
               case '*':
                 condnimi[n]=EOS;
                 h=tutki_ehto2(condnimi);
-                if (h<0) return(-1);
+                if (h<0) { return(-1);
+}
                 condspace[condcount++]=h;
                 n=0;
                 break;
               case '+':
                 condnimi[n]=EOS;
                 h=tutki_ehto2(condnimi);
-                if (h<0) return(-1);
+                if (h<0) { return(-1);
+}
                 condspace[condcount++]=h;
                 condspace[condcount++]=C_PLUS;
                 n=0;
@@ -1396,18 +1502,21 @@ static int tutki_ehto(char *s,int i)
             }
         condnimi[n]=EOS;
         h=tutki_ehto2(condnimi);
-        if (h<0) return(-1);
+        if (h<0) { return(-1);
+}
         condspace[condcount++]=h;
         condspace[condcount++]=C_END;
 
         for (k=0; k<i; ++k)   /* 27.8.93 */
             {
             ck=condnr[k];
-            if (ck==-1) continue;
+            if (ck==-1) { continue;
+}
             h=0; ok=0;
             while (1)
                 {
-                if (condspace[ci+h]!=condspace[ck+h]) break;
+                if (condspace[ci+h]!=condspace[ck+h]) { break;
+}
                 if (condspace[ck+h]==C_END) { ok=1; break; }
                 ++h;
                 }
@@ -1429,10 +1538,12 @@ static int find_task(char *s)
         i=0;
         while (*taskname[i]!=EOS)
             {
-            if (muste_strcmpi(s,taskname[i])==0) break;
+            if (muste_strcmpi(s,taskname[i])==0) { break;
+}
             ++i;
             }
-        if (*taskname[i]==EOS) return(-1);
+        if (*taskname[i]==EOS) { return(-1);
+}
         return(i);
         }
 
@@ -1447,10 +1558,12 @@ static int varlist_start()
             edread(x,i);
             k=split(x+1,osa,1);
             if (k==0) { ++i; continue; }
-            if (strcmp(osa[0],"VARIABLES:")==0) break;
+            if (strcmp(osa[0],"VARIABLES:")==0) { break;
+}
             ++i;
             }
-        if (i>r2) return(-1);
+        if (i>r2) { return(-1);
+}
         return(i);
         }
 
@@ -1483,11 +1596,13 @@ static int read_varlist()
                 }
             edread(x,varline+i);
             k=split(x+1,osa,1);
-            if (strcmp(osa[0],"END")==0) break;
+            if (strcmp(osa[0],"END")==0) { break;
+}
             ++i;
             }
         nvar=i;
-        i=varaa_tilat(); if (i<0) return(-1);
+        i=varaa_tilat(); if (i<0) { return(-1);
+}
         pname=namestring;
         pcond=condstring;
 
@@ -1498,22 +1613,25 @@ static int read_varlist()
             k=space_split(x+1,osa,5);
             for (h=k-1; h>=0; --h)
                 {
-                if (strcmp(osa[h],"/")==0) break;
+                if (strcmp(osa[h],"/")==0) { break;
+}
                 }
-            if (h>=0) k=h;
+            if (h>=0) { k=h;
+}
             if (k==0)
                 {
                 sur_print("\nEmpty line in VARIABLES list or END missing!");
                 WAIT; return(-1);
                 }
-            if (strcmp(osa[0],"END")==0) break;
+            if (strcmp(osa[0],"END")==0) { break;
+}
             if (k<3)
                 {
                 muste_sprintf(sbuf,"\nIncomplete line %d in VARIABLES list!",varline+i);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             p=strchr(osa[0],':');
-            if (p==NULL) strcpy(type,"-"); else { *p=EOS; strcpy(type,p+1); }
+            if (p==NULL) { strcpy(type,"-"); } else { *p=EOS; strcpy(type,p+1); }
             if (strchr("-1248S",*type)==NULL)
                 {
                 muste_sprintf(sbuf,"\nError on line %d. Permitted types 1,2,4,8 and S<length>.",
@@ -1521,8 +1639,8 @@ static int read_varlist()
                 sur_print(sbuf); WAIT; return(-1);
                 }
             p=strchr(osa[0],'('); // RS 17.1.2014
-            if (p==NULL) strcpy(pname,osa[0]);
-            else
+            if (p==NULL) { strcpy(pname,osa[0]);
+            } else
             	{ 
             	*p=EOS; 
             	strcpy(pname,osa[0]);
@@ -1551,11 +1669,12 @@ static int read_varlist()
             w[i]=worksize;
             worksize+=n_work[task[i]];
 
-            if (strcmp(osa[2],"-")==0) keyvar[i]=-1;
-            else
+            if (strcmp(osa[2],"-")==0) { keyvar[i]=-1;
+            } else
                 {
                 keyvar[i]=varfind(&d1,osa[2]);
-                if (keyvar[i]<0) return(-1);
+                if (keyvar[i]<0) { return(-1);
+}
                 }
                 
 // Rprintf("\ni: %d, type: %c",i,*type);                
@@ -1575,8 +1694,9 @@ static int read_varlist()
             else
                 {
                 vartype[i]=*type;
-                if (*type=='S') varlen[i]=atoi(type+1);
-                else varlen[i]=vartype[i]-'0';
+                if (*type=='S') { varlen[i]=atoi(type+1);
+                } else { varlen[i]=vartype[i]-'0';
+}
                 }
 
 // Rprintf("\nvartype[%d]=%c",i,vartype[i]);                
@@ -1584,7 +1704,8 @@ static int read_varlist()
             keytype[i]=0;
             if (keytypes[task[i]]==1)
                 {               
-                if (vartype[i]=='S') keytype[i]=1;
+                if (vartype[i]=='S') { keytype[i]=1;
+}
                 if (task[i]==XXVALUES) // RS 28.2.2013
                     {
                     vartype[i]='2';
@@ -1595,16 +1716,20 @@ static int read_varlist()
             if (k>=4)
                 {
                 strcpy(xxx,osa[3]);
-                h=bool_norm(xxx); if (h<0) return(-1);
-                h=tutki_ehto(xxx,i); if (h<0) return(-1);
+                h=bool_norm(xxx); if (h<0) { return(-1);
+}
+                h=tutki_ehto(xxx,i); if (h<0) { return(-1);
+}
                 }
 
             if (order_statistics[task[i]])
-                { h=order_stat1(i,&task[i],ppar); if (h<0) return(-1); }
+                { h=order_stat1(i,&task[i],ppar); if (h<0) { return(-1); 
+}}
                          /* task[i]-muutos MEDIAN -> FRACTILE(0.5) */
 
             if (xy_statistics[task[i]])
-                { h=xy_stat1(i,ppar); if (h<0) return(-1); }
+                { h=xy_stat1(i,ppar); if (h<0) { return(-1); 
+}}
             ++i;
             }
         return(1);
@@ -1732,7 +1857,8 @@ x_var=NULL;
 new_file=0;
 
 
-        if (argc==1) return;
+        if (argc==1) { return;
+}
         s_init(argv[1]);
         if (g<7) { remarks(); return; }
         if (muste_strcmpi(word[3],"BY")!=0) { remarks(); return; }
@@ -1751,14 +1877,17 @@ new_file=0;
             } 
 
         maxvar=MAXVAR;
-        i=data_open3(word[2],&d1,1,1,1,0); if (i<0) return;
+        i=data_open3(word[2],&d1,1,1,1,0); if (i<0) { return;
+}
         if (d1.type!=2)
             {
             muste_sprintf(sbuf,"\n%s must be a Survo data file!",word[2]);
             sur_print(sbuf); WAIT; return;
             }
-        i=spec_init(r1+r-1); if (i<0) return;
-        i=conditions(&d1); if (i<0) return;
+        i=spec_init(r1+r-1); if (i<0) { return;
+}
+        i=conditions(&d1); if (i<0) { return;
+}
 
         if (muste_strcmpi(word[2],word[g-1])==0) // RS 5.9.2013 6->g-1
             {

@@ -153,7 +153,8 @@ else    if ( // KV
            (strcmp(OO,"DM")==0)
           )
           {
-            if (strcmp(OO,"DD")==0) muste_dd_call=TRUE; // RS 30.5.2014
+            if (strcmp(OO,"DD")==0) { muste_dd_call=TRUE; // RS 30.5.2014
+}
           	muste_undo=FALSE; // RS 9.10.2012
             muste_desktop(sur_session);
             muste_undo=TRUE; // RS 9.10.2012
@@ -293,10 +294,11 @@ static int op_tab(char *OO) // 14.7.2011/SM
             WAIT; return(-1);
             }
         i=split(x,w,1);
-        if (strchr(w[0],':')!=NULL)
+        if (strchr(w[0],':')!=NULL) {
             muste_tabb(sur_session);
-        else
+        } else {
             muste_tab(sur_session);
+}
         return(1);
         }
 

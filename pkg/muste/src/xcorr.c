@@ -46,22 +46,31 @@ void muste_xcorr(char *argv)
             sur_print("\nUsage: XCORR <data>,<xvar>,<yvar>,L");
             WAIT; return;
             }
-        i=sp_init(r1+r-1); if (i<0) return;
-        i=data_read_open(word[1],&d); if (i<0) return;
-        xvar=varfind(&d,word[2]); if (xvar<0) return;
-        yvar=varfind(&d,word[3]); if (yvar<0) return;
-        if (xvar==yvar) autocorr=1; else autocorr=0;
+        i=sp_init(r1+r-1); if (i<0) { return;
+}
+        i=data_read_open(word[1],&d); if (i<0) { return;
+}
+        xvar=varfind(&d,word[2]); if (xvar<0) { return;
+}
+        yvar=varfind(&d,word[3]); if (yvar<0) { return;
+}
+        if (xvar==yvar) { autocorr=1; } else { autocorr=0;
+}
 
-        if (g<5) tulosrivi=0;
-        else
+        if (g<5) { tulosrivi=0;
+        } else
             {
             tulosrivi=edline2(word[4],1,1);
-            if (tulosrivi==0) return;
+            if (tulosrivi==0) { return;
+}
             }
-        i=conditions(&d); if (i<0) return;
+        i=conditions(&d); if (i<0) { return;
+}
         i=spfind("MAXLAG");
-        if (i<0) maxlag=12; else maxlag=atoi(spb[i]);
-        if (maxlag<1) maxlag=1;
+        if (i<0) { maxlag=12; } else { maxlag=atoi(spb[i]);
+}
+        if (maxlag<1) { maxlag=1;
+}
 
     xx=NULL;
     yy=NULL;
@@ -74,16 +83,21 @@ void muste_xcorr(char *argv)
     ys1=NULL;
     ys2=NULL;
 
-        i=varaa_tilat_xcorr(); if (i<0) return;
+        i=varaa_tilat_xcorr(); if (i<0) { return;
+}
         n=0;
-        for (i=0; i<maxlag; ++i) xx[i]=yy[i]=xy1[i]=xy2[i]=0.0;
-        for (i=0; i<maxlag; ++i) xs1[i]=xs2[i]=ys1[i]=ys2[i]=0.0;
+        for (i=0; i<maxlag; ++i) { xx[i]=yy[i]=xy1[i]=xy2[i]=0.0;
+}
+        for (i=0; i<maxlag; ++i) { xs1[i]=xs2[i]=ys1[i]=ys2[i]=0.0;
+}
         xsum=ysum=xsum2=ysum2=0.0;
         corr=0.0;
         i=lue_datat();
         data_close(&d);
-        if (i<0) return;
-        if ((int)maxlag>n-1) maxlag=n-1;
+        if (i<0) { return;
+}
+        if ((int)maxlag>n-1) { maxlag=n-1;
+}
         tulostus();
         s_end(argv);
         }
@@ -130,13 +144,16 @@ static int lue_datat()
       else { muste_sprintf(sbuf,"\nLoading values of %s and %s ...",word[2],word[3]); sur_print(sbuf); }
         for (j=d.l1; j<=d.l2; ++j)
             {
-            if (unsuitable(&d,j)) continue;
+            if (unsuitable(&d,j)) { continue;
+}
             data_load(&d,j,xvar,&x);
-            if (x==MISSING8) { if (n==0) continue; break; }
+            if (x==MISSING8) { if (n==0) { continue; 
+}break; }
             if (!autocorr)
                 {
                 data_load(&d,j,yvar,&y);
-                if (y==MISSING8) { if (n==0) continue; break; }
+                if (y==MISSING8) { if (n==0) { continue; 
+}break; }
                 }
 
             xsum+=x; xsum2+=x*x;
@@ -144,8 +161,10 @@ static int lue_datat()
 
             for (i=0; i<maxlag; ++i)
                 {
-                if ((int)n<i+1) break;
-                h=k-i-1; if (h<0) h+=maxlag;
+                if ((int)n<i+1) { break;
+}
+                h=k-i-1; if (h<0) { h+=maxlag;
+}
                 xx[i]+=x*x2[h];
                 xs1[i]+=x; xs2[i]+=x2[h];
                 if (!autocorr)
@@ -157,8 +176,10 @@ static int lue_datat()
                     }
                 }
             x2[k]=x;
-            if (!autocorr) y2[k]=y;
-            ++k; if (k==maxlag) k=0;
+            if (!autocorr) { y2[k]=y;
+}
+            ++k; if (k==maxlag) { k=0;
+}
             ++n;
             }
 
@@ -189,7 +210,8 @@ static int lue_datat()
 
                 }
             }
-        if (!autocorr) corr=(corr-n*xmean*ymean)/sqrt(xxs*yys);
+        if (!autocorr) { corr=(corr-n*xmean*ymean)/sqrt(xxs*yys);
+}
 
         muste_sprintf(sbuf,"\n%u observations loaded!",n); sur_print(sbuf);
 
@@ -208,27 +230,32 @@ static int tulostus()
         int i,t;
         char x[LLENGTH];
 
-        i=output_open(eout); if (i<0) return(1);
-        if (autocorr) muste_sprintf(x,"Autocorrelations of %s in data %s:",word[2],word[1]);
-    else muste_sprintf(x,"Auto- and crosscorrelations of %s and %s in data %s:",word[2],word[3],word[1]);
+        i=output_open(eout); if (i<0) { return(1);
+}
+        if (autocorr) { muste_sprintf(x,"Autocorrelations of %s in data %s:",word[2],word[1]);
+    } else { muste_sprintf(x,"Auto- and crosscorrelations of %s and %s in data %s:",word[2],word[3],word[1]);
+}
         print_line(x);
 
-        if (autocorr) muste_sprintf(x," Lag  %.8s",word[2]);
-        else muste_sprintf(x," Lag %8.8s   %8.8s       Cross+     Cross-",word[2],word[3]);
+        if (autocorr) { muste_sprintf(x," Lag  %.8s",word[2]);
+        } else { muste_sprintf(x," Lag %8.8s   %8.8s       Cross+     Cross-",word[2],word[3]);
+}
         print_line(x);
         t=accuracy-3;
-        if (autocorr)
+        if (autocorr) {
             muste_sprintf(x,"%3d  %10.*f",0,t,1.0);
-        else
+        } else {
             muste_sprintf(x,"%3d  %10.*f %10.*f %10.*f %10.*f",0,t,1.0,t,1.0,t,corr,t,corr);
+}
 
         print_line(x);
         for (i=0; i<maxlag; ++i)
             {
-            if (autocorr)
+            if (autocorr) {
                 muste_sprintf(x,"%3d  %10.*f",i+1,t,xx[i]);
-            else
+            } else {
                muste_sprintf(x,"%3d  %10.*f %10.*f %10.*f %10.*f",i+1,t,xx[i],t,yy[i],t,xy1[i],t,xy2[i]);
+}
             print_line(x);
             }
         output_close(eout);
@@ -238,7 +265,8 @@ static int tulostus()
 static int print_line(char *line)
         {
         output_line(line,eout,tulosrivi);
-        if (tulosrivi) ++tulosrivi;
+        if (tulosrivi) { ++tulosrivi;
+}
         return(1);
         }
 

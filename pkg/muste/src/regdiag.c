@@ -139,18 +139,23 @@ void muste_regdiag(char *argv)
         if (g>2)
             {
             results_line=edline2(word[2],1,1);
-            if (results_line==0) return;
+            if (results_line==0) { return;
+}
             }
-        i=sp_init(r1+r-1); if (i<0) return;
+        i=sp_init(r1+r-1); if (i<0) { return;
+}
         i=data_read_open(word[1],&dat);
-        if (i<0) return;
-        i=mask(&dat); if (i<0) return;
+        if (i<0) { return;
+}
+        i=mask(&dat); if (i<0) { return;
+}
         yvar=activated(&dat,'Y');
         if (yvar<0)
             {
             sur_print("\nNo regressand (Y)!"); WAIT; return;
             }
-        i=find_regressors(); if (i<0) return;
+        i=find_regressors(); if (i<0) { return;
+}
         resvar=activated(&dat,'R');
         predvar=activated(&dat,'P');
         hatvar=activated(&dat,'H');
@@ -160,29 +165,38 @@ void muste_regdiag(char *argv)
    Rprintf("\nmxvar=%d",mxvar);
   for (i=0; i<mxvar; ++i) Rprintf(" %d",xvar[i]); getch();
 */
-        i=conditions(&dat); if (i<0) return;
+        i=conditions(&dat); if (i<0) { return;
+}
         konst=m-mxvar;
-        i=space_allocation1(); if (i<0) return;
+        i=space_allocation1(); if (i<0) { return;
+}
 /*******************
         i=optdim_d(); if (i && i<dat.m) err(0);
         i=optdim_o(); if (i && (int)i<dat.n) err(0);
 **********************/
         prind=0;
-        i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
-        if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);
+        i=hae_apu("prind",sbuf); if (i) { prind=atoi(sbuf);
+}
+        if ((i=spfind("PRIND"))>=0) { prind=atoi(spb[i]);
+}
 
-        i=load_data(); if (i<0) return;
-        i=space_allocation(); if (i<0) return;
+        i=load_data(); if (i<0) { return;
+}
+        i=space_allocation(); if (i<0) { return;
+}
 /*
   Rprintf("\nm=%d n=%d",m,n); getch();
   for (j=0; j<n; ++j) { Rprintf("\n%g",Y[j]); for (i=0; i<m; ++i)
                                               Rprintf(" %g",X[i*n+j]); getch(); }
 */
         eps=1e-15;
-        i=spfind("EPS"); if (i>=0) eps=atof(spb[i]);
+        i=spfind("EPS"); if (i>=0) { eps=atof(spb[i]);
+}
 
-        i=scale_data(); if (i<0) return;
-        i=linreg(); if (i<0) return;
+        i=scale_data(); if (i<0) { return;
+}
+        i=linreg(); if (i<0) { return;
+}
 
         if (resvar>=0 || predvar>=0 || hatvar>=0 || studvar>=0 || cookvar>=0)
             {
@@ -198,21 +212,26 @@ void muste_regdiag(char *argv)
 
         print_coeff();
 
-        for (i=0; i<m; ++i) b[i]/=collength[i];
-        for (i=0; i<8*m; ++i) r_label[i]=' ';
+        for (i=0; i<m; ++i) { b[i]/=collength[i];
+}
+        for (i=0; i<8*m; ++i) { r_label[i]=' ';
+}
         for (i=0; i<m; ++i)
             {
-            if (i==0 && konst) muste_fieldcopy(name,"Constant",8);
-            else muste_fieldcopy(name,dat.varname[xvar[i-konst]],8);
+            if (i==0 && konst) { muste_fieldcopy(name,"Constant",8);
+            } else { muste_fieldcopy(name,dat.varname[xvar[i-konst]],8);
+}
             for (h=0; h<8; ++h)
                 {
-                if (name[h]==EOS) break;
+                if (name[h]==EOS) { break;
+}
                 r_label[8*i+h]=name[h];
                 }
             }
         strcpy(sbuf,"regr("); strcat(sbuf,word[1]); strcat(sbuf,")");
         matrix_save("REG.M",b,m,1,r_label,"%1      ",8,8,-1,sbuf,0,0);
-        for (i=0; i<m; ++i) b[m+i]=se[i]/collength[i];
+        for (i=0; i<m; ++i) { b[m+i]=se[i]/collength[i];
+}
         strcpy(sbuf,"regs("); strcat(sbuf,word[1]); strcat(sbuf,")");
         matrix_save("REGS.M",b,m,2,r_label,"Coeff   Std.dev.",8,8,-1,sbuf,0,0);
         strcpy(sbuf,"reg_corr("); strcat(sbuf,word[1]); strcat(sbuf,")");
@@ -227,7 +246,7 @@ static int find_regressors()
         int i;
 
         mxvar=0;
-        for (i=0; i<dat.m_act; ++i)
+        for (i=0; i<dat.m_act; ++i) {
             if (dat.vartype[dat.v[i]][1]=='X')
                 {
                 if (mxvar>=MAX_X)
@@ -237,14 +256,17 @@ static int find_regressors()
                     }
                 xvar[mxvar++]=dat.v[i];
                 }
+}
         if (mxvar==0)
             {
             sur_print("\nNo regressors (X)!"); WAIT; return(-1);
             }
         m=mxvar+1;
         i=spfind("CONSTANT");
-        if (i<0) return(1);
-        if (atoi(spb[i])==0) m=mxvar;
+        if (i<0) { return(1);
+}
+        if (atoi(spb[i])==0) { m=mxvar;
+}
         return(1);
         }
 
@@ -269,7 +291,8 @@ static int space_allocation()
         if (hat==NULL) { not_enough_memory(); return(-1); }
         res=(double *)muste_malloc((unsigned int)((n+MAXLAG)*sizeof(double)));
         if (res==NULL) { not_enough_memory(); return(-1); }
-        for (i=0; i<n+MAXLAG; ++i) res[i]=0.0; // autokorr. varten!
+        for (i=0; i<n+MAXLAG; ++i) { res[i]=0.0; // autokorr. varten!
+}
         a=(double *)muste_malloc((unsigned int)(m*sizeof(double)));
         if (a==NULL) { not_enough_memory(); return(-1); }
         se=(double *)muste_malloc((unsigned int)(m*sizeof(double)));
@@ -315,18 +338,23 @@ static int load_data()
 
                 }
 
-            if (unsuitable(&dat,j)) continue;
-            data_load(&dat,j,yvar,&y); if (y==MISSING8) continue;
+            if (unsuitable(&dat,j)) { continue;
+}
+            data_load(&dat,j,yvar,&y); if (y==MISSING8) { continue;
+}
             for (i=0; i<mxvar; ++i)
                 {
-                data_load(&dat,j,xvar[i],&b[i]); if (b[i]==MISSING8) break;
+                data_load(&dat,j,xvar[i],&b[i]); if (b[i]==MISSING8) { break;
+}
                 }
             if (i==mxvar)
                 {
            //   if (kbhit()) { getch(); prind=1-prind; }
            //   if (prind) { muste_sprintf(sbuf,"%ld ",j); sur_print(sbuf); }
-                for (i=0; i<mxvar; ++i) X[(m+1)*n+i+konst]=b[i];
-                if (konst) X[(m+1)*n]=1.0;
+                for (i=0; i<mxvar; ++i) { X[(m+1)*n+i+konst]=b[i];
+}
+                if (konst) { X[(m+1)*n]=1.0;
+}
                 X[(m+1)*n+m]=y;
                 ++n;
                 }
@@ -360,7 +388,8 @@ static int scale_data()
                 }
 
             collength[i]=sqrt(s);
-            for (j=0; j<n; ++j) X[i*n+j]/=collength[i];
+            for (j=0; j<n; ++j) { X[i*n+j]/=collength[i];
+}
             }
         return(1);
         }
@@ -377,7 +406,8 @@ static int save_variables()
         for (j=dat.l1; j<=dat.l2; ++j)
             {
 //          if (kbhit()) { getch(); prind=1-prind; }
-            if (unsuitable(&dat,j)) continue;
+            if (unsuitable(&dat,j)) { continue;
+}
             miss=0;
             data_load(&dat,j,yvar,&x); if (x==MISSING8) { miss=1; }
             for (i=0; i<mxvar; ++i)
@@ -388,13 +418,17 @@ static int save_variables()
                 {
                 muste_sprintf(sbuf,"%d ",j); sur_print(sbuf);
                 }
-            if (miss) x=MISSING8;
+            if (miss) { x=MISSING8;
+}
             if (resvar>=0)
-                { if (!miss) x=res[jn]; data_save(&dat,j,resvar,x); }
+                { if (!miss) { x=res[jn]; 
+}data_save(&dat,j,resvar,x); }
             if (predvar>=0)
-                { if (!miss) x=Y[jn]-res[jn]; data_save(&dat,j,predvar,x); }
+                { if (!miss) { x=Y[jn]-res[jn]; 
+}data_save(&dat,j,predvar,x); }
             if (hatvar>=0)
-                { if (!miss) x=hat[jn]; data_save(&dat,j,hatvar,x); }
+                { if (!miss) { x=hat[jn]; 
+}data_save(&dat,j,hatvar,x); }
             if (studvar>=0)
                 {
                 if (!miss)
@@ -404,7 +438,8 @@ static int save_variables()
                     Rprintf("\nhat=%g %g",hat[jn],x); getch();
                 */
                     x=((1-hat[jn])*rss-res[jn]*res[jn])/(n-m-1);
-                    if (x<=0.0) x=MISSING8; else x=res[jn]/sqrt(x);
+                    if (x<=0.0) { x=MISSING8; } else { x=res[jn]/sqrt(x);
+}
                     }
                 data_save(&dat,j,studvar,x);
                 }
@@ -413,21 +448,28 @@ static int save_variables()
                 if (!miss)
                     {
                     x=1-hat[jn];
-                    if (x<=0.0) x=MISSING8;
-                    else x=res[jn]*sqrt(hat[jn]/m/(rss/(n-m)))/(1-hat[jn]);
+                    if (x<=0.0) { x=MISSING8;
+                    } else { x=res[jn]*sqrt(hat[jn]/m/(rss/(n-m)))/(1-hat[jn]);
+}
                     }
                 data_save(&dat,j,cookvar,x);
                 }
 
-            if (!miss) ++jn;
+            if (!miss) { ++jn;
+}
 
             }
 
-        if (resvar>=0) update_varname(&dat,resvar,"Residual from REGDIAG");
-        if (predvar>=0) update_varname(&dat,predvar,"Predicted value from REGDIAG");
-        if (hatvar>=0) update_varname(&dat,hatvar,"Diagonal of hat matrix from REGDIAG");
-        if (studvar>=0) update_varname(&dat,studvar,"Studentized residual from REGDIAG");
-if (cookvar>=0) update_varname(&dat,cookvar,"Cook's distance (signed sqrt) from REGDIAG");
+        if (resvar>=0) { update_varname(&dat,resvar,"Residual from REGDIAG");
+}
+        if (predvar>=0) { update_varname(&dat,predvar,"Predicted value from REGDIAG");
+}
+        if (hatvar>=0) { update_varname(&dat,hatvar,"Diagonal of hat matrix from REGDIAG");
+}
+        if (studvar>=0) { update_varname(&dat,studvar,"Studentized residual from REGDIAG");
+}
+if (cookvar>=0) { update_varname(&dat,cookvar,"Cook's distance (signed sqrt) from REGDIAG");
+}
         return(1);
         }
 /*****************
@@ -469,12 +511,14 @@ static int save_rg_matrix()
     rg[_const]=(double)konst;
     rg[_const2]=(double)(implicit_constant);
 
-    if (konst || implicit_constant) const0=1; else const0=0; // 12.2.2005
+    if (konst || implicit_constant) { const0=1; } else { const0=0; // 12.2.2005
+}
 
     rg[_df]=(double)(n-m);
     rg[_Yvar]=vy;
     rg[_SST]=(n-1)*vy;
-    if (const0==0) rg[_SST]=ssy; // 10.2.2005
+    if (const0==0) { rg[_SST]=ssy; // 10.2.2005
+}
     rg[_SSE]=rss;
     rg[_SSR]=rg[_SST]-rg[_SSE];
     rg[_MSE]=rss/(n-m);
@@ -530,14 +574,16 @@ static int linreg()
         muste_sprintf(x,"Regression diagnostics on data %s: N=%d",word[1],n);
         print_line(x);
         i=muste_sprintf(x,"Regressand %s  # of regressors=%d",dat.varname[yvar],m);
-        if (konst) muste_sprintf(x+i," (Constant term included)");
+        if (konst) { muste_sprintf(x+i," (Constant term included)");
+}
         print_line(x);
         sur_print("\nSingular value decomposition of X...");
         mat_svd(X,D,V,n,m,1e-16,1e-300);
         sur_print("\nSing.values: "); for (i=0; i<m; ++i)
                          { muste_sprintf(sbuf,"%g ",D[i]); sur_print(sbuf); }
         implicit_constant=0;
-        if(m==mxvar) implicit_constant=check_1(X,n,m);  /* 15.6.1997 */
+        if(m==mxvar) { implicit_constant=check_1(X,n,m);  /* 15.6.1997 */
+}
 
         singular=0;
         cond_number=D[0]/D[m-1];
@@ -546,16 +592,19 @@ static int linreg()
             muste_sprintf(x,"Matrix X of regressors is singular!");
             singular=1;
             }
-        else
+        else {
             muste_sprintf(x,"Condition number of scaled X: k=%g",cond_number);
-        if (implicit_constant)
+}
+        if (implicit_constant) {
             strcat(x,"  Constant term implicitly included.");
+}
         print_line(x);
         compute_hat();
         compute_b();
         compute_res();
         compute_invxtx();
-        for (i=0; i<m; ++i) se[i]=sqrt(invxtx[i+m*i]*rss/(n-m));
+        for (i=0; i<m; ++i) { se[i]=sqrt(invxtx[i+m*i]*rss/(n-m));
+}
 
         compute_vy();
         if (vy==0.0)
@@ -577,7 +626,8 @@ static int compute_hat()
 
         for (j=0; j<n; ++j)
             {
-            s=0; for (i=0; i<m; ++i) s+=X[i*n+j]*X[i*n+j];
+            s=0; for (i=0; i<m; ++i) { s+=X[i*n+j]*X[i*n+j];
+}
             hat[j]=s;
             }
         return(1);
@@ -590,17 +640,20 @@ static int compute_b()
 
         for (i=0; i<m; ++i)
             {
-            if (D[i]<eps) b[i]=0.0; else b[i]=1/D[i];
+            if (D[i]<eps) { b[i]=0.0; } else { b[i]=1/D[i];
+}
             }           /* b temporarily = D+ */
         for (i=0; i<m; ++i)
             {
-            s=0.0; for (j=0; j<n; ++j) s+=X[i*n+j]*Y[j];
+            s=0.0; for (j=0; j<n; ++j) { s+=X[i*n+j]*Y[j];
+}
             res[i]=b[i]*s; /* temp. */
             }
         for (i=0; i<m; ++i)
             {
             s=0.0;
-            for (j=0; j<m; ++j) s+=V[i+m*j]*res[j];
+            for (j=0; j<m; ++j) { s+=V[i+m*j]*res[j];
+}
             b[i]=s;
             }
         return(1);
@@ -614,7 +667,8 @@ static int compute_res()
         for (i=0; i<m; ++i)
             {
             s=0.0;
-            for (j=0; j<n; ++j) s+=X[i*n+j]*Y[j];
+            for (j=0; j<n; ++j) { s+=X[i*n+j]*Y[j];
+}
             a[i]=s;
             }
         rss=0.0;
@@ -622,13 +676,16 @@ static int compute_res()
         for (j=0; j<n; ++j)
             {
             s=Y[j];
-            for (i=0; i<m; ++i) s-=X[i*n+j]*a[i];
+            for (i=0; i<m; ++i) { s-=X[i*n+j]*a[i];
+}
             res[j]=s;
             rss+=s*s;
-            if (j>0) dw+=(s-res[j-1])*(s-res[j-1]);
+            if (j>0) { dw+=(s-res[j-1])*(s-res[j-1]);
+}
             }
 //      if (rss>0.0) dw/=rss;
-        if (rss>1e-25) dw/=rss; else dw=0.0;
+        if (rss>1e-25) { dw/=rss; } else { dw=0.0;
+}
         return(1);
         }
 
@@ -639,14 +696,17 @@ static int compute_invxtx()
 
         for (j=0; j<m; ++j)
             {
-            if (D[j]<eps) s=0.0; else s=1/D[j];
-            for (i=0; i<m; ++i) amm[i+m*j]=s*V[i+m*j];
+            if (D[j]<eps) { s=0.0; } else { s=1/D[j];
+}
+            for (i=0; i<m; ++i) { amm[i+m*j]=s*V[i+m*j];
+}
             }
         for (i=0; i<m; ++i)
             {
             for (j=0; j<m; ++j)
                 {
-                s=0.0; for (k=0; k<m; ++k) s+=amm[i+m*k]*amm[j+m*k];
+                s=0.0; for (k=0; k<m; ++k) { s+=amm[i+m*k]*amm[j+m*k];
+}
                 invxtx[i+m*j]=s;
                 }
             }
@@ -659,12 +719,14 @@ static int compute_reg_corr()
     {
     int i,j;
 
-    for (i=0; i<m; ++i) a[i]=1.0/sqrt(invxtx[(m+1)*i]);
-    for (i=0; i<m; ++i)
+    for (i=0; i<m; ++i) { a[i]=1.0/sqrt(invxtx[(m+1)*i]);
+}
+    for (i=0; i<m; ++i) {
         for (j=0; j<m; ++j)
             {
             invxtx[i+m*j]*=a[i]*a[j];
             }
+}
 //  mprint(invxtx,m,m);
     return(1);
     }
@@ -696,22 +758,25 @@ static int print_coeff()
 
         for (i=0; i<m; ++i)
             {
-            if (konst && i==0) k=muste_sprintf(x,"Constant");
-            else k=muste_sprintf(x,"%8.8s",dat.varname[xvar[i-konst]]);
+            if (konst && i==0) { k=muste_sprintf(x,"Constant");
+            } else { k=muste_sprintf(x,"%8.8s",dat.varname[xvar[i-konst]]);
+}
             fnconv(b[i]/collength[i],ac,sana1);
             *sana2=*sana3=EOS;
             if (!singular)
                 {
                 fnconv(se[i]/collength[i],ac,sana2);
-                if (se[i]<1e-12) strcpy(sana3,"-"); // 16.7.2004
-                else fnconv(b[i]/se[i],ac-3,sana3);
+                if (se[i]<1e-12) { strcpy(sana3,"-"); // 16.7.2004
+                } else { fnconv(b[i]/se[i],ac-3,sana3);
+}
                 }
             k+=muste_sprintf(x+k," %*.*s %*.*s %*.*s",ac,ac,sana1,ac,ac,sana2,ac,ac,sana3);
             print_line(x);
             }
 
         muste_fieldcopy(sana1,dat.varname[yvar],8); sana1[8]=EOS;
-        h=8; while(sana1[h-1]==' ') sana1[--h]=EOS;
+        h=8; while(sana1[h-1]==' ') { sana1[--h]=EOS;
+}
         h=muste_sprintf(x,"Variance of regressand %s",sana1);
         fnconv(vy,accuracy+5,sana1);
         h+=muste_sprintf(x+h,"=%s df=%d",spois(sana1),n-1);
@@ -719,9 +784,10 @@ static int print_coeff()
         fnconv(rss/(n-m),accuracy+5,sana1);
         h=muste_sprintf(x,"Residual variance=%s df=%d",spois(sana1),n-m);
         print_line(x);
-        if (m==mxvar && !implicit_constant) r2_without_c(&a);  /* 27.2.1997 */
+        if (m==mxvar && !implicit_constant) { r2_without_c(&a);  /* 27.2.1997 */
                         /* 15.6.1997 */
-        else a=1.0-rss/((n-1)*vy);
+        } else { a=1.0-rss/((n-1)*vy);
+}
         r_square=a; // 25.1.2005
         fnconv(sqrt(a),accuracy,sana1);
         h=muste_sprintf(x,"R=%s",spois(sana1));
@@ -735,15 +801,17 @@ static int print_coeff()
 
 
              a=dw_probability2();
-             if (a==MISSING8)
+             if (a==MISSING8) {
                  a=dw_probability();
+}
              if (a!=MISSING8)
                  {
                  *sbuf=EOS;
-                 if (a<0.05)
+                 if (a<0.05) {
                      strcpy(sbuf,"Autocorr>0");
-                 else if (a>0.95)
+                 } else if (a>0.95) {
                      strcpy(sbuf,"Autocorr<0");
+}
                  fnconv(a,accuracy,sana1);
                  h+=muste_sprintf(x+h," (P=%s) %s",spois(sana1),sbuf);
                  }
@@ -763,16 +831,18 @@ static int print_coeff()
 
                 a=sqrt(p_dw[i]*(1.0-p_dw[i])/(double)nsimul);
                 muste_sprintf(sana5,"%.*f",accuracy-3,a);
-                if (a==0) strcpy(sana5,"-");
+                if (a==0) { strcpy(sana5,"-");
+}
 
                 muste_sprintf(sbuf,"%3d   %s   %s   %s       %s       %s",
                          i,sana1,sana2,sana3,sana4,sana5);
                 print_line(sbuf);
                 }
-            if (dw_test==1)
+            if (dw_test==1) {
                 print_line("Randomized tests are based on DW values.");
-            else
+            } else {
                 print_line("Randomized tests are based on autocorrelations.");
+}
             }
         return(1);
         }
@@ -803,26 +873,32 @@ static int check_1(double *X,int n,int m) /* 15.6.1997 */
             for (i=0; i<n; ++i)
                 {
                 b=0.0;
-                for (k=0; k<m; ++k) b+=X[i+n*k]*X[j+n*k];
+                for (k=0; k<m; ++k) { b+=X[i+n*k]*X[j+n*k];
+}
                 a+=b;
                 }
-            if (fabs(a-1.0)>1e-10) break;
+            if (fabs(a-1.0)>1e-10) { break;
+}
             }
-        if (j==n) return(1);
+        if (j==n) { return(1);
+}
         return(0);
         }
 
 static int print_line(char *x)
         {
         output_line(x,eout,results_line);
-        if (results_line) ++results_line;
-        if (results_line>r2) results_line=0;
+        if (results_line) { ++results_line;
+}
+        if (results_line>r2) { results_line=0;
+}
         return(1);
         }
 
 static char *spois(char *s)
         {
-        while (*s && *s==' ') ++s;
+        while (*s && *s==' ') { ++s;
+}
         return(s);
         }
 
@@ -845,11 +921,13 @@ static double dw_probability()
 
     dp=MISSING8;
     i=spfind("DWR");
-    if (i<0) return(MISSING8);
+    if (i<0) { return(MISSING8);
+}
     nsimul=atol(spb[i]);
 
     i=spfind("DWDATA");
-    if (i>=0) dwdata=atoi(spb[i]);
+    if (i>=0) { dwdata=atoi(spb[i]);
+}
 
 // Rprintf("\nnsimul=%ld|",nsimul); getch();
 // Rprintf("\nn=%d res1=%g resn=%g|",n,res[0],res[n-1]); getch();
@@ -860,7 +938,8 @@ static double dw_probability()
         }
     dw_stat(res,n,rss,&dw0);
 
-    if (dwdata) dw_data=muste_fopen("DWDATA.TXT","wt");
+    if (dwdata) { dw_data=muste_fopen("DWDATA.TXT","wt");
+}
     spec_rnd();
     ln1=0L;
     for (ln=0L; ln<nsimul; ++ln)
@@ -873,11 +952,14 @@ static double dw_probability()
             a=res[k]; res[k]=res[j]; res[j]=a;
             }
         dw_stat(res,n,rss,&dw);
-         if (dwdata) fprintf(dw_data,"%g\n",dw);
-        if (dw<dw0) ++ln1;
+         if (dwdata) { fprintf(dw_data,"%g\n",dw);
+}
+        if (dw<dw0) { ++ln1;
+}
 // Rprintf("%g ",dw);
         }
-    if (dwdata) muste_fclose(dw_data);
+    if (dwdata) { muste_fclose(dw_data);
+}
     dp=(double)ln1/(double)nsimul;
 
     return(dp);
@@ -915,11 +997,12 @@ static double dw_probability2()
     spec_rnd(); // 26.7.2011/SM
     dp=MISSING8;
     i=spfind("DWN");
-    if (i>=0) dw_test=1;
-    else
+    if (i>=0) { dw_test=1;
+    } else
         {
         i=spfind("RN");
-        if (i<0) return(MISSING8);
+        if (i<0) { return(MISSING8);
+}
         dw_test=0;
         }
     nsimul=atol(spb[i]);
@@ -931,9 +1014,12 @@ static double dw_probability2()
 
     maxlag=0;
     i=spfind("MAXLAG");
-    if (i<0) i=spfind("AUTOCORR");
-    if (i>=0) maxlag=atoi(spb[i]);
-    if (maxlag>MAXLAG-1) maxlag=MAXLAG-1;
+    if (i<0) { i=spfind("AUTOCORR");
+}
+    if (i>=0) { maxlag=atoi(spb[i]);
+}
+    if (maxlag>MAXLAG-1) { maxlag=MAXLAG-1;
+}
 
     if (maxlag)
         {
@@ -945,7 +1031,8 @@ static double dw_probability2()
     rss0=rss;
 
     i=spfind("DWDATA");
-    if (i>=0) dwdata=atoi(spb[i]);
+    if (i>=0) { dwdata=atoi(spb[i]);
+}
 
     muste_sprintf(sbuf,"\n\nP value for DW by simulation: %d replicates...",
                                                  nsimul);
@@ -955,51 +1042,63 @@ static double dw_probability2()
 
     spec_rnd();
 
-    if (dwdata) dw_data=muste_fopen("DWDATA.TXT","wt");
+    if (dwdata) { dw_data=muste_fopen("DWDATA.TXT","wt");
+}
 
     ln1=0L;
     for (ln=0L; ln<nsimul; ++ln)
         {
-        for (j=0; j<n; ++j)
+        for (j=0; j<n; ++j) {
             Y[j]=normal_dev();
+}
         mtm1(b,X,Y,n,m);
         mat_mlt(res,X,b,n,m,1);
-        for (j=0; j<n; ++j) res[j]=Y[j]-res[j];
+        for (j=0; j<n; ++j) { res[j]=Y[j]-res[j];
+}
         s1=s2=0.0;
         for (j=0; j<n; ++j)
             {
             s=res[j];
             s1+=s*s;
-            if (j>0) s2+=(s-res[j-1])*(s-res[j-1]);
+            if (j>0) { s2+=(s-res[j-1])*(s-res[j-1]);
+}
             }
         rss=s1;
         dw=s2/s1;
-        if (dwdata) fprintf(dw_data,"%g\n",dw);
-        if (dw<dw0) ++ln1;
+        if (dwdata) { fprintf(dw_data,"%g\n",dw);
+}
+        if (dw<dw0) { ++ln1;
+}
         if (maxlag)
             {
             if (dw_test)
                 {
                 dw_lagged();
-                for (i=1; i<=maxlag; ++i)
-                    if (dwk[i]>=dwk0[i]) ++lcn1[i];
+                for (i=1; i<=maxlag; ++i) {
+                    if (dwk[i]>=dwk0[i]) { ++lcn1[i];
+}
+}
                 }
             else
                 {
                 autocorr();
-                for (i=1; i<=maxlag; ++i)
-                    if (corr[i]<corr0[i]) ++lcn1[i];
+                for (i=1; i<=maxlag; ++i) {
+                    if (corr[i]<corr0[i]) { ++lcn1[i];
+}
+}
                 }
             }
         }
-    if (dwdata) muste_fclose(dw_data);
+    if (dwdata) { muste_fclose(dw_data);
+}
     dw=dw0;
     dp=(double)ln1/(double)nsimul;
     rss=rss0;
     if (maxlag)
         {
-        for (i=1; i<=maxlag; ++i)
+        for (i=1; i<=maxlag; ++i) {
             p_dw[i]=(double)lcn1[i]/(double)nsimul;
+}
         }
     return(dp);
     }
@@ -1012,7 +1111,8 @@ static int dw_lagged()
     double resj;
     double a;
 
-    for (k=1; k<=maxlag; ++k) dwk[k]=0.0;
+    for (k=1; k<=maxlag; ++k) { dwk[k]=0.0;
+}
 
     for (j=0; j<n; ++j)
         {
@@ -1022,7 +1122,8 @@ static int dw_lagged()
             if (j+k<n) { a=resj-res[j+k]; dwk[k]+=a*a; }
             }
         }
-    for (k=1; k<=maxlag; ++k) dwk[k]/=rss;
+    for (k=1; k<=maxlag; ++k) { dwk[k]/=rss;
+}
     return(1);
     }
 
@@ -1032,15 +1133,18 @@ static int autocorr()
     int k;
     double resj;
 
-    for (k=1; k<=maxlag; ++k) corr[k]=0.0;
+    for (k=1; k<=maxlag; ++k) { corr[k]=0.0;
+}
 
     for (j=0; j<n; ++j)
         {
         resj=res[j];
-        for (k=1; k<=maxlag; ++k)
+        for (k=1; k<=maxlag; ++k) {
             corr[k]+=resj*res[j+k];  // res-lopussa ainakin k kpl nollia
+}
         }
-    for (k=1; k<=maxlag; ++k) corr[k]/=rss;
+    for (k=1; k<=maxlag; ++k) { corr[k]/=rss;
+}
     return(1);
     }
 

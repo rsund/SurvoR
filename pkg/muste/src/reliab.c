@@ -100,10 +100,14 @@ LSum=0;
 
     s_init(argv);
     spec_init(r1+r-1);
-    i=check_parameters(); if (i<0) return;
-    i=check_specifications(); if (i<0) return;
-    i=allocate_memory(); if (i<0) return;
-    i=compute_weights(); if (i<0) return;
+    i=check_parameters(); if (i<0) { return;
+}
+    i=check_specifications(); if (i<0) { return;
+}
+    i=allocate_memory(); if (i<0) { return;
+}
+    i=compute_weights(); if (i<0) { return;
+}
     reliabilities();
     free_spaces();
     s_end(argv);
@@ -120,13 +124,15 @@ static int check_parameters (void)
     }
     results_line=0; model=1; alpha=0;
     i=matrix_load(word[1],&CORR,&mX,&j,&rlab,&clabR,&lr,&lc,&type,expr);
-    if (i<0) return -1;
+    if (i<0) { return -1;
+}
     if (j!=mX) {
         muste_kv_s_err("%s is not a proper correlation matrix!",word[1]);
         return -1;
     }
     i=matrix_load(word[2],&FACT,&j,&nF,&rlab,&clabF,&lr,&lc,&type,expr);
-    if (i<0) return -1;
+    if (i<0) { return -1;
+}
     if (j!=mX) {
         muste_kv_s_err("Correlation matrix and factor matrix are incompatible!");
         return -1;
@@ -135,7 +141,8 @@ static int check_parameters (void)
         i=muste_kv_edline(word[3],1,0);
         if (i==0) { /* no such edit line found! => matrix? */
             i=matrix_load(word[3],&RFACT,&j,&k,&rlab,&clab,&lr,&lc,&type,expr);
-            if (i<0) return -1;
+            if (i<0) { return -1;
+}
             model=2;
             if (j!=k) {
                 muste_kv_s_err("%s is not a proper factor correlation matrix!", word[3]);
@@ -174,7 +181,8 @@ static int check_specifications(void)
     if ((j>=0) && (strcmp(spb[j],"0"))) {
         strcpy(weight,spb[j]);
         i=matrix_load(weight,&COEFF,&k,&nW,&rlabW,&clabW,&lr,&lc,&type,expr);
-        if (i<0) return -1;
+        if (i<0) { return -1;
+}
         model+=2;
         if (k-1!=mX && k!=mX ) {
             muste_kv_s_err("Incompatible dimensions in coefficient matrix %s!",weight);
@@ -186,7 +194,8 @@ static int check_specifications(void)
             strcpy(sbuf,spb[j]);
             strcat(weight,"*"); strcat(weight,sbuf);
             i=matrix_load(sbuf,&COEFF2,&k,&nW2,&rlab,&clabW2,&lr,&lc,&type,expr);
-            if (i<0) return -1;
+            if (i<0) { return -1;
+}
             model+=2;
             if (k-1!=nW && k!=nW ) {
                 muste_kv_s_err("Incompatible dimensions in coefficient matrix %s!",spb[j]);
@@ -196,20 +205,25 @@ static int check_specifications(void)
         }
     }
     j=spfind("RESULTS");
-    if (j>=0) results=atoi(spb[j]);
+    if (j>=0) { results=atoi(spb[j]);
+}
 
     j=spfind("MSN_for_Cronbach's_alpha");
-    if (j<0) j=spfind("MSN"); /* 9.12.93 */
+    if (j<0) { j=spfind("MSN"); /* 9.12.93 */
+}
     if (j>=0) {
         alpha=1;
         if (*spb[j]=='*') {
             MSN=(double *)muste_malloc(mX*2*sizeof(double));
             if (MSN==NULL) { no_memory(); return -1; }
-            for (i=0; i<mX; i++) for (j=0; j<2; j++)
+            for (i=0; i<mX; i++) { for (j=0; j<2; j++) {
                 MSN[i+mX*j]=(double)j; /* j=0: mean, j=1: stddev */
+}
+}
         } else {
             i=matrix_load(spb[j],&MSN,&k,&n,&rlab,&clab,&lr,&lc,&type,expr);
-            if (i<0) return -1;
+            if (i<0) { return -1;
+}
             if (n<2 || n>3) {
                 muste_kv_s_err("%s is not a proper MSN-matrix!",spb[j]);
                 return -1;
@@ -220,7 +234,8 @@ static int check_specifications(void)
             }
         }
         i=matrix_load(word[1],&COV,&mX,&n,&rlab,&clab,&lr,&lc,&type,expr);
-        if (i<0) return -1;
+        if (i<0) { return -1;
+}
     }
 
     simul=0;
@@ -249,21 +264,29 @@ static int allocate_memory(void)
     if (NO_RFACT) { /* create identity matrix */
         RFACT=(double *)muste_malloc(nF*nF*sizeof(double));
         if (RFACT==NULL) { no_memory(); return -1; }
-        for (i=0; i<nF; i++) for (j=0; j<nF; j++)
-            if (i==j) RFACT[i+nF*j]=1.0;
-            else RFACT[i+nF*j]=0.0;
+        for (i=0; i<nF; i++) { for (j=0; j<nF; j++) {
+            if (i==j) { RFACT[i+nF*j]=1.0;
+            } else { RFACT[i+nF*j]=0.0;
+}
+}
+}
     } else { /* check given factor correlation matrix */
         chsum=0.0;
-        for (i=0; i<nF; i++) for (j=0; j<nF; j++)
+        for (i=0; i<nF; i++) { for (j=0; j<nF; j++) {
             chsum+=RFACT[i+nF*j];
-        if (chsum!=nF) orthogonal=0; /* not an identity matrix */
+}
+}
+        if (chsum!=nF) { orthogonal=0; /* not an identity matrix */
+}
     }
     if (orthogonal) {
-        for (i=0; i<mX; i++) for (j=0; j<nF; j++)
+        for (i=0; i<mX; i++) { for (j=0; j<nF; j++) {
           if (FACT[i+mX*j] > 1.0) {
               muste_kv_s_err("Error: factor loading > 1.0 in element (%d,%d) of factor matrix!",i+1,j+1);
               return -1;
           }
+}
+}
     }
     FT=(double *)muste_malloc(mX*nF*sizeof(double));
     if (FT==NULL) { no_memory(); return -1; }
@@ -287,30 +310,37 @@ static int compute_weights(void)
     int i,j,k,l;
     double a;
 
-    if (!WEIGHTED) return 1;
+    if (!WEIGHTED) { return 1;
+}
     if (WEIGHTED2) { /* 2nd order scale */
         COEF=(double *)muste_malloc((mX+1)*nW2*sizeof(double));
         if (COEF==NULL) { no_memory(); return -1; }
-        for (i=0; i<mX+1; i++) for (j=0; j<nW2; j++)
+        for (i=0; i<mX+1; i++) { for (j=0; j<nW2; j++) {
             COEF[i+(mX+1)*j]=0.0;
+}
+}
         for (i=1; i<mX+1; i++) {
             for (j=0; j<nW2; j++) {
                 a=0.0;
                 if (wdim==mX) {
                     if (w2dim==nW) {
-                        for (k=0,l=0; k<nW && l<nW; k++,l++)
+                        for (k=0,l=0; k<nW && l<nW; k++,l++) {
                             a+=COEFF[(i-1)+mX*k]*COEFF2[(l+0)+nW*j];
+}
                     } else {
-                        for (k=0,l=0; k<nW && l<nW; k++,l++)
+                        for (k=0,l=0; k<nW && l<nW; k++,l++) {
                             a+=COEFF[(i-1)+mX*k]*COEFF2[(l+1)+(nW+1)*j];
+}
                     }
                 } else {
                     if (w2dim==nW) {
-                        for (k=0,l=0; k<nW && l<nW; k++,l++)
+                        for (k=0,l=0; k<nW && l<nW; k++,l++) {
                             a+=COEFF[i+(mX+1)*k]*COEFF2[(l+0)+nW*j];
+}
                     } else {
-                        for (k=0,l=0; k<nW && l<nW; k++,l++)
+                        for (k=0,l=0; k<nW && l<nW; k++,l++) {
                             a+=COEFF[i+(mX+1)*k]*COEFF2[(l+1)+(nW+1)*j];
+}
                     }
                 }
                 COEF[i+(mX+1)*j]=a;
@@ -335,8 +365,9 @@ static int compute_weights(void)
         for (i=0; i<mX+1; i++) {
             for (j=0; j<nW; j++) {
                 if (wdim==mX) {
-                    if (i==0) COEF[i+(mX+1)*j]=0.0;
-                    else      COEF[i+(mX+1)*j]=COEFF[(i-1)+mX*j];
+                    if (i==0) { COEF[i+(mX+1)*j]=0.0;
+                    } else {      COEF[i+(mX+1)*j]=COEFF[(i-1)+mX*j];
+}
                 } else {
                               COEF[i+(mX+1)*j]=COEFF[i+(mX+1)*j];
                 }
@@ -349,12 +380,17 @@ static int compute_weights(void)
 static void free_spaces(void)
 {
     if (alpha) { muste_free(COV); muste_free(MSN); muste_free(COVd); }
-    if (WEIGHTED) muste_free(COEF);
+    if (WEIGHTED) { muste_free(COEF);
+}
     muste_free(FC); muste_free(RCOVd); muste_free(TMP); muste_free(FT);
-    if (NO_RFACT) muste_free(RFACT);
-    if (WEIGHTED2) muste_free(COEFF2);
-    if (WEIGHTED) muste_free(COEFF);
-    if (!NO_RFACT) muste_free(RFACT);
+    if (NO_RFACT) { muste_free(RFACT);
+}
+    if (WEIGHTED2) { muste_free(COEFF2);
+}
+    if (WEIGHTED) { muste_free(COEFF);
+}
+    if (!NO_RFACT) { muste_free(RFACT);
+}
     muste_free(FACT); muste_free(CORR);
 }
 
@@ -373,19 +409,28 @@ static int reliabilities(void)
     mat_transp(FT,FACT,mX,nF);
     mat_mlt(TMP,FACT,RFACT,mX,nF,nF);
     mat_mlt(RCOV,TMP,FT,mX,nF,mX);
-    for (i=0; i<mX; i++) for (j=0; j<mX; j++)
+    for (i=0; i<mX; i++) { for (j=0; j<mX; j++) {
         RCOV[i+mX*j]=CORR[i+mX*j]-RCOV[i+mX*j];
+}
+}
     for (i=0,j=0; i<mX; i++,j++) {
         RCOVd[i]=RCOV[i+mX*j];
-        if (RCOVd[i] < 0.0) errorneous=1;
+        if (RCOVd[i] < 0.0) { errorneous=1;
+}
     }
     /* row&col multiply to get residual corr.matrix */
-    for (i=0; i<mX; i++) for (j=0; j<mX; j++)
-        if (RCOVd[i]<=0.0) CORR[i+mX*j]=0.0;
-        else CORR[i+mX*j]=RCOV[i+mX*j]/sqrt(RCOVd[i]);
-    for (i=0; i<mX; i++) for (j=0; j<mX; j++)
-        if (RCOVd[i]<=0.0) CORR[i*mX+j]=0.0;
-        else CORR[i*mX+j]/=sqrt(RCOVd[i]);
+    for (i=0; i<mX; i++) { for (j=0; j<mX; j++) {
+        if (RCOVd[i]<=0.0) { CORR[i+mX*j]=0.0;
+        } else { CORR[i+mX*j]=RCOV[i+mX*j]/sqrt(RCOVd[i]);
+}
+}
+}
+    for (i=0; i<mX; i++) { for (j=0; j<mX; j++) {
+        if (RCOVd[i]<=0.0) { CORR[i*mX+j]=0.0;
+        } else { CORR[i*mX+j]/=sqrt(RCOVd[i]);
+}
+}
+}
     save_resmats();
 
     output_open(eout);
@@ -397,40 +442,52 @@ static int reliabilities(void)
     strcpy(sbuf,"E2: errors do not correlate; E3: errors may correlate.");
     print_line();
 
-    if (alpha) do_cov_matrix(); /* 29.2.2000 */
+    if (alpha) { do_cov_matrix(); /* 29.2.2000 */
+}
 
-    if (WEIGHTED)  up_lim=nW;
-    if (WEIGHTED2) up_lim=nW2;
-    if (NORMAL12)  up_lim=nF;
+    if (WEIGHTED) {  up_lim=nW;
+}
+    if (WEIGHTED2) { up_lim=nW2;
+}
+    if (NORMAL12) {  up_lim=nF;
+}
 
     for (k=0; k<=up_lim; k++) {
         if (k<up_lim) {
             if (WEIGHTED) {
-                for (i=0; i<mX; i++) FC[i]=COEF[(i+1)+(mX+1)*k]; /* skip constant! */
-                if (WEIGHTED2) muste_fieldcopy(lab,&clabW2[lc*k],lc);
-                          else muste_fieldcopy(lab,&clabW [lc*k],lc);
+                for (i=0; i<mX; i++) { FC[i]=COEF[(i+1)+(mX+1)*k]; /* skip constant! */
+}
+                if (WEIGHTED2) { muste_fieldcopy(lab,&clabW2[lc*k],lc);
+                          } else { muste_fieldcopy(lab,&clabW [lc*k],lc);
+}
                 lab[lc]='\0'; trim2(lab);
             }
             if (NORMAL12) {
-                for (i=0; i<mX; i++) FC[i]=FACT[i+mX*k];
+                for (i=0; i<mX; i++) { FC[i]=FACT[i+mX*k];
+}
                 muste_fieldcopy(lab,&clabF[lc*k],lc);
                 lab[lc]='\0'; trim2(lab);
                 if (simul) {
                     a=0.0;
-                    for (i=0; i<mX; i++) a+=FC[i]*FC[i];
+                    for (i=0; i<mX; i++) { a+=FC[i]*FC[i];
+}
                     fprintf(outfile, "L\\%s %.10f\n",lab,a);
                     LSum+=a;
                 }
             }
         } else { /* last round for the unweighted sums only */
-            if (WEIGHTED) break;
-            for (i=0; i<mX; i++) FC[i]=1.0;
+            if (WEIGHTED) { break;
+}
+            for (i=0; i<mX; i++) { FC[i]=1.0;
+}
             strcpy(lab,"Sum");
-            if (simul) fprintf(outfile, "L\\%s %.10f\n",lab,LSum);
+            if (simul) { fprintf(outfile, "L\\%s %.10f\n",lab,LSum);
+}
         }
         if (alpha) {
             rxx=compute_alpha();
-            if (simul) fprintf(outfile, "a\\%s %.10f\n",lab,rxx);
+            if (simul) { fprintf(outfile, "a\\%s %.10f\n",lab,rxx);
+}
             fnconv(rxx,accuracy,alph);
             trim1(alph); trim2(alph);
         }
@@ -442,8 +499,9 @@ static int reliabilities(void)
 
         for (l=0; l<2; l++) {
             if (l==0) {
-                for (i=0; i<mX; i++)
+                for (i=0; i<mX; i++) {
                     TMP[i]=FC[i]*RCOVd[i];
+}
                 muste_sprintf(mod,"%s\\E2", lab);
             } else {
                 mat_mlt(TMP,FC,RCOV,1,mX,mX);
@@ -451,7 +509,8 @@ static int reliabilities(void)
             }
             mat_mlt(&b,TMP,FC,1,mX,1);
             rxx=1.0/(1.0+b/a);
-            if (simul) fprintf(outfile, "%s %.10f\n",mod,rxx);
+            if (simul) { fprintf(outfile, "%s %.10f\n",mod,rxx);
+}
             fnconv(rxx,accuracy,reli);
             if (l==0) { /* first items on line */
                 muste_sprintf(sbuf,"%s=%s ",mod,trim1(reli));
@@ -466,7 +525,8 @@ static int reliabilities(void)
             }
         }
     }
-    if (simul) muste_fclose(outfile);
+    if (simul) { muste_fclose(outfile);
+}
     output_close(eout);
     add_loadms();
     return 1;
@@ -475,21 +535,27 @@ static int reliabilities(void)
 static void print_line(void)
 {
     int res_line;
-    if (results<31) res_line=0; else res_line=results_line;
-    if (results>=0) output_line(sbuf,eout,res_line);
-    if (res_line) ++results_line;
+    if (results<31) { res_line=0; } else { res_line=results_line;
+}
+    if (results>=0) { output_line(sbuf,eout,res_line);
+}
+    if (res_line) { ++results_line;
+}
 }
 
 static char *trim1(char *s) /* remove spaces from the beginning */
 {
-    while(*s==' ') ++s;
+    while(*s==' ') { ++s;
+}
     return(s);
 }
 
 static void trim2(char *s) /* remove spaces from the end */
 {
-    while(*s) s++; s--;
-    while(*s==' ') s--; s++;
+    while(*s) { s++; 
+}s--;
+    while(*s==' ') { s--; 
+}s++;
     *s='\0';
 }
 
@@ -503,8 +569,10 @@ static void save_resmats(void)
 
 static void add_loadms(void)
 {
-    if (results_line==0) return; /* 29.2.2000 */
-    if (results<31) return;
+    if (results_line==0) { return; /* 29.2.2000 */
+}
+    if (results<31) { return;
+}
     if (errorneous) {
         strcpy(sbuf,"At least one communality was greater than 1, which implies");
         write_line();
@@ -548,8 +616,9 @@ static double compute_alpha(void)
     double a,b;
 
     a=0.0; b=0.0;
-    for (i=0; i<mX; i++)
+    for (i=0; i<mX; i++) {
         a+=FC[i]*COVd[i]*FC[i];
+}
 
     mat_mlt(TMP,FC,COV,1,mX,mX);
     mat_mlt(&b,TMP,FC,1,mX,1);

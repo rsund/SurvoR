@@ -49,7 +49,8 @@ double sis_tulo(double *a, double *b, int sa, int sb, int n)
 {
     int i;
     double c = 0.0;
-    for (i = 0; i < n; i++) c += a[i*sa] * b[i*sb];
+    for (i = 0; i < n; i++) { c += a[i*sa] * b[i*sb];
+}
     return c;
 }
 
@@ -62,18 +63,19 @@ int ortholin1(double *a,int n,int m,double *b,int k,double eps,double *x,int imp
         int g,h,i,j,l,ll,mm;
         double s,t;
 
-        if (!improvement) u=a;
-        else
+        if (!improvement) { u=a;
+        } else
             {
             u=(double *)muste_malloc((unsigned int)m*n*sizeof(double));
             if (u==NULL) { not_enough_memory(); return(-1); }
-            for (i=0; i<n; ++i)
+            for (i=0; i<n; ++i) {
                 for (j=0; j<m; ++j)
                     {
                     double xxx;
                     xxx=a[i+n*j];
                     u[i+n*j]=xxx;
                     }
+}
             }
         p=(double *)muste_malloc(n*sizeof(double));
         if (p==NULL) { not_enough_memory(); return(-1); }
@@ -95,18 +97,21 @@ int ortholin1(double *a,int n,int m,double *b,int k,double eps,double *x,int imp
             for (g=0; g<k; ++g)
                 {
                 t=0.0;
-                for (j=0; j<n; ++j)
+                for (j=0; j<n; ++j) {
                     t+=p[j]*b[j+n*g];
+}
                 x[i+m*g]=t;
                 }
             for (g=i+1; g<m; ++g)
                 {
                 t=0.0;
-                for (j=0; j<n; ++j)
+                for (j=0; j<n; ++j) {
                     t+=p[j]*u[j+n*g];
+}
                 q[++l]=t; t/=s;
-                for (j=0; j<n; ++j)
+                for (j=0; j<n; ++j) {
                     u[j+n*g]-=p[j]*t;
+}
                 }
             }
         ll=l; mm=m+2;
@@ -116,10 +121,12 @@ int ortholin1(double *a,int n,int m,double *b,int k,double eps,double *x,int imp
             for (j=0; j<k; ++j)
                 {
                 s=x[i+m*j];
-                for (g=i+1; g<m; ++g)
+                for (g=i+1; g<m; ++g) {
                     s-=q[g+h]*x[g+m*j];
+}
                 x[i+m*j]=s=s/t;
-                if (j==0) px[i]=s;
+                if (j==0) { px[i]=s;
+}
                 }
             l+=i+1-mm;
             }
@@ -154,16 +161,18 @@ int ortholin1(double *a,int n,int m,double *b,int k,double eps,double *x,int imp
                     for (j=0; j<m; ++j)
                         {
                         s=0.0;
-                        for (g=0; g<n; ++g)
+                        for (g=0; g<n; ++g) {
                             s+=u[g+n*j]*p[g];
+}
                         pp[j]=s;
                         }
 
                     for (j=m-1; j>=0; --j)
                         {
                         h=l-j; s=pp[j];
-                        for (g=j+1; g<m; ++g)
+                        for (g=j+1; g<m; ++g) {
                             s-=q[g+h]*pp[g];
+}
                         pp[j]=s=s/q[l]; s1+=s*s;
                         t=px[j]; s2+=t*t;
                         px[j]=s+t; l+=j+1-mm;
@@ -182,7 +191,8 @@ int ortholin1(double *a,int n,int m,double *b,int k,double eps,double *x,int imp
                         double xxx;
                         xxx=px[j];
                         x[j+m*i]=xxx;
-                        if (i!=k-1) px[j]=x[j+m*g];
+                        if (i!=k-1) { px[j]=x[j+m*g];
+}
                         }
                     break;
                     } /* while */
@@ -206,8 +216,9 @@ static int mat_mlt_Hilbert(double *y,double *x,int n)  // y=H*x
     for (j=0; j<n; ++j)
         {
         s=0.0;
-        for (i=0; i<n; ++i)
+        for (i=0; i<n; ++i) {
             s+=x[i]/(double)(i+j+1);
+}
         y[j]=s;
         }
     return(1);
@@ -235,11 +246,13 @@ int mat_lanczos(double *aa,double *alfa,double *beta,int n,int j,int jmax,double
             w=(double *)muste_malloc((n+1)*sizeof(double));
             u=(double *)muste_malloc((n+1)*sizeof(double));
 
-            for (i=0; i<n+1; ++i) v[i]=w[i]=0.0;
+            for (i=0; i<n+1; ++i) { v[i]=w[i]=0.0;
+}
             beta[0]=1.0; j=0;
 
             t=1.0/sqrt((double)n);
-            for (i=1; i<=n; ++i) w[i]=ww[i-1]=t;
+            for (i=1; i<=n; ++i) { w[i]=ww[i-1]=t;
+}
 
             }
         while (beta[j]!=0.0 && j<jmax)
@@ -260,11 +273,14 @@ int mat_lanczos(double *aa,double *alfa,double *beta,int n,int j,int jmax,double
                 mat_mlt_Hilbert(u+1,w+1,n);
                 sur_print(")");
                 }
-            else
+            else {
                 mat_mlt(u+1,aa,w+1,n,n,1);
-            for (i=1; i<=n; ++i) v[i]+=u[i];
+}
+            for (i=1; i<=n; ++i) { v[i]+=u[i];
+}
             ++j;
-            t=0.0; for (i=1; i<=n; ++i) t+=w[i]*v[i]; alfa[j]=t;
+            t=0.0; for (i=1; i<=n; ++i) { t+=w[i]*v[i]; 
+}alfa[j]=t;
 // Rprintf("\nj=%d alfa=%g",j,alfa[j]);
             s=0.0;
             for (i=1; i<=n; ++i)
@@ -285,8 +301,9 @@ static double pythag(double a,double b)
     double absa,absb;
 
     absa=fabs(a); absb=fabs(b);
-    if (absa>absb) return( absa*sqrt(1.0+absb/absa*absb/absa));
-    else return(absb==0.0 ? 0.0 : absb*sqrt(1.0+absa/absb*absa/absb));
+    if (absa>absb) { return( absa*sqrt(1.0+absb/absa*absb/absa));
+    } else { return(absb==0.0 ? 0.0 : absb*sqrt(1.0+absa/absb*absa/absb));
+}
     }
 
 int mat_tqlb(double *d, double *e, int n, double *z)
@@ -295,7 +312,8 @@ int mat_tqlb(double *d, double *e, int n, double *z)
     int m,l,iter,i,k;
     double s,r,p,g,f,dd,c,b;
 
-    for (i=1; i<n; ++i) e[i-1]=e[i];
+    for (i=1; i<n; ++i) { e[i-1]=e[i];
+}
     e[n-1]=0.0;
     for (l=0; l<n; ++l)
       {
@@ -305,7 +323,8 @@ int mat_tqlb(double *d, double *e, int n, double *z)
         for (m=l; m<n-1; ++m)
           {
           dd=fabs(d[m])+fabs(d[m+1]);
-          if (fabs(e[m])+dd==dd) break;
+          if (fabs(e[m])+dd==dd) { break;
+}
           }
         if (m!=l)
           {
@@ -336,15 +355,17 @@ int mat_tqlb(double *d, double *e, int n, double *z)
               r=(d[i]-g)*s+2.0*c*b;
               d[i+1]=g+(p=s*r);
               g=c*r-b;
-            if (z!=NULL) // 15.7.2005  ei ominaisvektoreita, jos z=NULL
+            if (z!=NULL) { // 15.7.2005  ei ominaisvektoreita, jos z=NULL
               for (k=0; k<n; ++k)
                 {
                 f=z[k+n*(i+1)];
                 z[k+n*(i+1)]=s*z[k+n*i]+c*f;
                 z[k+n*i]=c*z[k+n*i]-s*f;
                 }
+}
               }
-          if (r==0.0 && i>=1) continue;
+          if (r==0.0 && i>=1) { continue;
+}
           d[l]-=p;
           e[l]=g;
           e[m]=0.0;
@@ -362,21 +383,23 @@ int mat_tqlb(double *d, double *e, int n, double *z)
         int j;
 
         k=i; p=d[i];
-        for (j=i+1; j<n; ++j)
+        for (j=i+1; j<n; ++j) {
             if (d[j]>p)
                 {
                 k=j; p=d[j];
                 }
+}
         if (k!=i)
             {
             d[k]=d[i]; d[i]=p;
-          if (z!=NULL)
+          if (z!=NULL) {
             for (j=0; j<n; ++j)
                 {
                 double xxx;
 
                 p=z[j+n*i]; xxx=z[j+n*k]; z[j+n*i]=xxx; z[j+n*k]=p;
                 }
+}
             }
         }
 
@@ -397,9 +420,12 @@ static int ludcmp(double *a,int n,int *indx,double *d)
     for (i=0; i<n; ++i)
       {
       big=0.0;
-      for (j=0; j<n; ++j)
-        if ((temp=fabs(a[i+n*j]))>big) big=temp;
-      if (big==0.0) return(-1);
+      for (j=0; j<n; ++j) {
+        if ((temp=fabs(a[i+n*j]))>big) { big=temp;
+}
+}
+      if (big==0.0) { return(-1);
+}
       vv[i]=1.0/big;
       }
     for (j=0; j<n; ++j)
@@ -407,13 +433,15 @@ static int ludcmp(double *a,int n,int *indx,double *d)
       for (i=0; i<j; ++i)
         {
         sum=a[i+n*j];
-        for (k=0; k<i; ++k) sum-=a[i+n*k]*a[k+n*j];
+        for (k=0; k<i; ++k) { sum-=a[i+n*k]*a[k+n*j];
+}
         a[i+n*j]=sum;
         }
       big=0.0;
       for (i=j; i<n; ++i)
         {
-        sum=a[i+n*j];for (k=0; k<j; ++k) sum-=a[i+n*k]*a[k+n*j];
+        sum=a[i+n*j];for (k=0; k<j; ++k) { sum-=a[i+n*k]*a[k+n*j];
+}
         a[i+n*j]=sum;
         if ((dum=vv[i]*fabs(sum)) >= big) { big=dum; imax=i; }
         }
@@ -434,7 +462,8 @@ static int ludcmp(double *a,int n,int *indx,double *d)
       if (j!=n-1)
         {
         dum=1.0/a[j+n*j];
-        for (i=j+1; i<n; ++i) a[i+n*j]*=dum;
+        for (i=j+1; i<n; ++i) { a[i+n*j]*=dum;
+}
         }
       } // j
     return(1);
@@ -450,16 +479,19 @@ static int lubksb(double *a, int n, int *indx, double *b)
       ip=indx[i];
       sum=b[ip];
       b[ip]=b[i];
-      if (ii!=0)
-        for (j=ii-1; j<i; ++j) sum-=a[i+n*j]*b[j];
-      else if (sum!=0.0)
+      if (ii!=0) {
+        for (j=ii-1; j<i; ++j) { sum-=a[i+n*j]*b[j];
+}
+      } else if (sum!=0.0) {
         ii=i+1;
+}
       b[i]=sum;
       }
     for (i=n-1; i>=0; --i)
       {
       sum=b[i];
-      for (j=i+1; j<n; ++j) sum-=a[i+n*j]*b[j];
+      for (j=i+1; j<n; ++j) { sum-=a[i+n*j]*b[j];
+}
       b[i]=sum/a[i+n*i];
       }
     return(1);
@@ -491,11 +523,12 @@ int mat_treb(double *a, int n, double *d, double *e)
       h=scale=0.0;
       if (l>0)
         {
-        for (k=0; k<l+1; ++k)
+        for (k=0; k<l+1; ++k) {
             scale+=fabs(a[i+n*k]);
-        if (scale==0.0)
+}
+        if (scale==0.0) {
             e[i]=a[i+n*l];
-        else
+        } else
             {
             for (k=0; k<l+1; ++k)
               {
@@ -512,10 +545,12 @@ int mat_treb(double *a, int n, double *d, double *e)
               {
               a[j+n*i]=a[i+n*j]/h;
               g=0.0;
-              for (k=0; k<j+1; ++k)
+              for (k=0; k<j+1; ++k) {
                   g+=a[j+n*k]*a[i+n*k];
-              for (k=j+1; k<l+1; ++k)
+}
+              for (k=j+1; k<l+1; ++k) {
                   g+=a[k+n*j]*a[i+n*k];
+}
               e[j]=g/h;
               f+=e[j]*a[i+n*j];
               }
@@ -524,13 +559,15 @@ int mat_treb(double *a, int n, double *d, double *e)
               {
               f=a[i+n*j];
               e[j]=g=e[j]-hh*f;
-              for (k=0; k<j+1; ++k)
+              for (k=0; k<j+1; ++k) {
                   a[j+n*k]-=(f*e[k]+g*a[i+n*k]);
+}
               }
             }
         } // l
-      else
+      else {
           e[i]=a[i+n*l];
+}
       d[i]=h;
       } // i
     d[0]=0.0;
@@ -543,16 +580,19 @@ int mat_treb(double *a, int n, double *d, double *e)
         for (j=0; j<l; ++j)
           {
           g=0.0;
-          for (k=0; k<l; ++k)
+          for (k=0; k<l; ++k) {
               g+=a[i+n*k]*a[k+n*j];
-          for (k=0; k<l; ++k)
+}
+          for (k=0; k<l; ++k) {
               a[k+n*j]-=g*a[k+n*i];
+}
           }
         }
       d[i]=a[i+n*i];
       a[i+n*i]=1.0;
-      for (j=0; j<l; ++j)
+      for (j=0; j<l; ++j) {
           a[j+n*i]=a[i+n*j]=0.0;
+}
       }
     return(1);
     }
@@ -568,7 +608,8 @@ static int row_house(double *A,double *v,double *w,int m,int n,int r)
         double beta,s;
 
         beta=0.0;
-        for (i=r; i<m; ++i) beta+=v[i]*v[i];
+        for (i=r; i<m; ++i) { beta+=v[i]*v[i];
+}
 
         beta=-2/beta;
         for (i=r; i<n; ++i)
@@ -581,9 +622,11 @@ static int row_house(double *A,double *v,double *w,int m,int n,int r)
             w[i]=beta*s;
             }
 
-        for (i=r; i<m; ++i)
-            for (j=r; j<n; ++j)
+        for (i=r; i<m; ++i) {
+            for (j=r; j<n; ++j) {
                 A[i+m*j]+=v[i]*w[j];
+}
+}
         return(1);
         }
 
@@ -597,11 +640,13 @@ static int house(double *x,double *v,int n)
         my=sqrt(my);
         if (my!=0.0)
             {
-            if (x[0]>0)
+            if (x[0]>0) {
                 beta=x[0]+my;
-            else
+            } else {
                 beta=x[0]-my;
-            for (i=1; i<n; ++i) v[i]/=beta;
+}
+            for (i=1; i<n; ++i) { v[i]/=beta;
+}
             }
         v[0]=1.0;
         return(1);
@@ -629,7 +674,8 @@ int mat_qrp(double *A,double *Q,int *piv,int m,int n,double tol)  /* A overwritt
         double s,tau;
         double *c; // RS CHA moved from local globals
 
-        k=m; if (n>m) k=n;
+        k=m; if (n>m) { k=n;
+}
         c=(double *)muste_malloc(n*sizeof(double));
         if (c==NULL) { not_enough_memory(); return(-1); }
         v=(double *)muste_malloc(k*sizeof(double));
@@ -640,8 +686,9 @@ int mat_qrp(double *A,double *Q,int *piv,int m,int n,double tol)  /* A overwritt
         for (j=0; j<n; ++j)
             {
             s=0.0;
-            for (i=0; i<m; ++i)
+            for (i=0; i<m; ++i) {
                 s+=A[i+m*j]*A[i+m*j];
+}
             c[j]=s;
             }
 
@@ -651,7 +698,8 @@ int mat_qrp(double *A,double *Q,int *piv,int m,int n,double tol)  /* A overwritt
 /*
    Rprintf("c[i]=%g tau=%g k=%d\n",c[i],tau,k); getch();
 */
-            if (c[i]<=tau) continue;
+            if (c[i]<=tau) { continue;
+}
             tau=c[i]; k=i;
             }
         while (tau>tol)
@@ -668,18 +716,21 @@ int mat_qrp(double *A,double *Q,int *piv,int m,int n,double tol)  /* A overwritt
                 }
             house(A+r*m+r,v+r,m-r);
             row_house(A,v,w,m,n,r);
-            for (i=r+1; i<m; ++i) A[i+m*r]=v[i];
+            for (i=r+1; i<m; ++i) { A[i+m*r]=v[i];
+}
             for (i=r+1; i<n; ++i) { s=A[r+m*i]; c[i]-=s*s; }
             if (r<n-1)
                 {
                 tau=-1.0;
                 for (i=r+1; i<n; ++i)
                     {
-                    if (c[i]<=tau) continue;
+                    if (c[i]<=tau) { continue;
+}
                     tau=c[i]; k=i;
                     }
                 }
-            else tau=0;
+            else { tau=0;
+}
             }
 /*
 printf("\nrank r+1=%d\npiv:",r+1);
@@ -689,20 +740,24 @@ mprint(A,m,n);
 
         for (i=0; i<m; ++i)
             {
-            for (j=0; j<m; ++j) Q[i+m*j]=0;
+            for (j=0; j<m; ++j) { Q[i+m*j]=0;
+}
             Q[(m+1)*i]=1.0;
             }
         for (j=r; j>=0; --j)
             {
             v[j]=1.0;
-            for (i=j+1; i<m; ++i) v[i]=A[i+m*j];
+            for (i=j+1; i<m; ++i) { v[i]=A[i+m*j];
+}
             row_house(Q,v,w,m,m,j);
             }
 
 // Rprintf("\nQ:");
 // mprint(Q,m,m);
 
-        for (j=0; j<n; ++j) for (i=j+1; i<m; ++i) A[i+m*j]=0.0;
+        for (j=0; j<n; ++j) { for (i=j+1; i<m; ++i) { A[i+m*j]=0.0;
+}
+}
 
         muste_free(w); w=NULL; muste_free(v); v=NULL; muste_free(c); c=NULL;
         return(r+1);
@@ -722,9 +777,12 @@ int mat_svd_rank(double *X,int mX,int nX,double eps)
     if (V==NULL) { not_enough_memory(); return(-1); }
     svd_eps=1e-16; tol=(1e-300)/eps;  // RS 6.9.2013 Switch eps and tol 
     i=mat_svd(X,D,V,mX,nX,svd_eps,tol);  
-    if (i<0) return(-1); // RS ADD   
-    for (i=nX-1; i>=0; --i)
-        if (D[i]>eps*D[0]) break; // 25.12.2003
+    if (i<0) { return(-1); // RS ADD   
+}
+    for (i=nX-1; i>=0; --i) {
+        if (D[i]>eps*D[0]) { break; // 25.12.2003
+}
+}
     X[0]=(double)(i+1);
     muste_free(V); V=NULL; muste_free(D); D=NULL;
     return(1);
@@ -747,10 +805,13 @@ int mat_column_space(int *pn,double *X,int mX,int nX,double eps) // int *pn; // 
     if (V==NULL) { not_enough_memory(); return(-1); }
     svd_eps=1e-16; tol=(1e-300)/eps;  // RS 6.9.2013 Switch eps and tol 
     i=mat_svd(X,D,V,mX,nX,svd_eps,tol);
-    if (i<0) return(-1); // RS ADD
+    if (i<0) { return(-1); // RS ADD
+}
 
-    for (i=nX-1; i>=0; --i)
-        if (D[i]>eps*D[0]) break; // 25.12.2003
+    for (i=nX-1; i>=0; --i) {
+        if (D[i]>eps*D[0]) { break; // 25.12.2003
+}
+}
     *pn=i+1;
 
     muste_free(V); V=NULL; muste_free(D); D=NULL;
@@ -772,21 +833,27 @@ int mat_null_space(int *pn,double *X,int mX,int nX,double eps) // int *pn; // ra
     if (V==NULL) { not_enough_memory(); return(-1); }
     svd_eps=1e-16; tol=(1e-300)/eps;  // RS 6.9.2013 Switch eps and tol 
     i=mat_svd(X,D,V,mX,nX,svd_eps,tol);
-    if (i<0) return(-1); // RS ADD
+    if (i<0) { return(-1); // RS ADD
+}
 
-    for (i=nX-1; i>=0; --i)
-        if (D[i]>eps*D[0]) break; // 25.12.2003
+    for (i=nX-1; i>=0; --i) {
+        if (D[i]>eps*D[0]) { break; // 25.12.2003
+}
+}
     *pn=nX-1-i;
 
     if (*pn==0)
         {
         *pn=1;
-        for (i=0; i<mX; ++i) X[i]=0.0;
+        for (i=0; i<mX; ++i) { X[i]=0.0;
+}
         return(1);
         }
-    for (j=0; j<*pn; ++j)
-        for (i=0; i<nX; ++i)
+    for (j=0; j<*pn; ++j) {
+        for (i=0; i<nX; ++i) {
             X[i+j*nX]=V[i+(j+nX-*pn)*nX];
+}
+}
     muste_free(V); V=NULL; muste_free(D); D=NULL;
     return(1);
     }
@@ -803,9 +870,12 @@ int mat_mp_inv(double *Z,double *X,int m,int n,double eps)
     if (m<n)
         {
         transp=1;
-        for (i=0; i<m; ++i) for (j=0; j<n; ++j)
+        for (i=0; i<m; ++i) { for (j=0; j<n; ++j) {
             Z[j+n*i]=X[i+m*j];
-        for (i=0; i<m*n; ++i) X[i]=Z[i];
+}
+}
+        for (i=0; i<m*n; ++i) { X[i]=Z[i];
+}
         i=m; m=n; n=i;
         }
 
@@ -816,29 +886,39 @@ int mat_mp_inv(double *Z,double *X,int m,int n,double eps)
 
     svd_eps=1e-16; tol=1e-300/svd_eps;
     i=mat_svd(X,D,V,m,n,svd_eps,tol);
-    if (i<0) return(-1); // RS ADD
+    if (i<0) { return(-1); // RS ADD
+}
 
-    if (eps<1e-15) eps=1e-15;
+    if (eps<1e-15) { eps=1e-15;
+}
     eps*=D[0];
-    for (i=0; i<n; ++i) if (D[i]>eps) D[i]=1/D[i]; else D[i]=0.0;
+    for (i=0; i<n; ++i) { if (D[i]>eps) { D[i]=1/D[i]; } else { D[i]=0.0;
+}
+}
 // MPINV(X)=V*dinv(D)*U'  eli tÑssÑ nyt V*dinv(D)*X'
     for (j=0; j<n; ++j)
         {
         tol=D[j];
-        for (i=0; i<n; ++i) V[i+n*j]*=tol;
+        for (i=0; i<n; ++i) { V[i+n*j]*=tol;
+}
         }
 
-    for (i=0; i<m; ++i) for (j=0; j<n; ++j)
+    for (i=0; i<m; ++i) { for (j=0; j<n; ++j) {
         D[j+n*i]=X[i+m*j]; // U'
+}
+}
 
     mat_mlt(Z,V,D,n,n,m);
 
     if (transp)
         {
         i=m; m=n; n=i;
-        for (i=0; i<m; ++i) for (j=0; j<n; ++j)
+        for (i=0; i<m; ++i) { for (j=0; j<n; ++j) {
             D[j+n*i]=Z[i+m*j];
-        for (i=0; i<m*n; ++i) Z[i]=D[i];
+}
+}
+        for (i=0; i<m*n; ++i) { Z[i]=D[i];
+}
         }
     muste_free(V); V=NULL; muste_free(D); D=NULL;
     return(1);
@@ -859,9 +939,11 @@ int ds_ratio(double luku,unsigned long *pd,unsigned long *ps,int nkonv,unsigned 
         {
         a[i]=(int)luku;
         b=luku-(double)a[i];
-        if (fabs(b)<eps) break;
+        if (fabs(b)<eps) { break;
+}
         luku=1.0/b;
-        if (i>=nkonv) break;
+        if (i>=nkonv) { break;
+}
         ++i;
         eps*=5.0;
         }
@@ -897,7 +979,8 @@ static unsigned long lcm_n(unsigned long *s,int n)
     unsigned long lcm;
 
     lcm=s[0];
-    if (n==1) return(lcm);
+    if (n==1) { return(lcm);
+}
     for (i=1; i<n; ++i)
         {
         lcm=lcm*s[i]/intv_gcd(lcm,s[i]);
@@ -919,8 +1002,10 @@ int mat_intval(double *aa,int m,double feps,int nkonv)
     for (i=0; i<m; ++i)
         {
         b=fabs(aa[i]);
-        if (b<feps) aa[i]=b=0.0;
-        if (b>max) max=b;
+        if (b<feps) { aa[i]=b=0.0;
+}
+        if (b>max) { max=b;
+}
         }
 
     for (i=0; i<m; ++i)
@@ -928,7 +1013,8 @@ int mat_intval(double *aa,int m,double feps,int nkonv)
         aa[i]/=max;
         if (aa[i]==1.0) { d[i]=1L; s[i]=1L; }
         else if (aa[i]==0.0) { d[i]=0L; s[i]=1L; }
-        else k=ds_ratio(fabs(aa[i]),&d[i],&s[i],nkonv,&an);
+        else { k=ds_ratio(fabs(aa[i]),&d[i],&s[i],nkonv,&an);
+}
 // Rprintf("\n%g %d/%d",aa[i],d[i],s[i]); getch();
 
         }
@@ -936,7 +1022,8 @@ int mat_intval(double *aa,int m,double feps,int nkonv)
     lcm=lcm_n(s,m);
     for (i=0; i<m; ++i)
         {
-        k=1; if (aa[i]<0) k=-1;
+        k=1; if (aa[i]<0) { k=-1;
+}
         aa[i]=k*(double)lcm/(double)s[i]*(double)d[i];
         }
     muste_free(s); s=NULL; muste_free(d); d=NULL;
@@ -979,23 +1066,28 @@ int mat_logdet(double *X,int m,double *pdet)
         for (k=0; k<m; ++k)
             {
             a=X[k*(m+1)];
-            if (a<=0.0) return(-1);
+            if (a<=0.0) { return(-1);
+}
             *pdet+=log(a);
-            if (k==m-1) return(1);
+            if (k==m-1) { return(1);
+}
             a=1/a;
             X[k*(m+1)]=a;
             for (j=0; j<m; ++j)
                 {
-                if (j==k) continue;
+                if (j==k) { continue;
+}
                 X[k+m*j]*=a;
                 }
             for (i=0; i<m; ++i)
                 {
-                if (i==k) continue;
+                if (i==k) { continue;
+}
                 b=X[i+m*k];
                 for (j=0; j<m; ++j)
                     {
-                    if (j==k) continue;
+                    if (j==k) { continue;
+}
                     X[i+m*j]-=b*X[k+m*j];
                     }
                 X[i+m*k]*=-a;
@@ -1019,21 +1111,27 @@ int mat_solve_homogeneous(int *pn,double *X,int mX,int nX,double eps) // int *pn
     if (V==NULL) { not_enough_memory(); return(-1); }
     svd_eps=1e-16; tol=(1e-300)/eps;  // RS 6.9.2013 Switch eps and tol 
     i=mat_svd(X,D,V,mX,nX,svd_eps,tol);
-    if (i<0) return(-1); // RS ADD
+    if (i<0) { return(-1); // RS ADD
+}
 
-    for (i=nX-1; i>=0; --i)
-        if (D[i]>eps) break;
+    for (i=nX-1; i>=0; --i) {
+        if (D[i]>eps) { break;
+}
+}
     *pn=nX-1-i;
 
     if (*pn==0)
         {
         *pn=1;
-        for (i=0; i<mX; ++i) X[i]=0.0;
+        for (i=0; i<mX; ++i) { X[i]=0.0;
+}
         return(1);
         }
-    for (j=0; j<*pn; ++j)
-        for (i=0; i<nX; ++i)
+    for (j=0; j<*pn; ++j) {
+        for (i=0; i<nX; ++i) {
             X[i+j*nX]=V[i+(j+nX-*pn)*nX];
+}
+}
     muste_free(V); V=NULL; muste_free(D); D=NULL;
     return(1);
     }
@@ -1058,21 +1156,27 @@ int mat_qr(double *A,double *Q,int m,int n,double tol)  /* A overwritten by R */
             {
             house(A+j*m+j,v+j,m-j);
             row_house(A,v,w,m,n,j);
-            if (j<m)
-                for (i=j+1; i<m; ++i) A[i+m*j]=v[i];
+            if (j<m) {
+                for (i=j+1; i<m; ++i) { A[i+m*j]=v[i];
+}
+}
             }
         for (i=0; i<m; ++i)
             {
-            for (j=0; j<m; ++j) Q[i+m*j]=0;
+            for (j=0; j<m; ++j) { Q[i+m*j]=0;
+}
             Q[(m+1)*i]=1.0;
             }
         for (j=n-1; j>=0; --j)
             {
             v[j]=1.0;
-            for (i=j+1; i<m; ++i) v[i]=A[i+m*j];
+            for (i=j+1; i<m; ++i) { v[i]=A[i+m*j];
+}
             row_house(Q,v,w,m,m,j);
             }
-        for (j=0; j<n; ++j) for (i=j+1; i<m; ++i) A[i+m*j]=0.0;
+        for (j=0; j<n; ++j) { for (i=j+1; i<m; ++i) { A[i+m*j]=0.0;
+}
+}
         muste_free(w); w=NULL; muste_free(v); v=NULL;
         return(1);
         }
@@ -1085,7 +1189,8 @@ int mat_transp_in_situ(double *aa,int m,int n)
         trp=(char *)muste_malloc(m*n);
         if (trp==NULL)
        { sur_print("Not enough space (mat_transp_in_situ)!\n"); return(-1); }
-        for (i=0; i<m*n; ++i) trp[i]='1';
+        for (i=0; i<m*n; ++i) { trp[i]='1';
+}
         trp[m*n-1]='2';
         h=1;
         while (h<m*n)
@@ -1117,7 +1222,7 @@ int mat_mtm(double *T,double *X,int m,int n)
 //        extern double sis_tulo();
         double a;
 
-        for (i=0; i<n; ++i) for (j=0; j<=i; ++j)
+        for (i=0; i<n; ++i) { for (j=0; j<=i; ++j)
             {
             a=sis_tulo(X+m*i,X+m*j,1,1,m);
             T[i+n*j]=T[j+n*i]=a;
@@ -1128,6 +1233,7 @@ int mat_mtm(double *T,double *X,int m,int n)
             T[i+n*j]=a; T[j+n*i]=a;
 */
             }
+}
         return(1);
         }
 /*
@@ -1184,9 +1290,11 @@ int mat_mmt(double *T,double *X,int m,int n)
         {
         int i;
 
-        i=mat_transp_in_situ(X,m,n); if (i<0) return(-1);
+        i=mat_transp_in_situ(X,m,n); if (i<0) { return(-1);
+}
         mat_mtm(T,X,n,m);
-        i=mat_transp_in_situ(X,n,m); if (i<0) return(-1);
+        i=mat_transp_in_situ(X,n,m); if (i<0) { return(-1);
+}
         return(1);
         }
 
@@ -1204,8 +1312,9 @@ int mat_tred2(double *d,double *e,double *a,int n,double tol)
         for (i=n-1; i>=1; --i)
             {
             l=i-2; f=z[i+n*(i-1)]; g=0.0;
-            for (k=0; k<=l; ++k)
+            for (k=0; k<=l; ++k) {
                 g+=z[i+n*k]*z[i+n*k];
+}
             h=g+f*f;
 
             if (g<=tol)
@@ -1215,24 +1324,28 @@ int mat_tred2(double *d,double *e,double *a,int n,double tol)
                 double apu;
 
                 ++l;
-                if (f>=0) apu=-sqrt(h); else apu=sqrt(h);
+                if (f>=0) { apu=-sqrt(h); } else { apu=sqrt(h);
+}
                 e[i]=g=apu;
                 h-=f*g; z[i+n*(i-1)]=f-g; f=0.0;
                 for (j=0; j<=l; ++j)
                     {
                     z[j+n*i]=z[i+n*j]/h; g=0.0;
-                    for (k=0; k<=j; ++k)
+                    for (k=0; k<=j; ++k) {
                         g+=z[j+n*k]*z[i+n*k];
-                    for (k=j+1; k<=l; ++k)
+}
+                    for (k=j+1; k<=l; ++k) {
                         g+=z[k+n*j]*z[i+n*k];
+}
                     e[j]=g/h; f+=g*z[j+n*i];
                     }
                 hh=f/(h+h);
                 for (j=0; j<=l; ++j)
                     {
                     f=z[i+n*j]; e[j]=g=e[j]-hh*f;
-                    for (k=0; k<=j; ++k)
+                    for (k=0; k<=j; ++k) {
                         z[j+n*k]-=f*e[k]+g*z[i+n*k];
+}
                     }
                 }
 /* skip */  d[i]=h;
@@ -1242,15 +1355,18 @@ int mat_tred2(double *d,double *e,double *a,int n,double tol)
         for (i=0; i<n; ++i)
             {
             l=i-1;
-            if (d[i]!=0.0)
+            if (d[i]!=0.0) {
                 for (j=0; j<=l; ++j)
                     {
                     g=0.0;
-                    for (k=0; k<=l; ++k)
+                    for (k=0; k<=l; ++k) {
                         g+=z[i+n*k]*z[k+n*j];
-                    for (k=0; k<=l; ++k)
+}
+                    for (k=0; k<=l; ++k) {
                         z[k+n*j]-=g*z[k+n*i];
+}
                     }
+}
             d[i]=z[i+n*i]; z[i+n*i]=1.0;
             for (j=0; j<=l; ++j) { z[i+n*j]=0.0; z[j+n*i]=0.0; }
             }
@@ -1266,15 +1382,19 @@ int mat_tql2(double *d,double *e,double *z,int n,double eps,int maxiter)
         double b,c,f,g,h,p,r,s;
         double apu;
 
-        for (i=1; i<n; ++i) e[i-1]=e[i];
+        for (i=1; i<n; ++i) { e[i-1]=e[i];
+}
         e[n-1]=0.0; b=f=0.0;
         for (l=0; l<n; ++l)
             {
             j=0; /* iter.laskuri */
             h=eps*(fabs(d[l])+fabs(e[l]));
-            if (b<h) b=h;
-            for (m=l; m<n; ++m)
-                if (fabs(e[m])<=b) break;
+            if (b<h) { b=h;
+}
+            for (m=l; m<n; ++m) {
+                if (fabs(e[m])<=b) { break;
+}
+}
             if (m!=l)
                 {
                 while (1)
@@ -1286,9 +1406,11 @@ int mat_tql2(double *d,double *e,double *z,int n,double eps,int maxiter)
                     ++j;
                     g=d[l]; p=(d[l+1]-g)/(2*e[l]);
                     r=sqrt(p*p+1.0);
-                    if (p<0.0) apu=p-r; else apu=p+r;
+                    if (p<0.0) { apu=p-r; } else { apu=p+r;
+}
                     d[l]=e[l]/apu; h=g-d[l];
-                    for (i=l+1; i<n; ++i) d[i]-=h;
+                    for (i=l+1; i<n; ++i) { d[i]-=h;
+}
                     f+=h;
 
                     p=d[m]; c=1.0; s=0.0;
@@ -1316,7 +1438,8 @@ int mat_tql2(double *d,double *e,double *z,int n,double eps,int maxiter)
                             }
                         } /* i */
                     e[l]=s*p; d[l]=c*p;
-                    if (fabs(e[l])<=b) break;
+                    if (fabs(e[l])<=b) { break;
+}
                     } /* while */
                 }
 /* root */  d[l]=d[l]+f;
@@ -1325,11 +1448,12 @@ int mat_tql2(double *d,double *e,double *z,int n,double eps,int maxiter)
         for (i=0; i<n; ++i)
             {
             k=i; p=d[i];
-            for (j=i+1; j<n; ++j)
+            for (j=i+1; j<n; ++j) {
                 if (d[j]>p)
                     {
                     k=j; p=d[j];
                     }
+}
             if (k!=i)
                 {
                 d[k]=d[i]; d[i]=p;
@@ -1363,38 +1487,48 @@ int mat_svd(double *u,double *q,double *v,int m,int n,double eps,double tol)
         for (i=0; i<n; ++i)
             {
             e[i]=g; s=0; l=i+1;
-            for (j=i; j<m; ++j) s+=u[j+m*i]*u[j+m*i];
-            if (s<tol) g=0;
-            else
+            for (j=i; j<m; ++j) { s+=u[j+m*i]*u[j+m*i];
+}
+            if (s<tol) { g=0;
+            } else
                 {
                 f=u[i*(m+1)];
-                if (f<0) g=sqrt(s); else g=-sqrt(s);
+                if (f<0) { g=sqrt(s); } else { g=-sqrt(s);
+}
                 h=f*g-s; u[i*(m+1)]=f-g;
                 for (j=l; j<n; ++j)
                     {
                     s=0;
-                    for (k=i; k<m; ++k) s+=u[k+m*i]*u[k+m*j];
+                    for (k=i; k<m; ++k) { s+=u[k+m*i]*u[k+m*j];
+}
                     f=s/h;
-                    for (k=i; k<m; ++k) u[k+m*j]+=f*u[k+m*i];
+                    for (k=i; k<m; ++k) { u[k+m*j]+=f*u[k+m*i];
+}
                     }
                 }
             q[i]=g; s=0;
-            for (j=l; j<n; ++j) s+=u[i+m*j]*u[i+m*j];
-            if (s<tol) g=0;
-            else
+            for (j=l; j<n; ++j) { s+=u[i+m*j]*u[i+m*j];
+}
+            if (s<tol) { g=0;
+            } else
                 {
                 f=u[i+m*(i+1)];
-                if (f<0) g=sqrt(s); else g=-sqrt(s);
+                if (f<0) { g=sqrt(s); } else { g=-sqrt(s);
+}
                 h=f*g-s; u[i+m*(i+1)]=f-g;
-                for (j=l; j<n; ++j) e[j]=u[i+m*j]/h;
+                for (j=l; j<n; ++j) { e[j]=u[i+m*j]/h;
+}
                 for (j=l; j<m; ++j)
                     {
                     s=0;
-                    for (k=l; k<n; ++k) s+=u[j+m*k]*u[i+m*k];
-                    for (k=l; k<n; ++k) u[j+m*k]+=s*e[k];
+                    for (k=l; k<n; ++k) { s+=u[j+m*k]*u[i+m*k];
+}
+                    for (k=l; k<n; ++k) { u[j+m*k]+=s*e[k];
+}
                     }
                 }
-            y=fabs(q[i])+fabs(e[i]); if (y>x) x=y;
+            y=fabs(q[i])+fabs(e[i]); if (y>x) { x=y;
+}
             }
 
 /* Accumulation of right-hand transformations */
@@ -1403,15 +1537,19 @@ int mat_svd(double *u,double *q,double *v,int m,int n,double eps,double tol)
             if (g)
                 {
                 h=u[i+m*(i+1)]*g;
-                for (j=l; j<n; ++j) v[j+n*i]=u[i+m*j]/h;
+                for (j=l; j<n; ++j) { v[j+n*i]=u[i+m*j]/h;
+}
                 for (j=l; j<n; ++j)
                     {
                     s=0;
-                    for (k=l; k<n; ++k) s+=u[i+m*k]*v[k+n*j];
-                    for (k=l; k<n; ++k) v[k+n*j]+=s*v[k+n*i];
+                    for (k=l; k<n; ++k) { s+=u[i+m*k]*v[k+n*j];
+}
+                    for (k=l; k<n; ++k) { v[k+n*j]+=s*v[k+n*i];
+}
                     }
                 }
-            for (j=l; j<n; ++j) v[i+n*j]=v[j+n*i]=0;
+            for (j=l; j<n; ++j) { v[i+n*j]=v[j+n*i]=0;
+}
             v[i*(n+1)]=1; g=e[i]; l=i;
             }
 
@@ -1419,20 +1557,26 @@ int mat_svd(double *u,double *q,double *v,int m,int n,double eps,double tol)
         for (i=n-1; i>=0; --i)
             {
             l=i+1; g=q[i];
-            for (j=l; j<n; ++j) u[i+m*j]=0;
+            for (j=l; j<n; ++j) { u[i+m*j]=0;
+}
             if (g)
                 {
                 h=u[i*(m+1)]*g;
                 for (j=l; j<n; ++j)
                     {
                     s=0;
-                    for (k=l; k<m; ++k) s+=u[k+m*i]*u[k+m*j];
+                    for (k=l; k<m; ++k) { s+=u[k+m*i]*u[k+m*j];
+}
                     f=s/h;
-                    for (k=i; k<m; ++k) u[k+m*j]+=f*u[k+m*i];
+                    for (k=i; k<m; ++k) { u[k+m*j]+=f*u[k+m*i];
+}
                     }
-                for (j=i; j<m; ++j) u[j+m*i]/=g;
+                for (j=i; j<m; ++j) { u[j+m*i]/=g;
+}
                 }
-            else for (j=i; j<m; ++j) u[j+m*i]=0;
+            else { for (j=i; j<m; ++j) { u[j+m*i]=0;
+}
+}
             ++u[i*(m+1)];
             }
 
@@ -1443,8 +1587,10 @@ int mat_svd(double *u,double *q,double *v,int m,int n,double eps,double tol)
 test_f_splitting:
             for (l=k; l>=0; --l)
                 {
-                if (fabs(e[l])<=eps) goto test_f_convergence;
-                if (fabs(q[l-1])<=eps) goto cancellation;
+                if (fabs(e[l])<=eps) { goto test_f_convergence;
+}
+                if (fabs(q[l-1])<=eps) { goto cancellation;
+}
                 }
 
 /* cancellation of e[l] if l>1 */
@@ -1453,7 +1599,8 @@ cancellation:
             for (i=l; i<=k; ++i)
                 {
                 f=s*e[i]; e[i]*=c;
-                if (fabs(f)<=eps) goto test_f_convergence;
+                if (fabs(f)<=eps) { goto test_f_convergence;
+}
                 g=q[i]; q[i]=h=sqrt(f*f+g*g); c=g/h; s=-f/h;
                 for (j=0; j<m; ++j)
                     {
@@ -1462,12 +1609,14 @@ cancellation:
                     }
                 }
 test_f_convergence:
-            z=q[k]; if (l==k) goto convergence;
+            z=q[k]; if (l==k) { goto convergence;
+}
 
 /* Shift from bottom 2*2 minor */
             x=q[l]; y=q[k-1]; g=e[k-1]; h=e[k];
             f=((y-z)*(y+z)+(g-h)*(g+h))/(2*h*y); g=sqrt(f*f+1);
-            if (f<0) apu=f-g; else apu=f+g;
+            if (f<0) { apu=f-g; } else { apu=f+g;
+}
             f=((x-z)*(x+z)+h*(y/apu-h))/x;
 
 /* Next QR transformation */
@@ -1497,7 +1646,8 @@ convergence:
             if (z<0)
                 {
                 q[k]=-z;
-                for (j=0; j<n; ++j) v[j+n*k]=-v[j+n*k];
+                for (j=0; j<n; ++j) { v[j+n*k]=-v[j+n*k];
+}
                 }
             } /* k */
 
@@ -1505,8 +1655,9 @@ convergence:
         for (i=0; i<n; ++i)
             {
             k=i; x=q[i];
-            for (j=i+1; j<n; ++j)
+            for (j=i+1; j<n; ++j) {
                 if (q[j]>x) { k=j; x=q[j]; }
+}
             if (k>i)
              {
              q[k]=q[i]; q[i]=x;
@@ -1526,7 +1677,8 @@ static void c_saxpy(double a,double *x,double *y,int n)  /* y+=a*x */
         {
         int i;
 
-        for (i=0; i<n; ++i) y[i]+=a*x[i];
+        for (i=0; i<n; ++i) { y[i]+=a*x[i];
+}
         }
 
 int mat_chol2(double *G,double *A,int n,double eps)
@@ -1537,19 +1689,24 @@ int mat_chol2(double *G,double *A,int n,double eps)
         v=(double *)muste_malloc(n*sizeof(double));
         if (v==NULL) { not_enough_memory(); return(-1); }
 
-        for (i=0; i<n*n; ++i) G[i]=0.0;
+        for (i=0; i<n*n; ++i) { G[i]=0.0;
+}
         for (j=0; j<n; ++j)
             {
-            for (i=j; i<n; ++i) v[i]=A[i+n*j];
+            for (i=j; i<n; ++i) { v[i]=A[i+n*j];
+}
             for (k=0; k<=j-1; ++k)
                 {
       /*        for (i=j; i<n; ++i) v[i]-=G[j+n*k]*G[i+n*k]; */
                 c_saxpy(-G[j+n*k],G+j+n*k,v+j,n-j);
                 }
             s=fabs(v[j]);
-            if (s<eps) return(-j);
-            if (s>0.0) s=1/sqrt(s); i1=j+n*j;
-            for (i=j; i<n; ++i) G[i1++]=s*v[i];
+            if (s<eps) { return(-j);
+}
+            if (s>0.0) { s=1/sqrt(s); 
+}i1=j+n*j;
+            for (i=j; i<n; ++i) { G[i1++]=s*v[i];
+}
             }
         muste_free(v); v=NULL;
         return(1);
@@ -1597,10 +1754,13 @@ int r)
         {
         int i,j,k;
 
-        for (i=0; i<m*r; ++i) T[i]=0.0;
-        for (j=0; j<r; ++j)
-            for (k=0; k<n; ++k)
+        for (i=0; i<m*r; ++i) { T[i]=0.0;
+}
+        for (j=0; j<r; ++j) {
+            for (k=0; k<n; ++k) {
                 c_saxpy(Y[k+n*j],X+m*k,T+m*j,m);
+}
+}
         return(1);
         }
 
@@ -1619,32 +1779,40 @@ int mat_det(double *X,int m,int type,double *pdet)
         double a,b;
 
         h=1;
-        if (!type) *pdet=1.0;
+        if (!type) { *pdet=1.0;
+}
         for (k=0; k<m; ++k)
             {
             a=X[k*(m+1)];
-            if (!type) *pdet*=a;
-            if (a==0.0) return(0);
+            if (!type) { *pdet*=a;
+}
+            if (a==0.0) { return(0);
+}
             if (a<0.0)
                 {
                 h=-1;
-                if (type) return(-1);
+                if (type) { return(-1);
+}
                 }
-            if (k==m-1) return(h);
+            if (k==m-1) { return(h);
+}
             a=1/a;
             X[k*(m+1)]=a;
             for (j=0; j<m; ++j)
                 {
-                if (j==k) continue;
+                if (j==k) { continue;
+}
                 X[k+m*j]*=a;
                 }
             for (i=0; i<m; ++i)
                 {
-                if (i==k) continue;
+                if (i==k) { continue;
+}
                 b=X[i+m*k];
                 for (j=0; j<m; ++j)
                     {
-                    if (j==k) continue;
+                    if (j==k) { continue;
+}
                     X[i+m*j]-=b*X[k+m*j];
                     }
                 X[i+m*k]*=-a;
@@ -1679,7 +1847,8 @@ int mat_nonsymm_eigen(double *a,double *t,double *u,int n,int iter,double ep,int
             right=1;
             for (i=0; i<n; ++i)
                 {
-                for (j=0; j<n; ++j) t[i+n*j]=0.0;
+                for (j=0; j<n; ++j) { t[i+n*j]=0.0;
+}
                 t[i*(n+1)]=1.0;
                 }
             }
@@ -1689,17 +1858,20 @@ int mat_nonsymm_eigen(double *a,double *t,double *u,int n,int iter,double ep,int
             left=1;
             for (i=0; i<n; ++i)
                 {
-                for (j=0; j<n; ++j) u[i+n*j]=0.0;
+                for (j=0; j<n; ++j) { u[i+n*j]=0.0;
+}
                 u[i*(n+1)]=1.0;
                 }
             }
 
         v=(int *)muste_malloc(n*n*sizeof(int));
         /* testi puuttuu */
-        for (i=0; i<n*n; ++i) v[i]=0;
+        for (i=0; i<n*n; ++i) { v[i]=0;
+}
         v_ind=0;
 
-        ns0=0.0; for (i=0; i<n*n; ++i) ns0+=a[i]*a[i];
+        ns0=0.0; for (i=0; i<n*n; ++i) { ns0+=a[i]*a[i];
+}
 
 /*      ep=1e-15;    */
         eps=sqrt(ep);
@@ -1707,7 +1879,8 @@ int mat_nonsymm_eigen(double *a,double *t,double *u,int n,int iter,double ep,int
         count=n*(n-1)/2;
         for (it=0; it<iter; ++it)
             {
-            if (sur_kbhit()) { i=sur_getch(); if (i=='.') return(it); } // RS CHA sur_
+            if (sur_kbhit()) { i=sur_getch(); if (i=='.') { return(it); 
+}} // RS CHA sur_
 
             muste_sprintf(x," %d %d %d\n",v_ind,it+1,count); sur_print(x);
             count=0;
@@ -1716,7 +1889,8 @@ int mat_nonsymm_eigen(double *a,double *t,double *u,int n,int iter,double ep,int
                 if (v_ind)
                     {
                     ++v_count;
-                    if (v_count>=n_small || mark) v_ind=0;
+                    if (v_count>=n_small || mark) { v_ind=0;
+}
                     mark=0;
                     }
                 else
@@ -1724,9 +1898,12 @@ int mat_nonsymm_eigen(double *a,double *t,double *u,int n,int iter,double ep,int
                     if (n_small>=10)
                         {
                         ns=0.0;
-                        for (i=0; i<n; ++i) for (j=0; j<n; ++j)
-                            if (i!=j && i-1!=j && i+1!=j)
+                        for (i=0; i<n; ++i) { for (j=0; j<n; ++j) {
+                            if (i!=j && i-1!=j && i+1!=j) {
                                 ns+=a[i+n*j]*a[i+n*j];
+}
+}
+}
                         aa=ns/(ns0+1e-15);
                         sur_cursor_position(&row,&col);
                         muste_sprintf(x,"ss/ss0=%g",aa);
@@ -1737,7 +1914,8 @@ int mat_nonsymm_eigen(double *a,double *t,double *u,int n,int iter,double ep,int
                     if (it>0) { v_ind=1; v_count=0; }
                     }
                 }
-            if (!v_ind && mark) return(it);
+            if (!v_ind && mark) { return(it);
+}
             jatka=0;
             for (i=0; i<nless1; ++i)
                 {
@@ -1749,20 +1927,23 @@ int mat_nonsymm_eigen(double *a,double *t,double *u,int n,int iter,double ep,int
                         (fabs(aij-aji)>eps && fabs(aii-a[j*(n+1)])>eps))
                     { jatka=1; break; }
                     }
-                if (jatka) break;
+                if (jatka) { break;
+}
                 }
 
 /*
 printf("jatka=%d\n",jatka); getch();
 */
-            if (!jatka) return(it);
+            if (!jatka) { return(it);
+}
             mark=1;
 
             for (k=0; k<nless1; ++k)
                 {
                 for (m=k+1; m<n; ++m)
                     {
-                    if (v_ind && v[k+n*m]==0) continue;
+                    if (v_ind && v[k+n*m]==0) { continue;
+}
 
                     h=g=hj=yh=0.0;
                     for (i=0; i<n; ++i)
@@ -1787,7 +1968,8 @@ printf("jatka=%d\n",jatka); getch();
                      else
                          {
                          cot2x=d/c;
-                         if (cot2x<0) sig=-1.0; else sig=1.0;
+                         if (cot2x<0) { sig=-1.0; } else { sig=1.0;
+}
                          cotx=cot2x+(sig*sqrt(1.0+cot2x*cot2x));
                          sx=sig/sqrt(1+cotx*cotx);
                          cx=sx*cotx;
@@ -1814,10 +1996,12 @@ printf("sx=%g cx=%g\n",sx,cx); getch();
                     s1=chy*sx+shy*cx;
                     s2=-chy*sx+shy*cx;
 
-                    if (!v_ind) v[k+n*m]=0;
+                    if (!v_ind) { v[k+n*m]=0;
+}
                     if (fabs(s1)>ep || fabs(s2)>ep)
                         {
-                        if (!v_ind) v[k+n*m]=1;
+                        if (!v_ind) { v[k+n*m]=1;
+}
                         ++count;
                         mark=0;
                         for (i=0; i<n; ++i)
@@ -1861,15 +2045,17 @@ int mat_kronecker(double *zz,double *xx,double *yy,int mX,int nX,int mY,int nY)
         int i,j,i1,j1;
         double a;
 
-        for (i=0; i<mX; ++i) for (j=0; j<nX; ++j)
+        for (i=0; i<mX; ++i) { for (j=0; j<nX; ++j)
             {
             a=xx[i+mX*j];
-            for (i1=0; i1<mY; ++i1) for (j1=0; j1<nY; ++j1)
+            for (i1=0; i1<mY; ++i1) { for (j1=0; j1<nY; ++j1)
                 {
 /* rivi: i*mY+i1  sar: j*nY+j1 */
                 zz[i*mY+i1+(j*nY+j1)*mX*mY]=a*yy[i1+mY*j1];
                 }
+}
             }
+}
 
         return(1);
         }
@@ -1883,7 +2069,8 @@ int mat_gram_schmidt(double *T,double *Y,double *X,int m,int n,double tol)
         int i,k,j;
         double a,a1,b;
 
-        for (i=0; i<n*n; ++i) Y[i]=0.0;
+        for (i=0; i<n*n; ++i) { Y[i]=0.0;
+}
         a1=1.0;
         for (k=0; k<n; ++k)
             {
@@ -1893,20 +2080,24 @@ int mat_gram_schmidt(double *T,double *Y,double *X,int m,int n,double tol)
                 b=X[i+m*k];
                 a+=b*b;
                 }
-            if (a/a1<tol*tol) return(-k);
+            if (a/a1<tol*tol) { return(-k);
+}
             a1=a;
             Y[k*(n+1)]=sqrt(a);
             b=1.0/Y[k*(n+1)];
-            for (i=0; i<m; ++i) T[i+m*k]=b*X[i+m*k];
+            for (i=0; i<m; ++i) { T[i+m*k]=b*X[i+m*k];
+}
             for (j=k+1; j<n; ++j)
                 {
                 a=0.0;
-                for (i=0; i<m; ++i)
+                for (i=0; i<m; ++i) {
                     a+=T[i+m*k]*X[i+m*j];
+}
                 Y[k+n*j]=a;
                 a=0.0;
-                for (i=0; i<m; ++i)
+                for (i=0; i<m; ++i) {
                     X[i+m*j]-=T[i+m*k]*Y[k+n*j];
+}
                 }
             }
         return(1);
@@ -1919,7 +2110,8 @@ int mat_sub(double *T,double *X,double *Y,int m,int n)
         {
         int k;
 
-        for (k=0; k<m*n; ++k) T[k]=X[k]-Y[k];
+        for (k=0; k<m*n; ++k) { T[k]=X[k]-Y[k];
+}
         return(1);
         }
 
@@ -1929,7 +2121,8 @@ int mat_add(double *T,double *X,double *Y,int m,int n)
         {
         int k;
 
-        for (k=0; k<m*n; ++k) T[k]=X[k]+Y[k];
+        for (k=0; k<m*n; ++k) { T[k]=X[k]+Y[k];
+}
         return(1);
         }
 
@@ -1956,12 +2149,13 @@ static int mat_gj2(double *a,int n,double *b,int m,double *pdet)
         if (ipiv==NULL) { not_enough_memory(); return(-1); }
 
         det=0.0; dets=1;
-        for (j=0; j<n; ++j) ipiv[j]=0;
+        for (j=0; j<n; ++j) { ipiv[j]=0;
+}
         for (i=0; i<n; ++i)
             {
             big=0.0;
-            for (j=0; j<n; ++j)
-                if (ipiv[j]!=1) for (k=0,i1=n*j; k<n; ++k,++i1)
+            for (j=0; j<n; ++j) {
+                if (ipiv[j]!=1) { for (k=0,i1=n*j; k<n; ++k,++i1)
                     {
                     if (ipiv[k]==0)
                       {
@@ -1973,6 +2167,8 @@ static int mat_gj2(double *a,int n,double *b,int m,double *pdet)
                       sing_matrix(); return(-1);
                       }
                     }  /* k */
+}
+}
             ++(ipiv[icol]);
 
             if (irow!=icol)
@@ -1987,22 +2183,28 @@ static int mat_gj2(double *a,int n,double *b,int m,double *pdet)
             indxr[i]=irow; indxc[i]=icol;
             i1=(n+1)*icol;
             if (a[i1]==0.0) { sing_matrix(); return(-1); }
-            det+=log(fabs(a[i1])); if (a[i1]<0) dets=-dets;
+            det+=log(fabs(a[i1])); if (a[i1]<0) { dets=-dets;
+}
             pivinv=1/a[i1];
             a[i1]=1.0;
             i1=n*icol;
-            for (l=0; l<n; ++l) a[i1++]*=pivinv;
+            for (l=0; l<n; ++l) { a[i1++]*=pivinv;
+}
             i1=n*icol;
-            for (l=0; l<m; ++l) b[i1++]*=pivinv;
-            for (ll=0; ll<n; ++ll)
+            for (l=0; l<m; ++l) { b[i1++]*=pivinv;
+}
+            for (ll=0; ll<n; ++ll) {
                 if (ll!=icol)
                     {
                     dum=a[icol+n*ll]; a[icol+n*ll]=0.0;
                     i1=n*ll; i2=n*icol;
-                    for (l=0; l<n; ++l,++i1,++i2) a[i1]-=dum*a[i2];
+                    for (l=0; l<n; ++l,++i1,++i2) { a[i1]-=dum*a[i2];
+}
                     i1=n*ll; i2=n*icol;
-                    for (l=0; l<m; ++l,++i1,++i2) b[i1]-=dum*b[i2];
+                    for (l=0; l<m; ++l,++i1,++i2) { b[i1]-=dum*b[i2];
+}
                     }
+}
             } /* i */
 
         for (l=n-1; l>=0; --l)
@@ -2018,8 +2220,9 @@ static int mat_gj2(double *a,int n,double *b,int m,double *pdet)
         muste_free(indxr); indxr=NULL;
 */        
 
-        if (det<700.0) *pdet=dets*exp(det);
-        else           *pdet=1e308;
+        if (det<700.0) { *pdet=dets*exp(det);
+        } else {           *pdet=1e308;
+}
         return(1);
         }
 
@@ -2041,8 +2244,10 @@ int mat_inv(double *z,double *x,int n,double *pdet)
         int i;
 
         i=mat_gj(x,n,z,0,pdet);
-        if (i<0) return(-1);
-        for (i=0; i<n*n; ++i) z[i]=x[i];
+        if (i<0) { return(-1);
+}
+        for (i=0; i<n*n; ++i) { z[i]=x[i];
+}
         return(1);
         }
 
@@ -2064,16 +2269,18 @@ int solve_upper(double *x,double *a,double *b,int m,int k,double eps)
         double s,t;
 
 //        sur_print("\nsolve_upper");
-        for (g=0; g<k; ++g)
+        for (g=0; g<k; ++g) {
             for (i=m-1; i>=0; --i)
                 {
                 s=b[i+m*g];
                 t=a[i*(m+1)];
                 if (fabs(t)<eps) { diag_error(i); return(-1); }
-                for (j=i+1; j<m; ++j)
+                for (j=i+1; j<m; ++j) {
                     s-=a[i+m*j]*x[j+m*g];
+}
                 x[i+m*g]=s/t;
                 }
+}
         return(1);
         }
 
@@ -2083,16 +2290,18 @@ int solve_lower(double *x,double *a,double *b,int m,int k,double eps)
         double s,t;
 
 //        sur_print("\nsolve_lower");
-        for (g=0; g<k; ++g)
+        for (g=0; g<k; ++g) {
             for (i=0; i<m; ++i)
                 {
                 s=b[i+m*g];
                 t=a[i*(m+1)];
                 if (fabs(t)<eps) { diag_error(i); return(-1); }
-                for (j=0; j<i; ++j)
+                for (j=0; j<i; ++j) {
                     s-=a[i+m*j]*x[j+m*g];
+}
                 x[i+m*g]=s/t;
                 }
+}
         return(1);
         }
 
@@ -2107,8 +2316,9 @@ int solve_diag(double *x,double *a,double *b,int m,int k,double eps)
             {
             s=a[i*(m+1)];
             if (fabs(s)<eps) { diag_error(i); return(-1); }
-            for (g=0; g<k; ++g)
+            for (g=0; g<k; ++g) {
                 x[i+m*g]=b[i+m*g]/s;
+}
             }
         return(1);
         }
@@ -2122,12 +2332,13 @@ int solve_symm(double *x,double *a,double *b,int m,int k,double eps)
         p=(double *)muste_malloc(m*sizeof(double));
         if (p==NULL) { not_enough_memory(); return(-1); }
 
-        for (i=0; i<m; ++i)
+        for (i=0; i<m; ++i) {
             for (j=0; j<m; ++j)
                 {
                 s=a[i+m*j];
-                for (h=i-1; h>=0; --h)
+                for (h=i-1; h>=0; --h) {
                     s-=a[j+m*h]*a[i+m*h];
+}
                 if (j==i)
                     {
                     if (s<eps)
@@ -2137,26 +2348,31 @@ int solve_symm(double *x,double *a,double *b,int m,int k,double eps)
                         }
                     p[i]=1/sqrt(s);
                     }
-                else a[j+m*i]=s*p[i];
+                else { a[j+m*i]=s*p[i];
+}
                 } /* j,i */
+}
 
         for (j=0; j<k; ++j)
             {
             for (i=0; i<m; ++i)
                 {
                 s=b[i+m*j];
-                for (h=i-1; h>=0; --h)
+                for (h=i-1; h>=0; --h) {
                     s-=a[i+m*h]*b[h+m*j];
+}
                 b[i+m*j]=s*p[i];
                 }
             for (i=m-1; i>=0; --i)
                 {
                 s=b[i+m*j];
-                for (h=i+1; h<m; ++h) s-=a[h+m*i]*b[h+m*j];
+                for (h=i+1; h<m; ++h) { s-=a[h+m*i]*b[h+m*j];
+}
                 b[i+m*j]=s*p[i];
                 }
             }
-        for (i=0; i<m*k; ++i) x[i]=b[i];
+        for (i=0; i<m*k; ++i) { x[i]=b[i];
+}
         muste_free(p); p=NULL;
         return(1);
         }
@@ -2177,18 +2393,27 @@ static int tutki_kertoimet(double *a,int m,int n)
         int lower=1;
         int symm=1;
 
-        if (m!=n) return(0);
-        for (i=0; i<m; ++i)
+        if (m!=n) { return(0);
+}
+        for (i=0; i<m; ++i) {
             for (j=0; j<i; ++j)
                 {
-                if (a[i+m*j]!=a[j+m*i]) symm=0;
-                if (a[i+m*j]!=0) upper=0;
-                if (a[j+m*i]!=0) lower=0;
+                if (a[i+m*j]!=a[j+m*i]) { symm=0;
+}
+                if (a[i+m*j]!=0) { upper=0;
+}
+                if (a[j+m*i]!=0) { lower=0;
+}
                 }
-        if (upper && lower) return(20);
-        if (symm) return(10);
-        if (upper) return(9);
-        if (lower) return(8);
+}
+        if (upper && lower) { return(20);
+}
+        if (symm) { return(10);
+}
+        if (upper) { return(9);
+}
+        if (lower) { return(8);
+}
         return(0);
         }
 
@@ -2199,10 +2424,14 @@ int mat_solve(double *x,double *a,double *b,int m,int n,int k,double eps)
 
         tyyppi=tutki_kertoimet(a,m,n);
 
-        if (tyyppi==20) return(solve_diag(x,a,b,m,k,eps));
-        if (tyyppi==10) return(solve_symm(x,a,b,m,k,eps));
-        if (tyyppi==9) return(solve_upper(x,a,b,m,k,eps));
-        if (tyyppi==8) return(solve_lower(x,a,b,m,k,eps));
+        if (tyyppi==20) { return(solve_diag(x,a,b,m,k,eps));
+}
+        if (tyyppi==10) { return(solve_symm(x,a,b,m,k,eps));
+}
+        if (tyyppi==9) { return(solve_upper(x,a,b,m,k,eps));
+}
+        if (tyyppi==8) { return(solve_lower(x,a,b,m,k,eps));
+}
 
         i=ortholin1(a,m,n,b,k,eps,x,0);
                                /*   0=!improvement  */
@@ -2219,8 +2448,9 @@ int mat_2mtm(double *T,double *X,double *Y,int m,int n,int r)	  /*  T=X'*Y */
 
 	for (i=0; i<n; ++i)
 	    {
-	    for (j=0; j<r; ++j)
+	    for (j=0; j<r; ++j) {
 		T[i+n*j]=sis_tulo(X+m*i,Y+m*j,1,1,m);
+}
 	    }
 	return(1);
 	}
@@ -2232,8 +2462,9 @@ int mat_2mmt(double *T,double *X,double *Y,int m,int n,int r)
 
 	for (i=0; i<m; ++i)
 	    {
-	    for (j=0; j<r; ++j)
+	    for (j=0; j<r; ++j) {
 		T[i+m*j]=sis_tulo(X+i,Y+j,m,r,n);
+}
 	    }
 	return(1);
 	}
@@ -2274,36 +2505,43 @@ int mat_dcholinv(double *a,int n,double *pdet)
 		x=a[n*i+j];	/* ajattele: i=sarake, j=rivi */
 				/* alunperin talletus riveittÑin */
 				/* nyt sarakkeittain */
-		for (k=i-1; k>=0; --k)
+		for (k=i-1; k>=0; --k) {
 		    x-=a[n*j1+k]*a[n*i1+k];
+}
 		if (j==i)
 		    {
-		    if (x<=0.0) return(-j);
+		    if (x<=0.0) { return(-j);
+}
 		    a[n*i1+i]=y=1/sqrt(x);
 		    *pdet*=x;
 		    }
-		else a[n*j1+i]=x*y;
+		else { a[n*j1+i]=x*y;
+}
 		}
 	    }
 
-	for (i=0; i<n; ++i)
+	for (i=0; i<n; ++i) {
 	for (j=i+1; j<n; ++j)
 	    {
 	    z=0;
 	    j1=j+1;
-	    for (k=j-1; k>=i; --k)
+	    for (k=j-1; k>=i; --k) {
 		z-=a[n*j1+k]*a[n*(k+1)+i];
+}
 	    a[n*j1+i]=z*a[n*j1+j];
 	    }
-	for (i=0; i<n; ++i)
+}
+	for (i=0; i<n; ++i) {
 	for (j=i; j<n; ++j)
 	    {
 	    z=0;
 	    j1=n;
-	    for (k=j+1; k<=j1; ++k)
+	    for (k=j+1; k<=j1; ++k) {
 		z+=a[n*k+j]*a[n*k+i];
+}
 	    a[n*(j+1)+i]=z;
 	    }
+}
 	return(1);
 	}
 
@@ -2317,11 +2555,12 @@ int mat_mtm2(double *T,double *X,double *Y,int m,int n,int r)
 //	extern double sis_tulo();
 	double a;
 
-	for (i=0; i<n; ++i) for (j=0; j<r; ++j)
+	for (i=0; i<n; ++i) { for (j=0; j<r; ++j)
 	    {
 	    a=sis_tulo(X+m*i,Y+m*j,1,1,m);
 	    T[i+n*j]=a;
 	    }
+}
 	return(1);
 	}
 
@@ -2333,8 +2572,9 @@ int mat_copy(double *T,double *X,int m,int n)
 	register unsigned int i,k;
 
 	k=m*n;
-	for (i=0; i<k; ++i)
+	for (i=0; i<k; ++i) {
 	    T[i]=X[i];
+}
 	return(1);
 	}
 
@@ -2345,10 +2585,13 @@ int mat_cholmove(double *A,int n)
 	{
 	int i,j;
 
-	for (i=0; i<n*n; ++i) A[i]=A[i+n];
-	for (j=0; j<n; ++j)
-	    for (i=j+1; i<n; ++i)
+	for (i=0; i<n*n; ++i) { A[i]=A[i+n];
+}
+	for (j=0; j<n; ++j) {
+	    for (i=j+1; i<n; ++i) {
 		A[i+j*n]=A[j+i*n];
+}
+}
 	return(1);
 	}
 
@@ -2386,35 +2629,42 @@ int mat_cholinv(double *a,int n)
 		x=a[n*i+j];	/* ajattele: i=sarake, j=rivi */
 				/* alunperin talletus riveittÑin */
 				/* nyt sarakkeittain */
-		for (k=i-1; k>=0; --k)
+		for (k=i-1; k>=0; --k) {
 		    x-=a[n*j1+k]*a[n*i1+k];
+}
 		if (j==i)
 		    {
-		    if (x<=0) return(-j);
+		    if (x<=0) { return(-j);
+}
 		    a[n*i1+i]=y=1/sqrt(x);
 		    }
-		else a[n*j1+i]=x*y;
+		else { a[n*j1+i]=x*y;
+}
 		}
 	    }
 
-	for (i=0; i<n; ++i)
+	for (i=0; i<n; ++i) {
 	for (j=i+1; j<n; ++j)
 	    {
 	    z=0;
 	    j1=j+1;
-	    for (k=j-1; k>=i; --k)
+	    for (k=j-1; k>=i; --k) {
 		z-=a[n*j1+k]*a[n*(k+1)+i];
+}
 	    a[n*j1+i]=z*a[n*j1+j];
 	    }
-	for (i=0; i<n; ++i)
+}
+	for (i=0; i<n; ++i) {
 	for (j=i; j<n; ++j)
 	    {
 	    z=0;
 	    j1=n;
-	    for (k=j+1; k<=j1; ++k)
+	    for (k=j+1; k<=j1; ++k) {
 		z+=a[n*k+j]*a[n*k+i];
+}
 	    a[n*(j+1)+i]=z;
 	    }
+}
 	return(1);
 	}
 
@@ -2437,9 +2687,11 @@ int mat_nrm(double *T,double *X,int m,int n)
 		a+=b*b;
 		}
 	    T[j]=a=sqrt(a);
-	    if (a==0.0) continue;
-	    for (i=0; i<m; ++i)
+	    if (a==0.0) { continue;
+}
+	    for (i=0; i<m; ++i) {
 		X[i+mj]/=a;
+}
 	    }
 	return(1);
 	}
@@ -2457,8 +2709,9 @@ int mat_sum(double *T,double *X,int m,int n)
 	    {
 	    a=0.0;
 	    mj=m*j;
-	    for (i=0; i<m; ++i)
+	    for (i=0; i<m; ++i) {
 		a+=X[i+mj];
+}
 	    T[j]=a;
 	    }
 	return(1);
@@ -2477,16 +2730,19 @@ int mat_p(double *X,int m,int k)
 	X[k+m*k]=a;
 	for (j=0; j<m; ++j)
 	    {
-	    if (j==k) continue;
+	    if (j==k) { continue;
+}
 	    X[k+m*j]*=a;
 	    }
 	for (i=0; i<m; ++i)
 	    {
-	    if (i==k) continue;
+	    if (i==k) { continue;
+}
 	    b=X[i+m*k];
 	    for (j=0; j<m; ++j)
 		{
-		if (j==k) continue;
+		if (j==k) { continue;
+}
 		X[i+m*j]-=b*X[k+m*j];
 		}
 	    X[i+m*k]*=-a;
@@ -2507,11 +2763,13 @@ int mat_center(double *T,double *X,int m,int n)
 	    {
 	    a=0.0;
 	    mj=m*j;
-	    for (i=0; i<m; ++i)
+	    for (i=0; i<m; ++i) {
 		a+=X[i+mj];
+}
 	    a=T[j]=a/(double)m;
-	    for (i=0; i<m; ++i)
+	    for (i=0; i<m; ++i) {
 		X[i+mj]-=a;
+}
 	    }
 	return(1);
 	}
@@ -2523,8 +2781,10 @@ int mat_transp(double *T,double *X,int m,int n)
 	{
 	register int i,j;
 
-	for (i=0; i<m; ++i) for (j=0; j<n; ++j)
+	for (i=0; i<m; ++i) { for (j=0; j<n; ++j) {
 	    T[j+n*i]=X[i+m*j];
+}
+}
 	return(1);
 	}
 
@@ -2539,8 +2799,9 @@ int mat_mltd(double *T,double *X,double *Y,int m,int n)
 	for (j=0; j<n; ++j)
 	    {
 	    yjj=Y[j+n*j];
-	    for (i=0; i<m; ++i)
+	    for (i=0; i<m; ++i) {
 		T[i+m*j]=X[i+m*j]*yjj;
+}
 	    }
 	return(1);
 	}
@@ -2556,8 +2817,9 @@ int mat_dmlt(double *T,double *X,double *Y,int m,int n)
 	for (i=0; i<m; ++i)
 	    {
 	    xii=X[i+m*i];
-	    for (j=0; j<n; ++j)
+	    for (j=0; j<n; ++j) {
 		T[i+m*j]=xii*Y[i+m*j];
+}
 	    }
 	return(1);
 	}

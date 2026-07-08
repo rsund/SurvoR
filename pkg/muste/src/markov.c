@@ -81,7 +81,8 @@ void muste_markov(char *argv)
 
         s_init(argv);
 
-        i=spec_init(r1+r-1); if (i<0) return;
+        i=spec_init(r1+r-1); if (i<0) { return;
+}
         spec_rnd();
 
         if (g==1)
@@ -129,20 +130,29 @@ void muste_markov(char *argv)
         if (g>3 && muste_strcmpi(word[3],"BY")!=0)
             {
             results_line=edline2(word[3],1,1);
-            if (results_line==0) return;
+            if (results_line==0) { return;
+}
             }
 
         degree=1;
         i=spfind("DEGREE");
-        if (i<0) i=spfind("ORDER");
-        if (i>=0) degree=atoi(spb[i]);
-        if (degree<0) degree=0;
-        i=spfind("DELETE"); if (i>=0) strcpy(delete,spb[i]);
-        l1=edline2(word[1],1,1); if (l1==0) return;
-        l2=edline2(word[2],l1,1); if (l2==0) return;
+        if (i<0) { i=spfind("ORDER");
+}
+        if (i>=0) { degree=atoi(spb[i]);
+}
+        if (degree<0) { degree=0;
+}
+        i=spfind("DELETE"); if (i>=0) { strcpy(delete,spb[i]);
+}
+        l1=edline2(word[1],1,1); if (l1==0) { return;
+}
+        l2=edline2(word[2],l1,1); if (l2==0) { return;
+}
         strcpy(line_end," ");
-        i=spfind("LINE_END"); if (i>=0) strcpy(line_end,spb[i]);
-        i=varaa_tilat(); if (i<0) return;
+        i=spfind("LINE_END"); if (i>=0) { strcpy(line_end,spb[i]);
+}
+        i=varaa_tilat(); if (i<0) { return;
+}
 
     //  MARKOV L1,L2 BY <matrix>
         if (g>4 && muste_strcmpi(word[3],"BY")==0)
@@ -177,7 +187,8 @@ static int varaa_tilat()
         for (l=l1; l<=l2; ++l)
             {
             edread(x,l);
-            i=ed1; while (x[i-1]==' ' && i>0) x[--i]=EOS;
+            i=ed1; while (x[i-1]==' ' && i>0) { x[--i]=EOS;
+}
             strcat(mspace,x+1);
             strcat(mspace,line_end);
             }
@@ -213,28 +224,34 @@ static int markov()
             if (i>c3)
                 {
                 x[i]=EOS;
-                k=i; while (k>0 && x[k-1]!=' ') --k;
+                k=i; while (k>0 && x[k-1]!=' ') { --k;
+}
                 if (k==0) { print_line(x); i=0; }
                 else
                     {
                     x[k-1]=EOS; print_line(x);
-                    for (h=k; h<i; ++h) x[h-k]=x[h];
+                    for (h=k; h<i; ++h) { x[h-k]=x[h];
+}
                     i=i-k;
                     }
-                if (results_line>last_line) return(1); // 14.8.2010
+                if (results_line>last_line) { return(1); // 14.8.2010
+}
                 }
 /*    Rprintf("\nstate=%s",state); getch();      */
             p=haku(state,p,degree);
 /*   Rprintf("\nmerkki=%c p-mstart=%d",*p,p-mstart); getch();    */
             if (degree>0)
                 {
-                for (k=0; k<degree-1; ++k) state[k]=state[k+1];
+                for (k=0; k<degree-1; ++k) { state[k]=state[k+1];
+}
                 x[i++]=state[degree-1]=*p;
                 }
-            else x[i++]=*p;
+            else { x[i++]=*p;
+}
             prev=p;
             p+=1+(int)(100*uniform_dev());
-            if (p>=mend) p=mstart+(int)(tila/5*uniform_dev());
+            if (p>=mend) { p=mstart+(int)(tila/5*uniform_dev());
+}
             if (sur_kbhit()) { sur_getch(); break; }
             }
         if (i>0) { x[i]=EOS; print_line(x); }
@@ -252,17 +269,20 @@ getch();
 */
         if (degree==0)
             {
-            q=p+1; if (q>=mend) q=mstart;
+            q=p+1; if (q>=mend) { q=mstart;
+}
             return(q);
             }
         q=strstr(p,state);
         if (q==NULL)
             {
             q=strstr(mstart,state);
-            if (q==NULL || q+degree-1==prev) return(haku(state+1,p+1,degree-1));
+            if (q==NULL || q+degree-1==prev) { return(haku(state+1,p+1,degree-1));
+}
             }
         q+=degree;
-        if (q>=mend) q=mstart;
+        if (q>=mend) { q=mstart;
+}
         return(q);
         }
 
@@ -270,7 +290,8 @@ getch();
 static int print_line(char *line)
         {
         output_line(line,eout,results_line);
-        if (results_line) ++results_line;
+        if (results_line) { ++results_line;
+}
         return(1);
         }
 
@@ -300,17 +321,20 @@ static int comp_matrix(char *mat)
         WAIT; return(-1);
         }
     n=strlen(spb[i]);
-    if (n<101) strcpy(state,spb[i]);
-    else
+    if (n<101) { strcpy(state,spb[i]);
+    } else
         {
         sur_print("\nMax.number of states is 100.");
         WAIT; return(-1);
         }
 
-    for (i=0; i<256; ++i) tila_nro[i]=-1;
-    for (i=0; i<n; ++i) tila_nro[(int)state[i]]=i;
+    for (i=0; i<256; ++i) { tila_nro[i]=-1;
+}
+    for (i=0; i<n; ++i) { tila_nro[(int)state[i]]=i;
+}
 
-    m=1; for (i=0; i<degree; ++i) m*=n;
+    m=1; for (i=0; i<degree; ++i) { m*=n;
+}
 
     aa=(double *)muste_malloc(m*n*sizeof(double));
     if (aa==NULL) { ei_tilaa(); return(-1); }
@@ -319,7 +343,8 @@ static int comp_matrix(char *mat)
     clab=muste_malloc(n*8+1);
     if (clab==NULL) { ei_tilaa(); return(-1); }
 
-    for (i=0; i<m*n; ++i) aa[i]=0.0;
+    for (i=0; i<m*n; ++i) { aa[i]=0.0;
+}
 
     paikka=-1;
     for (i=0; i<degree; ++i)
@@ -330,11 +355,14 @@ static int comp_matrix(char *mat)
     while(1)
         {
         k=seuraava_tila();
-        if (k<0) break;
+        if (k<0) { break;
+}
         rivi=ntila[0];
-        for (i=1; i<degree; ++i) rivi=n*rivi+ntila[i];
+        for (i=1; i<degree; ++i) { rivi=n*rivi+ntila[i];
+}
         ++aa[rivi+m*k];
-        for (i=0; i<degree-1; ++i) ntila[i]=ntila[i+1];
+        for (i=0; i<degree-1; ++i) { ntila[i]=ntila[i+1];
+}
         ntila[degree-1]=k;
         }
 
@@ -342,30 +370,40 @@ static int comp_matrix(char *mat)
     for (i=0; i<m; ++i)
         {
         a=0.0;
-        for (k=0; k<n; ++k) a+=aa[i+m*k];
+        for (k=0; k<n; ++k) { a+=aa[i+m*k];
+}
 //      if (a==0.0) { aa[i]=1.0; continue; }
-        if (a==0.0) { for (k=0; k<n; ++k) aa[i+m*k]=b; continue; }
-        for (k=0; k<n; ++k) aa[i+m*k]/=a;
+        if (a==0.0) { for (k=0; k<n; ++k) { aa[i+m*k]=b; 
+}continue; }
+        for (k=0; k<n; ++k) { aa[i+m*k]/=a;
+}
         }
 
 // mprint(aa,m,n);
 
-    for (i=degree; i<8; ++i) sbuf[i]=' '; sbuf[8]=EOS;
-    for (i=0; i<degree; ++i) ntila[i]=0;
+    for (i=degree; i<8; ++i) { sbuf[i]=' '; 
+}sbuf[8]=EOS;
+    for (i=0; i<degree; ++i) { ntila[i]=0;
+}
     h=0;
     while (1)
         {
-        for (i=0; i<degree; ++i) sbuf[i]=state[ntila[i]];
-        for (i=0; i<8; ++i) rlab[h++]=sbuf[i];
+        for (i=0; i<degree; ++i) { sbuf[i]=state[ntila[i]];
+}
+        for (i=0; i<8; ++i) { rlab[h++]=sbuf[i];
+}
         i=next_lattice_point(degree,ntila,n-1);
-        if (i<0) break;
+        if (i<0) { break;
+}
         }
-    for (i=1; i<8; ++i) sbuf[i]=' '; sbuf[8]=EOS;
+    for (i=1; i<8; ++i) { sbuf[i]=' '; 
+}sbuf[8]=EOS;
     h=0;
     for (i=0; i<n; ++i)
         {
         sbuf[0]=state[i];
-        for (k=0; k<8; ++k) clab[h++]=sbuf[k];
+        for (k=0; k<8; ++k) { clab[h++]=sbuf[k];
+}
         }
 
     strcpy(sbuf,mat);
@@ -387,10 +425,13 @@ static int seuraava_tila()
         {
         ++paikka;
         ch=mspace[paikka];
-        if (ch==' ') ch='_';
-        if (ch==EOS) return(-1);
+        if (ch==' ') { ch='_';
+}
+        if (ch==EOS) { return(-1);
+}
         i=tila_nro[(int)ch];
-        if (i>=0) break;
+        if (i>=0) { break;
+}
         }
     return(i);
     }
@@ -400,10 +441,13 @@ static int next_lattice_point(int n,int *elem1,int vmax)
         int i;
 
         i=n-1;
-        while (elem1[i]==vmax && i>=0) --i;
-        if (i<0) return(-1);
+        while (elem1[i]==vmax && i>=0) { --i;
+}
+        if (i<0) { return(-1);
+}
         ++elem1[i];
-        ++i; for (; i<n; ++i) elem1[i]=0;
+        ++i; for (; i<n; ++i) { elem1[i]=0;
+}
         return(1);
         }
 
@@ -429,7 +473,8 @@ static int simul_matrix(char *mat)
         degree=1; k=cdim;
         while (1)
             {
-            if (rdim==k) break;
+            if (rdim==k) { break;
+}
             if (rdim<k) { degree=0; break; }
             ++degree; k*=cdim;
             }
@@ -446,7 +491,8 @@ static int simul_matrix(char *mat)
 
         sp_char=EOS;
         i=spfind("SPACE");
-        if (i>=0) sp_char=*spb[i];
+        if (i>=0) { sp_char=*spb[i];
+}
 
         for (i=0; i<rdim; ++i)
             {
@@ -462,18 +508,23 @@ static int simul_matrix(char *mat)
             }
 
         start_state=0;
-        if (degree>1) for (k=0; k<degree; ++k) start_states[k]=0; // 24.4.2002
+        if (degree>1) { for (k=0; k<degree; ++k) { start_states[k]=0; // 24.4.2002
+}
+}
 
         i=spfind("START");
-        if (i>=0) start_state=atoi(spb[i])-1;
+        if (i>=0) { start_state=atoi(spb[i])-1;
+}
 
         if (degree>1 && i>=0)
             {
             muste_itoa((int)start_state,sbuf,cdim);
-            for (i=0; i<cdim; ++i) x[i]='0'; x[cdim]=EOS;
+            for (i=0; i<cdim; ++i) { x[i]='0'; 
+}x[cdim]=EOS;
             strcpy(x+degree-strlen(sbuf),sbuf);
 // Rprintf("\nx=%s|",x); getch();
-            for (k=0; k<degree; ++k) start_states[k]=(int)(x[k]-'0');
+            for (k=0; k<degree; ++k) { start_states[k]=(int)(x[k]-'0');
+}
             }
 
         sur_print("\nGenerating Markov chain... ");
@@ -487,25 +538,32 @@ static int simul_matrix(char *mat)
             a=uniform_dev();
             if (degree==1)
                 {
-                for (k=0; k<rdim; ++k)
-                    if (a<aa[start_state+rdim*k]) break;
+                for (k=0; k<rdim; ++k) {
+                    if (a<aa[start_state+rdim*k]) { break;
+}
+}
                 start_state=k;
                 }
             else
                 {
                 start_state=start_states[0];
-                for (k=1; k<degree; ++k)
+                for (k=1; k<degree; ++k) {
                     start_state=cdim*start_state+start_states[k];
-                for (k=0; k<cdim; ++k)
-                    if (a<aa[start_state+rdim*k]) break;
-                for (h=0; h<degree-1; ++h)
+}
+                for (k=0; k<cdim; ++k) {
+                    if (a<aa[start_state+rdim*k]) { break;
+}
+}
+                for (h=0; h<degree-1; ++h) {
                     start_states[h]=start_states[h+1];
+}
                 start_states[degree-1]=k;
                 }
 // muste_sprintf(sbuf,"%d|",k); sur_print(sbuf);
             muste_sprintf(sbuf,"%c",*(clab+lc*k));
             sur_print(sbuf);
-            if (*sbuf==sp_char) *sbuf=' ';
+            if (*sbuf==sp_char) { *sbuf=' ';
+}
             x[pos++]=*sbuf;
             if (pos>c3-2)
                 {
@@ -516,7 +574,8 @@ static int simul_matrix(char *mat)
                     else
                         {
                         --pos;
-                        while (x[pos]!=' ') --pos;
+                        while (x[pos]!=' ') { --pos;
+}
                         x[pos]=EOS;
                         edwrite(x,j,1);
                         memmove(x, x + pos + 1, strlen(x + pos + 1) + 1);  // strcpy(x,x+pos+1);
@@ -525,7 +584,8 @@ static int simul_matrix(char *mat)
                     }
                 else { edwrite(x,j,1); pos=0; }
                 ++j;
-                if (j>l2) break;
+                if (j>l2) { break;
+}
                 }
             } // j
 
@@ -550,7 +610,8 @@ rem_pr("a Markov chain and writes the results from line L onwards.");
             }
         strcpy(matname,word[2]);
         i=matrix_load(matname,&aa,&rdim,&cdim,&rlab,&clab,&lr,&lc,&mtype,expr);
-        if (i<0) return(-1);
+        if (i<0) { return(-1);
+}
         if (cdim!=rdim)
             {
             p_error();
@@ -572,7 +633,8 @@ rem_pr("a Markov chain and writes the results from line L onwards.");
         if (g>3)
             {
             results_line=edline2(word[3],1,1);
-            if (results_line==0) return(-1);
+            if (results_line==0) { return(-1);
+}
             }
 
         ip1=(int *)muste_malloc(m2*sizeof(int));
@@ -583,7 +645,8 @@ rem_pr("a Markov chain and writes the results from line L onwards.");
         i=spfind("SVD");
         if (i>=0 && atoi(spb[i])>0)
             {
-            k=svd_study(); if (k<0) return(-1);
+            k=svd_study(); if (k<0) { return(-1);
+}
             study_results(k,1);
             return(1);
             }
@@ -593,34 +656,44 @@ rem_pr("a Markov chain and writes the results from line L onwards.");
         ip4=(int *)muste_malloc(m2*sizeof(int));
         if (ip4==NULL) { ei_tilaa(); return(-1); }
 
-        for (i=0; i<m2; ++i) if (aa[i]==0.0) ip1[i]=0; else ip1[i]=1;
+        for (i=0; i<m2; ++i) { if (aa[i]==0.0) { ip1[i]=0; } else { ip1[i]=1;
+}
+}
 
         i=spfind("POWER");
         if (i<0)
             {   /* Transitive closure, Reingold & al. p.338- */
-            for (i=0; i<m2; ++i) if (aa[i]==0.0) ip4[i]=0; else ip4[i]=1;
-            for (k=0; k<m; ++k) for(i=0; i<m; ++i)
+            for (i=0; i<m2; ++i) { if (aa[i]==0.0) { ip4[i]=0; } else { ip4[i]=1;
+}
+}
+            for (k=0; k<m; ++k) { for(i=0; i<m; ++i)
                 {
                 if (ip4[i+m*k])
                     {
-                    for (j=0; j<m; ++j)
-                        if (ip4[i+m*j] || ip4[k+m*j]) ip4[i+m*j]=1;
-                        else ip4[i+m*j]=0;
+                    for (j=0; j<m; ++j) {
+                        if (ip4[i+m*j] || ip4[k+m*j]) { ip4[i+m*j]=1;
+                        } else { ip4[i+m*j]=0;
+}
+}
                     }
                 }
+}
             }
 
 else { /* POWER */
-        for (i=0; i<m2; ++i) if (aa[i]==0.0) ip1[i]=0; else ip1[i]=1;
+        for (i=0; i<m2; ++i) { if (aa[i]==0.0) { ip1[i]=0; } else { ip1[i]=1;
+}
+}
         for (i=0; i<m; ++i)
             {
-            for (j=0; j<m; ++j) ip4[i+m*j]=ip1[i+m*j];
+            for (j=0; j<m; ++j) { ip4[i+m*j]=ip1[i+m*j];
+}
             ip4[(m+1)*i]=1; /* P+I */
             }
         for (k=0; k<m-2; ++k)
             {
             muste_sprintf(sbuf," %d",k+1); sur_print(sbuf);
-                for (i=0; i<m; ++i)
+                for (i=0; i<m; ++i) {
                     for (j=0; j<m; ++j)
                         {
                         is=0;
@@ -631,10 +704,15 @@ else { /* POWER */
                             }
                         ip3[i+m*j]=is;
                         }
-                for (i=0; i<m2; ++i) ip4[i]=ip3[i]; /* (P+I)P */
-                for (i=0; i<m; ++i) ip4[(m+1)*i]=1; /* (P+I)P+I */
+}
+                for (i=0; i<m2; ++i) { ip4[i]=ip3[i]; /* (P+I)P */
+}
+                for (i=0; i<m; ++i) { ip4[(m+1)*i]=1; /* (P+I)P+I */
+}
             }
-        for (i=0; i<m2; ++i) if (ip4[i]>0) ip4[i]=1;
+        for (i=0; i<m2; ++i) { if (ip4[i]>0) { ip4[i]=1;
+}
+}
      }
 
 /*
@@ -649,28 +727,37 @@ getch();
 */
 
         k=0; /* current class */
-        for (i=0; i<m; ++i) ip1[i]=0; /* class indices */
+        for (i=0; i<m; ++i) { ip1[i]=0; /* class indices */
+}
         for (i=0; i<m; ++i)
             {
-            if (ip1[i]!=0) continue;
+            if (ip1[i]!=0) { continue;
+}
             h=0;
             for (j=i+1; j<m; ++j)
                 {
-                for (e=0; e<m; ++e)
-                    if (ip4[i+m*e]!=ip4[j+m*e]) break;
+                for (e=0; e<m; ++e) {
+                    if (ip4[i+m*e]!=ip4[j+m*e]) { break;
+}
+}
                 if (e==m)
                     { ip3[h]=j; ++h; }
                 }
-            for (j=0; j<h; ++j)
-                if (ip4[i+m*ip3[j]]==0) break;
+            for (j=0; j<h; ++j) {
+                if (ip4[i+m*ip3[j]]==0) { break;
+}
+}
             if (j==h)
                 {
-                e=0; for (j=0; j<m; ++j) if (ip4[i+m*j]>0) ++e;
+                e=0; for (j=0; j<m; ++j) { if (ip4[i+m*j]>0) { ++e;
+}
+}
                 if (e==h+1)
                     {
                     ++k;
                     ip1[i]=k;
-                    for (j=0; j<h; ++j) ip1[ip3[j]]=k;
+                    for (j=0; j<h; ++j) { ip1[ip3[j]]=k;
+}
                     ip2[k]=h+1;
                     }
                 else
@@ -680,7 +767,8 @@ getch();
                 }
             }
         h=0;
-        for (i=0; i<m; ++i) if (ip1[i]==-1) { ip1[i]=0; ++h; }
+        for (i=0; i<m; ++i) { if (ip1[i]==-1) { ip1[i]=0; ++h; }
+}
         ip2[0]=h;
 /*
 printf("\n");
@@ -698,7 +786,8 @@ static int svd_study()
         double eps,tol;
 
 
-        for (i=0; i<m; ++i) aa[(m+1)*i]-=1.0;
+        for (i=0; i<m; ++i) { aa[(m+1)*i]-=1.0;
+}
 
         dd=(double *)muste_malloc(m*sizeof(double));
         if (dd==NULL) { ei_tilaa(); return(-1); }
@@ -711,8 +800,11 @@ mprint(aa,m,m);
 mprint(dd,m,1);
 mprint(vv,m,m);
 */
-        for (i=0; i<m; ++i) ip1[i]=-1; /* class indices */
-        for (i=m-1; i>=0; --i) if (dd[i]>tol_svd) break;
+        for (i=0; i<m; ++i) { ip1[i]=-1; /* class indices */
+}
+        for (i=m-1; i>=0; --i) { if (dd[i]>tol_svd) { break;
+}
+}
         n1=m-i-2;
         /* n1+1= # of 'zero' singular values = # of recurrent classes */
 
@@ -732,11 +824,13 @@ mprint(vv,m,m);
         k=0; /* current class */
         for (i=0; i<m; ++i)
             {
-            if (ip1[i]!=-1) continue;
+            if (ip1[i]!=-1) { continue;
+}
             ++k; h=i; ip1[i]=k; ip2[k]=1;
             for (ii=h+1; ii<m; ++ii)
                 {
-                if (ip1[ii]!=-1) continue;
+                if (ip1[ii]!=-1) { continue;
+}
                 tol=0.0;
                 for (j=m-n1-1; j<m; ++j)
                     {
@@ -760,7 +854,8 @@ mprint(vv,m,m);
             {
             for (i=0; i<m; ++i)
                 {
-                if (ip1[i]!=kk) continue;
+                if (ip1[i]!=kk) { continue;
+}
                 tol=-1.0;
                 for (j=m-n1-1; j<m; ++j)
                     {
@@ -770,12 +865,14 @@ mprint(vv,m,m);
                 tol=0.0;
                 for (j=i; j<m; ++j)
                     {
-                    if (ip1[j]!=kk) continue;
+                    if (ip1[j]!=kk) { continue;
+}
                     tol+=aa[j+m*h];
                     }
                 for (j=i; j<m; ++j)
                     {
-                    if (ip1[j]!=kk) continue;
+                    if (ip1[j]!=kk) { continue;
+}
                     vv[j+m]=aa[j+m*h]/tol;
                     ii=j;
                     }
@@ -805,7 +902,8 @@ static int study_results(int k,int svd)
         int i,j,e;
         char x[LLENGTH];
 
-        i=output_open(eout); if (i<0) return(-1);
+        i=output_open(eout); if (i<0) { return(-1);
+}
         muste_sprintf(sbuf,"Structure of Markov chain %s of %d states:",
                         word[2],m);
         print_line(sbuf);
@@ -813,47 +911,53 @@ static int study_results(int k,int svd)
             {
             print_line("The chain is irreducible.");
             output_close(eout);
-            if (svd)
+            if (svd) {
                 i=matrix_save("MCLASS.M",vv,rdim,2,rlab,"Class   Prob    ",lr,8,-1,expr,0,0);
+}
             return(1);
             }
-        else
+        else {
             print_line("Class structure saved in matrix file MCLASS.M");
-        if (k==1)
+}
+        if (k==1) {
             muste_sprintf(sbuf,"1 recurrent class of states:");
-        else
+        } else {
             muste_sprintf(sbuf,"%d recurrent classes of states:",k);
+}
         print_line(sbuf);
 
         for (i=1; i<=k; ++i)
             {
             j=muste_sprintf(sbuf,"%d (%d):",i,ip2[i]);
-            for (e=0; e<m; ++e)
+            for (e=0; e<m; ++e) {
                 if (ip1[e]==i)
                     {
                     *x=EOS; strncat(x,rlab+lr*e,lr);
                     j+=muste_sprintf(sbuf+j," %s",lyh(x));
                     if (j>c2-8) { muste_sprintf(sbuf+j,"..."); break; }
                     }
+}
             print_line(sbuf);
             }
-        if (ip2[0]==0) print_line("No transient states");
-        else
+        if (ip2[0]==0) { print_line("No transient states");
+        } else
             {
-            if (ip2[0]==1)
+            if (ip2[0]==1) {
                 muste_sprintf(sbuf,"1 transient state:");
-            else
+            } else {
                 muste_sprintf(sbuf,"%d transient states:",ip2[0]);
+}
             print_line(sbuf);
 
             j=0;
-            for (e=0; e<m; ++e)
+            for (e=0; e<m; ++e) {
                 if (ip1[e]==0)
                     {
                     *x=EOS; strncat(x,rlab+lr*e,lr);
                     j+=muste_sprintf(sbuf+j," %s",lyh(x));
                     if (j>c2-8) { muste_sprintf(sbuf+j,"..."); break; }
                     }
+}
             print_line(sbuf);
             }
         output_close(eout);
@@ -865,10 +969,11 @@ static int study_results(int k,int svd)
 
         muste_sprintf(expr,"Class_structure_of_%s_(Transient_states=0)",
                                  word[2]);
-        if (svd)
+        if (svd) {
             i=matrix_save("MCLASS.M",vv,rdim,2,rlab,"Class   Prob    ",lr,8,-1,expr,0,0);
-        else
+        } else {
             i=matrix_save("MCLASS.M",aa,rdim,1,rlab,"Class",lr,lr,-1,expr,0,0);
+}
 
         return(1);
         }
@@ -878,7 +983,8 @@ static char *lyh(char *s)
         int i;
 
         i=strlen(s)-1;
-        while (s[i]==' ') s[i--]=EOS;
+        while (s[i]==' ') { s[i--]=EOS;
+}
         return(s);
         }
 
@@ -917,7 +1023,8 @@ rem_pr("for k=1,2,...,n and saves them as a new vector PN.");
         }
     strcpy(matname,word[2]);
     i=matrix_load(matname,&aa,&rdim,&cdim,&rlab,&clab,&lr,&lc,&mtype,expr);
-    if (i<0) return(-1);
+    if (i<0) { return(-1);
+}
     if (cdim!=rdim)
         {
         p_error();
@@ -936,9 +1043,11 @@ rem_pr("for k=1,2,...,n and saves them as a new vector PN.");
         }
 
     tila1=p_label(word[3],m,rlab,lr);
-    if (tila1<0) return(1);
+    if (tila1<0) { return(1);
+}
     tila2=p_label(word[4],m,rlab,lr);
-    if (tila2<0) return(1);
+    if (tila2<0) { return(1);
+}
 
     n=atoi(word[5]);
 
@@ -951,18 +1060,21 @@ rem_pr("for k=1,2,...,n and saves them as a new vector PN.");
     plab=muste_malloc(8*n);
     if (plab==NULL) { ei_tilaa(); return(1); }
 
-    for (i=0; i<m2; ++i) qq[i]=aa[i];
+    for (i=0; i<m2; ++i) { qq[i]=aa[i];
+}
     ppn[0]=aa[tila1+m*tila2];
 
     for (i=1; i<n; ++i)
         {
         mat_mlt(qq2,qq,aa,m,m,m);
         ppn[i]=qq2[tila1+m*tila2];
-        for (j=0; j<m*m; ++j) qq[j]=qq2[j];
+        for (j=0; j<m*m; ++j) { qq[j]=qq2[j];
+}
         }
 
     strcpy(sbuf,word[6]);
-    if (strchr(sbuf,'.')==NULL) strcat(sbuf,".MAT");
+    if (strchr(sbuf,'.')==NULL) { strcat(sbuf,".MAT");
+}
     numlab2(plab,n,8,1);
     muste_sprintf(s,"P(to_%s_in_n_steps)",word[4]);
 
@@ -980,11 +1092,15 @@ static int p_label(char *tila,int m,char *lab,int k)
     if (is_integer(x))
         {
         i=atoi(x);
-        if (i<=m) return(i-1);
+        if (i<=m) { return(i-1);
+}
         }
-    for (i=strlen(x); i<lr; ++i) strcat(x," ");
-    for (i=0; i<m; ++i)
-        if (strncmp(x,lab+i*k,k)==0) return(i);
+    for (i=strlen(x); i<lr; ++i) { strcat(x," ");
+}
+    for (i=0; i<m; ++i) {
+        if (strncmp(x,lab+i*k,k)==0) { return(i);
+}
+}
 
     muste_sprintf(sbuf,"\nState %s not found!",tila);
     sur_print(sbuf); WAIT; return(-1);
@@ -994,8 +1110,10 @@ static int is_integer(char *x)
     {
     int i;
 
-    for (i=0; i<strlen(x); ++i)
-        if (strchr("0123456789 ",x[i])==NULL) return(0);
+    for (i=0; i<strlen(x); ++i) {
+        if (strchr("0123456789 ",x[i])==NULL) { return(0);
+}
+}
     return(1);
     }
 
@@ -1006,16 +1124,19 @@ static int numlab2(char *lab,int n,int len,int base)
         int sar;
 
         --base;
-        for (i=0; i<n*len; ++i) lab[i]=' ';
-        if (n+base<1000) sar=3;
-        else if (n+base<100000) sar=5;
-        else sar=8;
+        for (i=0; i<n*len; ++i) { lab[i]=' ';
+}
+        if (n+base<1000) { sar=3;
+        } else if (n+base<100000) { sar=5;
+        } else { sar=8;
+}
 
         for (i=0; i<n; ++i)
             {
             muste_itoa(i+1+base,sana,10);
             h=strlen(sana);
-            for (j=i*len+sar-h, k=0; k<h; ++k, ++j) lab[j]=sana[k];
+            for (j=i*len+sar-h, k=0; k<h; ++k, ++j) { lab[j]=sana[k];
+}
             }
         return(1);
         }
@@ -1073,7 +1194,8 @@ static int markov_teach()
     char xx[LLENGTH];
     char state[LNAME];
 
-    if (g<3) return(-1);
+    if (g<3) { return(-1);
+}
 /***********************
     if (g<3)
         {
@@ -1104,12 +1226,14 @@ static int markov_teach()
     stop_when_found=0;
     n_xor(4,maski,t_stop,sbuf);
     i=spfind(sbuf); // STOP
-    if (i>=0) stop_when_found=atoi(spb[i]);
+    if (i>=0) { stop_when_found=atoi(spb[i]);
+}
 
     show=1;
     n_xor(4,maski,t_show,sbuf);
     i=spfind(sbuf); // SHOW
-    if (i>=0) show=atoi(spb[i]);
+    if (i>=0) { show=atoi(spb[i]);
+}
 
     suggest=0;
     n_xor(7,maski,t_suggest,sbuf);
@@ -1118,14 +1242,16 @@ static int markov_teach()
         {
         strcpy(suggestion,spb[i]);
         suggest=split(suggestion,sug,50);
-        for (i=0; i<suggest; ++i) sug_value[i]=m_coeff*atof(sug[i]);
+        for (i=0; i<suggest; ++i) { sug_value[i]=m_coeff*atof(sug[i]);
+}
         }
     strcpy(kohdesana,word[2]);
     ns=strlen(kohdesana);
 
     nnmax=1000000000L;
     i=spfind("NMAX");
-    if (i>=0) nnmax=atol(spb[i]);
+    if (i>=0) { nnmax=atol(spb[i]);
+}
 
     sur_cursor_position(&row,&col);
     rivi=r1+r-1;
@@ -1140,13 +1266,18 @@ static int markov_teach()
         aa2=(double *)muste_malloc(m*m*sizeof(double));
         ps2=(double *)muste_malloc(m*sizeof(double));
         }
-    for (i=0; i<m-1; ++i) ps[i]=1.0/(double)(m-1); ps[m-1]=0.0;
+    for (i=0; i<m-1; ++i) { ps[i]=1.0/(double)(m-1); 
+}ps[m-1]=0.0;
     a=0.25;
-    for (i=0; i<m; ++i) aa[i+m*(m-1)]=a;
+    for (i=0; i<m; ++i) { aa[i+m*(m-1)]=a;
+}
     a=(1.0-a)*1.0/(double)(m-1);
-    for (i=0; i<m-1; ++i) for (j=0; j<m-1; ++j)
+    for (i=0; i<m-1; ++i) { for (j=0; j<m-1; ++j) {
         aa[i+m*j]=a;
-    for (j=0; j<m-1; ++j) aa[m-1+m*j]=0.0; aa[m*m-1]=1.0;
+}
+}
+    for (j=0; j<m-1; ++j) { aa[m-1+m*j]=0.0; 
+}aa[m*m-1]=1.0;
 
 // mprint(ps,m,1);
 // mprint(aa,m,m);
@@ -1167,22 +1298,25 @@ static int markov_teach()
             sur_locate(r3+2,c3-5);
             muste_sprintf(sbuf,"%e",tn); sur_print(sbuf);
             }
-        n=arvonta(sana); if (n<0) return(-1);
+        n=arvonta(sana); if (n<0) { return(-1);
+}
         if (show)
             {
             muste_sprintf(sbuf," %s",sana);
             sur_locate(r3+2,8);
             sur_print(sbuf);
             }
-        if (suggest) make_suggestion(vast,sana);
-        else *vast=EOS;
+        if (suggest) { make_suggestion(vast,sana);
+        } else { *vast=EOS;
+}
         if (show)
             {
             while (1)
                 {
                 sur_locate(r3+2,9+n);
                 prompt("? ",vast,6);
-                if (*vast!=EOS) break;
+                if (*vast!=EOS) { break;
+}
                 }
             PR_EINV;
             if (*vast!='.')
@@ -1201,8 +1335,9 @@ static int markov_teach()
             {
             sur_locate(row,col);
             i=muste_sprintf(sbuf,"%d %s %s",nn,sana,vast);
-            if (tn<1e-6) muste_sprintf(xx,"%e",tn);
-            else muste_sprintf(xx,"%g",tn);
+            if (tn<1e-6) { muste_sprintf(xx,"%e",tn);
+            } else { muste_sprintf(xx,"%g",tn);
+}
             muste_sprintf(sbuf+i,"%*.*s %s",57-i,57-i,space,xx);
 
             sur_print("\n");
@@ -1214,27 +1349,33 @@ static int markov_teach()
             }
         else
             {
-            sur_locate(r3+2,1); if (nn>nnmax) break;
+            sur_locate(r3+2,1); if (nn>nnmax) { break;
+}
             muste_sprintf(sbuf,"%d %e",nn,tn);
             sur_print(sbuf);
             }
-        if (stop_when_found && strcmp(kohdesana,sana)==0) break;
+        if (stop_when_found && strcmp(kohdesana,sana)==0) { break;
+}
         if (show)
             {
-            if (*vast=='.') break;
-            if (*vast=='p') mprint2(aa,m,m);
-            if (*vast=='s') mprint2(ps,m,1);
+            if (*vast=='.') { break;
+}
+            if (*vast=='p') { mprint2(aa,m,m);
+}
+            if (*vast=='s') { mprint2(ps,m,1);
+}
             }
         }
         if (!show)
             {
             ++rivi;
-            if (nn>nnmax)
+            if (nn>nnmax) {
              muste_sprintf(sbuf,"Trials %d No success!. Probability=%e",
                                  nn,tn);
-            else
+            } else {
              muste_sprintf(sbuf,"Success in trial %d. Probability=%e",
                                  nn,tn);
+}
             edwrite(space,rivi,1);
             edwrite(sbuf,rivi,1);
             }
@@ -1251,8 +1392,9 @@ static int laske_tn(char *s,double *ptn)
     n=strlen(s);
     for (k=1; k<=n; ++k)
         {
-        if (k<n) j=state_nr(s[k]);
-        else j=m-1;
+        if (k<n) { j=state_nr(s[k]);
+        } else { j=m-1;
+}
         tn*=aa[i+m*j];
         i=j;
         }
@@ -1274,7 +1416,8 @@ static int arvonta(char *sana)
     for (i=0; i<m; ++i)
         {
         sum+=ps[i];
-        if (a<=sum) break;
+        if (a<=sum) { break;
+}
         }
     if (i==m) { sur_print("\nProb. error!"); WAIT; return(-1); }
     *sana=state[i]; n=1;
@@ -1288,10 +1431,12 @@ static int arvonta(char *sana)
         for (j=0; j<m; ++j)
             {
             sum+=aa[i+m*j];
-            if (a<=sum) break;
+            if (a<=sum) { break;
+}
             }
         if (j==m) { sur_print("\nProb. error!"); WAIT; return(-1); }
-        if (j==m-1) break;
+        if (j==m-1) { break;
+}
         sana[n++]=state[j];
 //      if (n>=ns) break;
         i=j;
@@ -1300,7 +1445,8 @@ static int arvonta(char *sana)
     sana[n]=EOS;
 // Rprintf("\n sana=%s|\nedell=%s|",sana,edellinen_sana); getch();
     if ( strcmp(sana,edellinen_sana)!=0 ||
-         strcmp(sana,kohdesana)==0 ) break;
+         strcmp(sana,kohdesana)==0 ) { break;
+}
   }
     strcpy(edellinen_sana,sana);
     return(n);
@@ -1316,18 +1462,21 @@ static int muunna(double muunnos,char *sana)
     a=1.0-ps[i];
     ps[i]=exp(muunnos+log(ps[i]));
     a+=ps[i]; a=1.0/a;
-    for (j=0; j<m-1; ++j) ps[j]*=a;
+    for (j=0; j<m-1; ++j) { ps[j]*=a;
+}
 // mprint2(ps,1,m);
 // mprint2(aa,m,m);
     for (k=1; k<=n; ++k)
         {
-        if (k<n) j=state_nr(sana[k]);
-        else j=m-1;
+        if (k<n) { j=state_nr(sana[k]);
+        } else { j=m-1;
+}
         b=aa[i+m*j];
         a=1.0-b;
         b=exp(muunnos+log(b));
         a+=b; aa[i+m*j]=b; a=1.0/a;
-        for (h=0; h<m; ++h) aa[i+m*h]*=a;
+        for (h=0; h<m; ++h) { aa[i+m*h]*=a;
+}
         i=j;
 
         }
@@ -1339,8 +1488,10 @@ static int state_nr(unsigned char ch)
     {
     int i;
 
-    for (i=0; i<m-1; ++i)
-       if (ch==state[i]) break;
+    for (i=0; i<m-1; ++i) {
+       if (ch==state[i]) { break;
+}
+}
     return(i);
     }
 
@@ -1353,7 +1504,8 @@ static int mprint2(double *aa,int m,int n)
         sur_cursor_position(&row,&col);
         sur_locate(2,1);
         strcpy(sbuf,"\n       "); j=6;
-        for (i=0;i<m; ++i) j+=muste_sprintf(sbuf+j,"%c       ",state[i]);
+        for (i=0;i<m; ++i) { j+=muste_sprintf(sbuf+j,"%c       ",state[i]);
+}
         sur_print(sbuf);
         for (i=0; i<m; ++i)
             {
@@ -1378,7 +1530,8 @@ static int make_suggestion(char *vast,char *sana)
     for (i=0; i<m; ++i)
         {
         ps2[i]=ps[i];
-        for (j=0; j<m; ++j) aa2[i+m*j]=aa[i+m*j];
+        for (j=0; j<m; ++j) { aa2[i+m*j]=aa[i+m*j];
+}
         }
 
     max=-1.0; imax=0;
@@ -1393,7 +1546,8 @@ static int make_suggestion(char *vast,char *sana)
         for (i=0; i<m; ++i)
             {
             ps[i]=ps2[i];
-            for (j=0; j<m; ++j) aa[i+m*j]=aa2[i+m*j];
+            for (j=0; j<m; ++j) { aa[i+m*j]=aa2[i+m*j];
+}
             }
         }
 
@@ -1401,7 +1555,9 @@ static int make_suggestion(char *vast,char *sana)
         {
         i=((double)muste_rand()/16384.0-0.5)*(double)(jitter)+0.5;
         i+=atoi(sug[imax]);
-        if (i<-30) i=-30; if (i>30) i=30;
+        if (i<-30) { i=-30; 
+}if (i>30) { i=30;
+}
         muste_sprintf(vast,"%d",i);
 // Rprintf("\nvast=%s sug=%s|",vast,sug[imax]); getch();
         return(1);

@@ -191,48 +191,63 @@ aa=NULL;
 
         if (g>2) {
                 results_line=edline2(word[2],1,1);
-                if (results_line==0) return;
+                if (results_line==0) { return;
+}
         }
-        if ( spec_init(r1+r-1) < 0 ) return;
+        if ( spec_init(r1+r-1) < 0 ) { return;
+}
                 /* spec_init gives also an error message! */
         if (!ismatrix(word[1]) ) {
-                if ( data_open(word[1],&d) < 0 ) return;
-                if ( mask(&d) < 0 ) return;
-                if ( conditions(&d) < 0 ) return;  /* permitted only once */
+                if ( data_open(word[1],&d) < 0 ) { return;
+}
+                if ( mask(&d) < 0 ) { return;
+}
+                if ( conditions(&d) < 0 ) { return;  /* permitted only once */
+}
                 namevar=activated(&d,'L');
                 if (namevar<0) {
                         if (d.vartype[ d.v[0] ][0] == 'S') {
                                 namevar=d.v[0];
                                 d.vartype[ d.v[0] ][1]='L';
                         }
-                        else label_obs=1;
+                        else { label_obs=1;
+}
                 }
-                else if ( d.vartype[namevar][0] != 'S' ) label_obs=1;
+                else if ( d.vartype[namevar][0] != 'S' ) { label_obs=1;
+}
 
                 m=d.m_act;         /* hoppar över variabel aktiverad med L */
                 for (i=0,k=0,l=m; i<l; ++i) {
-                        if (d.vartype[ d.v[i] ][1]=='L')
+                        if (d.vartype[ d.v[i] ][1]=='L') {
                                 --m;
-                        else
+                        } else {
                                 d.v[k++]=d.v[i];
+}
                 }
         }
         if ( (i=spfind("METHOD")) >=0 ) {
                 met=atoi(spb[i]);
-                if ( met < 1 || met > 7 ) met=metstring(spb[i]);
-                if ( met < 1 || met > 7 ) met=1;
+                if ( met < 1 || met > 7 ) { met=metstring(spb[i]);
+}
+                if ( met < 1 || met > 7 ) { met=1;
+}
 
         }
-        if (met==0) met=1;
+        if (met==0) { met=1;
+}
 
         if ( (i=spfind("DISTANCE")) >=0 ) {
                 dis=atoi(spb[i]);
-                if (dis<1 || dis>4) dis=disstring(spb[i]);
-                if ( dis < 1 || dis > 4 ) dis=1;
+                if (dis<1 || dis>4) { dis=disstring(spb[i]);
+}
+                if ( dis < 1 || dis > 4 ) { dis=1;
+}
         }
-        if (dis==0) dis=1;
+        if (dis==0) { dis=1;
+}
 
-        if ( (i=spfind("RESULTS")) >=0 ) results=atoi(spb[i]);
+        if ( (i=spfind("RESULTS")) >=0 ) { results=atoi(spb[i]);
+}
 
         strcpy(treedata,PUUDATA);
         if ( (i=spfind("TREEDATA")) >=0 ) {
@@ -245,18 +260,21 @@ aa=NULL;
                         ps=1;
                         for(;spb[i];spb[i]++) {
                                 if (*spb[i]==',') {
-                                        if ( samaalku(spb[i]+1,"LAND") )
+                                        if ( samaalku(spb[i]+1,"LAND") ) {
                                                 landscape=1;
+}
                                         break;
                                 }
-                                if (*spb[i]==EOS) break; // 1.02.003/KV
+                                if (*spb[i]==EOS) { break; // 1.02.003/KV
+}
                         }
                 }
         }
 
         if ( (i=spfind("SAVEDIST")) >= 0 ) {
                 strcpy(distfile,spb[i]);
-                if ( samaloppu(distfile,"TXT") ) distfiletxt=1;
+                if ( samaloppu(distfile,"TXT") ) { distfiletxt=1;
+}
                 poistapaate(distfile);
                 savedist=1;
         }
@@ -287,13 +305,16 @@ aa=NULL;
                 }
                 n=rdim;
                 if ( (i=alloc_dist()) < 0 ) {ei_tilaa(1,i); return; }
-                if ( mat_read_distance() < 0 ) return;
+                if ( mat_read_distance() < 0 ) { return;
+}
                 if ( (i=varaa_nimet()) < 0 ) {ei_tilaa(2,i); return; }
-                if ( lue_nimet() < 0 ) warning_names=1;
+                if ( lue_nimet() < 0 ) { warning_names=1;
+}
         }
         else {
                 if ( (i=varaa_tilat()) < 0 ) {ei_tilaa(3,i); return; }
-                if ( talleta_data() < 0 ) return;
+                if ( talleta_data() < 0 ) { return;
+}
 
                 if ( (i=spfind("WEIGHTS")) >=0) {
                         strcpy(weightmat,spb[i]);
@@ -306,19 +327,22 @@ aa=NULL;
                                 WAIT;
                                 return;
                         }
-                        if ( (rdimwei==m) && (cdimwei==1)) weights=1;
-                        else weightwarning=1;
+                        if ( (rdimwei==m) && (cdimwei==1)) { weights=1;
+                        } else { weightwarning=1;
+}
                 }
 
                 ind_zz=0;
                 if ( n*m <= MAXSPACE ) {
                         zz = (float *)muste_malloc( (unsigned int)n*m*sizeof(float) );
-                        if (zz!=NULL) ind_zz=1;
+                        if (zz!=NULL) { ind_zz=1;
+}
                 }
 
                 if (ind_zz) {
                         siirto_zz();
-                        if ( disk_read_distance() < 0 ) return;
+                        if ( disk_read_distance() < 0 ) { return;
+}
                         if (zz!=NULL) { muste_free(zz); zz=NULL; } // RS CHA
                         if ( (i=alloc_dist()) < 0 ) {ei_tilaa(4,i); return; }
                         disk2mem_dist();
@@ -326,19 +350,22 @@ aa=NULL;
                 }
                 else  {
                         if ( (i=alloc_dist()) < 0 ) {ei_tilaa(5,i); return; }
-                        if ( mem_read_distance() < 0 ) return;
+                        if ( mem_read_distance() < 0 ) { return;
+}
                         muste_fclose(temp);
                 }
                 if ( (i=varaa_nimet()) < 0 ) {ei_tilaa(6,i); return; }
-                if ( lue_nimet() < 0 ) warning_names=1;
+                if ( lue_nimet() < 0 ) { warning_names=1;
+}
         }
 
-        if (w1mat) free_input_matrix();
-        else data_close(&d);
+        if (w1mat) { free_input_matrix();
+        } else { data_close(&d);
+}
 
         if (savedist) {
-                if (distfiletxt) txt_save_distance_matrix();
-                else {
+                if (distfiletxt) { txt_save_distance_matrix();
+                } else {
                         if ((i=alloc_save_dist()) < 0 ) {ei_tilaa(7,i);return;}
                         mat_save_distance_matrix();
                 }
@@ -355,8 +382,10 @@ aa=NULL;
 
 
 static int ismatrix(char *w1) {
-        if (samaloppu(w1,".MAT")) return 1;
-        if (samaloppu(w1,".M")) return 1;
+        if (samaloppu(w1,".MAT")) { return 1;
+}
+        if (samaloppu(w1,".M")) { return 1;
+}
         return 0;
 }
 
@@ -376,7 +405,8 @@ static float distance(float a,float b,int dmeasure) {
                 c=a-b;
                 c= ( c<0 ? -c : c);
                 d=a+b;
-                if ( ( d < 0.00001 ) && ( d > -0.00001 ) ) d=0.00001;
+                if ( ( d < 0.00001 ) && ( d > -0.00001 ) ) { d=0.00001;
+}
                 return ( c/d );
         default :
                 break;
@@ -387,9 +417,11 @@ static float distance(float a,float b,int dmeasure) {
 static int mat_read_distance(void) {
         int i,j;
 
-        for ( i=1; i<n; ++i)
-                for (j=0 ; j<i; ++j)
+        for ( i=1; i<n; ++i) {
+                for (j=0 ; j<i; ++j) {
                         (dist[i])[j]=(float)aa[i+j*cdim];
+}
+}
         return 1;
 }
 
@@ -406,8 +438,9 @@ static void equal(float *x) {
 static void weight(float *x) {
         int i;
 
-        for (i=0;i<m;i++)
+        for (i=0;i<m;i++) {
                 x[i]*=aawei[i];
+}
 }
 
 static int mem_read_distance(void) {
@@ -416,16 +449,21 @@ static int mem_read_distance(void) {
 
           for ( i=1; i<n; ++i) {
                 lue(xx,i);
-                if (equalize) equal(xx);
-                if (weights) weight(xx);
+                if (equalize) { equal(xx);
+}
+                if (weights) { weight(xx);
+}
                 for (j=0 ; j<i; ++j) {
                   lue(xx2,j);
-                  if (equalize) equal(xx2);
-                  if (weights) weight(xx2);
+                  if (equalize) { equal(xx2);
+}
+                  if (weights) { weight(xx2);
+}
                   for (summa=0,k=0;k<m;++k) {
                         summa=summa+distance(xx[k],xx2[k],dis);
                   }
-                  if (dis==EUCLIDIAN) summa=sqrt(summa);
+                  if (dis==EUCLIDIAN) { summa=sqrt(summa);
+}
                   (dist[i])[j]=summa;
                 }
           }
@@ -446,15 +484,21 @@ static int disk_read_distance(void) {
 
         for ( i=1; i<n; ++i) {
                 lue(xx,i);
-                if (equalize) equal(xx);
-                if (weights) weight(xx);
+                if (equalize) { equal(xx);
+}
+                if (weights) { weight(xx);
+}
                 for (j=0 ; j<i; ++j) {
                         lue(xx2,j);
-                        if (equalize) equal(xx2);
-                        if (weights) weight(xx2);
-                        for (summa=0,k=0;k<m;++k)
+                        if (equalize) { equal(xx2);
+}
+                        if (weights) { weight(xx2);
+}
+                        for (summa=0,k=0;k<m;++k) {
                                 summa=summa+distance(xx[k],xx2[k],dis);
-                        if (dis==EUCLIDIAN) summa=sqrt(summa);
+}
+                        if (dis==EUCLIDIAN) { summa=sqrt(summa);
+}
                         fwrite(&summa,sizeof(float),1,temp_dist);
                 }
         }
@@ -486,16 +530,18 @@ static float dd(int method,int k,int r, int s) {
         switch( method ) {
 
         case SINGLE_LINK :   /* Se sid 79-80 i Jain Anil.  */
-                if ( plats(k,r) <= plats(k,s) )
+                if ( plats(k,r) <= plats(k,s) ) {
                         return plats(k,r);
-                else
+                } else {
                         return plats(k,s);
+}
 
         case COMPLETE_LINK :
-                if ( plats(k,r) >= plats(k,s) )
+                if ( plats(k,r) >= plats(k,s) ) {
                         return plats(k,r);
-                else
+                } else {
                         return plats(k,s);
+}
 
         case GROUP_AVERAGE :
                 summa = nn[r] + nn[s];
@@ -533,19 +579,22 @@ static void do_cluster(void) {
         int i,  k , j , imin=0, jmin=0,ip=0,jp=0;
         float min;
 
-        for(i=0;i<n;i++)
+        for(i=0;i<n;i++) {
                 aktiva[i]=i;
+}
 
         for (k=1 ; k<n ; k++){
                 min=FLT_MAX;
-                for(i=1; i < n-k+1 ; i++)
-                        for (j=0; j < i ;j++)
+                for(i=1; i < n-k+1 ; i++) {
+                        for (j=0; j < i ;j++) {
                                 if (  (dist[ aktiva[i] ])[aktiva[j]] <= min) {
                                         min =  (dist[aktiva[i]])[aktiva[j]]  ;
                                                 /* avigt för att imin < jmin */
                                         ip=j;
                                         jp=i;
                                 }
+}
+}
                 jmin = aktiva[jp];
                 imin = aktiva[ip];
                 ii[k]=imin;
@@ -554,22 +603,31 @@ static void do_cluster(void) {
                 il[k]=last[imin];
                 jl[k]=last[jmin];
                 last[imin]=k;
-                if (il[k]!=0) next[ il[k] ] = k;
-                if (jl[k]!=0) next[ jl[k] ] = k;
+                if (il[k]!=0) { next[ il[k] ] = k;
+}
+                if (jl[k]!=0) { next[ jl[k] ] = k;
+}
 
-                for (i=ip+1;i<n-k+1;i++)
-                        if (aktiva[i]!=jmin)
+                for (i=ip+1;i<n-k+1;i++) {
+                        if (aktiva[i]!=jmin) {
                                 ( dist[ aktiva[i] ] )[ imin ] =
                                 dd(met,aktiva[i],imin,jmin);
-                for (j=0;j<ip;j++)
-                        if (aktiva[j]!=jmin)
+}
+}
+                for (j=0;j<ip;j++) {
+                        if (aktiva[j]!=jmin) {
                                 ( dist[ imin ] )[ aktiva[j] ] =
                                 dd(met,aktiva[j],imin,jmin);
+}
+}
                 nn[imin]+=nn[jmin];
-                for (i=0; i < n-k ; i++)            /* hoppar över jmin */
-                        if ( aktiva[i]==jmin ) break;
-                for (j=(i+1); i < n-k ; j++,i++)
+                for (i=0; i < n-k ; i++) {            /* hoppar över jmin */
+                        if ( aktiva[i]==jmin ) { break;
+}
+}
+                for (j=(i+1); i < n-k ; j++,i++) {
                         aktiva[i]=aktiva[j];
+}
         }
 }
 
@@ -593,8 +651,9 @@ static int tee_data(void) {
                 strcpy(nimi,edisk);
                 strcat(nimi,treedata);
         }
-        else
+        else {
                 strcpy(nimi,treedata);
+}
         strcat(nimi,".SVO");
         temp_puu=muste_fopen(nimi,"wb");
         if (temp_puu==NULL) {
@@ -615,8 +674,10 @@ static int tee_data(void) {
         for (l=1,k=1,gang=1;gang<n;gang++){
                 while ( ( il[k]!=0 && !gjord[ il[k] ] ) ||
                         ( jl[k]!=0 && !gjord[ jl[k] ] )) {
-                        while ( il[k]!=0 && !gjord[ il[k] ] ) k = il[k];
-                        while ( jl[k]!=0 && !gjord[ jl[k] ] ) k = jl[k];
+                        while ( il[k]!=0 && !gjord[ il[k] ] ) { k = il[k];
+}
+                        while ( jl[k]!=0 && !gjord[ jl[k] ] ) { k = jl[k];
+}
                 }
                 oksa[0]=-(il[k]==0 ? 0 : ss[il[k]]);
                 oksa[1]=(il[k]==0 ? l++ : mittpunkt[ il[k] ]);
@@ -634,8 +695,9 @@ static int tee_data(void) {
 
                 fwrite(&oksa[0],sizeof(float),2,temp_puu);
 
-                if (il[k]==0) fwrite((nimet+ii[k]*NIMIPIT),1,NIMIPIT,temp_puu);
-                else fwrite(tom,1,NIMIPIT,temp_puu);
+                if (il[k]==0) { fwrite((nimet+ii[k]*NIMIPIT),1,NIMIPIT,temp_puu);
+                } else { fwrite(tom,1,NIMIPIT,temp_puu);
+}
 
                 fwrite(&oksa[2],sizeof(float),2,temp_puu);
                 fwrite(tom,1,NIMIPIT,temp_puu);
@@ -644,8 +706,9 @@ static int tee_data(void) {
                 fwrite(tom,1,NIMIPIT,temp_puu);
 
                 fwrite(&oksa[6],sizeof(float),2,temp_puu);
-                if (jl[k]==0) fwrite(nimet+jj[k]*NIMIPIT,1,NIMIPIT,temp_puu);
-                else fwrite(tom,1,NIMIPIT,temp_puu);
+                if (jl[k]==0) { fwrite(nimet+jj[k]*NIMIPIT,1,NIMIPIT,temp_puu);
+                } else { fwrite(tom,1,NIMIPIT,temp_puu);
+}
 
                 fwrite(&oksa[2],sizeof(float),2,temp_puu);
                 fwrite(tom,1,NIMIPIT,temp_puu);
@@ -654,7 +717,8 @@ static int tee_data(void) {
                 fwrite(tom,1,NIMIPIT,temp_puu);
 
                 gjord[k]=1;
-                if (ss[k]>maxss) maxss=ss[k];
+                if (ss[k]>maxss) { maxss=ss[k];
+}
                 k=next[k];
         }
         muste_fclose(temp_puu);
@@ -662,8 +726,10 @@ static int tee_data(void) {
 }
 
 static int is_path(char *a) {
-        for(;*a;a++)
-                if ( *a == ':' || *a == '\\' ) return 1;
+        for(;*a;a++) {
+                if ( *a == ':' || *a == '\\' ) { return 1;
+}
+}
         return 0;
 }
 
@@ -679,7 +745,8 @@ static int mojena(float k) {
         stddev=sqrt(sumss2/(n-2)-mean*mean*(n-1)/(n-2));
         stop=mean+k*stddev;
         for (i=1;i<n;i++) {
-                if (ss[i]>stop) return (n-i+1);
+                if (ss[i]>stop) { return (n-i+1);
+}
         }
         return 0;
 }
@@ -707,17 +774,19 @@ static void printout(void) {
 
         output_open(eout);
 
-        if (w1mat)
+        if (w1mat) {
                 muste_sprintf(line,"  Hierarchical cluster analysis "
                         "of distance matrix %s N=%d",word[1],n);
-        else
+        } else {
                 muste_sprintf(line,"  Hierarchical cluster analysis "
                         "of observations in %s N=%d",word[1],n);
+}
         print_line(line);
 
-        if (equalize)
+        if (equalize) {
                 print_line("  Variables equalized to zero mean and"
                 " unit variance.");
+}
 
         if (weights) {
                 muste_sprintf(line,"  Variables weighted with matrix: %s",weightmat);
@@ -742,25 +811,30 @@ static void printout(void) {
                         print_line(line);
                 }
         }
-        if (warning_names)
+        if (warning_names) {
                 print_line("Warning: observation labels are not unique!");
+}
 
-        if (weightwarning)
+        if (weightwarning) {
                 print_line("Warning: Weightmatrix wrong "
                         "dimension; weighting not performed.");
+}
 
-        if (label_obs)
+        if (label_obs) {
                 print_line("Note: label is observation number in data.");
+}
 
-        if (ps) teepskaavio();
-        else teegplotkaavio();
+        if (ps) { teepskaavio();
+        } else { teegplotkaavio();
+}
 
         if (savedist) {
-                if (distfiletxt)
+                if (distfiletxt) {
                         muste_sprintf(line,"  Distances saved in textfile "
                                         "%s   '\376' SHOW %s",distfile,distfile);
-                else muste_sprintf(line,"  Distances saved as "
+                } else { muste_sprintf(line,"  Distances saved as "
                         "matrix %s   '\376' MAT LOAD %s,END+2",distfile,distfile);
+}
                 print_line(line);
                 print_line("");
         }
@@ -769,11 +843,13 @@ static void printout(void) {
           print_line(" Stage    Cluster 1   Cluster 2    Distance");
           for ( k=1;k<n;k++) {
                 muste_sprintf(line," %3d    ",k);
-                if (il[k]==0) muste_sprintf(line2,"%12.11s",(nimet+ii[k]*NIMIPIT));
-                else muste_sprintf(line2,"   GROUP %-3d",il[k]);
+                if (il[k]==0) { muste_sprintf(line2,"%12.11s",(nimet+ii[k]*NIMIPIT));
+                } else { muste_sprintf(line2,"   GROUP %-3d",il[k]);
+}
                 strcat(line,line2);
-                if (jl[k]==0) muste_sprintf(line2,"%12.11s",(nimet+jj[k]*NIMIPIT));
-                else muste_sprintf(line2,"   GROUP %-3d",jl[k]);
+                if (jl[k]==0) { muste_sprintf(line2,"%12.11s",(nimet+jj[k]*NIMIPIT));
+                } else { muste_sprintf(line2,"   GROUP %-3d",jl[k]);
+}
                 strcat(line,line2);
                 fnconv(ss[k],accuracy+2,luku);
                 muste_sprintf(line2,"   %-13.13s",luku);
@@ -817,11 +893,13 @@ static int talleta_data(void) {
         n=0L;
         sur_print("\nSaving active data in a temporary file... ");
         for (j=d.l1; j<=d.l2; ++j) {
-                if (unsuitable(&d,j)) continue;
+                if (unsuitable(&d,j)) { continue;
+}
                 muste_sprintf(sbuf,"%d ",j); sur_print(sbuf);
                 for (i=0; i<m; ++i) {
                         data_load(&d,j,d.v[i],&a);
-                        if (a==MISSING8) break;
+                        if (a==MISSING8) { break;
+}
                         xx[i]=(float)a;
                 }
                 if (i<m) {
@@ -882,27 +960,33 @@ static int lue_nimet(void) {
         double a;
 
         p=nimet;
-        if (w1mat)
+        if (w1mat) {
                 for (j=0;j<n;j++) {
                         *p++ = ' ';
                         *p++ = ' ';
-                        for (i=0 ; i < NIMIPIT-2 ; i++)
-                                if (i < lr )
+                        for (i=0 ; i < NIMIPIT-2 ; i++) {
+                                if (i < lr ) {
                                         *p++=*rlab++;
-                                else
+                                } else {
                                         *p++=' ';
-                        for(;i<lr;i++,rlab++);
+}
+}
+                        for(;i<lr;i++,rlab++) {;
+}
                 }
-        else
+        } else {
                 for (j=d.l1; j<=d.l2; ++j) {
                         q=label;
-                        if (unsuitable(&d,j)) continue;
+                        if (unsuitable(&d,j)) { continue;
+}
 
                         for (i=0; i<m; ++i) {
                                 data_load(&d,j,d.v[i],&a);
-                                if (a==MISSING8) break;
+                                if (a==MISSING8) { break;
+}
                         }
-                        if (i<m) continue;
+                        if (i<m) { continue;
+}
 
 
                         if (label_obs) {
@@ -915,21 +999,26 @@ static int lue_nimet(void) {
                                 data_alpha_load(&d,j,namevar,label);
                                 *p++ = ' ';
                                 *p++ = ' ';
-                                for (i=0 ; i < NIMIPIT-2 ; i++ )
-                                        if (*q)
+                                for (i=0 ; i < NIMIPIT-2 ; i++ ) {
+                                        if (*q) {
                                                 *p++=*q++ ;
-                                        else
+                                        } else {
                                                 *p++=' ';
+}
+}
                         }
                 }
-        for (j=0;j<n-1;j++)
+}
+        for (j=0;j<n-1;j++) {
                 for(k=j+1;k<n;k++) {
                         eri=0;
-                        for (i=0;i<NIMIPIT;i++)
+                        for (i=0;i<NIMIPIT;i++) {
                                 if(*(nimet+j*NIMIPIT+i) != *(nimet+k*NIMIPIT+i))
                                         {eri=1;break;}
+}
                         if (!eri) {vika_samatnimet(j,k);return -1;}
                 }
+}
         return 1;
 }
 
@@ -938,11 +1027,13 @@ static void vika_samatnimet(int j,int k) {
         char nimi2[NIMIPIT+1];
         char line[LLENGTH];
         int i;
-        for (i=0;i<NIMIPIT;i++)
+        for (i=0;i<NIMIPIT;i++) {
                 nimi1[i]=*(nimet+j*NIMIPIT+i);
+}
         nimi1[NIMIPIT]='\0';
-        for (i=0;i<NIMIPIT;i++)
+        for (i=0;i<NIMIPIT;i++) {
                 nimi2[i]=*(nimet+k*NIMIPIT+i);
+}
         nimi2[NIMIPIT]='\0';
         muste_sprintf(line,"\nWarning: same labels %s and %s"
                 ,nimi1,nimi2);
@@ -954,17 +1045,21 @@ static int varaa_tilat(void) {
         int i;
 
         xx=(float *)muste_malloc(m*sizeof(float));
-        if (xx==NULL) return(-1);
+        if (xx==NULL) { return(-1);
+}
 
         xx2=(float *)muste_malloc(m*sizeof(float));
-        if (xx==NULL) return(-2);
+        if (xx==NULL) { return(-2);
+}
 
         if (equalize) {
                 sumx=(double *)muste_malloc(m*sizeof(double));
-                if (sumx==NULL) return(-3);
+                if (sumx==NULL) { return(-3);
+}
 
                 sumx2=(double *)muste_malloc(m*sizeof(double));
-                if (sumx2==NULL) return(-4);
+                if (sumx2==NULL) { return(-4);
+}
 
                 for (i=0;i<m;i++) {
                         sumx[i]=0.0;
@@ -977,7 +1072,8 @@ static int varaa_tilat(void) {
 
 static int varaa_nimet(void) {
         nimet=(char *)muste_malloc( (unsigned int)(n+1) * NIMIPIT * sizeof(char));
-        if (nimet==NULL) return(-1);
+        if (nimet==NULL) { return(-1);
+}
         return 1;
 }
 
@@ -985,11 +1081,13 @@ static int alloc_dist(void) {
         int i;
 
         dist=(float **)muste_malloc( (unsigned int)(n+1) * sizeof(float *));
-        if (dist==NULL) return(-1);
+        if (dist==NULL) { return(-1);
+}
 
         for (i=n-1;i>=0;i--) {  // RS CHA i>0 -> i>=0
                 dist[i]=(float *)muste_malloc( (unsigned int)i * sizeof(float) );
-                if (dist[i]==NULL) return(-2);
+                if (dist[i]==NULL) { return(-2);
+}
         }
 
         return 1;
@@ -998,15 +1096,17 @@ static int alloc_dist(void) {
 static void free_dist(void) {
         int i;
 
-        for (i=0;i<n;i++)
+        for (i=0;i<n;i++) {
                 if (dist[i]!=NULL) { muste_free(dist[i]); dist[i]=NULL; } // RS CHA
+}
 }
 
 static int nollaa(int *uusi,int maara) {
         int i;
 
-        for (i=0;i<maara;i++)
+        for (i=0;i<maara;i++) {
                 uusi[i]=0;
+}
         return 0;
 }
 
@@ -1014,49 +1114,61 @@ static int varaa2_tilat(void) {
         int j;
 
         ii=(int *)muste_malloc( (unsigned int)n * sizeof(int));
-        if (ii==NULL) return(-1);
+        if (ii==NULL) { return(-1);
+}
         nollaa(ii,(int)n);
 
         jj=(int *)muste_malloc( (unsigned int)n * sizeof(int));
-        if (jj==NULL) return(-2);
+        if (jj==NULL) { return(-2);
+}
         nollaa(jj,(int)n);
 
         il=(int *)muste_malloc( (unsigned int)n * sizeof(int));
-        if (il==NULL) return(-3);
+        if (il==NULL) { return(-3);
+}
         nollaa(il,(int)n);
 
         jl=(int *)muste_malloc( (unsigned int)n * sizeof(int));
-        if (jl==NULL) return(-4);
+        if (jl==NULL) { return(-4);
+}
         nollaa(jl,(int)n);
 
         last=(int *)muste_malloc( (unsigned int)n * sizeof(int));
-        if (last==NULL) return(-5);
+        if (last==NULL) { return(-5);
+}
         nollaa(last,(int)n);
 
         next=(int *)muste_malloc( (unsigned int)n * sizeof(int));
-        if (next==NULL) return(-6);
+        if (next==NULL) { return(-6);
+}
         nollaa(next,(int)n);
 
         ss=(float *)muste_malloc( (unsigned int)n * sizeof(float));
-        if (ss==NULL) return(-7);
+        if (ss==NULL) { return(-7);
+}
 
         aktiva=(int *)muste_malloc( (unsigned int)n * sizeof(int));
-        if (aktiva==NULL) return(-8);
+        if (aktiva==NULL) { return(-8);
+}
         nollaa(aktiva,(int)n);
 
         nn=(int *)muste_malloc( (unsigned int)n * sizeof(int) );
-        if (nn==NULL) return (-9);
-        for (j=0;j<n;j++) nn[j]=1;
+        if (nn==NULL) { return (-9);
+}
+        for (j=0;j<n;j++) { nn[j]=1;
+}
 
         return(1);
 }
 
 static int varaa3_tilat(void) {
         mittpunkt=(float *)muste_malloc( (unsigned int)n * sizeof(float) );
-        if (mittpunkt==NULL) return (-1);
+        if (mittpunkt==NULL) { return (-1);
+}
 
         gjord=(int *)muste_malloc( (unsigned int)n * sizeof(int) );
-        if (gjord==NULL) return (-2);
+        if (gjord==NULL) { return (-2);
+}
         nollaa(gjord,(int)n);
 
         return 1;
@@ -1070,51 +1182,78 @@ static int ei_tilaa(int a,int b) {
 
 static void print_line(char *line) {
         output_line(line,eout,results_line);
-        if (results_line) ++results_line;
+        if (results_line) { ++results_line;
+}
 }
 
 static int metstring(char *t) {
-        if (samaalku(t,"SIN")) return 1;
-        if (samaalku(t,"COM")) return 2;
-        if (samaalku(t,"AVE")) return 3;
-        if (samaalku(t,"GRO")) return 3;
-        if (samaalku(t,"UNWEIGHTED_AVER")) return 3;
-        if (samaalku(t,"WAV")) return 4;
-        if (samaalku(t,"WEIGHTED_AVER")) return 4;
-        if (samaalku(t,"CEN")) return 5;
-        if (samaalku(t,"UNWEIGHTED_CENT")) return 5;
-        if (samaalku(t,"WCE")) return 6;
-        if (samaalku(t,"WEIGHTED_CENT")) return 6;
-        if (samaalku(t,"MIN")) return 7;
-        if (samaalku(t,"WAR")) return 7;
-        if (samaalku(t,"MINIMUM_VAR")) return 7;
+        if (samaalku(t,"SIN")) { return 1;
+}
+        if (samaalku(t,"COM")) { return 2;
+}
+        if (samaalku(t,"AVE")) { return 3;
+}
+        if (samaalku(t,"GRO")) { return 3;
+}
+        if (samaalku(t,"UNWEIGHTED_AVER")) { return 3;
+}
+        if (samaalku(t,"WAV")) { return 4;
+}
+        if (samaalku(t,"WEIGHTED_AVER")) { return 4;
+}
+        if (samaalku(t,"CEN")) { return 5;
+}
+        if (samaalku(t,"UNWEIGHTED_CENT")) { return 5;
+}
+        if (samaalku(t,"WCE")) { return 6;
+}
+        if (samaalku(t,"WEIGHTED_CENT")) { return 6;
+}
+        if (samaalku(t,"MIN")) { return 7;
+}
+        if (samaalku(t,"WAR")) { return 7;
+}
+        if (samaalku(t,"MINIMUM_VAR")) { return 7;
+}
         return -1;
 }
 
 static int disstring(char *t) {
-        if (samaalku(t,"SQR")) return SQREUCLIDIAN;
-        if (samaalku(t,"SQU")) return SQREUCLIDIAN;
-        if (samaalku(t,"EUC")) return EUCLIDIAN;
-        if (samaalku(t,"CIT")) return CITYBLOCK;
-        if (samaalku(t,"CAN")) return CANBERRA;
+        if (samaalku(t,"SQR")) { return SQREUCLIDIAN;
+}
+        if (samaalku(t,"SQU")) { return SQREUCLIDIAN;
+}
+        if (samaalku(t,"EUC")) { return EUCLIDIAN;
+}
+        if (samaalku(t,"CIT")) { return CITYBLOCK;
+}
+        if (samaalku(t,"CAN")) { return CANBERRA;
+}
         return -1;
 }
 
 static int samaalku(char *a, char *b) {
-        for (;*a==*b || toupper(*a)==*b;a++,b++)
-                if (*b==0) return 1;
-        if (*b==0) return 1;
+        for (;*a==*b || toupper(*a)==*b;a++,b++) {
+                if (*b==0) { return 1;
+}
+}
+        if (*b==0) { return 1;
+}
         return 0;
 }
 
 static int samaloppu(char *a, char *b) {
         char *atmp,*btmp;
 
-        for (atmp=a;*a!='\0';a++);
-        for (btmp=b;*b!='\0';b++);
+        for (atmp=a;*a!='\0';a++) {;
+}
+        for (btmp=b;*b!='\0';b++) {;
+}
         for (;*a==*b || toupper(*a)==*b;a--,b--) {
-                if (b==btmp) return 1;
-                if (a==atmp) return 0;
+                if (b==btmp) { return 1;
+}
+                if (a==atmp) { return 0;
+}
         }
         return 0;
 }
@@ -1123,11 +1262,15 @@ static double pyoristaylos(double x) {
         int k;
         double kerroin;
 
-        if (fabs(x)>=1000) kerroin=.1;
-        if (fabs(x)<100) kerroin=10;
-        for (k=0;fabs(x)>=1000 || fabs(x)<100;k++,x*=kerroin);
+        if (fabs(x)>=1000) { kerroin=.1;
+}
+        if (fabs(x)<100) { kerroin=10;
+}
+        for (k=0;fabs(x)>=1000 || fabs(x)<100;k++,x*=kerroin) {;
+}
         x=ceil(x);
-        for (;k>0;k--,x/=kerroin);
+        for (;k>0;k--,x/=kerroin) {;
+}
         return x;
 }
 
@@ -1144,8 +1287,9 @@ static int poistapaate(char *t) {
 static void raja_rivi(void) {
         int i;
         char line[LLENGTH];
-        for (*line='\0',i=0;i<c3;i++)
+        for (*line='\0',i=0;i<c3;i++) {
                 strcat(line,".");
+}
         print_line(line);
 }
 
@@ -1165,7 +1309,8 @@ static void teepskaavio(void) {
         char line[LLENGTH];
         char line2[LLENGTH];
 
-        if (n>NRAJA) font=MINFONT+(350.0-n)/(350.0-NRAJA)*(MAXFONT-MINFONT);
+        if (n>NRAJA) { font=MINFONT+(350.0-n)/(350.0-NRAJA)*(MAXFONT-MINFONT);
+}
         raja_rivi();
         muste_sprintf(line,"  Activate the line below to plot the tree to file %s.PS"
                         ,treedata);
@@ -1176,12 +1321,13 @@ static void teepskaavio(void) {
         muste_sprintf(line,"   YSCALE=1,%d     POINT=Label  FRAME=0 "
         "XLABEL=<-_Distance",n);
         print_line(line);
-        if (landscape)
+        if (landscape) {
                 muste_sprintf(line,"   XSCALE=-%-1g/1,0   PEN=[Landscape][Swiss(%d)] "
                 "MODE VGA YLABEL= ",pyoristaylos(maxss),font-2);
-        else
+        } else {
                 muste_sprintf(line,"   XSCALE=-%-1g/1,0     PEN=[Swiss(%d)] "
                 "MODE VGA YLABEL= ",pyoristaylos(maxss),font);
+}
 
         print_line(line);
         if (!landscape) {
@@ -1204,12 +1350,13 @@ static void teepskaavio(void) {
                 xhome=-300;
                 yhome=100+MAXXSIZE-ysize;
         }
-        if (!landscape)
+        if (!landscape) {
                 muste_sprintf(line,"XDIV=100,%d,100 YDIV=100,%d,200"
                 ,xsize-200,ysize-300);
-        else
+        } else {
                 muste_sprintf(line,"XDIV=100,%d,200 YDIV=100,%d,100"
                 ,xsize-200,ysize-300);
+}
         print_line("  Change LINE spec. below to 1 for a 'triangular' tree.");
         muste_sprintf(line2,"   LINE=3   %s",line);
         print_line(line2);
@@ -1258,8 +1405,9 @@ static int txt_save_distance_matrix(void) {
                 strcpy(nimi,edisk);
                 strcat(nimi,distfile);
         }
-        else
+        else {
                 strcpy(nimi,distfile);
+}
         temp_txt=muste_fopen(nimi,"w");
         if (temp_txt==NULL) {
                 muste_sprintf(sbuf,"Cannot open %s for distance matrix!",nimi);
@@ -1291,7 +1439,8 @@ static int txt_save_distance_matrix(void) {
 
 static int alloc_save_dist(void) {
         aa=(double *)muste_malloc( (unsigned int)(n*n) * sizeof(double) );
-        if (aa==NULL) return (-1);
+        if (aa==NULL) { return (-1);
+}
         return 1;
 }
 
@@ -1301,7 +1450,7 @@ static int mat_save_distance_matrix(void) {
         char nimi[LNAME];
 
         strcpy(nimi,distfile);
-        for(i=0;i<n;i++)
+        for(i=0;i<n;i++) {
                 for(j=0;j<n;j++) {
                         if (i==j) {
                                 aa[i+j*n]=0.0;
@@ -1309,6 +1458,7 @@ static int mat_save_distance_matrix(void) {
                         }
                         aa[i+j*n]=plats(i,j);
                 }
+}
         type=10;
         muste_sprintf(expr,"%s_distances_computed_by_HCLUSTER.",distancename[dis]);
         i=n;j=n;
@@ -1323,8 +1473,9 @@ static int mat_save_distance_matrix(void) {
 static int lue_havainto_nimi(char *a, int i ) {
         char *p;
         int k;       /* +1 koska eka merkki blanko */
-        for (k=0,p=(nimet+NIMIPIT*i+1);k<NIMIPIT-1;k++)
+        for (k=0,p=(nimet+NIMIPIT*i+1);k<NIMIPIT-1;k++) {
                 *a++=*p++;
+}
         *a='\0';
         return 1;
 }
@@ -1339,12 +1490,15 @@ static void int_to_string(int luku,char *eka,char *vika) {
         char lukustring[12];
         int i;
 
-        for (i=0; i<12 && luku ;luku/=10,i++)
+        for (i=0; i<12 && luku ;luku/=10,i++) {
                 lukustring[i]=luku%10+'0';
-        for (i--;i>=0 && eka<=vika ;i--)
+}
+        for (i--;i>=0 && eka<=vika ;i--) {
                 *eka++=lukustring[i];
-        for (;eka<=vika;)
+}
+        for (;eka<=vika;) {
                 *eka++=' ';
+}
 }
 #if 0
 aputekstit() {

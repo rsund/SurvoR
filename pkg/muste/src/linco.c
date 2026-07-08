@@ -67,21 +67,28 @@ act=0;
             sur_print("\nUsage: LINCO <SURVO_data>,<matrix_of_coefficients>");
             WAIT; return;
             }
-        i=data_open2(word[1],&d,1,0,0); if (i<0) return;
+        i=data_open2(word[1],&d,1,0,0); if (i<0) { return;
+}
                                 /* tilaa uusille muuttujille */
-        i=spec_init(r1+r-1); if (i<0) return;
+        i=spec_init(r1+r-1); if (i<0) { return;
+}
 
         pros=0;
 
         act='A'; i=spfind("ACT");
-        if (i>=0) act=*spb[i];
+        if (i>=0) { act=*spb[i];
+}
 
-        i=conditions(&d); if (i<0) return;  /* permitted only once */
-        i=matparam(); if (i<0) return;
+        i=conditions(&d); if (i<0) { return;  /* permitted only once */
+}
+        i=matparam(); if (i<0) { return;
+}
         i=matrix_load(matname,&A,&rdim,&cdim,&rlab,&clab,&lr,&lc,&type,expr);
-        if (i<0) return;
+        if (i<0) { return;
+}
 
-        i=varaa_tilat(); if (i<0) return;
+        i=varaa_tilat(); if (i<0) { return;
+}
         i=find_variables();
         if (i<0)
             {
@@ -146,33 +153,39 @@ static int find_variables()
         for (i=0; i<rdim; ++i)
             {
             poimi(nimi,rlab,lr,i);
-            if (constant(nimi)) k=-1;
-            else
+            if (constant(nimi)) { k=-1;
+            } else
                 {
-                k=prosparam(nimi); if (k<0) return(-1);
-                k=varfind(&d,nimi); if (k<0) return(-2);
+                k=prosparam(nimi); if (k<0) { return(-1);
+}
+                k=varfind(&d,nimi); if (k<0) { return(-2);
+}
                 }
             var[i]=k;
             }
 
-        for (k=0; k<rdim; ++k) lag[k]=0;
+        for (k=0; k<rdim; ++k) { lag[k]=0;
+}
         for (i=0; i<cdim; ++i)
             {
             poimi(nimi,clab,lc,i);
             if (muste_strcmpi(nimi,"#LAG")==0)
                 {
-                for (k=0; k<rdim; ++k) lag[k]=(int)A[i*rdim+k];
+                for (k=0; k<rdim; ++k) { lag[k]=(int)A[i*rdim+k];
+}
                 k=-1;
                 }
             else
                 {
-                k=prosparam(nimi); if (k<0) return(-1);
+                k=prosparam(nimi); if (k<0) { return(-1);
+}
                 if (k==0) { outvar[i]=-1; continue; }
                 k=varfind2(&d,nimi,0);
                 if (k<0)
                     {
                     k=create_newvar1(&d,nimi,'4',4,act);
-                    if (k<0) return(-3);
+                    if (k<0) { return(-3);
+}
                     }
                 }
             outvar[i]=k;
@@ -193,10 +206,13 @@ static int constant(char *nimi)
         char *p;
 
         strcpy(x,nimi); muste_strupr(x);
-        if (strncmp(x,"CONST",5)==0) return(1);
+        if (strncmp(x,"CONST",5)==0) { return(1);
+}
         p=x;
-        while (*p && *p==' ') ++p;
-        if (*p=='-' || *p==EOS) return(1);
+        while (*p && *p==' ') { ++p;
+}
+        if (*p=='-' || *p==EOS) { return(1);
+}
         return(0);
         }
 
@@ -204,10 +220,12 @@ static int prosparam(char *nimi)
         {
         int i;
 
-        if (*nimi!='%') return(1);
+        if (*nimi!='%') { return(1);
+}
         i=1+atoi(nimi+1);
-        if (!pros || i<2 || i>g-1)
+        if (!pros || i<2 || i>g-1) {
             return(0);
+}
         strcpy(nimi,word[i]);
         return(1);
         }
@@ -226,15 +244,20 @@ static int linear_combinations()
         sur_print("\nComputing and saving linear combinations: ");
 
         keyind=1;
-        i=hae_apu("prind",sbuf); if (i) keyind=atoi(sbuf);
-        i=spfind("PRIND"); if (i>=0) keyind=atoi(spb[i]);
+        i=hae_apu("prind",sbuf); if (i) { keyind=atoi(sbuf);
+}
+        i=spfind("PRIND"); if (i>=0) { keyind=atoi(spb[i]);
+}
 
 
-        for (i=0; i<cdim; ++i)
+        for (i=0; i<cdim; ++i) {
             if (outvar[i]>=0) { muste_sprintf(sbuf," %.*s",8,d.varname[outvar[i]]); sur_print(sbuf); }
+}
         sur_print("\n");
 
-        for (i=0; i<cdim; ++i) if (outvar[i]>=0) break;
+        for (i=0; i<cdim; ++i) { if (outvar[i]>=0) { break;
+}
+}
         if (i==cdim)
             {
             muste_sprintf(sbuf,"\nParameters missing in %s!",word[2]);
@@ -250,30 +273,37 @@ static int linear_combinations()
                 prind_count=0;
                 if (sur_kbhit()) { sur_getch(); keyind=1-keyind; }
                 }
-            if (unsuitable(&d,j)) continue;
+            if (unsuitable(&d,j)) { continue;
+}
             if (keyind) { muste_sprintf(sbuf," %d",j); sur_print(sbuf); }
             for (k=0; k<rdim; ++k)
                 {
                 m=var[k];
-                if (m==-1) y[k]=1.0;
-                else
+                if (m==-1) { y[k]=1.0;
+                } else
                     {
                     l=j+lag[k];
-                    if (l>=1L && l<=d.n)
+                    if (l>=1L && l<=d.n) {
                         data_load(&d,l,m,&y[k]);
-                    else
+                    } else {
                         y[k]=MISSING8;
+}
                     }
                 }
             for (i=0; i<cdim; ++i)
                 {
-                if (outvar[i]==-1) continue;
+                if (outvar[i]==-1) { continue;
+}
 //                miss=0;
 
-                for (k=0; k<rdim; ++k) if (y[k]==MISSING8) break;
-                if (k<rdim) val=MISSING8;
-                else val=sis_tulo(A+i*rdim,y,1,1,rdim);
-                k=data_save(&d,j,outvar[i],val); if (k<0) return(-1);
+                for (k=0; k<rdim; ++k) { if (y[k]==MISSING8) { break;
+}
+}
+                if (k<rdim) { val=MISSING8;
+                } else { val=sis_tulo(A+i*rdim,y,1,1,rdim);
+}
+                k=data_save(&d,j,outvar[i],val); if (k<0) { return(-1);
+}
                 }
             }
         return(1);

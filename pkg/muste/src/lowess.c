@@ -91,62 +91,80 @@ out_mat=0;
            return;
            }
         ff=60.;
-        if(g>2) ff=atof(word[2]);
-        if(ff>1.00) ff/=100.;
+        if(g>2) { ff=atof(word[2]);
+}
+        if(ff>1.00) { ff/=100.;
+}
         if(g>3)
            {
            mat_file = word[3];
            out_mat=1;
            }
         strcpy(aineisto,word[1]);
-        i=data_open(aineisto,&d); if (i<0) return;
-        i=spec_init(r1+r-1); if (i<0) return;
+        i=data_open(aineisto,&d); if (i<0) { return;
+}
+        i=spec_init(r1+r-1); if (i<0) { return;
+}
         prind=0;
         i=spfind("PRIND");
-        if(i>=0) prind=atoi(spb[i]);
-        i=mask(&d); if (i<0) return;
+        if(i>=0) { prind=atoi(spb[i]);
+}
+        i=mask(&d); if (i<0) { return;
+}
         scales(&d);
         if (d.m_act==0)
             {
             sur_print("\nNo active variables!");
             WAIT; return;
             }
-        if((i=check_mask())==-1)return;
-        i=conditions(&d); if (i<0) return;  /* permitted only once */
-        i=lue(); if (i<0) return;
+        if((i=check_mask())==-1) {return;
+}
+        i=conditions(&d); if (i<0) { return;  /* permitted only once */
+}
+        i=lue(); if (i<0) { return;
+}
 
         /* mallirivi analysoitu  ...................... */
         sxx=sum;sxy=sum+1;sx=sum+2;sy=sum+3;sw=sum+4;
         iter=2;
         i=spfind("ITERATIONS");
-        if(i>=0)iter=atoi(spb[i]);
-        if(iter<1) iter=1;
-        if(iter>2) iter=2;
+        if(i>=0) {iter=atoi(spb[i]);
+}
+        if(iter<1) { iter=1;
+}
+        if(iter>2) { iter=2;
+}
  /*  data  luettu muistiin */
 
-        if(prind) sur_print("\nSorting data... ");
+        if(prind) { sur_print("\nSorting data... ");
+}
         sort(ip,xx,n1);     /* lajitellaan aineisto  x suhteen  */
         med=0.0;
 
-        if(prind) sur_print("\n Phase 1 ");
+        if(prind) { sur_print("\n Phase 1 ");
+}
 /* ensimmäinen tasoitus ..............................................*/
         smooth(xx,yy,ye,ee,ip,0);
 if (iter==2){
-        if(prind) sur_print("\n Phase 2 ");
+        if(prind) { sur_print("\n Phase 2 ");
+}
         init(ir,n1);
         med=rank_order(ir,ee,n1,(n1+1)/2);
         muste_sprintf(sbuf," median = %f n1=%d nn= %d \n",med,n1,nn);
-        if(prind) sur_print(sbuf);
+        if(prind) { sur_print(sbuf);
+}
 /* toinen  tasoitus ..................................................*/
         smooth(xx,yy,ye,ee,ip,1);
  } /* toinen tasoitus loppuu */
-        if(prind) sur_print("\n Phase 3 ");
+        if(prind) { sur_print("\n Phase 3 ");
+}
         talletus();
-        if(out_mat)
+        if(out_mat) {
                if((i=talleta2())==-1){
                     sur_print("\nMatrix saving failed!");
                     WAIT;
                     }
+}
         s_end(argv);
         return;
         }
@@ -172,7 +190,8 @@ static int check_mask()
             WAIT; return(-1);
             }
         s_variable=activated(&d,'S');
-        if (s_variable<0) out_mat=1;
+        if (s_variable<0) { out_mat=1;
+}
         e_variable=activated(&d,'E');
 
         muste_free(xx);muste_free(yy);muste_free(ye);muste_free(ee);
@@ -203,7 +222,8 @@ static int lue()
    if (ir==NULL) { not_enough_memory(); return(-1); }
    ihav=(int *)muste_malloc(koko3);
    if (ihav==NULL) { not_enough_memory(); return(-1); }
-   if(prind) sur_print("\n Reading data... \n");
+   if(prind) { sur_print("\n Reading data... \n");
+}
    for(l=0;l<nn;l++)
       {
       xx[l]=MISSING8;
@@ -212,11 +232,13 @@ static int lue()
   n1=0;
   for (l=d.l1; l<=d.l2; ++l)
      {
-     if (unsuitable(&d,l)) continue;
+     if (unsuitable(&d,l)) { continue;
+}
      if (prind) { muste_sprintf(sbuf," %d",l); sur_print(sbuf); }
      data_load(&d,l,x_variable,&xarvo);
      data_load(&d,l,y_variable,&yarvo);
-     if (xarvo==MISSING8 || yarvo==MISSING8) continue;
+     if (xarvo==MISSING8 || yarvo==MISSING8) { continue;
+}
      xx[n1]=xarvo;
      yy[n1]=yarvo;
      ip[n1]=n1;
@@ -244,7 +266,8 @@ static void sort(int p[],double a[], int n)
      while (1)
           {
           gap/=2;
-          if (gap==0) return;
+          if (gap==0) { return;
+}
           if(prind){
           muste_sprintf(sbuf,"\n gap = %d",gap);
           sur_print(sbuf);
@@ -261,7 +284,8 @@ static void sort(int p[],double a[], int n)
                       {
                       temp=p[j];p[j]=p[nextj];p[nextj]=temp;
                       }
-                   else j=0;
+                   else { j=0;
+}
                    j=j-gap;
                    }
                }
@@ -270,7 +294,8 @@ static void sort(int p[],double a[], int n)
 static double rank_order(int p[],double a[],int n,int k)
         {
         int indeksi;
-        if(prind) sur_print("\nSorting data... ");
+        if(prind) { sur_print("\nSorting data... ");
+}
         sort(p,a,n);
         indeksi=p[k];
         return a[indeksi];
@@ -279,7 +304,8 @@ static double paino2(double a)   /* jasketaan bisquar painokerroin */
         {
         double b,c ;
         b = a<0  ? -a:a ;
-        if (b >1) return (0.0);
+        if (b >1) { return (0.0);
+}
         c=b*b ;
         b=1-c ;
         c=b*b ;
@@ -289,7 +315,8 @@ static double paino3(double a)   /*  lasketaan tricube  painokerroin  */
         {
         double b,c ;
         b=(a<0) ? -a:a ;
-        if (b >1) return (0.0);
+        if (b >1) { return (0.0);
+}
         c=b*b*b ;
         b=1-c ;
         c=b*b*b ;
@@ -319,10 +346,11 @@ static void f_nearest(int p[],double a[],int l,int *m1,int *m2,int n,int fn)
         l1=l2=l;
         for (i=0; i<fn-1;i++)
               {
-              if (l1<=0) l2+=1;
-              else if (l2>=n-1) l1-=1;
-              else if (*(a+p[l])-*(a+p[l1-1])>=*(a+p[l2+1])-*(a+p[l])) l2+=1;
-              else l1-=1;
+              if (l1<=0) { l2+=1;
+              } else if (l2>=n-1) { l1-=1;
+              } else if (*(a+p[l])-*(a+p[l1-1])>=*(a+p[l2+1])-*(a+p[l])) { l2+=1;
+              } else { l1-=1;
+}
               }
         *m1 = l1;
         *m2 = l2;
@@ -359,24 +387,28 @@ static void smooth(double xx[],double yy[],double ye[],double ee[],int ip[],int 
                                 x =(*(xx+idp)-*(xx+irp))/max1;
                                 w1= paino3(x);
                                 }
-                        else w1 = 1.0;
+                        else { w1 = 1.0;
+}
                         e = 0.0;
                         if(id)
                                 {
                                 e = *(ee+idp);
                                 if(med==0.0)
                                      {
-                                     if(e==0.0) w2=1.0;
-                                     else w2=0.0;
+                                     if(e==0.0) { w2=1.0;
+                                     } else { w2=0.0;
+}
                                      }
                                 else
                                      {
                                      x= e/(6*med);
-                                     if (x > 1) w2 = 0.0;
-                                     else w2=paino2(x);
+                                     if (x > 1) { w2 = 0.0;
+                                     } else { w2=paino2(x);
+}
                                      }
                                 }
-                        else w2=1.0;
+                        else { w2=1.0;
+}
                         x = *(xx+idp);
                         y = *(yy+idp);
                         w=w1*w2;
@@ -393,14 +425,16 @@ static void smooth(double xx[],double yy[],double ye[],double ee[],int ip[],int 
                                b=(*sxy-(*sx)*(*sy)/(*sw))/ssx;
                                yee = b*(*(xx+irp)-(*sx)/(*sw))+(*sy)/(*sw);
                                }
-                        else yee = (*sy)/(*sw);
+                        else { yee = (*sy)/(*sw);
+}
                         }
                 *(ye+irp) = yee;
                 }
         for (ii=0; ii <n1; ii++) /* yli kaikkien havaintojen */
                 {
                 e = *(ye+ii) - *(yy+ii);
-                if (id==0) e = (e > 0 ? e : -e);
+                if (id==0) { e = (e > 0 ? e : -e);
+}
                 *(ee+ii) = e ;
                 }
         return;
@@ -409,8 +443,10 @@ static void talletus()
    {
    int i;
    int l,kl;
-   if (s_variable<0 && e_variable<0 ) return; /* nothing to save!! */
-   if(prind) sur_print("\nSaving values of output variables\n");
+   if (s_variable<0 && e_variable<0 ) { return; /* nothing to save!! */
+}
+   if(prind) { sur_print("\nSaving values of output variables\n");
+}
    i=d.l1;
    for (l=0;l<n1;l++,i+=1)
       {
@@ -470,13 +506,17 @@ static int talleta2()
   strcpy(clab,"X       Y       S       ");
   muste_sprintf(mnimi,"DATA %s; n=%d; X-var=%s; Y-var=%s",
       word[1], n1, d.varname[x_variable], d.varname[y_variable]);
-  for(cp=mnimi;*cp;cp++) if(*cp==' ') *cp='_';
-  for (cp--; *cp=='_'; --cp) *cp=' '; cp++; *cp=EOS;
+  for(cp=mnimi;*cp;cp++) { if(*cp==' ') { *cp='_';
+}
+}
+  for (cp--; *cp=='_'; --cp) { *cp=' '; 
+}cp++; *cp=EOS;
   if(prind) { sur_print("\n"); sur_print(mnimi);
               sur_print("\n"); sur_print(clab); }
 
   i=matrix_save(mat_file,A,n1,3,rlab,clab,8,8,-1,mnimi,0,0);
-  if (i<0) return(-1);
+  if (i<0) { return(-1);
+}
   muste_free(rlab); muste_free(clab);
   muste_free(A);
   return(1);

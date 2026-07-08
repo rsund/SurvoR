@@ -111,7 +111,8 @@ static int Muste_EvalTcl_core(char *komento, int ikkuna)
 //    if (strlen(muste_window)<2)
     if (muste_window_existing==FALSE) 
     {
-    if (muste_lopetus) return(0); // RS 21.12.2012
+    if (muste_lopetus) { return(0); // RS 21.12.2012
+}
     
 //    SEXP avar=R_NilValue;
 //    avar = findVar(install("muste:::.muste$window"),R_GlobalEnv);
@@ -122,8 +123,8 @@ static int Muste_EvalTcl_core(char *komento, int ikkuna)
 //Rprintf("\nLoytyi ikkuna: %s\n",muste_window);
     }
 
-    if(!ikkuna) strcpy(tclkomento,komento);
-    else 
+    if(!ikkuna) { strcpy(tclkomento,komento);
+    } else 
     {
       strcpy(tclkomento,muste_window);
       strcat(tclkomento,komento);
@@ -135,7 +136,8 @@ static int Muste_EvalTcl_core(char *komento, int ikkuna)
     aptr=alist;
     aptr=CDR(aptr); 
     SETCAR(aptr, Rf_mkString(tclkomento));
-    if (!muste_lopetus) RdotTcl(alist); // RS 21.12.2012 if
+    if (!muste_lopetus) { RdotTcl(alist); // RS 21.12.2012 if
+}
     UNPROTECT(1);
     return(1);
 }

@@ -138,8 +138,9 @@ int muste_checkstack(void)
 
 SEXP muste_findVar(SEXP sym, SEXP env) {
   while (env != R_EmptyEnv) {
-    if (R_existsVarInFrame(env, sym))
+    if (R_existsVarInFrame(env, sym)) {
       return R_getVar(sym, env, FALSE);
+}
     
     env = R_ParentEnv(env);
   }
@@ -149,13 +150,15 @@ SEXP muste_findVar(SEXP sym, SEXP env) {
 
 
 int muste_is_utf8_string(SEXP x) {
-  if (TYPEOF(x) != STRSXP || XLENGTH(x) == 0)
+  if (TYPEOF(x) != STRSXP || XLENGTH(x) == 0) {
     return 0;
+}
   
   SEXP s = STRING_ELT(x, 0);
   
-  if (s == NA_STRING)
+  if (s == NA_STRING) {
     return 0;
+}
   
   return (Rf_getCharCE(s) == CE_UTF8);
 }
@@ -170,7 +173,8 @@ SEXP Muste_EvalRExpr(char *cmd)
 //   muste_sprintf(komento,"if (inherits(try(.muste$ans<-%s,silent=TRUE), \"try-error\")) FALSE else TRUE",cmd);   
    apu=apu2=apu3=NULL;
    apu=strchr(cmd,'('); apu2=strchr(cmd,' '); apu3=strchr(cmd,'<');   
-   if ((apu2!=NULL && apu3!=NULL && (apu3-cmd)<(apu2-cmd)) || (apu2==NULL)) apu2=apu3;
+   if ((apu2!=NULL && apu3!=NULL && (apu3-cmd)<(apu2-cmd)) || (apu2==NULL)) { apu2=apu3;
+}
    if (strncmp(cmd,".muste.",7)==0 && 
       (apu!=NULL && 
       (apu2==NULL || 
@@ -212,7 +216,8 @@ int muste_evalr(char *cmd)
    Muste_EvalRExpr(apu);
    
    status=Muste_EvalRExpr(cmd);
-   if (status==R_NilValue) retstat=-1; 
+   if (status==R_NilValue) { retstat=-1; 
+}
  
 //   muste_sprintf(apu,"remove(.muste)");
 //   i=Muste_EvalRExpr(apu); 
@@ -245,10 +250,12 @@ int muste_evalsource_output(char *sfile,char *rout)
      
 //	strcpy(x,sfile);
     if (!muste_is_path(sfile)) { strcpy(out,etmpd); strcat(out,sfile); } // RS CHA 14.11.2012
-    else strcpy(out,sfile);
+    else { strcpy(out,sfile);
+}
 
-	if (*rout!=EOS) muste_sprintf(cmd,".muste.runsource(\"%s\",dest=\"%s\")",out,rout);
-	else muste_sprintf(cmd,".muste.runsource(\"%s\")",out);
+	if (*rout!=EOS) { muste_sprintf(cmd,".muste.runsource(\"%s\",dest=\"%s\")",out,rout);
+	} else { muste_sprintf(cmd,".muste.runsource(\"%s\")",out);
+}
 //    "source(\"%s\",echo=TRUE,print.eval=TRUE)",out);         
     muste_evalr(cmd);
     return(1);
@@ -304,7 +311,8 @@ int muste_evalsource(char *sfile)
 		{
 //		if (y[i]=='"') y[i]='\''; 
 		y[j]=x[i];
-		if (x[i]=='\'') y[j]='"'; 		
+		if (x[i]=='\'') { y[j]='"'; 		
+}
 //		if (y[i]=='\\') y[i]='/';
 		if (x[i]=='\\') { j++; y[j]='\\'; } // RS CHA 15.11.2012
 		j++;
@@ -316,21 +324,23 @@ int muste_evalsource(char *sfile)
 		{
 		if (strchr(y,' ')==NULL)  { clip=tyhja; }
 		else { clip=strchr(y,' ')+1; }
-		if (odotus) snprintf(cmd,LLENGTH,"muste:::.muste.dir('%s',TRUE)",clip);
-		else muste_snprintf(cmd,LLENGTH,"muste:::.muste.dir('%s',FALSE)",clip);			
+		if (odotus) { snprintf(cmd,LLENGTH,"muste:::.muste.dir('%s',TRUE)",clip);
+		} else { muste_snprintf(cmd,LLENGTH,"muste:::.muste.dir('%s',FALSE)",clip);			
+}
 //		if (wait) muste_sprintf(cmd,"muste:::.muste.dir(\"%s\",TRUE)",clip);
 //		else muste_sprintf(cmd,"muste:::.muste.dir(\"%s\",FALSE)",clip);		
 		}
 	else
 		{
-		if (odotus==1) muste_snprintf(cmd,LLENGTH,"muste:::.muste.system('%s',TRUE)",y);
-		else if (odotus==2)
+		if (odotus==1) { muste_snprintf(cmd,LLENGTH,"muste:::.muste.system('%s',TRUE)",y);
+		} else if (odotus==2)
 			{
 			strcpy(x,y);
 			len=splitq(x,osat,5);		
 			muste_snprintf(cmd,LLENGTH,"muste:::.muste.systemopen('%s',FALSE,%d)",y,len); // RS 25.11.2012
 			}
-		else muste_snprintf(cmd,LLENGTH,"muste:::.muste.system('%s',FALSE)",y);		
+		else { muste_snprintf(cmd,LLENGTH,"muste:::.muste.system('%s',FALSE)",y);		
+}
 //		if (wait) muste_sprintf(cmd,"muste:::.muste.system(\"%s\",TRUE)",y);
 //		else muste_sprintf(cmd,"muste:::.muste.system(\"%s\",FALSE)",y);	
     	}
@@ -378,7 +388,8 @@ int muste_requirepackage(char *package)
     sur_print(cmd);
     sur_print("\nInstall now (Y/N)?"); // RS 29.8.2013
     i=sur_getch();
-    if (i!='Y' && i!='y') return(vast);    
+    if (i!='Y' && i!='y') { return(vast);    
+}
     snprintf(cmd,LLENGTH,"install.packages(\"%s\",dep=TRUE)",package);  
     muste_evalr(cmd);
     snprintf(cmd,LLENGTH,"if (!require(%s)) { install.packages(\"%s\",contriburl=\"http://www.survo.fi/muste\") }",package,package);
@@ -407,12 +418,15 @@ void muste_set_R_string(char *dest,char *sour) // RS 25.11.2012
 	char *hakuapu,*teksti;
 	char tyhja[]="";
 
-	if (dest==NULL) return;
-	if (sour==NULL) teksti=tyhja;
-	else teksti=sour;
+	if (dest==NULL) { return;
+}
+	if (sour==NULL) { teksti=tyhja;
+	} else { teksti=sour;
+}
 
  	hakuapu=strchr(dest,'$')+1;
-  	if (hakuapu==NULL) hakuapu=dest;
+  	if (hakuapu==NULL) { hakuapu=dest;
+}
 	  
 	PROTECT(tmp = Rf_allocVector(STRSXP, 1));
 	SET_STRING_ELT(tmp, 0, Rf_mkChar(teksti));
@@ -429,7 +443,8 @@ int muste_get_R_char_noencode(char *dest,char *sour,int length)
   char *hakuapu;
 
   hakuapu=strchr(sour,'$')+1;
-  if (hakuapu==NULL) hakuapu=sour;
+  if (hakuapu==NULL) { hakuapu=sour;
+}
   avar = muste_findVar(Rf_install(hakuapu),muste_environment); // RS CHA R_GlobalEnv);
   snprintf(dest,length,"%s",CHAR(STRING_ELT(avar,0)));
   
@@ -444,7 +459,8 @@ int muste_get_R_string_vec(char *dest,char *sour,int length,int element)
   int len;
 
   hakuapu=strchr(sour,'$')+1;
-  if (hakuapu==NULL) hakuapu=sour;
+  if (hakuapu==NULL) { hakuapu=sour;
+}
   avar = muste_findVar(Rf_install(hakuapu),muste_environment); // RS CHA R_GlobalEnv);
   if (!Rf_isString(avar)) // RS 29.8.2013
     {
@@ -455,10 +471,12 @@ int muste_get_R_string_vec(char *dest,char *sour,int length,int element)
   hakuapu=(char *)CHAR(enc);
   len=strlen(hakuapu);
   hakubuf=(char *)malloc(len+2);
-  if (hakubuf==NULL) return(0);
+  if (hakubuf==NULL) { return(0);
+}
   strcpy(hakubuf,hakuapu); 
   if (muste_is_utf8_string(enc)) { muste_iconv(hakubuf,"CP850","UTF-8"); }
-  else muste_iconv(hakubuf,"CP850","");
+  else { muste_iconv(hakubuf,"CP850","");
+}
   snprintf(dest,length,"%s",hakubuf);
   free(hakubuf);
   return(1);
@@ -482,7 +500,8 @@ int muste_get_R_int_vec(char *sour,int element)
   char *hakuapu;
 
   hakuapu=strchr(sour,'$')+1;
-  if (hakuapu==NULL) hakuapu=sour;
+  if (hakuapu==NULL) { hakuapu=sour;
+}
   avar = muste_findVar(Rf_install(hakuapu),muste_environment);
   if (!Rf_isInteger(avar) && !Rf_isLogical(avar))  // RS 29.8.2013
     {
@@ -505,7 +524,8 @@ double muste_get_R_real_vec(char *sour,int element)
   char *hakuapu;
 
   hakuapu=strchr(sour,'$')+1;
-  if (hakuapu==NULL) hakuapu=sour;
+  if (hakuapu==NULL) { hakuapu=sour;
+}
   avar = muste_findVar(Rf_install(hakuapu),muste_environment);
   if (!Rf_isReal(avar))  // RS 29.8.2013
     {
@@ -530,7 +550,8 @@ void muste_copy_to_clipboard(char *x)
     len=strlen(x);    
     
     y=malloc(3*(len+3)); // RS ei muste_malloc, koska putsataan heti pois
-	if (y==NULL) return; // RS ADD 3.10.2012
+	if (y==NULL) { return; // RS ADD 3.10.2012
+}
 //    leike=malloc(3*(len+1));
 //    if (leike==NULL) return; // RS ADD 3.10.2012
 
@@ -662,7 +683,8 @@ int muste_geturlfile(char *path, char *retfilename) // RS 29.8.2013
     muste_sprintf(cmd,".muste.getfile(\"%s\")",clip);
     muste_evalr(cmd);
     muste_get_R_string(retfilename,".muste$retrievedfile",LLENGTH);
-    if (*retfilename==EOS) return(-1);
+    if (*retfilename==EOS) { return(-1);
+}
     return(1);
 	}
 		                
@@ -677,11 +699,12 @@ double muste_R_function(char *s,double *x,int n)
 //	Rprintf("\ns: %s; x[0]: %f, n: %d",s,x[0],n);
 	
 	muste_sprintf(cmd,".muste$rfu<-as.numeric(%s(%.16g",s,x[0]); // RS 9.10.2013 as.real -> as.numeric
-	if (n>1) for (i=1; i<n; i++)
+	if (n>1) { for (i=1; i<n; i++)
 		{
 		muste_sprintf(luku,",%.16g",x[i]);
 		strcat(cmd,luku);
 		}
+}
 	strcat(cmd,"))");
 
 //	Rprintf("\ncmd: %s",cmd);	
@@ -731,8 +754,9 @@ int sur_play_tone(double freq,double time) // RS 17.12.2013
 
 int muste_theme(int classic)
 	{
-	if (classic) muste_evalr(".muste.shadows(\"#FFFEFF\",\"#FFFEFF\")");
-	else muste_evalr(".muste.shadows(\"white\",\"#F8F8F8\")");
+	if (classic) { muste_evalr(".muste.shadows(\"#FFFEFF\",\"#FFFEFF\")");
+	} else { muste_evalr(".muste.shadows(\"white\",\"#F8F8F8\")");
+}
 	return(1);
 	}
 
@@ -786,9 +810,10 @@ int muste_statusbar(int basic,int shadow)
 		muste_snprintf(str1,256,"tkconfigure(.muste$statbarl3,text=\"Path: %s\")",cmd);		
 		muste_evalr(str1);
 		
-		if (insert_type && insert_mode)
+		if (insert_type && insert_mode) {
 			 muste_sprintf(str1,"tkconfigure(.muste$statbarl4,text=\"Ins\",background=.muste$insertcursorcolor,foreground=\"white\")");
-		else muste_sprintf(str1,"tkconfigure(.muste$statbarl4,text=\"Ins\",background=\"white\",foreground=\"white\")");
+		} else { muste_sprintf(str1,"tkconfigure(.muste$statbarl4,text=\"Ins\",background=\"white\",foreground=\"white\")");
+}
 //		else muste_sprintf(str1,"tkconfigure(.muste$statbarl4,text='',background='')");
 	
 			
@@ -883,7 +908,8 @@ if (strcmp(kojo,"SaveEdt")==0)
 	extern int muste_save_firstline(void);
 	int i;
 	i=muste_save_firstline();
-	if (i<0) muste_set_R_int(".muste$saverror",1);
+	if (i<0) { muste_set_R_int(".muste$saverror",1);
+}
 	return(para);
 	}
 
@@ -909,7 +935,8 @@ if (strcmp(kojo,"GetSaveName")==0)
     g=splitq(str1+1,parm,2);
     if (g>1) 
     	{
-    	if (strcmp(parm[0],"SAVE")==0) muste_set_R_string(".muste$savename",parm[1]);
+    	if (strcmp(parm[0],"SAVE")==0) { muste_set_R_string(".muste$savename",parm[1]);
+}
     	}
     return(para);
     }	
@@ -935,7 +962,8 @@ if (strcmp(kojo,"Cut")==0)
 		{	
 		muste_cutselection(i);
 		}
-	else if (i>10) muste_cutselection(i);
+	else if (i>10) { muste_cutselection(i);
+}
 	return(para);
 	}	
 
@@ -1132,12 +1160,16 @@ SEXP Muste_Selection(SEXP session)
 		j=0; k=0;
 		if (seltype!=4)
 			{
-			if (move_r2-r1+2>r3+1) j=1;
-			if (move_r2-r1+2<=1) j=-1;
+			if (move_r2-r1+2>r3+1) { j=1;
+}
+			if (move_r2-r1+2<=1) { j=-1;
+}
 			
 //Rprintf("\nraja: mc2: %d, c1: %d, c3: %d",mc2,c1,c3);			
-			if (mc2-c1+2>c3) k=1;
-			if (mc2-c1+2<=1) k=-1;
+			if (mc2-c1+2>c3) { k=1;
+}
+			if (mc2-c1+2<=1) { k=-1;
+}
 			}
 
 		muste_set_R_int(".muste$selection.r2",move_r2);
@@ -1153,10 +1185,12 @@ SEXP Muste_Selection(SEXP session)
 		else if (j!=0 || k!=0)
 				{
   				muste_sprintf(cmd,".muste.yview(.muste$scry,\"scroll\",as.integer(%d),\"units\")",j);
-  				if (j!=0) muste_evalr(cmd);
+  				if (j!=0) { muste_evalr(cmd);
+}
   				
   				muste_sprintf(cmd,".muste.xview(.muste$scrx,\"scroll\",as.integer(%d),\"units\")",k);
-  				if (k!=0) muste_evalr(cmd);
+  				if (k!=0) { muste_evalr(cmd);
+}
   			
 //  				muste_sprintf(cmd,"tcl(\"after\",100,.muste.yview(.muste$scry,\"scroll\",%d,\"units\"))",i);
   				muste_sprintf(cmd,"tcl(\"after\",10,muste:::.muste.selcoord)");
@@ -1172,9 +1206,11 @@ SEXP Muste_Selection(SEXP session)
 	if (move_r2<move_r1) { i=move_r1; move_r1=move_r2; move_r2=i; }
 	if (mc2<mc1) { i=mc1; mc1=mc2; mc2=i; }
 	
-	if (mc2>c2) mc2=c2;
+	if (mc2>c2) { mc2=c2;
+}
 
-	if (muste_get_R_int(".muste$selection.alt")) { mc2=c2; if (mc1<1) mc1=0; else mc1=1; }
+	if (muste_get_R_int(".muste$selection.alt")) { mc2=c2; if (mc1<1) { mc1=0; } else { mc1=1; 
+}}
 		
 //Rprintf("\nr1: %d, c1: %d, r2: %d, c2: %d",move_r1,mc1,move_r2,mc2);	
 	disp();
@@ -1197,8 +1233,10 @@ static void muste_edt_dim()
     max=r2;
     cur=r1+r-1;
     end=lastline2();
-    if (first>end) end=last;
-    if (end<last) end=last;
+    if (first>end) { end=last;
+}
+    if (end<last) { end=last;
+}
 	
     muste_set_R_int(".muste$edty.first",first);
     muste_set_R_int(".muste$edty.last",last);
@@ -1211,8 +1249,10 @@ static void muste_edt_dim()
     max=c2;
     cur=c1+c-1;
     end=max; // RS FIXME
-    if (first>end) end=last;
-    if (end<last) end=last;
+    if (first>end) { end=last;
+}
+    if (end<last) { end=last;
+}
     
     muste_set_R_int(".muste$edtx.first",first);
     muste_set_R_int(".muste$edtx.last",last);
@@ -1248,7 +1288,8 @@ SEXP Muste_Edtgoto(SEXP gotoparm)
     Rprintf("\neventpeek: %d, mousewheel: %d",muste_eventpeek,mousewheel);
     if (muste_eventpeek==FALSE && mousewheel!=9999) return(gotoparm);
 */	
-    if (muste_mousewheel==FALSE || muste_no_selection) return(gotoparm);
+    if (muste_mousewheel==FALSE || muste_no_selection) { return(gotoparm);
+}
 
 	newfirst=muste_get_R_int(".muste$edty.newfirst");
 	newcur=muste_get_R_int(".muste$edty.newcur");
@@ -1355,7 +1396,8 @@ SEXP Muste_Eventloop(SEXP session)
 //    muste_eventpeek=FALSE;
 
     }
-    else disp();
+    else { disp();
+}
     
 //    survo_ajax_screenbuffer(); // RS 1.12.2015
     survo_close_ajaxbuffer(); // RS 10.12.2015
@@ -1549,7 +1591,8 @@ void muste_initstack()
 	int i;
 	muste_stack[0].all=0;
 	muste_stack_count=0;
-	for (i=0; i<MUSTESTACKSIZE; i++) muste_stackdepth[i]=0;
+	for (i=0; i<MUSTESTACKSIZE; i++) { muste_stackdepth[i]=0;
+}
 	}
 
 int muste_save_stack_count(int debug)
@@ -1679,7 +1722,8 @@ int muste_fclose(FILE *p)
   		{
     	if (muste_stack[no].ptr==p) muste_stack[no].ptr=NULL;
   		}	
-  	if (p!=NULL) fclose(p);
+  	if (p!=NULL) { fclose(p);
+}
 //  	Rprintf("\nptr closed: %ld",(long)p);  // RS DEBUG  	
   	p=NULL;
   	return 0;
@@ -1688,7 +1732,8 @@ int muste_fclose(FILE *p)
 int muste_fclose2(void *p)
 	{
 //Rprintf("\nfclose2");	
-  	if (p!=NULL) fclose((FILE *)p);
+  	if (p!=NULL) { fclose((FILE *)p);
+}
   	p=NULL;
   	return 0;
 	}
@@ -1719,8 +1764,9 @@ void MUSTE_REAL(void (*func)(void*), void* ptr)
 void *muste_memset(void *s, int c, size_t n)
 {
     unsigned char* p=s;
-    while(n--)
+    while(n--) {
         *p++ = (unsigned char)c;
+}
     return s;
 }
 
@@ -1737,7 +1783,8 @@ void *muste_realloc(void *p,size_t n)
     		if (muste_stack[no].ptr==p) { loytyi=1; break; }
     		no--;
   			}	
-  		if (no<0) no=0;
+  		if (no<0) { no=0;
+}
   		if (loytyi==0) 
   			{ 
   			p=muste_malloc(n); 
@@ -1748,7 +1795,8 @@ void *muste_realloc(void *p,size_t n)
 		p=NULL;  // RS free="normal", Free="R"
 //		p=(void *)Calloc(n,char); // RS malloc="normal", Calloc="R"
 		p=(void *)malloc(n); // RS malloc="normal", Calloc="R"
-        if (p!=NULL) muste_memset(p,0,n);		
+        if (p!=NULL) { muste_memset(p,0,n);		
+}
 	    muste_stack[no].ptr=p;
 	    return(p);
 		}
@@ -1764,7 +1812,8 @@ void *muste_malloc(size_t n)
 //Rprintf("\nmalloc");	
 //	ptr=(void *)Calloc(n+1,char); // RS malloc="normal", Calloc="R"
 	ptr=(void *)malloc(n+1); // RS malloc="normal", Calloc="R"
-	if (ptr!=NULL) muste_memset(ptr,0,n);
+	if (ptr!=NULL) { muste_memset(ptr,0,n);
+}
 	muste_resource_allocation(muste_free2,ptr);
 	return(ptr);
 	}
@@ -1780,7 +1829,8 @@ FILE *muste_fopen(char *path, char *mode)
 		{
 		muste_geturlfile(path,mem); // RS 29.8.2013	
 		}
-	else strcpy(mem,path);
+	else { strcpy(mem,path);
+}
 	muste_iconv(mem,"UTF-8","CP850");
 	muste_expand_path(mem);
 	ptr=fopen(mem,mode);
@@ -1800,7 +1850,8 @@ FILE *muste_fopen2(char *path, char *mode)
 		{
 		muste_geturlfile(path,mem); // RS 29.8.2013	
 		}
-	else strcpy(mem,path);
+	else { strcpy(mem,path);
+}
 	muste_iconv(mem,"UTF-8","CP850");
 	muste_expand_path(mem);
 	ptr=fopen(mem,mode);
@@ -1816,7 +1867,8 @@ int muste_debug_print(char *teksti)
 
 /* Drop-in replacement function for ftime */
 int muste_ftime(struct muste_timeb *tp) {
-  if (tp == NULL) return -1;
+  if (tp == NULL) { return -1;
+}
   
   struct timespec ts;
   // C11 standard ultra-portable wall-clock resolution

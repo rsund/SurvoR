@@ -128,11 +128,11 @@ static double Cabs(fcomplex z)
 double x,y,ans,temp;
 x=fabs(z.r);
 y=fabs(z.i);
-if (x==0.0)
+if (x==0.0) {
   ans=y;
-else if (y==0.0)
+} else if (y==0.0) {
   ans=x;
-else if (x>y) {
+} else if (x>y) {
 temp=y/x;
 ans=x*sqrt(1.0+temp*temp);
 } else {
@@ -200,7 +200,8 @@ for (iter=1; iter<=MAXIT;  iter++) {
     err=Cabs(b)+abx*err;
   }
   err *= EPSS;
-  if (Cabs(b) <= err) return;
+  if (Cabs(b) <= err) { return;
+}
   g=Cdiv(d,b);
   g2=Cmul(g,g);
   h=Csub(g2,RCmul(2.0,Cdiv(f,b)));
@@ -209,16 +210,20 @@ for (iter=1; iter<=MAXIT;  iter++) {
   gm=Csub(g,sq);
   abp=Cabs(gp);
   abm=Cabs(gm);
-  if (abp < abm) gp=gm;
+  if (abp < abm) { gp=gm;
+}
 
 // dx=((FMAX(abp,abm) > 0.0 ? Cdiv(Complex((double) m,0.0),gp)
-  maxa=abp; if (abm>abp) maxa=abm;
+  maxa=abp; if (abm>abp) { maxa=abm;
+}
   dx=((maxa > 0.0 ? Cdiv(Complex((double) m,0.0),gp)
  : RCmul(exp(log(1.0+abx)),Complex(cos((double)iter),sin((double)iter)))));
   x1=Csub(*x,dx);
-  if (x->r == x1.r && x->i == x1.i) return; // Converged!
-  if (iter%MT) *x=x1;
-  else *x=Csub(*x,RCmul(frac[iter/MT],dx));
+  if (x->r == x1.r && x->i == x1.i) { return; // Converged!
+}
+  if (iter%MT) { *x=x1;
+  } else { *x=Csub(*x,RCmul(frac[iter/MT],dx));
+}
   }
 sur_print("\nToo many iterations"); WAIT;
 return;
@@ -252,14 +257,18 @@ static double tark(double r)
     double a,b;
     long m,n;
 
-    if (r<0.0) merkki=-1; else merkki=1;
-    a=fabs(r); if (a<0.00001) return(0.0);
+    if (r<0.0) { merkki=-1; } else { merkki=1;
+}
+    a=fabs(r); if (a<0.00001) { return(0.0);
+}
     kok=(int)a;
     b=a-(double)kok;
-    if (b<0.0000001) return((double)kok);
+    if (b<0.0000001) { return((double)kok);
+}
 // printf("\nkok=%d b=%g",kok,b); getch();
     diss(b,10.0,&m,&n);
-    if (m==0) return(r);
+    if (m==0) { return(r);
+}
 // printf("\nn=%ld m=%ld",m,n); getch();
     a=merkki*((double)kok+(double)n/(double)m);
     return(a);
@@ -274,15 +283,17 @@ static int tarkennus(fcomplex a[], int m, fcomplex roots[])
     for (i=1; i<=m; ++i)
       {
       b=a[m];
-      for (j=m-1; j>=0; j--)
+      for (j=m-1; j>=0; j--) {
           b=Cadd(Cmul(roots[i],b),a[j]);
+}
 //    printf("\nre=%.16g im=%.16g b.r=%g b.i=%g",
 //              roots[i].r,roots[i].i,  b.r,b.i);
       r.r=tark(roots[i].r);
       r.i=tark(roots[i].i);
       b1=a[m];
-      for (j=m-1; j>=0; j--)
+      for (j=m-1; j>=0; j--) {
           b1=Cadd(Cmul(r,b1),a[j]);
+}
 //    printf("\ntark:");
 //    printf("\nre=%.16g im=%.16g b1.r=%g b1.i=%g",
 //              r.r,r.i,  b1.r,b1.i);
@@ -305,11 +316,13 @@ void laguer(fcomplex a[], int m, fcomplex *x, int *its);
 int i,its,j,jj;
 fcomplex x,b,c,ad[MAXM];
 
-for (j=0; j<=m; j++) ad[j]=a[j];
+for (j=0; j<=m; j++) { ad[j]=a[j];
+}
 for (j=m; j>=1; j--) {
   x=Complex(0.0,0.0);
    laguer(ad,j,&x,&its);
-  if (fabs(x.i) <= 2.0*LEPS*fabs(x.r)) x.i=0.0;
+  if (fabs(x.i) <= 2.0*LEPS*fabs(x.r)) { x.i=0.0;
+}
   roots[j]=x;
   b=ad[j];
   for (jj=j-1; jj>=0; jj--) {
@@ -334,14 +347,17 @@ for (i=1; i<=m; ++i)
 // - kokeilu 9.3.2017
 ******************************/
 
-if (polish)
-  for (j=1;j<=m; j++)
+if (polish) {
+  for (j=1;j<=m; j++) {
     laguer(a,m,&roots[j],&its);
+}
+}
 
 for (j=2; j<=m; j++) {
   x=roots[j];
   for (i=j-1; i>=1; i--) {
-    if (roots[i].r <= x.r) break;
+    if (roots[i].r <= x.r) { break;
+}
     roots[i+1]=roots[i];
     }
   roots[i+1]=x;
@@ -354,13 +370,15 @@ tarkennus(a,m,roots);
 
 static int zero(double x)
         {
-        if (fabs(x)<C_ZERO) return(1);
+        if (fabs(x)<C_ZERO) { return(1);
+}
         return(0);
         }
         
 static int c_zero(struct complex *z)
         {
-        if (zero(z->x) && zero(z->y)) return(1);
+        if (zero(z->x) && zero(z->y)) { return(1);
+}
         return(0);
         }
 
@@ -420,12 +438,15 @@ static struct polynom *pol_mult(struct polynom *p,struct polynom *p1,struct poly
         p->n=p1->n+p2->n;
         if (p->n>MAXN-1) { pol_dim_overflow(); return(p); }
 
-        for (i=0; i<=p->n; ++i)
+        for (i=0; i<=p->n; ++i) {
             p->a[i].x=p->a[i].y=0.0;
-        for (i=0; i<=p1->n; ++i)
-            for (j=0; j<=p2->n; ++j)
+}
+        for (i=0; i<=p1->n; ++i) {
+            for (j=0; j<=p2->n; ++j) {
                 c_add(&(p->a[i+j]),&(p->a[i+j]),
                           c_mult(&tulo,&(p1->a[i]),&(p2->a[j])));
+}
+}
 
         return(p);
         }
@@ -438,11 +459,14 @@ static struct polynom *pol_mult_real(struct polynom *p,struct polynom *p1,struct
         p->n=p1->n+p2->n;
         if (p->n>MAXN-1) { pol_dim_overflow(); return(p); }
 
-        for (i=0; i<=p->n; ++i)
+        for (i=0; i<=p->n; ++i) {
             p->a[i].x=p->a[i].y=0.0;
-        for (i=0; i<=p1->n; ++i)
-            for (j=0; j<=p2->n; ++j)
+}
+        for (i=0; i<=p1->n; ++i) {
+            for (j=0; j<=p2->n; ++j) {
                  p->a[i+j].x+=p1->a[i].x*p2->a[j].x;
+}
+}
 
          /*     c_add(&(p->a[i+j]),&(p->a[i+j]),
                           c_mult(&tulo,&(p1->a[i]),&(p2->a[j])));
@@ -465,23 +489,27 @@ static struct polynom *pol_div(struct polynom *p,struct polynom *q,struct polyno
             sur_print("\nDegree of dividend < Degree of divisor");
             WAIT; return(p);
             }
-        for (i=0; i<=p->n; ++i)
+        for (i=0; i<=p->n; ++i) {
             p->a[i].x=p->a[i].y=0.0;
+}
         for (i=0; i<=p1->n; ++i)
             { q->a[i].x=p1->a[i].x; q->a[i].y=p1->a[i].y; }
 
         for (i=p1->n; i>=p2->n; --i)
             {
-            if (c_zero(&(q->a[i]))) continue;
+            if (c_zero(&(q->a[i]))) { continue;
+}
             c_div(&z,&(q->a[i]),&(p2->a[p2->n]));
             p->a[i-p2->n].x=z.x; p->a[i-p2->n].y=z.y;
             q->a[i].x=q->a[i].y=0.0;
-            for (j=i-1; j>=i-p2->n; --j)
+            for (j=i-1; j>=i-p2->n; --j) {
                 c_sub(&(q->a[j]),&(q->a[j]),
                       c_mult(&z1,&z,&(p2->a[p2->n-i+j])));
+}
             }
         i=p2->n-1;
-        while (c_zero(&(q->a[i])) && i>0) --i;
+        while (c_zero(&(q->a[i])) && i>0) { --i;
+}
         q->n=i;
         return(p);
         }
@@ -497,16 +525,17 @@ static struct polynom *pol_add(struct polynom *p,struct polynom *p1,struct polyn
             {
             if (i<=p1->n)
                 {
-                if (i<=p2->n)
+                if (i<=p2->n) {
                     c_add(&(p->a[i]),&(p1->a[i]),&(p2->a[i]));
-                else
+                } else
                     { p->a[i].x=p1->a[i].x; p->a[i].y=p1->a[i].y; }
                 }
             else
                 { p->a[i].x=p2->a[i].x; p->a[i].y=p2->a[i].y; }
             }
         i=p->n;
-        while (c_zero(&(p->a[i])) && i>0) --i;
+        while (c_zero(&(p->a[i])) && i>0) { --i;
+}
         p->n=i;
         return(p);
         }
@@ -522,16 +551,17 @@ static struct polynom *pol_sub(struct polynom *p,struct polynom *p1,struct polyn
             {
             if (i<=p1->n)
                 {
-                if (i<=p2->n)
+                if (i<=p2->n) {
                     c_sub(&(p->a[i]),&(p1->a[i]),&(p2->a[i]));
-                else
+                } else
                     { p->a[i].x=p1->a[i].x; p->a[i].y=p1->a[i].y; }
                 }
             else
                 { p->a[i].x=-(p2->a[i].x); p->a[i].y=-(p2->a[i].y); }
             }
         i=p->n;
-        while (c_zero(&(p->a[i])) && i>0) --i;
+        while (c_zero(&(p->a[i])) && i>0) { --i;
+}
         p->n=i;
         return(p);
         }
@@ -549,8 +579,9 @@ struct complex *v   /* pointer to function value */
 
         v->x=p->a[p->n].x;
         v->y=p->a[p->n].y;
-        for (i=p->n-1; i>=0; --i)
+        for (i=p->n-1; i>=0; --i) {
             c_add(v,&(p->a[i]),c_mult(v,z,v));
+}
         return(v);
         }
 
@@ -729,14 +760,17 @@ static void op_roots()
         char expr[LLENGTH];
         char x[LLENGTH], *osa[2];
 
-        i=sp_init(r1+r-1); if (i<0) return;
+        i=sp_init(r1+r-1); if (i<0) { return;
+}
         i=spfind("MAX_ITER");
         if (i>=0) { strcpy(x,spb[i]); i=split(x,osa,2);
                     roots_max_iter=atoi(osa[0]);
-                    if (i>1) roots_eps=atof(osa[1]);
+                    if (i>1) { roots_eps=atof(osa[1]);
+}
                   }
 
-        i=muste_pol_load(q,&pol); if (i<0) return;
+        i=muste_pol_load(q,&pol); if (i<0) { return;
+}
         
         
 // new code 8.3.2017
@@ -780,10 +814,13 @@ static void op_mult()
 // RS REM        extern struct polynom *pol_mult();
 
         *q++=EOS;
-        i1=muste_pol_load(p,&pol1); if (i1<0) return;
-        i2=muste_pol_load(q,&pol2); if (i2<0) return;
-        if (i1==1 && i2==1) pol_mult_real(&pol,&pol1,&pol2);
-        else pol_mult(&pol,&pol1,&pol2);
+        i1=muste_pol_load(p,&pol1); if (i1<0) { return;
+}
+        i2=muste_pol_load(q,&pol2); if (i2<0) { return;
+}
+        if (i1==1 && i2==1) { pol_mult_real(&pol,&pol1,&pol2);
+        } else { pol_mult(&pol,&pol1,&pol2);
+}
         muste_pol_save(xx,&pol);
         }
 
@@ -796,13 +833,16 @@ static void op_div()
 //        extern struct polynom *pol_div();
 
         *q++=EOS;
-        i=muste_pol_load(p,&pol1); if (i<0) return;
-        i=muste_pol_load(q,&pol2); if (i<0) return;
+        i=muste_pol_load(p,&pol1); if (i<0) { return;
+}
+        i=muste_pol_load(q,&pol2); if (i<0) { return;
+}
         pol_div(&pol,&polres,&pol1,&pol2);
         pres=strchr(xx,'(');
         if (pres!=NULL) { *pres=EOS; ++pres; }
         muste_pol_save(xx,&pol);
-        if (pres==NULL) return;
+        if (pres==NULL) { return;
+}
 
         pp=strchr(pres,')');
         if (pp==NULL)
@@ -821,8 +861,10 @@ static void op_add()
 //        extern struct polynom *pol_add();
 
         *q++=EOS;
-        i=muste_pol_load(p,&pol1); if (i<0) return;
-        i=muste_pol_load(q,&pol2); if (i<0) return;
+        i=muste_pol_load(p,&pol1); if (i<0) { return;
+}
+        i=muste_pol_load(q,&pol2); if (i<0) { return;
+}
         pol_add(&pol,&pol1,&pol2);
         muste_pol_save(xx,&pol);
         }
@@ -834,8 +876,10 @@ static void op_sub()
 //        extern struct polynom *pol_sub();
 
         *q++=EOS;
-        i=muste_pol_load(p,&pol1); if (i<0) return;
-        i=muste_pol_load(q,&pol2); if (i<0) return;
+        i=muste_pol_load(p,&pol1); if (i<0) { return;
+}
+        i=muste_pol_load(q,&pol2); if (i<0) { return;
+}
         pol_sub(&pol,&pol1,&pol2);
         muste_pol_save(xx,&pol);
         }
@@ -870,11 +914,14 @@ static void op_value()   /* POL V=P(X) */
         char expr[LLENGTH];
 //        extern struct polynom *pol_product();
 
-        i=muste_pol_load(p,&pol); if (i<0) return;
-        i=muste_pol_load(q,&arg); if (i<0) return;
+        i=muste_pol_load(p,&pol); if (i<0) { return;
+}
+        i=muste_pol_load(q,&arg); if (i<0) { return;
+}
 
-        for (i=0; i<=arg.n; ++i)
+        for (i=0; i<=arg.n; ++i) {
             pol_value(&pol,&(arg.a[i]),&(val.a[i]));
+}
         val.n=arg.n;
         muste_sprintf(expr,"Values_of_polynomial_%s_on_%s",p,q);
         muste_pol_save2(xx,&val,"real    imag    ",1,expr);
@@ -887,7 +934,8 @@ static void op_der()
         char expr[LLENGTH];
 //        extern struct polynom *pol_der();
 
-        i=muste_pol_load(q,&pol); if (i<0) return;
+        i=muste_pol_load(q,&pol); if (i<0) { return;
+}
         pol_der(&d,&pol);
         muste_sprintf(expr,"Derivative_of_%s",q);
         muste_pol_save2(xx,&d,"real    imag    ",0,expr);
@@ -903,7 +951,8 @@ static int op_lag(char *s)
     q=s+4;
     j=atoi(word[2]);
 // Rprintf("\nxx=%s q=%s j=%d|",xx,q,j); getch();
-    i=muste_pol_load(q,&pol); if (i<0) return(-1);
+    i=muste_pol_load(q,&pol); if (i<0) { return(-1);
+}
 
     pol_lag(&d,&pol,j);
     muste_sprintf(expr,"Lag(%s,%d)",q,j);
@@ -917,7 +966,8 @@ static void op_product()
         struct polynom pol,roots;
 //        extern struct polynom *pol_product();
 
-        i=muste_pol_load(q,&roots); if (i<0) return;
+        i=muste_pol_load(q,&roots); if (i<0) { return;
+}
         pol_product(&pol,&roots);
         muste_pol_save(xx,&pol);
         }

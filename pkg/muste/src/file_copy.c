@@ -109,46 +109,57 @@ static int tutki_madata()
             sur_print(sbuf); WAIT; return(-1);
             }
             
-        for (i=0; i<m; ++i) kok[i]=des[i]=tyyppi[i]=neg[i]=0;
+        for (i=0; i<m; ++i) { kok[i]=des[i]=tyyppi[i]=neg[i]=0;
+}
                    /* tyyppi: 0=pos.luku 1=luku 2=string */
                    
         for (j=d1.l1; j<=d1.l2; ++j)
             {
             if (prind) { muste_sprintf(sbuf,"%d ",j); sur_print(sbuf); } // RS CHA %ld -> %d
-            if (unsuitable(&d1,j)) continue;
+            if (unsuitable(&d1,j)) { continue;
+}
             for (i=0; i<m; ++i)
                 {
                 k=ma_load(&d1.d1,(int)j,i,(double *)jakso,1);
-                if (k<0) return(-1);
+                if (k<0) { return(-1);
+}
                 if (tyyppi[i]==2)
                     {
-                    len=strlen(jakso); if (len>kok[i]) kok[i]=len;
+                    len=strlen(jakso); if (len>kok[i]) { kok[i]=len;
+}
                     continue;
                     }
 // Rprintf("\njakso: %s, missing: %d, isnumber: %d",jakso,ma_missing(jakso),muste_isnumber(jakso));                    
-                if (ma_missing(jakso)) continue;
+                if (ma_missing(jakso)) { continue;
+}
                 if (muste_isnumber(jakso))
                     {
-                    p=jakso; while (*p==' ') ++p;
+                    p=jakso; while (*p==' ') { ++p;
+}
                     if (*p=='-') { ++p; neg[i]=1; }
-                    len=strlen(p); while (p[len-1]==' ') p[--len]=EOS;
-                    if (*p=='+') ++p;
-                    else if (*p=='-') { ++p; tyyppi[i]=1; }
+                    len=strlen(p); while (p[len-1]==' ') { p[--len]=EOS;
+}
+                    if (*p=='+') { ++p;
+                    } else if (*p=='-') { ++p; tyyppi[i]=1; }
                     q=strchr(p,'.');
                     if (q==NULL)
                         {
-                        k=strlen(p); if (k>kok[i]) kok[i]=k;
+                        k=strlen(p); if (k>kok[i]) { kok[i]=k;
+}
                         }
                     else
                         {
-                        k=q-p; if (k>kok[i]) kok[i]=k;
-                        k=strlen(p)-(k+1); if (k>des[i]) des[i]=k;
+                        k=q-p; if (k>kok[i]) { kok[i]=k;
+}
+                        k=strlen(p)-(k+1); if (k>des[i]) { des[i]=k;
+}
                         }
                     }
                 else
                     {
                     tyyppi[i]=2;
-                    len=strlen(jakso); if (len>kok[i]) kok[i]=len;
+                    len=strlen(jakso); if (len>kok[i]) { kok[i]=len;
+}
                     }
                 }
             }
@@ -156,24 +167,31 @@ static int tutki_madata()
         p=ntila;
         for (i=0; i<m; ++i)       /* (###.##) formaatit  19.4.1992 */
             {
-            if (tyyppi[i]==2) continue;
+            if (tyyppi[i]==2) { continue;
+}
             len=kok[i]+neg[i];
             k=len;
-            if (des[i]) k+=des[i]+1;
+            if (des[i]) { k+=des[i]+1;
+}
             ii=strlen(d1.varname[i]);
-            while (d1.varname[i][ii-1]==' ') --ii;
+            while (d1.varname[i][ii-1]==' ') { --ii;
+}
             ii-=k;
-            if (ii>0) len+=ii;
+            if (ii>0) { len+=ii;
+}
             x[0]='('; ii=0;
-            for (k=0; k<len; ++k) x[++ii]='#';
+            for (k=0; k<len; ++k) { x[++ii]='#';
+}
             if (des[i]>0)
                 {
                 x[++ii]='.';
-                for (k=0; k<des[i]; ++k) x[++ii]='#';
+                for (k=0; k<des[i]; ++k) { x[++ii]='#';
+}
                 }
             x[++ii]=')'; x[++ii]=EOS;
             len=strlen(x);
-            if (len>NIMIMAX-9) continue;
+            if (len>NIMIMAX-9) { continue;
+}
             k=muste_sprintf(p,"%-8.8s %s",d1.varname[i],x);
             d1.varname[i]=p;
             p+=k+1;
@@ -232,15 +250,17 @@ static int luo_uusi()
 
         if (expand) // 29.12.2003
             {
-            if (expm==-9999) expm=d1.m_act/4+4;
-            else if (expm==-11111) expm=d1.d2.m-d1.d2.m1; // minimoi
-            else if (expm<d1.d2.m-d1.d2.m1) expm=d1.d2.m-d1.d2.m1;
+            if (expm==-9999) { expm=d1.m_act/4+4;
+            } else if (expm==-11111) { expm=d1.d2.m-d1.d2.m1; // minimoi
+            } else if (expm<d1.d2.m-d1.d2.m1) { expm=d1.d2.m-d1.d2.m1;
+}
 
             filen=0;
-            for (i=0; i<d1.m; ++i) filen+=d1.varlen[i];
+            for (i=0; i<d1.m; ++i) { filen+=d1.varlen[i];
+}
 
-            if (expn==-9999) expn=d1.d2.len/4+20;
-            else if (expn==-11111) // minimoi
+            if (expn==-9999) { expn=d1.d2.len/4+20;
+            } else if (expn==-11111) // minimoi
             	{
                 expn=filen-d1.d2.len;
                 }
@@ -250,26 +270,30 @@ static int luo_uusi()
                 }
             new_f=expm;
             new_l=expn;
-if (debug) Rprintf("\nFILE EXPAND: expm: %d, expn: %d",new_f,new_l);            
+if (debug) { Rprintf("\nFILE EXPAND: expm: %d, expn: %d",new_f,new_l);            
+}
             }
 
         if (d1.type==2)
             {
             filen=0;
-            for (i=0; i<d1.m_act; ++i) filen+=d1.varlen[d1.v[i]];
+            for (i=0; i<d1.m_act; ++i) { filen+=d1.varlen[d1.v[i]];
+}
             if (new_l!=-999)
                 {
                 filen=d1.d2.len;
-                if (new_l!=-1)
+                if (new_l!=-1) {
                     filen+=new_l;
+}
                 fim=d1.m_act;
                 fim1=d1.d2.m1;
                 if (new_f!=-1)
                     {
-                    if (expand) // 29.12.2003
+                    if (expand) { // 29.12.2003
                         fim1+=new_f;
-                    else
+                    } else {
                         fim1=fim+new_f;
+}
                     }
 
                 }
@@ -285,7 +309,8 @@ if (debug) Rprintf("\nFILE EXPAND: expm: %d, expn: %d",new_f,new_l);
             fitextlen=d1.d2.textlen;
             fitext=d1.d2.fitext;
 
-            i=varaa_tilat2(); if (i<0) return(-1);   /* 15.3.1993 */
+            i=varaa_tilat2(); if (i<0) { return(-1);   /* 15.3.1993 */
+}
 
             for (i=0; i<d1.m_act; ++i)
                 {
@@ -302,11 +327,13 @@ if (debug) Rprintf("\nFILE EXPAND: expm: %d, expn: %d",new_f,new_l);
 // Rprintf("\ndelete=%d|",i); getch();
             i=fi_create(word3,filen,fim1,fim,0L,fil,fiextra,fitextn,fitextlen,
                         fitext,uvarname,uvarlen,uvartype);
-            if (i<0) return(-1);        
+            if (i<0) { return(-1);        
+}
             data_close(&d1);
 sur_sleep(100L); // RS 8.5.2015              
             i=data_read_open(word2,&d1);  /* 11.9.91 */
-            if (i<0) return(-1); // RS 8.5.2015              
+            if (i<0) { return(-1); // RS 8.5.2015              
+}
             if (expand) // 29.12.2003
                 {
                 for (i=0; i<d1.d2.m; ++i)
@@ -320,12 +347,14 @@ sur_sleep(100L); // RS 8.5.2015
                 { mask(&d1); conditions(&d1); } // RS ADD conditions
 sur_sleep(100L); // RS 8.5.2015                  
             i=data_open(word3,&d2);
-            if (i<0) return(-1); // RS 8.5.2015                 
+            if (i<0) { return(-1); // RS 8.5.2015                 
+}
             return(1);
             }
         else if (d1.type==1)        
             {    
-            i=tutki_madata(); if (i<0) return(-1);                  
+            i=tutki_madata(); if (i<0) { return(-1);                  
+}
             fim=d1.m;
             for (i=0; i<fim; ++i)       // des=varlen
                 {
@@ -351,7 +380,8 @@ sur_sleep(100L); // RS 8.5.2015
                 }
                                
             filen=0;
-            for (i=0; i<fim; ++i) filen+=des[i];
+            for (i=0; i<fim; ++i) { filen+=des[i];
+}
             if (new_l!=-999)
                 {
                 filen+=new_l;
@@ -372,7 +402,8 @@ sur_sleep(100L); // RS 8.5.2015
 
 // RS ADD VARS may change order
 
-            i=varaa_tilat2(); if (i<0) return(-1);
+            i=varaa_tilat2(); if (i<0) { return(-1);
+}
 			j=d1.m_act; // RS 21.2.2014 fim -> j
              for (i=0; i<j; ++i)
                 {
@@ -386,16 +417,19 @@ sur_sleep(100L); // RS 8.5.2015
 //                        fitext,d1.varname,des,d1.vartype);
                         fitext,uvarname,uvarlen,uvartype);
 
-            if (i<0) return(-1); 
+            if (i<0) { return(-1); 
+}
 sur_sleep(100L); // RS 8.5.2015                                  
             data_close(&d1);
 sur_sleep(100L); // RS 8.5.2015              
             i=data_open(word2,&d1);
-            if (i<0) return(-1); // RS 8.5.2015             
+            if (i<0) { return(-1); // RS 8.5.2015             
+}
             mask(&d1); // RS ADD
             conditions(&d1); // RS ADD
             i=data_open(word3,&d2);
-            if (i<0) return(-1); // RS 8.5.2015              
+            if (i<0) { return(-1); // RS 8.5.2015              
+}
             return(1);
             }
         else  /* d1.type==3 */
@@ -406,7 +440,8 @@ sur_sleep(100L); // RS 8.5.2015
             fim=d1.m;
             for (i=0; i<fim; ++i) { d1.vartype[i][0]='4'; d1.varlen[i]=4; }
             filen=0;
-            for (i=0; i<fim; ++i) filen+=d1.varlen[i];
+            for (i=0; i<fim; ++i) { filen+=d1.varlen[i];
+}
             filen+=filen/4+20;
             fim1=fim+fim/4+4;
             fil=64;
@@ -417,17 +452,21 @@ sur_sleep(100L); // RS 8.5.2015
             fitext=privi;
             uvarlen=(int *)muste_malloc(fim*sizeof(int));  /* 8.12.1998 */
             if (uvarlen==NULL) { tilanpuute(); return(-1); }
-            for (i=0; i<fim; ++i) uvarlen[i]=d1.varlen[i];
+            for (i=0; i<fim; ++i) { uvarlen[i]=d1.varlen[i];
+}
             i=fi_create(word3,filen,fim1,fim,0L,fil,fiextra,fitextn,fitextlen,
                         fitext,d1.varname,uvarlen,d1.vartype);
-            if (i<0) return(-1);
+            if (i<0) { return(-1);
+}
 sur_sleep(100L); // RS 8.5.2015                          
             data_close(&d1);
 sur_sleep(100L); // RS 8.5.2015                          
             i=data_open(word2,&d1);
-            if (i<0) return(-1); // RS 8.5.2015               
+            if (i<0) { return(-1); // RS 8.5.2015               
+}
             i=data_open(word3,&d2);
-            if (i<0) return(-1); // RS 8.5.2015               
+            if (i<0) { return(-1); // RS 8.5.2015               
+}
             return(1);
             }
 
@@ -511,8 +550,9 @@ static int kopioi(long j,long j2,int i)
                 fi_alpha_load(&d1.d2,j,vi,jakso);
                 if (type1=='S')
                     {
-                    for (h=d1.varlen[vi]; h<d2.varlen[v2[i]]; ++h)
+                    for (h=d1.varlen[vi]; h<d2.varlen[v2[i]]; ++h) {
                         jakso[h]=' ';
+}
                     }
 
 // Rprintf("\n1sour: %ld, dest: %ld, jakso:%c%c%c",j,j2,jakso[0],jakso[1],jakso[2]);                       
@@ -524,16 +564,19 @@ static int kopioi(long j,long j2,int i)
                 double x;
 
                 h=data_load(&d1,j,vi,&x);
-                if (h<0) return(-1);
+                if (h<0) { return(-1);
+}
 
-                if (form[i]!=NULL) fconv(x,form[i],jakso);
-                else fconv(x,"",jakso);
-                if (strlen(jakso)>d2.varlen[v2[i]])
+                if (form[i]!=NULL) { fconv(x,form[i],jakso);
+                } else { fconv(x,"",jakso);
+}
+                if (strlen(jakso)>d2.varlen[v2[i]]) {
                     strcpy(jakso,space);
-                else
+                } else
                     {
-                    for (h=strlen(jakso); h<d2.varlen[v2[i]]; ++h)
+                    for (h=strlen(jakso); h<d2.varlen[v2[i]]; ++h) {
                         jakso[h]=' ';
+}
                     }
                 fi_alpha_save(&d2.d2,j2,v2[i],jakso);
                 }
@@ -545,7 +588,8 @@ static int kopioi(long j,long j2,int i)
 //      Rprintf("\n1sour: %ld, dest: %ld, h: %d, x:%f",j,j2,h,x);           
 
 
-                if (h<0) return(-1);
+                if (h<0) { return(-1);
+}
                 data_save(&d2,j2,v2[i],x);
                 }
             }
@@ -554,10 +598,14 @@ static int kopioi(long j,long j2,int i)
             if (d2.vartype[v2[i]][0]=='S')
                 {
                 h=data_alpha_load(&d1,j,vi,jakso);
-                if (h<0) return(-1);
-                for (h=0; h<strlen(jakso); h++) if (jakso[h]=='\r') jakso[h]=' '; // RS ADD
-                for (h=strlen(jakso); h<d2.varlen[v2[i]]; ++h)
+                if (h<0) { return(-1);
+}
+                for (h=0; h<strlen(jakso); h++) { if (jakso[h]=='\r') { jakso[h]=' '; // RS ADD
+}
+}
+                for (h=strlen(jakso); h<d2.varlen[v2[i]]; ++h) {
                     jakso[h]=' ';
+}
                 fi_alpha_save(&d2.d2,j2,v2[i],jakso);
                 }
             else
@@ -568,7 +616,8 @@ static int kopioi(long j,long j2,int i)
 //      Rprintf("\n2sour: %ld, dest: %ld, h: %d, x:%f",j,j2,h,x);           
 
 
-                if (h<0) return(-1);
+                if (h<0) { return(-1);
+}
                 data_save(&d2,j2,v2[i],x);
                 }
             }
@@ -579,7 +628,8 @@ static int kopioi(long j,long j2,int i)
             h=data_load(&d1,j,vi,&x);
 //      Rprintf("\n3sour: %ld, dest: %ld, h: %d, x:%f",j,j2,h,x);           
 
-            if (h<0) return(-1);
+            if (h<0) { return(-1);
+}
             data_save(&d2,j2,v2[i],x);
             }
         return(1);
@@ -623,7 +673,8 @@ static int match_copy2()
         if (i>=0)
             {
             odd_mode=atoi(spb[i]);
-            if (odd_mode!=1) odd_var=32766;
+            if (odd_mode!=1) { odd_var=32766;
+}
             }
         else
             {
@@ -641,17 +692,21 @@ static int match_copy2()
                         sur_print(sbuf); WAIT; return(-1);
                         }
                     }
-                else odd_var=32766;
-                if (i>1) odd_mode=atoi(osa[1]);
+                else { odd_var=32766;
+}
+                if (i>1) { odd_mode=atoi(osa[1]);
+}
                 }
             }
 
         if (odd_mode!=3)
             {
-            i=conditions(&d1); if (i<0) return(-1);
+            i=conditions(&d1); if (i<0) { return(-1);
+}
             }
 
-        i=data_open2(word3,&d2,0,1,0); if (i<0) return(-1);
+        i=data_open2(word3,&d2,0,1,0); if (i<0) { return(-1);
+}
                        /* 1.12.1999 */
         if (d2.type!=2)
             {
@@ -668,7 +723,8 @@ static int match_copy2()
                 }
 
             vartyp=d2.vartype[m_var2[k]][0];
-            if (vartyp=='S') num_match[k]=0; else num_match[k]=1;
+            if (vartyp=='S') { num_match[k]=0; } else { num_match[k]=1;
+}
             if (vartyp!=m_vart[k]) // RS 17.5.2013
                 {               
                 muste_sprintf(sbuf,"\nDifferent MATCH field types: %s (%c vs. %c)",m_name[k],m_vart[k],vartyp);
@@ -680,34 +736,40 @@ static int match_copy2()
 
         if (odd_mode==3)
             {
-            i=conditions(&d2); if (i<0) return(-1);
+            i=conditions(&d2); if (i<0) { return(-1);
+}
             }
 
-        i=varaa_tilat(); if (i<0) return(-1);
-        i=tutki_muuttujat(); if (i<0) return(-1);
+        i=varaa_tilat(); if (i<0) { return(-1);
+}
+        i=tutki_muuttujat(); if (i<0) { return(-1);
+}
 
         muste_sprintf(sbuf,"\n%d active fields to be copied",d1.m_act); sur_print(sbuf);
         muste_sprintf(sbuf,"\nCopying records from %s to %s:",word[2],word[3]); sur_print(sbuf);
 
         if (odd_var>=0 && odd_var<32766)
             {
-            i=data_to_write(word2,&d1); if (i<0) return(-1);  /* 21.11.91 */
+            i=data_to_write(word2,&d1); if (i<0) { return(-1);  /* 21.11.91 */
+}
             }
 
         if (odd_mode==3)
             {
             for (j=d2.l1; j<=d2.l2; ++j)
                 {
-                if (unsuitable(&d2,j)) continue;
+                if (unsuitable(&d2,j)) { continue;
+}
                 j2=0L;
                 for (k=0; k<n_match; ++k)
                   {
-                  if (num_match[k])
+                  if (num_match[k]) {
                       data_load(&d2,j,m_var2[k],&mx1[k]);
-                  else
+                  } else
                       {
                       data_alpha_load(&d2,j,m_var2[k],m_jakso[k]);
-                      i=strlen(m_jakso[k]); while (i && m_jakso[k][i-1]==' ') m_jakso[k][--i]=EOS;
+                      i=strlen(m_jakso[k]); while (i && m_jakso[k][i-1]==' ') { m_jakso[k][--i]=EOS;
+}
                       }
                   }
 
@@ -738,14 +800,17 @@ static int match_copy2()
 						  if (num_match[k])
 							  {
 							  data_load(&d1,j2,m_var[k],&x2);
-							  if (mx1[k]!=x2) break;
+							  if (mx1[k]!=x2) { break;
+}
 							  }
 						  else
 							  {
 							  data_alpha_load(&d1,j2,m_var[k],vert);
-							  i=strlen(vert); while (i && vert[i-1]==' ') vert[--i]=EOS;
+							  i=strlen(vert); while (i && vert[i-1]==' ') { vert[--i]=EOS;
+}
 // Rprintf("\nk: %d, j2: %d, m_var: %d, m_jakso: %s, vert: %s",k,j2,m_var[k],m_jakso[k],vert);							  
-							  if (strcmp(m_jakso[k],vert)!=0) break;							  
+							  if (strcmp(m_jakso[k],vert)!=0) { break;							  
+}
 							  }
 						  } // k
                     if (k==n_match) 
@@ -758,8 +823,10 @@ static int match_copy2()
                         }                    
                     }
 
-                if (j2>d1.n) continue;
-                if (sur_kbhit()) { i=sur_getch(); if (i=='.') prind=1-prind; }
+                if (j2>d1.n) { continue;
+}
+                if (sur_kbhit()) { i=sur_getch(); if (i=='.') { prind=1-prind; 
+}}
                 if (prind)
                     { muste_sprintf(sbuf," %ld",j); sur_print(sbuf); }
                     
@@ -784,17 +851,20 @@ static int match_copy2()
 //      if (match_var==-1) j2=d1.l1-1L;
         for (j=d1.l1; j<=d1.l2; ++j)
             {
-            if (odd_mode==2) j2=0L;
+            if (odd_mode==2) { j2=0L;
+}
             odd_toisto=0;
-            if (unsuitable(&d1,j)) continue;
+            if (unsuitable(&d1,j)) { continue;
+}
             for (k=0; k<n_match; ++k)
                 {
-                if (num_match[k])
+                if (num_match[k]) {
                     data_load(&d1,j,m_var[k],&mx1[k]);
-                else
+                } else
                     {
                     data_alpha_load(&d1,j,m_var[k],m_jakso[k]);
-                    i=strlen(m_jakso[k]); while (i && m_jakso[k][i-1]==' ') m_jakso[k][--i]=EOS;
+                    i=strlen(m_jakso[k]); while (i && m_jakso[k][i-1]==' ') { m_jakso[k][--i]=EOS;
+}
                     }
                 }
             while (1)
@@ -848,9 +918,11 @@ static int match_copy2()
                         		}
                         	sur_print(" ");	                        	
                         	}
-                        if (odd_var<32766)
+                        if (odd_var<32766) {
                             data_save(&d1,j,odd_var,1.0);
-                        if (odd_mode==1) j2=last_found;
+}
+                        if (odd_mode==1) { j2=last_found;
+}
                         odd_toisto=1; break;
                         }
                     }
@@ -860,21 +932,27 @@ static int match_copy2()
                     if (num_match[k])
                         {
                         data_load(&d2,j2,m_var2[k],&x2);
-                        if (mx1[k]!=x2) break;
+                        if (mx1[k]!=x2) { break;
+}
                         }
                     else
                         {
                         data_alpha_load(&d2,j2,m_var2[k],vert);
-                        i=strlen(vert); while (i && vert[i-1]==' ') vert[--i]=EOS;
-                        if (strcmp(m_jakso[k],vert)!=0) break;
+                        i=strlen(vert); while (i && vert[i-1]==' ') { vert[--i]=EOS;
+}
+                        if (strcmp(m_jakso[k],vert)!=0) { break;
+}
                         }
                     }
-                if (k==n_match) break;
+                if (k==n_match) { break;
+}
 
                 }
 
-            if (odd_toisto) continue;
-            if (sur_kbhit()) { i=sur_getch(); if (i=='.') prind=1-prind; }
+            if (odd_toisto) { continue;
+}
+            if (sur_kbhit()) { i=sur_getch(); if (i=='.') { prind=1-prind; 
+}}
             if (prind)
                 { muste_sprintf(sbuf," %ld",j); sur_print(sbuf); }
 
@@ -908,15 +986,16 @@ static int match_copy()
         char vartyp;
 
         nummatch=0;
-        i=spfind("MATCH"); if (i<0) return(-1);
+        i=spfind("MATCH"); if (i<0) { return(-1);
+}
 
         strcpy(y,spb[i]); // 30.12.2001
         h=split(y,osa,2);
         if (h==2) { match_copy2(); return(1); }
 
-        if (spb[i][0]=='#' && spb[i][1]==EOS) /* nro:n mukaan */
+        if (spb[i][0]=='#' && spb[i][1]==EOS) { /* nro:n mukaan */
             match_var=match_var2=-1;
-        else
+        } else
             {
             match_var=varfind2(&d1,spb[i],0);
             if (match_var<0 || strlen(spb[i])>LNAME-1)
@@ -938,7 +1017,8 @@ static int match_copy()
         if (i>=0)
             {
             odd_mode=atoi(spb[i]);
-            if (odd_mode!=1) odd_var=32766;
+            if (odd_mode!=1) { odd_var=32766;
+}
             }
         else
             {
@@ -956,17 +1036,21 @@ static int match_copy()
                         sur_print(sbuf); WAIT; return(-1);
                         }
                     }
-                else odd_var=32766;
-                if (i>1) odd_mode=atoi(osa[1]);
+                else { odd_var=32766;
+}
+                if (i>1) { odd_mode=atoi(osa[1]);
+}
                 }
             }
 
         if (odd_mode!=3)
             {
-            i=conditions(&d1); if (i<0) return(-1);
+            i=conditions(&d1); if (i<0) { return(-1);
+}
             }
 
-        i=data_open2(word3,&d2,0,1,0); if (i<0) return(-1);
+        i=data_open2(word3,&d2,0,1,0); if (i<0) { return(-1);
+}
                        /* 1.12.1999 */
         if (d2.type!=2)
             {
@@ -983,7 +1067,8 @@ static int match_copy()
                 }
 
             vartyp=d2.vartype[match_var2][0];
-            if (vartyp=='S') nummatch=0; else nummatch=1;
+            if (vartyp=='S') { nummatch=0; } else { nummatch=1;
+}
                                                 /* oli == */  
                                                 
             if (vartyp!=match_vartype) // RS 17.5.2013
@@ -995,18 +1080,22 @@ static int match_copy()
 
         if (odd_mode==3)
             {
-            i=conditions(&d2); if (i<0) return(-1);
+            i=conditions(&d2); if (i<0) { return(-1);
+}
             }
 
-        i=varaa_tilat(); if (i<0) return(-1);
-        i=tutki_muuttujat(); if (i<0) return(-1);
+        i=varaa_tilat(); if (i<0) { return(-1);
+}
+        i=tutki_muuttujat(); if (i<0) { return(-1);
+}
 
         muste_sprintf(sbuf,"\n%d active fields to be copied",d1.m_act); sur_print(sbuf);
         muste_sprintf(sbuf,"\nCopying records from %s to %s:",word[2],word[3]); sur_print(sbuf);
 
         if (odd_var>=0 && odd_var<32766)
             {
-            i=data_to_write(word2,&d1); if (i<0) return(-1);  /* 21.11.91 */
+            i=data_to_write(word2,&d1); if (i<0) { return(-1);  /* 21.11.91 */
+}
             }
 
         if (odd_mode==3)
@@ -1019,14 +1108,16 @@ static int match_copy()
 
             for (j=d2.l1; j<=d2.l2; ++j)
                 {
-                if (unsuitable(&d2,j)) continue;
+                if (unsuitable(&d2,j)) { continue;
+}
                 j2=0L;
-                if (nummatch)
+                if (nummatch) {
                     data_load(&d2,j,match_var2,&x1);
-                else
+                } else
                     {
                     data_alpha_load(&d2,j,match_var2,jakso);
-                    i=strlen(jakso); while (i && jakso[i-1]==' ') jakso[--i]=EOS;
+                    i=strlen(jakso); while (i && jakso[i-1]==' ') { jakso[--i]=EOS;
+}
                     }
                 while (1)
                     {
@@ -1041,12 +1132,14 @@ static int match_copy()
                     if (nummatch)
                         {
                         data_load(&d1,j2,match_var,&x2);
-                        if (x1==x2) break;
+                        if (x1==x2) { break;
+}
                         }
                     else
                         {
                         data_alpha_load(&d1,j2,match_var,vert);
-                        i=strlen(vert); while (i && vert[i-1]==' ') vert[--i]=EOS;
+                        i=strlen(vert); while (i && vert[i-1]==' ') { vert[--i]=EOS;
+}
 /*   Rprintf("\njakso=%s vert=%s",jakso,vert); getch(); */
                         if (strcmp(jakso,vert)==0) 
                         	{
@@ -1059,8 +1152,10 @@ static int match_copy()
                         }
                     }
 
-                if (j2>d1.n) continue;
-                if (sur_kbhit()) { i=sur_getch(); if (i=='.') prind=1-prind; }
+                if (j2>d1.n) { continue;
+}
+                if (sur_kbhit()) { i=sur_getch(); if (i=='.') { prind=1-prind; 
+}}
                 if (prind)
                     { muste_sprintf(sbuf," %ld",j); sur_print(sbuf); }
                     
@@ -1083,20 +1178,24 @@ static int match_copy()
 
         j2=0L;
         last_found=0L;
-        if (match_var==-1) j2=d1.l1-1L;
+        if (match_var==-1) { j2=d1.l1-1L;
+}
         for (j=d1.l1; j<=d1.l2; ++j)
             {
-            if (odd_mode==2) j2=0L;
+            if (odd_mode==2) { j2=0L;
+}
             odd_toisto=0;
-            if (unsuitable(&d1,j)) continue;
+            if (unsuitable(&d1,j)) { continue;
+}
             if (match_var>=0)
                 {
-                if (nummatch)
+                if (nummatch) {
                     data_load(&d1,j,match_var,&x1);
-                else
+                } else
                     {
                     data_alpha_load(&d1,j,match_var,jakso);
-                    i=strlen(jakso); while (i && jakso[i-1]==' ') jakso[--i]=EOS;
+                    i=strlen(jakso); while (i && jakso[i-1]==' ') { jakso[--i]=EOS;
+}
                     }
                 }
             while (1)
@@ -1132,28 +1231,36 @@ static int match_copy()
                     else /* ODD */
                         {
                         if (prind) { muste_sprintf(sbuf,"\nODD:%s ",jakso); sur_print(sbuf); }
-                        if (odd_var<32766)
+                        if (odd_var<32766) {
                             data_save(&d1,j,odd_var,1.0);
-                        if (odd_mode==1) j2=last_found;
+}
+                        if (odd_mode==1) { j2=last_found;
+}
                         odd_toisto=1; break;
                         }
                     }
-                if (match_var<0) break;
+                if (match_var<0) { break;
+}
                 if (nummatch)
                     {
                     data_load(&d2,j2,match_var2,&x2);
-                    if (x1==x2) break;
+                    if (x1==x2) { break;
+}
                     }
                 else
                     {
                     data_alpha_load(&d2,j2,match_var2,vert);
-                    i=strlen(vert); while (i && vert[i-1]==' ') vert[--i]=EOS;
-                    if (strcmp(jakso,vert)==0) break;
+                    i=strlen(vert); while (i && vert[i-1]==' ') { vert[--i]=EOS;
+}
+                    if (strcmp(jakso,vert)==0) { break;
+}
                     }
                 }
 
-            if (odd_toisto) continue;
-            if (sur_kbhit()) { i=sur_getch(); if (i=='.') prind=1-prind; }
+            if (odd_toisto) { continue;
+}
+            if (sur_kbhit()) { i=sur_getch(); if (i=='.') { prind=1-prind; 
+}}
             if (prind)
                 { muste_sprintf(sbuf," %ld",j); sur_print(sbuf); }
 
@@ -1247,23 +1354,26 @@ uvartype=NULL;
             expm=-9999;
             if (g>3)
                 {
-                if (muste_strcmpi(word[3],"MIN")==0)
+                if (muste_strcmpi(word[3],"MIN")==0) {
                     expm=-11111;
-                else
+                } else {
                     expm=atoi(word[3]);
+}
                 }
             expn=-9999;
             if (g>4)
                 {
-                if (muste_strcmpi(word[4],"MIN")==0)
+                if (muste_strcmpi(word[4],"MIN")==0) {
                     expn=-11111;
-                else
+                } else {
                     expn=atoi(word[4]);
+}
                 }
 
             strcpy(sbuf,word[2]);
             h=strlen(sbuf)-1;
-            while (h>=0 && sbuf[h]!=':' && sbuf[h]!='\\' && sbuf[h]!='/') sbuf[h--]=EOS; // RS FIXME unix path
+            while (h>=0 && sbuf[h]!=':' && sbuf[h]!='\\' && sbuf[h]!='/') { sbuf[h--]=EOS; // RS FIXME unix path
+}
             strcat(sbuf,"SURVO.TMP");
 // Rprintf("\nsbuf=%s|",sbuf); getch();
             strcpy(tempn,sbuf);
@@ -1325,7 +1435,8 @@ uvartype=NULL;
 
             if (g>5)
                {
-               if (strcmp(muste_strupr(word[3]),"NEW")==0) new_file=1;
+               if (strcmp(muste_strupr(word[3]),"NEW")==0) { new_file=1;
+}
                word[3]=word[5];
                }
             }
@@ -1354,7 +1465,8 @@ uvartype=NULL;
         if (new_file) // 23.2.2004
             {
             strcpy(sbuf,word3);
-            if (strchr(sbuf,'.')==NULL) strcat(sbuf,".SVO"); // RS FIXME Not working with relative paths (any paths with dot)
+            if (strchr(sbuf,'.')==NULL) { strcat(sbuf,".SVO"); // RS FIXME Not working with relative paths (any paths with dot)
+}
             sur_delete(sbuf);
             }
 
@@ -1368,26 +1480,32 @@ uvartype=NULL;
             sur_print(sbuf); WAIT; sulje(); return;
             }
 
-        i=sp_init(r1+r-1); if (i<0) return;
+        i=sp_init(r1+r-1); if (i<0) { return;
+}
 
         debug=0; // RS 22.2.2014
         i=spfind("DEBUG");
-        if (i>=0) debug=atoi(spb[i]);
+        if (i>=0) { debug=atoi(spb[i]);
+}
 
 		i=spfind("MATCH"); // RS ADD 19.10.2012 conditions for &d2 instead of &d1 if MATCH with MODE=3
 		if (i>=0 && !expand)
 			{
 			i=spfind("MODE");
-			if (i>=0) i=atoi(spb[i]);
-			else i=0;
+			if (i>=0) { i=atoi(spb[i]);
+			} else { i=0;
+}
 			}
-		else i=0;					
+		else { i=0;					
+}
         if (i!=3)
         	{ 
         	i=conditions(&d1); if (i<0) { s_end(argv[1]); return; } // RS CHA Need to be before luo_uusi()
 			}
-        i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
-        if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);
+        i=hae_apu("prind",sbuf); if (i) { prind=atoi(sbuf);
+}
+        if ((i=spfind("PRIND"))>=0) { prind=atoi(spb[i]);
+}
 
         if (expand) // 29.12.2003
             {
@@ -1438,7 +1556,8 @@ sur_sleep(100L); // RS 8.5.2015
 //          i=fi_find(word3,&d2.d2,jakso);  - 14.2.2004
             if (new_file || !sur_find_svo_file(word3,jakso)) // RS CHA fi_find(word3,&d2.d2,jakso)<0)
                 {               
-                i=luo_uusi(); if (i<0) return;
+                i=luo_uusi(); if (i<0) { return;
+}
                 }
             else
                 {                  
@@ -1452,9 +1571,11 @@ sur_sleep(100L); // RS 8.5.2015
             sur_print(sbuf); WAIT; sulje(); return;
             }
 
-        i=varaa_tilat(); if (i<0) return;
+        i=varaa_tilat(); if (i<0) { return;
+}
 
-        i=tutki_muuttujat(); if (i<0) return;
+        i=tutki_muuttujat(); if (i<0) { return;
+}
     if (!expand)
           {
         muste_sprintf(sbuf,"\n%d active fields to be copied",d1.m_act); sur_print(sbuf);
@@ -1464,15 +1585,19 @@ sur_sleep(100L); // RS 8.5.2015
         for (j=d1.l1; j<=d1.l2; ++j)
             {
             if (survo_ferror) { sur_print("\nCannot save data!"); WAIT; s_end(argv[1]); return; } // RS CHA exit(0) -> s_end return
-            if (!expand && unsuitable(&d1,j)) continue;
-            if (sur_kbhit()) { i=sur_getch(); if (i=='.') prind=1-prind; }
+            if (!expand && unsuitable(&d1,j)) { continue;
+}
+            if (sur_kbhit()) { i=sur_getch(); if (i=='.') { prind=1-prind; 
+}}
             if (prind)
                 {
                 muste_sprintf(sbuf,"%ld ",j); sur_print(sbuf);
                 }
             ++j2;
-            if (j2>d2.n) d2.n=j2;   /* fi_save vaatii j2<=d2.n */
-            if (d2.m>d1.m_act) fi_miss_obs(&d2.d2,j2);
+            if (j2>d2.n) { d2.n=j2;   /* fi_save vaatii j2<=d2.n */
+}
+            if (d2.m>d1.m_act) { fi_miss_obs(&d2.d2,j2);
+}
             for (i=0; i<d1.m_act; ++i)
                 {
                 h=kopioi(j,j2,i);

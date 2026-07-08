@@ -204,7 +204,8 @@ dprob=NULL;
             s_end(argv);
             return;
             }
-        i=spec_init(r1+r-1); if (i<0) return;
+        i=spec_init(r1+r-1); if (i<0) { return;
+}
 
 //       for (i=0; i<4*MAXELEM; ++i) symblist[i]=EOS; // 17.10.2011
 
@@ -233,7 +234,8 @@ dprob=NULL;
         else
             {
             line=edline2(word[2],1,1);
-            if (line==0) return;
+            if (line==0) { return;
+}
             }
         i=spfind(word[1]);
         if (i<0)
@@ -252,7 +254,8 @@ dprob=NULL;
 
         ind_elem=0;
         i=spfind("ELEMENTS");
-        if (i>=0) ind_elem=1; else i=spfind("SYMBOLS");
+        if (i>=0) { ind_elem=1; } else { i=spfind("SYMBOLS");
+}
         distinct_symbols=1;
         if (!ind_elem && i<0)   /* 1 2 3 4 ... */
             {
@@ -300,19 +303,23 @@ dprob=NULL;
                 }
             else
                 {
-                for (i=0; i<MAXELEM; ++i) symbolvalues[i]=(double)i;
+                for (i=0; i<MAXELEM; ++i) { symbolvalues[i]=(double)i;
+}
                 }
             }
 
             
         res=70;
         i=spfind("RESULTS");
-        if (i>=0) res=atoi(spb[i]);
+        if (i>=0) { res=atoi(spb[i]);
+}
 
-        if (res==1) --line;
+        if (res==1) { --line;
+}
 
         i=spfind("FAST");
-        if (i>=0) fast=atoi(spb[i]);
+        if (i>=0) { fast=atoi(spb[i]);
+}
 
 
         n_comb=0L; kb_count=0;
@@ -343,7 +350,8 @@ static int permutations()
         double dp;
 
         n=atoi(par[0]);
-        if (n<=0) return(-1);
+        if (n<=0) { return(-1);
+}
 
         if (npar>1) { permutations2(n,atoi(par[1])); return(1); }
 
@@ -360,7 +368,8 @@ static int permutations()
         if (!restr && !res)
             {
             dp=1.0;
-            for (i=2; i<=n; ++i) dp*=(double)i;
+            for (i=2; i<=n; ++i) { dp*=(double)i;
+}
             edwrite(space,line1,1);
             muste_sprintf(sbuf,"Permutations of %d elements: N[%s]=%.15g",
                               n,word[1],dp);
@@ -368,21 +377,28 @@ static int permutations()
             return(1);
             }
 
-        for (i=0; i<n; ++i) elem1[i]=i;
+        for (i=0; i<n; ++i) { elem1[i]=i;
+}
         while (1)
             {
             if (restr)
                 {
-                for (i=0; i<n; ++i)
-                    if (restr_mat[elem1[i]+n*i]) break;
-                if (i==n) print_comb(elem1,n,1);
+                for (i=0; i<n; ++i) {
+                    if (restr_mat[elem1[i]+n*i]) { break;
+}
+}
+                if (i==n) { print_comb(elem1,n,1);
+}
                 }
-            else print_comb(elem1,n,1);
+            else { print_comb(elem1,n,1);
+}
             i=next_perm(n,elem1);
     /*      i=vanha_next_perm(n,elem1,elem2); */
-            if (i<0) break;
+            if (i<0) { break;
+}
             }
-        if (!line || res==1) return(1);
+        if (!line || res==1) { return(1);
+}
         edwrite(space,line1,1);
         muste_sprintf(sbuf,"Permutations of %d elements: N[%s]=%d",
                           n,word[1],n_comb);
@@ -397,12 +413,15 @@ static int next_perm(int n,int * p)
         int i,j,k,pi;
 
         i=n-1;
-        while (i>0 && p[i-1]>p[i]) --i;
-        if (i==0) return(-1); /* kaikki permutaatiot k?yty l?pi */
+        while (i>0 && p[i-1]>p[i]) { --i;
+}
+        if (i==0) { return(-1); /* kaikki permutaatiot k?yty l?pi */
+}
         --i;
         j=n-1;
         pi=p[i];
-        while (p[j]<pi) --j;
+        while (p[j]<pi) { --j;
+}
         p[i]=p[j]; p[j]=pi;
 
         j=i+1; k=n-1;
@@ -419,7 +438,8 @@ static int permutations2(int n,int m)
         int i,line1;
         double dp;
 
-        if (m>n) return(1);
+        if (m>n) { return(1);
+}
 //      if (ind_elem) { permutations_with_repetitions(n,m); return(1); }
 // 17.10.2011
  if (!distinct_symbols) { permutations_with_repetitions(n,m); return(1); }
@@ -428,23 +448,27 @@ static int permutations2(int n,int m)
         if (!res)
             {
             dp=1.0;
-            for (i=n-m+1; i<=n; ++i) dp*=(double)i;
+            for (i=n-m+1; i<=n; ++i) { dp*=(double)i;
+}
             edwrite(space,line1,1);
             muste_sprintf(sbuf,"%d-permutations of %d elements: N[%s]=%.15g",
                               m,n,word[1],dp);
             edwrite(sbuf,line1,1);
             return(1);
             }
-        for (i=0; i<m; ++i) elem1[i]=i;
+        for (i=0; i<m; ++i) { elem1[i]=i;
+}
 
         while (1)
             {
             print_comb(elem1,m,1);
             i=next_perm_m(n,m,elem1,elem2);
-            if (i<0) break;
+            if (i<0) { break;
+}
             }
 
-        if (!line || res==1) return(1);
+        if (!line || res==1) { return(1);
+}
         edwrite(space,line1,1);
         muste_sprintf(sbuf,"%d-permutations of %d elements: N[%s]=%d",
                           m,n,word[1],n_comb);
@@ -456,26 +480,34 @@ static int next_perm_m(int n,int m,int *p,int *q)
         {
         int i,j,k,h;
 
-        for (j=0; j<n; ++j) q[j]=0;
-        for (j=0; j<m; ++j) q[p[j]]=1;
+        for (j=0; j<n; ++j) { q[j]=0;
+}
+        for (j=0; j<m; ++j) { q[p[j]]=1;
+}
         for (k=m-1; k>=0; --k)
             {
             if (p[k]==n-1) { q[n-1]=0; continue; }
-            for (i=p[k]+1; i<n; ++i)
-                if (!q[i]) break;
+            for (i=p[k]+1; i<n; ++i) {
+                if (!q[i]) { break;
+}
+}
             if (i==n) { q[p[k]]=0; continue; }
             q[p[k]]=0; p[k]=i; q[i]=1;
-            if (k==m-1) return(1);
+            if (k==m-1) { return(1);
+}
             h=k;
             for (j=0; j<n; ++j)
                 {
-                if (q[j]) continue;
+                if (q[j]) { continue;
+}
                 p[++h]=j;
-                if (h==m) break;
+                if (h==m) { break;
+}
                 }
             break;
             }
-        if (k==-1) return(-1);
+        if (k==-1) { return(-1);
+}
         return(1);
         }
 
@@ -499,14 +531,17 @@ static int permutations_with_repetitions(int n,int m)
             if (strcmp(ps,symbol[i])!=0) { ++j; ps=symbol[i]; symbol2[j]=ps; }
             elem0[i]=j;
             }
-        for (i=0; i<m; ++i) elem1[i]=elem0[i];
+        for (i=0; i<m; ++i) { elem1[i]=elem0[i];
+}
         while (1)
             {
             print_comb(elem1,m,2);
             i=next_perm_m_rep(n,m,elem0,elem1,elem2);
-            if (i<0) break;
+            if (i<0) { break;
+}
             }
-        if (!line || res==1) return(1);
+        if (!line || res==1) { return(1);
+}
         edwrite(space,line1,1);
         muste_sprintf(sbuf,"%d-permutations of %d elements (with repetitions): N[%s]=%d",
                           m,n,word[1],n_comb);
@@ -519,7 +554,8 @@ static int next_perm_m_rep(int n,int m,int *koko,int *perm,int *apu)
         {
         int i,j=0,k=0,h; // RS ADD inits
 
-        for (i=0; i<n; ++i) apu[i]=0;
+        for (i=0; i<n; ++i) { apu[i]=0;
+}
         for (i=0; i<m; ++i)
             {
             k=perm[i];
@@ -528,18 +564,24 @@ static int next_perm_m_rep(int n,int m,int *koko,int *perm,int *apu)
                 if (!apu[j] && k==koko[j]) { apu[j]=1; break; }
                 }
             }
-        for (h=j+1; h<n; ++h)
-            if (!apu[h] && koko[h]>k) break;
+        for (h=j+1; h<n; ++h) {
+            if (!apu[h] && koko[h]>k) { break;
+}
+}
         if (h<n)
             {
             perm[m-1]=koko[h];
             return (1);
             }
 /* viimeist? ei voinut korottaa */
-        for (i=0; i<n; ++i) apu[i]=0;
-        for (j=m-1; j>0; --j)
-            if (perm[j-1]<perm[j]) break;
-        if (j==0) return(-1);
+        for (i=0; i<n; ++i) { apu[i]=0;
+}
+        for (j=m-1; j>0; --j) {
+            if (perm[j-1]<perm[j]) { break;
+}
+}
+        if (j==0) { return(-1);
+}
         h=j-1;
         for (i=0; i<h; ++i) /* alkup?? paikallaan */
             {
@@ -550,13 +592,16 @@ static int next_perm_m_rep(int n,int m,int *koko,int *perm,int *apu)
                 }
             }
         k=perm[h];
-        for (i=0; i<n; ++i)
-            if (!apu[i] && k<koko[i]) break;
+        for (i=0; i<n; ++i) {
+            if (!apu[i] && k<koko[i]) { break;
+}
+}
         apu[i]=1; perm[h]=koko[i];
         j=h+1;
         for (i=0; i<n; ++i)
             {
-            if (j==m) break;
+            if (j==m) { break;
+}
             if (!apu[i]) { perm[j]=koko[i]; ++j; }
             }
         return(1);
@@ -568,7 +613,8 @@ static int r_permutations()
    //   int restr;
 
         n=atoi(par[0]);
-        if (n<=0) return(-1);
+        if (n<=0) { return(-1);
+}
         i=spfind("RESTRICTIONS");
         if (i>=0)
             {
@@ -579,8 +625,10 @@ static int r_permutations()
                WAIT; return(-1);
              }
         line1=line;
-        for (i=0; i<n; ++i)
-            if (restr_mat[i]==0) break;
+        for (i=0; i<n; ++i) {
+            if (restr_mat[i]==0) { break;
+}
+}
         if (i<n)
             {
             elem1[0]=i-1;
@@ -591,12 +639,14 @@ static int r_permutations()
                 while (1)
                     {
                     i=next_restr_perm_from(n-1,n);
-                    if (i<0 || elem1[1]<0) break;
+                    if (i<0 || elem1[1]<0) { break;
+}
                     print_comb(elem1,n,1);
                     }
                 }
             }
-        if (!line || res==1) return(1);
+        if (!line || res==1) { return(1);
+}
         edwrite(space,line1,1);
         muste_sprintf(sbuf,"Permutations of %d elements with restrictions %s: N[%s]=%d",
                           n,matname,word[1],n_comb);
@@ -608,18 +658,26 @@ static int next_restr_perm_from(int k,int n)
         {
         int i,h;
 
-        if (k<0) return(-1);
+        if (k<0) { return(-1);
+}
         elem1[k+1]=-1; /* tahallinen ylitys, kun k=n-1 */
         for (i=elem1[k]+1; i<n; ++i)
             {
-            if (restr_mat[i+n*k]) continue;
-            for (h=0; h<k; ++h)
-                if (elem1[h]==i) break;
-            if (h<k) continue;
-            elem1[k]=i; if (k==n-1) return(1);
-            if (next_restr_perm_from(k+1,n)==1) return(1);
+            if (restr_mat[i+n*k]) { continue;
+}
+            for (h=0; h<k; ++h) {
+                if (elem1[h]==i) { break;
+}
+}
+            if (h<k) { continue;
+}
+            elem1[k]=i; if (k==n-1) { return(1);
+}
+            if (next_restr_perm_from(k+1,n)==1) { return(1);
+}
             }
-        if (i<n) return(1);
+        if (i<n) { return(1);
+}
         return(next_restr_perm_from(k-1,n));
         }
 
@@ -636,11 +694,13 @@ static int subsets()
 
 		m=m0=0; // RS ADD
         n=atoi(par[0]);
-        if (n<=0) return(-1);
+        if (n<=0) { return(-1);
+}
         if (npar==1)
             { all=1; m1=1; m2=n; }
         else
-            { all=0; m0=m=atoi(par[1]); if (m>n) return(-1); m1=m2=m; }
+            { all=0; m0=m=atoi(par[1]); if (m>n) { return(-1); 
+}m1=m2=m; }
 
         if (!distinct_symbols) { subsets_with_repetitions(n,m); return(1); }
 
@@ -650,13 +710,19 @@ static int subsets()
             if (!all)
                 {
                 iv=v=n; iu=u=m;
-                if ((double)iu!=u) return(0.0);
-                if ((double)iv!=v) return(0.0);
-                if (u>v/2) u=v-u;
-                if (u<0.0 || v<0.0) return(0.0);
-                if (u==0.0) return(1.0);
+                if ((double)iu!=u) { return(0.0);
+}
+                if ((double)iv!=v) { return(0.0);
+}
+                if (u>v/2) { u=v-u;
+}
+                if (u<0.0 || v<0.0) { return(0.0);
+}
+                if (u==0.0) { return(1.0);
+}
                 y=1.0;
-                for (; u>0; --u, --v) y*=(v/u);
+                for (; u>0; --u, --v) { y*=(v/u);
+}
             muste_sprintf(sbuf,"Subsets of size %d of %d elements: N[%s]=%.15g",
                               m,n,word[1],y);
                 }
@@ -672,22 +738,26 @@ static int subsets()
 
         for (m=m1; m<=m2; ++m)
             {
-            for (i=0; i<m; ++i) elem1[i]=i;
+            for (i=0; i<m; ++i) { elem1[i]=i;
+}
             while (1)
                 {
                 print_comb(elem1,m,1);
                 i=next_m_comb(n,m,elem1);
-                if (i<0) break;
+                if (i<0) { break;
+}
                 }
             }
-        if (!line || res==1) return(1);
+        if (!line || res==1) { return(1);
+}
         edwrite(space,line1,1);
-        if (all)
+        if (all) {
             muste_sprintf(sbuf,"Non-empty subsets of %d elements: N[%s]=%d",
                                  n,word[1],n_comb);
-        else
+        } else {
             muste_sprintf(sbuf,"Subsets of size %d of %d elements: N[%s]=%d",
                               m0,n,word[1],n_comb);
+}
         edwrite(sbuf,line1,1);
         return(1);
         }
@@ -698,10 +768,13 @@ static int next_m_comb(int n,int m,int *p)
 
         if (p[m-1]<n-1) { ++p[m-1]; return(1); }
         i=m-2;
-        while (p[i]==n-m+i && i>=0 ) --i;
-        if (i<0) return(-1);
+        while (p[i]==n-m+i && i>=0 ) { --i;
+}
+        if (i<0) { return(-1);
+}
         ++p[i]; k=p[i]; ++i;
-        for ( ; i<m; ++i) p[i]=++k;
+        for ( ; i<m; ++i) { p[i]=++k;
+}
         return(1);
         }
 
@@ -733,14 +806,17 @@ static int subsets_with_repetitions(int n,int m)
 /* for (j=0; j<n; ++j)Rprintf("%d\n",elem0[j]); getch();
 */
 
-        for (i=0; i<m; ++i) elem1[i]=elem0[i];
+        for (i=0; i<m; ++i) { elem1[i]=elem0[i];
+}
         while (1)
             {
             print_comb(elem1,m,2);
             i=next_subset_m_rep(n,m,k,elem0,elem1,elem2);
-            if (i<0) break;
+            if (i<0) { break;
+}
             }
-        if (!line || res==1) return(1);
+        if (!line || res==1) { return(1);
+}
         edwrite(space,line1,1);
         muste_sprintf(sbuf,"%d-subsets of %d elements (with repetitions): N[%s]=%d",
                           m,n,word[1],n_comb);
@@ -759,8 +835,10 @@ static int next_subset_m_rep(int n,int m,int k,int *elem0,int *elem1,int *elem2)
             if (elem1[i]<k)
                 {
                 h=elem2[elem1[i]+1];
-                if (n-h<m-i) continue;
-                for (j=i; j<m; ++j) elem1[j]=elem0[h++];
+                if (n-h<m-i) { continue;
+}
+                for (j=i; j<m; ++j) { elem1[j]=elem0[h++];
+}
                 return(1);
                 }
             }
@@ -811,17 +889,22 @@ static int partitions()
             {
             strcpy(sbuf,spb[i]);
             n_off=split(sbuf,vv,MAXELEM);
-            for (i=0; i<n_off; ++i) off[i]=atoi(vv[i]);
+            for (i=0; i<n_off; ++i) { off[i]=atoi(vv[i]);
+}
 
             if (imax && idistinct)
                 {
                 parts_by_off=max-n_off;
-                for (i=0; i<max; ++i) elem2[i]=i+1;
-                for (i=0; i<n_off; ++i)
+                for (i=0; i<max; ++i) { elem2[i]=i+1;
+}
+                for (i=0; i<n_off; ++i) {
                     elem2[off[i]-1]=0;
+}
                 k=0;
-                for (i=0; i<max; ++i)
-                    if (elem2[i]!=0) elem2[k++]=elem2[i];
+                for (i=0; i<max; ++i) {
+                    if (elem2[i]!=0) { elem2[k++]=elem2[i];
+}
+}
                 parts_by_off=k;
                 partitions2(); return(1);
                 }
@@ -841,8 +924,10 @@ static int partitions()
             power=atoi(spb[i]); ++rajoitukset; ++raj2;
             for (i=1; i<=MAXELEM-1; ++i)
                 {
-                k=1; for (j=0; j<power; ++j) k*=i;
-                if (k>n) break;
+                k=1; for (j=0; j<power; ++j) { k*=i;
+}
+                if (k>n) { break;
+}
                 pot[i]=k;
                 }
             }
@@ -858,7 +943,8 @@ static int partitions()
                 {
                 sum+=i+1; ++k;
                 if (k==survo) { off[kk++]=sum; k=0; }
-                if (kk==m) break;
+                if (kk==m) { break;
+}
                 }
                 
 /*********************
@@ -895,9 +981,12 @@ for (i=0; i<kk; ++i) Rprintf("%d ",off[i]); // getch();
                 if (rajoitukset)
                     {
                     ok=1;
-                    if (imax && elem1[m-1]>max) ok=0;
-                    if (imin && elem1[0]<min) ok=0;
-                    if (greatest_part && elem1[m-1]!=greatest_part) ok=0; // 14.8.2006
+                    if (imax && elem1[m-1]>max) { ok=0;
+}
+                    if (imin && elem1[0]<min) { ok=0;
+}
+                    if (greatest_part && elem1[m-1]!=greatest_part) { ok=0; // 14.8.2006
+}
 
                     if (idistinct)
                         {
@@ -932,38 +1021,46 @@ for (i=0; i<kk; ++i) Rprintf("%d ",off[i]); // getch();
                                   {
                                   if (v==off[u]) { ok=0; break; }
                                   }
-                              if (ok==0) break;
+                              if (ok==0) { break;
+}
                               }
                             }
                         }
                     if (ok)
                         {
-                        if (!raj2) print_comb(elem1,m,0);
-                        else
+                        if (!raj2) { print_comb(elem1,m,0);
+                        } else
                             {
                             for (i=0; i<m; ++i)
                                 {
                                 j=1;
-                                while (elem1[i]>pot[j]) ++j;
-                                if (elem1[i]<pot[j]) break;
+                                while (elem1[i]>pot[j]) { ++j;
+}
+                                if (elem1[i]<pot[j]) { break;
+}
                                 }
-                            if (i==m) print_comb(elem1,m,0);
+                            if (i==m) { print_comb(elem1,m,0);
+}
                             }
                         }
                     }
-                else print_comb(elem1,m,0);
+                else { print_comb(elem1,m,0);
+}
                 i=next_m_part(n,m,elem1);
-                if (i<0) break;
+                if (i<0) { break;
+}
                 }
             }
-        if (!line || res==1) return(1);
+        if (!line || res==1) { return(1);
+}
         edwrite(space,line1,1);
-        if (all)
+        if (all) {
             muste_sprintf(sbuf,"Partitions of %d: N[%s]=%d",
                                    n,word[1],n_comb);
-        else
+        } else {
             muste_sprintf(sbuf,"Partitions %d of %d: N[%s]=%d",
                               m0,n,word[1],n_comb);
+}
         edwrite(sbuf,line1,1);
         return(1);
         }
@@ -973,15 +1070,19 @@ static int next_m_part(int n,int m,int *p)
         int i,j,k;
 
         i=m-2;
-        while (i>=0 && p[m-1]-p[i]<2) --i;
+        while (i>=0 && p[m-1]-p[i]<2) { --i;
+}
         if (i>-1)
             {
-            for (j=m-2; j>=i; --j) p[j]=p[i]+1;
-            k=0; for (j=0; j<m-1; ++j) k+=p[j];
+            for (j=m-2; j>=i; --j) { p[j]=p[i]+1;
+}
+            k=0; for (j=0; j<m-1; ++j) { k+=p[j];
+}
             p[m-1]=n-k;
             return(1);
             }
-        else return(-1);
+        else { return(-1);
+}
         }
 
 static double sum1=0.0;
@@ -1003,12 +1104,15 @@ static double multin_prob1(int n,int m)
         {
         k2=elem1[i]; lcoeff2-=comb_lfact[k2];
         if (k2==k) { ++nk; continue; }
-        if (nk>1) lcoeff1-=comb_lfact[nk];
+        if (nk>1) { lcoeff1-=comb_lfact[nk];
+}
         k=k2; nk=1;
         }
-    if (nk>1) lcoeff1-=comb_lfact[nk];
+    if (nk>1) { lcoeff1-=comb_lfact[nk];
+}
     a=exp(lcoeff1+lcoeff2-n_log_m);
-    if (multin==2) sum1+=exp(lcoeff1);
+    if (multin==2) { sum1+=exp(lcoeff1);
+}
     return(a);
     }
 
@@ -1019,7 +1123,8 @@ static int tee_comb_lfact(int n)
     comb_lfact=(double *)muste_malloc((n+1)*sizeof(double));
     if (comb_lfact==NULL) { not_enough_memory(); return(-1); }
     comb_lfact[0]=comb_lfact[1]=0.0;
-    for (i=2; i<=n; ++i) comb_lfact[i]=log((double)i)+comb_lfact[i-1];
+    for (i=2; i<=n; ++i) { comb_lfact[i]=log((double)i)+comb_lfact[i-1];
+}
     return(1);
     }
 
@@ -1032,7 +1137,8 @@ static int min_max_partitions(int n,int m,int min,int max)
     double prob0;
     int n0,i0;
 
-    i=spfind("MULTIN"); if (i>=0) multin=atoi(spb[i]);
+    i=spfind("MULTIN"); if (i>=0) { multin=atoi(spb[i]);
+}
     if (multin)
         {
         tee_comb_lfact(n);
@@ -1041,8 +1147,10 @@ static int min_max_partitions(int n,int m,int min,int max)
 
     n0=1000L;
     i=spfind("SUMSTEP");
-    if (i>=0) n0=atol(spb[i]);
-    if (n0<1L) n0=1L;
+    if (i>=0) { n0=atol(spb[i]);
+}
+    if (n0<1L) { n0=1L;
+}
 
     line1=line;
     elem1[0]=min; i=0;
@@ -1052,7 +1160,8 @@ static int min_max_partitions(int n,int m,int min,int max)
         {
         ++nn;
         next_min_max_partition(n,m,i+1,elem1[i],max);
-        if(res) print_comb(elem1,m,0);
+        if(res) { print_comb(elem1,m,0);
+}
         if (multin)
             {
             prob0+=multin_prob1(n,m);
@@ -1066,27 +1175,32 @@ static int min_max_partitions(int n,int m,int min,int max)
         max0=elem1[m-1];
         for (i=m-1; i>=0; --i)
             {
-            if (elem1[i]<max0-1) break;
+            if (elem1[i]<max0-1) { break;
+}
             }
-        if (i<0) break;
+        if (i<0) { break;
+}
         ++elem1[i];
         }
 
     prob+=prob0;
-    if (!line || res==1) return(1);
+    if (!line || res==1) { return(1);
+}
     edwrite(space,line1,1);
     if (multin)
         {
-        if (multin==1)
+        if (multin==1) {
         muste_sprintf(sbuf,"Restricted partitions of %d: N[%s]=%.15g P=%.15g",
                       n,word[1],nn,prob);
-        else
+        } else {
         muste_sprintf(sbuf,"Restricted partitions of %d: N[%s]=%.15g P=%.15g NM=%.15g",
                       n,word[1],nn,prob,sum1);
+}
         }
-    else
+    else {
         muste_sprintf(sbuf,"Restricted partitions of %d: N[%s]=%.15g",
                       n,word[1],nn);
+}
     edwrite(sbuf,line1,1);
 //Rprintf("\nsum1=%.15g",sum1); getch();
     return(1);
@@ -1098,12 +1212,15 @@ static int next_min_max_partition(int n,int m,int k,int min,int max)
     int ero;
 
     s=0; ero=max-min;
-    for (i=0; i<k; ++i) s+=elem1[i];
-    for (i=k; i<m; ++i) elem1[i]=elem1[k-1];
+    for (i=0; i<k; ++i) { s+=elem1[i];
+}
+    for (i=k; i<m; ++i) { elem1[i]=elem1[k-1];
+}
     s=n-s-(m-k)*elem1[k-1];
     j=s/ero;
 //Rprintf("\ns=%d j=%d",s,j); getch();
-    for (i=m-1; i>m-j-1; --i) elem1[i]=max;
+    for (i=m-1; i>m-j-1; --i) { elem1[i]=max;
+}
     elem1[m-j-1]+=s%ero;
 //Rprintf("\n");
 // for (i=0; i<m; ++i)Rprintf("%d ",elem1[i]); getch();
@@ -1125,10 +1242,12 @@ static int partitions2()
 
         idistinct=0; m0=0;
         i=spfind("DISTINCT");
-        if (i>=0) idistinct=atoi(spb[i]);
+        if (i>=0) { idistinct=atoi(spb[i]);
+}
         coeff=0;
         i=spfind("COEFF");
-        if (i>=0) coeff=atoi(spb[i]);
+        if (i>=0) { coeff=atoi(spb[i]);
+}
 
         n=atoi(par[0]);
         if (npar==1)
@@ -1153,23 +1272,30 @@ static int partitions2()
             k=atoi(vv[1]);
             for (i=1; i<MAXELEM+1; ++i)
                 {
-                s=1; for (h=0; h<k; ++h) s*=i;
-                if (s>n) break;
+                s=1; for (h=0; h<k; ++h) { s*=i;
+}
+                if (s>n) { break;
+}
                 elem2[i-1]=s;
                 }
             if (npart>2)
                 {
                 k=atoi(vv[2]);
-                for (h=0; h<MAXELEM+1; ++h) elem2[h]=elem2[h+k-1];
+                for (h=0; h<MAXELEM+1; ++h) { elem2[h]=elem2[h+k-1];
+}
                 npart=i-1-k+1;
                 }
-            else npart=i-1;
+            else { npart=i-1;
+}
             }
-        else if (!parts_by_off)
-            for (i=0; i<npart; ++i) elem2[i]=atoi(vv[i]);
+        else if (!parts_by_off) {
+            for (i=0; i<npart; ++i) { elem2[i]=atoi(vv[i]);
+}
+}
         ok=1;
-        for (i=1; i<npart; ++i)
+        for (i=1; i<npart; ++i) {
             if (elem2[i]<elem2[i-1]) { ok=0; break; }
+}
         if (!ok)
             {
             sur_print("\nPARTS not in ascending order!");
@@ -1191,9 +1317,9 @@ static int partitions2()
             {
             if (res==0)
                 {
-                if (idistinct)
+                if (idistinct) {
                     i=n_dist_part(n,npart);  /* recursively */
-                else
+                } else
                     {
                     i=n_part(n,npart);  /* recursively */
                     }
@@ -1209,8 +1335,9 @@ static int partitions2()
                     {
                     i=n_dist_part_p(n,npart);  /* recursively */
                     }
-                else
+                else {
                     i=n_part_p(n,npart);  /* recursively */
+}
                 muste_sprintf(sbuf,"Partitions of %d: N[%s]=%d",
                                        n,word[1],i);
                 edwrite(space,line1,1);
@@ -1219,9 +1346,9 @@ static int partitions2()
                 }
             }
 
-        if (idistinct && m1==m2 && fast) // 22.6.2006
+        if (idistinct && m1==m2 && fast) { // 22.6.2006
             partitions_with_given_distinct_parts(n,m1,npart,elem2);
-     else
+     } else {
 
         for (m=m1; m<=m2; ++m)
             {
@@ -1229,7 +1356,9 @@ static int partitions2()
 
             if (m==1)  /* 24.7.1999 */
                 {
-                for (i=0; i<npart; ++i) if (n<=elem2[i]) break;
+                for (i=0; i<npart; ++i) { if (n<=elem2[i]) { break;
+}
+}
                 if (i<npart && n==elem2[i])
                     {
                     elem1[0]=n;
@@ -1244,25 +1373,33 @@ static int partitions2()
                 continue;
                 }
 **************************************/
-            for (i=0; i<m-1; ++i) elem0[i]=0;
-            for (i=0; i<npart; ++i) if (m*elem2[i]>n) break;
+            for (i=0; i<m-1; ++i) { elem0[i]=0;
+}
+            for (i=0; i<npart; ++i) { if (m*elem2[i]>n) { break;
+}
+}
             max_elem0=i-1;
 
             s=n-(m-1)*elem2[0];
-            for (i=0; i<npart; ++i) if (elem2[i]>s) break;
+            for (i=0; i<npart; ++i) { if (elem2[i]>s) { break;
+}
+}
             npart=i;
 
             while (1)
                 {
-                if (elem0[0]>max_elem0) break;
-                s=n; for (i=0; i<m-1; ++i) s-=elem2[elem0[i]];
+                if (elem0[0]>max_elem0) { break;
+}
+                s=n; for (i=0; i<m-1; ++i) { s-=elem2[elem0[i]];
+}
                 if (s>=elem2[elem0[m-2]])
                     {
-                    for (i=elem0[m-2]; i<npart; ++i)
+                    for (i=elem0[m-2]; i<npart; ++i) {
                         if (s==elem2[i])
                             {
                             elem0[m-1]=i;
-                            for (k=0; k<m; ++k) elem1[k]=elem2[elem0[k]];
+                            for (k=0; k<m; ++k) { elem1[k]=elem2[elem0[k]];
+}
                             ok=1;
                             if (idistinct)
                                 {
@@ -1272,26 +1409,35 @@ static int partitions2()
                                         { ok=0; break; }
                                     }
                                 }
-                            if (ok) print_comb(elem1,m,0);
+                            if (ok) { print_comb(elem1,m,0);
+}
                             break;
                             }
-                        else if (s<elem2[i]) break;
+                        else if (s<elem2[i]) { break;
+}
+}
                     }
                 i=m-2;
-                while (i>=0 && elem0[i]==npart-1) --i;
-                if (i<0) break;
+                while (i>=0 && elem0[i]==npart-1) { --i;
+}
+                if (i<0) { break;
+}
                 ++elem0[i]; s=elem0[i]; ++i;
-                for ( ; i<m-1; ++i) elem0[i]=s;
+                for ( ; i<m-1; ++i) { elem0[i]=s;
+}
                 }
             }
-        if (!line || res==1) return(1);
+}
+        if (!line || res==1) { return(1);
+}
         edwrite(space,line1,1);
-        if (all)
+        if (all) {
             muste_sprintf(sbuf,"Partitions of %d: N[%s]=%d",
                                    n,word[1],n_comb);
-        else
+        } else {
             muste_sprintf(sbuf,"Partitions %d of %d: N[%s]=%d",
                               m0,n,word[1],n_comb);
+}
         edwrite(sbuf,line1,1);
         return(1);
         }
@@ -1303,26 +1449,33 @@ static int partitions_with_given_distinct_parts(int n,int m,int npart,int a[])  
     int nk=0;
 
     max=a[npart-1];
-    for (i=0; i<m-1; ++i) p[i]=&a[i];
+    for (i=0; i<m-1; ++i) { p[i]=&a[i];
+}
 
     while (1)
         {
-        s=0; for (i=0; i<m-1; ++i) s+=*p[i];
+        s=0; for (i=0; i<m-1; ++i) { s+=*p[i];
+}
         s=n-s;
         if (s<=*p[m-2])
             {
           while (1)
               {
             h=m-2;
-            while (p[h]-p[h-1]==1) --h;
-            if (h==0) return(nk);
+            while (p[h]-p[h-1]==1) { --h;
+}
+            if (h==0) { return(nk);
+}
             --h;
             ++p[h];
             ++h;
-            for ( ; h<m-1; ++h) p[h]=p[h-1]+1;
-            s=0; for (i=0; i<m-1; ++i) s+=*p[i];
+            for ( ; h<m-1; ++h) { p[h]=p[h-1]+1;
+}
+            s=0; for (i=0; i<m-1; ++i) { s+=*p[i];
+}
             s=n-s;
-            if (s>*p[m-2]) break;
+            if (s>*p[m-2]) { break;
+}
               }
             }
         if (s<=max && s>*p[m-2])
@@ -1336,12 +1489,14 @@ static int partitions_with_given_distinct_parts(int n,int m,int npart,int a[])  
                     p[m-1]=&a[i];
 //                 Rprintf("\n partitio:");
 //                  for (h=0; h<m; ++h)Rprintf(" %d",*p[h]);
-                    for (h=0; h<m; ++h) elem1[h]=*p[h];
+                    for (h=0; h<m; ++h) { elem1[h]=*p[h];
+}
                     print_comb(elem1,m,0);
 
                     break;
                     }
-                if (a[i]<*p[m-2]) break;
+                if (a[i]<*p[m-2]) { break;
+}
                 }
             }
         ++p[m-2];
@@ -1355,8 +1510,10 @@ static int n_part(int n,int m)
         {
         int s,t;
 
-        if (n==0) return(1);
-        if (m==1) { if (n%elem2[0]==0) return(1); else return(0); }
+        if (n==0) { return(1);
+}
+        if (m==1) { if (n%elem2[0]==0) { return(1); } else { return(0); 
+}}
         s=0; t=elem2[m-1];
         while (n>=0)
             {
@@ -1370,11 +1527,14 @@ static int n_dist_part(int n,int m)
         {
         int s,t;
 
-        if (n==0) return(1);
-        if (m==1) { if (n==elem2[0]) return(1); else return(0); }
+        if (n==0) { return(1);
+}
+        if (m==1) { if (n==elem2[0]) { return(1); } else { return(0); 
+}}
         s=0; t=elem2[m-1];
         s+=n_dist_part(n,m-1);
-        if (n>=t) s+=n_dist_part(n-t,m-1);
+        if (n>=t) { s+=n_dist_part(n-t,m-1);
+}
         return(s);
         }
 
@@ -1382,7 +1542,8 @@ static int n_part_p(int n,int m)
         {
         int s,t;
 
-        if (n==0) { for (s=0; s<m; ++s) elem0[s]=0; print_n_part();  return(1); }
+        if (n==0) { for (s=0; s<m; ++s) { elem0[s]=0; 
+}print_n_part();  return(1); }
         if (m==1)
             {
             if (n%elem2[0]==0)
@@ -1390,13 +1551,15 @@ static int n_part_p(int n,int m)
                 elem0[0]=n/elem2[0];
                 print_n_part(); return(1);
                 }
-            else return(0);
+            else { return(0);
+}
             }
         s=0; t=elem2[m-1]; elem0[m-1]=0;
         while (n>=0)
             {
             s+=n_part_p(n,m-1);
-            n-=t; if (n>=0) ++elem0[m-1];
+            n-=t; if (n>=0) { ++elem0[m-1];
+}
             }
         return(s);
         }
@@ -1405,7 +1568,8 @@ static int n_dist_part_p(int n,int m)
         {
         int s,t;
 
-        if (n==0) { for (s=0; s<m; ++s) elem0[s]=0; print_n_part();  return(1); }
+        if (n==0) { for (s=0; s<m; ++s) { elem0[s]=0; 
+}print_n_part();  return(1); }
         if (m==1)
             {
             if (n==elem2[0])
@@ -1413,7 +1577,8 @@ static int n_dist_part_p(int n,int m)
                 elem0[0]=1;
                 print_n_part(); return(1);
                 }
-            else return(0);
+            else { return(0);
+}
             }
 
         s=0; t=elem2[m-1];
@@ -1434,8 +1599,9 @@ static int print_n_part()
         j=0; k=0;
         for (i=0; i<npart0; ++i)
             {
-            for (j=0; j<elem0[i]; ++j)
+            for (j=0; j<elem0[i]; ++j) {
                 elem1[k++]=elem2[i];
+}
             }
         print_comb(elem1,k,0);
         return(1);
@@ -1456,28 +1622,35 @@ static int count_partitions(int n,int distinct,double *pa)
         freq3=(double *)muste_malloc(n1*sizeof(double));
         if (freq3==NULL) { not_enough_memory(); return(-1); }
 
-        for (i=0; i<n1; ++i) freq[i]=0.0;
+        for (i=0; i<n1; ++i) { freq[i]=0.0;
+}
         freq[0]=1.0;
         k=1;
-        if (distinct)
+        if (distinct) {
             for (i=1; i<n1; ++i)
                 {
                 if (k) { f1=freq3; f2=freq; k=0; }
                 else   { f2=freq3; f1=freq; k=1; }
-                for (j=0; j<n1; ++j) f1[j]=f2[j];
-                for (ii=0; ii<=n-i; ++ii)
+                for (j=0; j<n1; ++j) { f1[j]=f2[j];
+}
+                for (ii=0; ii<=n-i; ++ii) {
                     f1[ii+i]+=f2[ii];
+}
                 }
-        else /* not distinct */
+        } else { /* not distinct */
             for (i=1; i<n1; ++i)
                 {
                 if (k) { f1=freq3; f2=freq; k=0; }
                 else   { f2=freq3; f1=freq; k=1; }
-                for (j=0; j<n1; ++j) f1[j]=f2[j];
-                for (j=i; j<=n; j+=i)
-                    for (ii=0; ii<=n-j; ++ii)
+                for (j=0; j<n1; ++j) { f1[j]=f2[j];
+}
+                for (j=i; j<=n; j+=i) {
+                    for (ii=0; ii<=n-j; ++ii) {
                         f1[ii+j]+=f2[ii];
+}
+}
                 }
+}
         *pa=f1[n];
         return(1);
         }
@@ -1497,7 +1670,8 @@ static int distributions()
         rajoitukset=0;
         imax=imin=idistinct=0;
 
-        if (npar>1) m=atoi(par[1]); else m=atoi(par[0]);
+        if (npar>1) { m=atoi(par[1]); } else { m=atoi(par[0]);
+}
 
         i=spfind("MAX");
             {
@@ -1508,9 +1682,13 @@ static int distributions()
               if (n==1)
                   {
                   max=atoi(spb[i]);
-                  if (npar>1) for (i=0; i<m; ++i) vmax[i]=max;
+                  if (npar>1) { for (i=0; i<m; ++i) { vmax[i]=max;
+}
+}
                   }
-              else for (i=0; i<n; ++i) vmax[i]=atoi(vv[i]);
+              else { for (i=0; i<n; ++i) { vmax[i]=atoi(vv[i]);
+}
+}
               ++rajoitukset;
               }
             }
@@ -1523,10 +1701,14 @@ static int distributions()
               if (n==1)
                   {
                   min=atoi(spb[i]);
-                  if (npar>1) for (i=0; i<m; ++i) vmin[i]=min;
+                  if (npar>1) { for (i=0; i<m; ++i) { vmin[i]=min;
+}
+}
                   }
 
-              else for (i=0; i<n; ++i) vmin[i]=atoi(vv[i]);
+              else { for (i=0; i<n; ++i) { vmin[i]=atoi(vv[i]);
+}
+}
               ++rajoitukset;
               }
             }
@@ -1563,35 +1745,46 @@ static int distributions()
                         {
                         if (imax>1)
                             {
-                            for (i=0; i<m; ++i) if (elem1[i]>vmax[i]) { ok=0; break; }
+                            for (i=0; i<m; ++i) { if (elem1[i]>vmax[i]) { ok=0; break; }
+}
                             }
-                        else
-                            for (i=0; i<m; ++i) if (elem1[i]>max) { ok=0; break; }
+                        else {
+                            for (i=0; i<m; ++i) { if (elem1[i]>max) { ok=0; break; }
+}
+}
                         }
                     if (imin && ok)
                         {
                         if (imin>1)
                             {
-                            for (i=0; i<m; ++i) if (elem1[i]<vmin[i]) { ok=0; break; }
+                            for (i=0; i<m; ++i) { if (elem1[i]<vmin[i]) { ok=0; break; }
+}
                             }
-                        else
-                            for (i=0; i<m; ++i) if (elem1[i]<min) { ok=0; break; }
+                        else {
+                            for (i=0; i<m; ++i) { if (elem1[i]<min) { ok=0; break; }
+}
+}
                         }
-                    if (ok) print_comb(elem1,m,0);
+                    if (ok) { print_comb(elem1,m,0);
+}
                     }
-                else print_comb(elem1,m,0);
+                else { print_comb(elem1,m,0);
+}
                 i=next_m_distr(n,m,elem1);
-                if (i<0) break;
+                if (i<0) { break;
+}
                 }
             }
-        if (!line || res==1) return(1);
+        if (!line || res==1) { return(1);
+}
         edwrite(space,line1,1);
-        if (all)
+        if (all) {
             muste_sprintf(sbuf,"Distributions of %d elements: N[%s]=%d",
                                    n,word[1],n_comb);
-        else
+        } else {
             muste_sprintf(sbuf,"Distributions of %d elements into %d cells: N[%s]=%d",
                               n,m0,word[1],n_comb);
+}
         edwrite(sbuf,line1,1);
         return(1);
         }
@@ -1601,11 +1794,14 @@ static int next_m_distr(int n,int m,int *elem1)
         int i,k;
 
         i=m-1;
-        while (elem1[i]==0) --i;
-        if (i==0) return(-1);
+        while (elem1[i]==0) { --i;
+}
+        if (i==0) { return(-1);
+}
         ++elem1[i-1];
         elem1[m-1]=elem1[i]-1;
-        for (k=i; k<m-1; ++k) elem1[k]=0;
+        for (k=i; k<m-1; ++k) { elem1[k]=0;
+}
         return(1);
         }
 
@@ -1634,16 +1830,20 @@ static double laske_multin_prob(int n,int m)  // samat p:t ja rajat
     int i,ii;
     double lm,lm1,a;
 
-    if (m*multin_min>n || m*multin_max<n) return(0.0);
-    if (m==1) return(1.0);
+    if (m*multin_min>n || m*multin_max<n) { return(0.0);
+}
+    if (m==1) { return(1.0);
+}
 // ++count1;
     ii=(m-1)*nnn+n-1;
-    a=mlt_prob[ii]; if (a>=0.0) return(a);
+    a=mlt_prob[ii]; if (a>=0.0) { return(a);
+}
     lm=log((double)m); lm1=log(1.0-1.0/(double)m);
     a=0.0;
-    for (i=multin_min; i<=multin_max; ++i)
+    for (i=multin_min; i<=multin_max; ++i) {
         a+=exp(comb_lfact[n]-comb_lfact[i]-comb_lfact[n-i]-i*lm+(n-i)*lm1)
                               *laske_multin_prob(n-i,m-1);
+}
     mlt_prob[ii]=a;
 // ++count2;
 //Rprintf("\nn=%d m=%d p=%g",n,m,a); getch();
@@ -1656,20 +1856,25 @@ static double laske_multin_prob2(int n,int m) // eri p:t, samat rajat
     double pr1,a;
 // double b,d;
 
-    if (m*multin_min>n || m*multin_max<n) return(0.0);
-    if (m==1) return(1.0);
+    if (m*multin_min>n || m*multin_max<n) { return(0.0);
+}
+    if (m==1) { return(1.0);
+}
 
-    pr1=0.0; for (i=0; i<m; ++i) pr1+=mlt_pr[i];
+    pr1=0.0; for (i=0; i<m; ++i) { pr1+=mlt_pr[i];
+}
     pr1=mlt_pr[m-1]/pr1;
 
     ii=(m-1)*nnn+n-1;
 //Rprintf("\nm=%d n=%d nnn=%d ii=%d|",m,n,nnn,ii);
-    a=mlt_prob[ii]; if (a>=0.0) return(a);
+    a=mlt_prob[ii]; if (a>=0.0) { return(a);
+}
     a=0.0;
-    for (i=multin_min; i<=multin_max; ++i)
+    for (i=multin_min; i<=multin_max; ++i) {
         a+=exp(comb_lfact[n]-comb_lfact[i]-comb_lfact[n-i]
                +i*log(pr1)+(n-i)*log(1.0-pr1))
                               *laske_multin_prob2(n-i,m-1);
+}
 /*********************************
         {
         b=exp(comb_lfact[n]-comb_lfact[i]-comb_lfact[n-i]
@@ -1690,24 +1895,32 @@ static double laske_multin_prob3(int n,int m) // eri p:t ja eri rajat
     int i,ii;
     double pr1,a;
 
-    ii=0; for (i=0; i<m; ++i) ii+=mlt_min[i];
-    if (ii>n) return(0.0);
-    ii=0; for (i=0; i<m; ++i) ii+=mlt_max[i];
-    if (ii<n) return(0.0);
+    ii=0; for (i=0; i<m; ++i) { ii+=mlt_min[i];
+}
+    if (ii>n) { return(0.0);
+}
+    ii=0; for (i=0; i<m; ++i) { ii+=mlt_max[i];
+}
+    if (ii<n) { return(0.0);
+}
 
-    if (m==1) return(1.0);
+    if (m==1) { return(1.0);
+}
 
-    pr1=0.0; for (i=0; i<m; ++i) pr1+=mlt_pr[i];
+    pr1=0.0; for (i=0; i<m; ++i) { pr1+=mlt_pr[i];
+}
     pr1=mlt_pr[m-1]/pr1;
 
     ii=(m-1)*nnn+n-1;
 
-    a=mlt_prob[ii]; if (a>=0.0) return(a);
+    a=mlt_prob[ii]; if (a>=0.0) { return(a);
+}
     a=0.0;
-    for (i=mlt_min[m-1]; i<=mlt_max[m-1]; ++i)
+    for (i=mlt_min[m-1]; i<=mlt_max[m-1]; ++i) {
         a+=exp(comb_lfact[n]-comb_lfact[i]-comb_lfact[n-i]
                +i*log(pr1)+(n-i)*log(1.0-pr1))
                               *laske_multin_prob3(n-i,m-1);
+}
     mlt_prob[ii]=a;
 //Rprintf("\nn=%d m=%d p=%g",n,m,a); getch();
     return(a);
@@ -1718,19 +1931,23 @@ static int multin_comp()
     int n,m,i;
     double a;
 
-    i=spfind("PROB"); if (i>=0)  return(multin_comp2());
+    i=spfind("PROB"); if (i>=0) {  return(multin_comp2());
+}
 
     n=atoi(par[0]);
     m=atoi(par[1]);
     nnn=n; // 12.7.2001
 //Rprintf("\nn=%d m=%d",n,m); getch();
 
-    multin_min=0; i=spfind("MIN"); if (i>=0) multin_min=atoi(spb[i]);
-    multin_max=n; i=spfind("MAX"); if (i>=0) multin_max=atoi(spb[i]);
+    multin_min=0; i=spfind("MIN"); if (i>=0) { multin_min=atoi(spb[i]);
+}
+    multin_max=n; i=spfind("MAX"); if (i>=0) { multin_max=atoi(spb[i]);
+}
 
     mlt_prob=(double *)muste_malloc(m*n*sizeof(double));
     if (mlt_prob==NULL) { not_enough_memory(); return(-1); }
-    for (i=0; i<m*n; ++i) mlt_prob[i]=-1.0;
+    for (i=0; i<m*n; ++i) { mlt_prob[i]=-1.0;
+}
     tee_comb_lfact(n);
 
     a=laske_multin_prob(n,m);
@@ -1774,8 +1991,8 @@ static int multin_comp2()
     for (i=0; i<m; ++i)
         {
         p=strchr(vv[i],'/');   // esim. 1/6 sallittu
-        if (p==NULL) mlt_pr[i]=atof(vv[i]);
-        else
+        if (p==NULL) { mlt_pr[i]=atof(vv[i]);
+        } else
             {
             *p=EOS;
             mlt_pr[i]=atof(vv[i])/atof(p+1);
@@ -1793,12 +2010,15 @@ static int multin_comp2()
             }
         }
 
-    multin_min=0; i=spfind("MIN"); if (i>=0) multin_min=atoi(spb[i]);
-    multin_max=n; i=spfind("MAX"); if (i>=0) multin_max=atoi(spb[i]);
+    multin_min=0; i=spfind("MIN"); if (i>=0) { multin_min=atoi(spb[i]);
+}
+    multin_max=n; i=spfind("MAX"); if (i>=0) { multin_max=atoi(spb[i]);
+}
 
     mlt_prob=(double *)muste_malloc(m*n*sizeof(double));
     if (mlt_prob==NULL) { not_enough_memory(); return(-1); }
-    for (i=0; i<m*n; ++i) mlt_prob[i]=-1.0;
+    for (i=0; i<m*n; ++i) { mlt_prob[i]=-1.0;
+}
     tee_comb_lfact(n);
 
     a=laske_multin_prob2(n,m);
@@ -1827,31 +2047,38 @@ static int multin_comp3()
     if (mlt_max==NULL) { not_enough_memory(); return(-1); }
 
     i=spfind("MIN");
-    if (i<0) for (i=0; i<m; ++i) mlt_min[i]=0;
-    else
+    if (i<0) { for (i=0; i<m; ++i) { mlt_min[i]=0;
+}
+    } else
         {
         strcpy(sbuf,spb[i]);
         i=split(sbuf,vv,m);
-        if (i==1) for (i=0; i<m; ++i) mlt_min[i]=atoi(vv[0]);
-        else if (i>=m)
-            for (i=0; i<m; ++i) mlt_min[i]=atoi(vv[i]);
-        else { sur_print("\nError in MIN!"); WAIT; return(-1); }
+        if (i==1) { for (i=0; i<m; ++i) { mlt_min[i]=atoi(vv[0]);
+}
+        } else if (i>=m) {
+            for (i=0; i<m; ++i) { mlt_min[i]=atoi(vv[i]);
+}
+        } else { sur_print("\nError in MIN!"); WAIT; return(-1); }
         }
     i=spfind("MAX");
-    if (i<0) for (i=0; i<m; ++i) mlt_max[i]=0;
-    else
+    if (i<0) { for (i=0; i<m; ++i) { mlt_max[i]=0;
+}
+    } else
         {
         strcpy(sbuf,spb[i]);
         i=split(sbuf,vv,m);
-        if (i==1) for (i=0; i<m; ++i) mlt_max[i]=atoi(vv[0]);
-        else if (i>=m)
-            for (i=0; i<m; ++i) mlt_max[i]=atoi(vv[i]);
-        else { sur_print("\nError in MAX!"); WAIT; return(-1); }
+        if (i==1) { for (i=0; i<m; ++i) { mlt_max[i]=atoi(vv[0]);
+}
+        } else if (i>=m) {
+            for (i=0; i<m; ++i) { mlt_max[i]=atoi(vv[i]);
+}
+        } else { sur_print("\nError in MAX!"); WAIT; return(-1); }
         }
 
     mlt_prob=(double *)muste_malloc(m*n*sizeof(double));
     if (mlt_prob==NULL) { not_enough_memory(); return(-1); }
-    for (i=0; i<m*n; ++i) mlt_prob[i]=-1.0;
+    for (i=0; i<m*n; ++i) { mlt_prob[i]=-1.0;
+}
     tee_comb_lfact(n);
 
     a=laske_multin_prob3(n,m);
@@ -1873,8 +2100,9 @@ static double multin_prob2(int n,int m)
     double lprob;
 
     lprob=comb_lfact[n];
-    for (i=0; i<m; ++i)
+    for (i=0; i<m; ++i) {
         lprob+=(double)elem1[i]*dprob[i]-comb_lfact[elem1[i]];
+}
     return(exp(lprob));
     }
 
@@ -1905,22 +2133,25 @@ static int distributions2(int n,int m) // 13.6.2001
         for (i=0; i<m; ++i)
             {
             p=strchr(vv[i],'/');   // esim. 1/6 sallittu
-            if (p==NULL) dprob[i]=atof(vv[i]);
-            else
+            if (p==NULL) { dprob[i]=atof(vv[i]);
+            } else
                 {
                 *p=EOS;
                 dprob[i]=atof(vv[i])/atof(p+1);
                 }
             }
         // ei tarkistusta, ett? summa=1
-        for (i=0; i<m; ++i) dprob[i]=log(dprob[i]);
+        for (i=0; i<m; ++i) { dprob[i]=log(dprob[i]);
+}
         tee_comb_lfact(n);
         }
 
     n0=1000L;
     i=spfind("SUMSTEP");
-    if (i>=0) n0=atol(spb[i]);
-    if (n0<1L) n0=1L;
+    if (i>=0) { n0=atol(spb[i]);
+}
+    if (n0<1L) { n0=1L;
+}
 
     line1=line;
     nn=0.0; i0=0L; prob=prob0=0.0;
@@ -1953,22 +2184,26 @@ static int distributions2(int n,int m) // 13.6.2001
             if (elem1[i]==vmax[i])
                 {
                 if (i==0) { j=-1; break; }
-                else continue;
+                else { continue;
+}
                 }
             ++elem1[i];
             j=set_distr(n,m,i+1);
-            if (j==1) break;
+            if (j==1) { break;
+}
             }
-        if (j<0) break;
+        if (j<0) { break;
+}
         }
     prob+=prob0;
     edwrite(space,line1,1);
-    if (multin)
+    if (multin) {
         muste_sprintf(sbuf,"Distributions of %d elements into %d cells: N[%s]=%.15g P=%.15g",
                           n,m,word[1],nn,prob);
-    else
+    } else {
         muste_sprintf(sbuf,"Distributions of %d elements into %d cells: N[%s]=%.15g",
                           n,m,word[1],nn);
+}
 
     edwrite(sbuf,line1,1);
     return(1);
@@ -1978,7 +2213,8 @@ static int set_distr(int n,int m,int k)
     {
     int i,s,h;
 
-    s=0; for (i=0; i<k; ++i) s+=elem1[i];
+    s=0; for (i=0; i<k; ++i) { s+=elem1[i];
+}
     for (i=k; i<m; ++i) { elem1[i]=vmin[i]; s+=vmin[i]; }
     n-=s;
 
@@ -1986,14 +2222,17 @@ static int set_distr(int n,int m,int k)
 // for (i=0; i<m; ++i)Rprintf("%d ",elem1[i]);
 //Rprintf("\nn=%d k=%d",n,k); getch();
 
-    if (n<0) return(-1);
+    if (n<0) { return(-1);
+}
     for (i=m-1; i>=0; --i)
         {
-        if (n==0) break;
+        if (n==0) { break;
+}
         elem1[i]+=n;
         h=elem1[i]-vmax[i];
         if (h>0) { n=h; elem1[i]=vmax[i]; }
-        else break;
+        else { break;
+}
         }
 
     return(1);
@@ -2008,45 +2247,58 @@ static int integers()
 
 		sum=0; // RS ADD
         n=atoi(par[0]);
-        if (n<=0) return(-1);
+        if (n<=0) { return(-1);
+}
         m=atoi(par[1]);
-        if (m<=1) return(-1);
+        if (m<=1) { return(-1);
+}
 
         move=0;
-        i=spfind("MOVE"); if (i>=0) move=atoi(spb[i]);
+        i=spfind("MOVE"); if (i>=0) { move=atoi(spb[i]);
+}
         sum_ind=0;
         i=spfind("SUM"); if (i>=0) { sum=atoi(spb[i]); sum_ind=1; }
         gap=0;
-        i=spfind("MIN_GAP"); if (i>=0) gap=atoi(spb[i]);
+        i=spfind("MIN_GAP"); if (i>=0) { gap=atoi(spb[i]);
+}
 
 
         line1=line;
-        for (i=0; i<n; ++i) elem1[i]=0;
+        for (i=0; i<n; ++i) { elem1[i]=0;
+}
         while (1)
             {
             if (sum_ind)
                 {
-                k=0; for (i=0; i<n; ++i) k+=elem1[i];
-                if (move) k+=n*move;
+                k=0; for (i=0; i<n; ++i) { k+=elem1[i];
+}
+                if (move) { k+=n*move;
+}
                 if (k!=sum)
                      {
                      i=next_integer(n,m,elem1);
-                     if (i<0) break; else continue;
+                     if (i<0) { break; } else { continue;
+}
                      }
                 }
             if (move)
                 {
-                for (i=0; i<n; ++i) elem2[i]=elem1[i]+move;
+                for (i=0; i<n; ++i) { elem2[i]=elem1[i]+move;
+}
                 print_comb(elem2,n,0);
                 }
-            else print_comb(elem1,n,0);
-            if (gap)
+            else { print_comb(elem1,n,0);
+}
+            if (gap) {
                 i=next_integer_with_gap(n,m,elem1,gap);
-            else
+            } else {
                 i=next_integer(n,m,elem1);
-            if (i<0) break;
+}
+            if (i<0) { break;
+}
             }
-        if (!line || res==1) return(1);
+        if (!line || res==1) { return(1);
+}
         edwrite(space,line1,1);
         muste_sprintf(sbuf,"Integers of %d digits in base %d: N[%s]=%d",
                           n,m,word[1],n_comb);
@@ -2059,10 +2311,13 @@ static int next_integer(int n,int m,int *elem1)
         int i;
 
         i=n-1;
-        while (elem1[i]==m-1 && i>=0) --i;
-        if (i<0) return(-1);
+        while (elem1[i]==m-1 && i>=0) { --i;
+}
+        if (i<0) { return(-1);
+}
         ++elem1[i];
-        ++i; for (; i<n; ++i) elem1[i]=0;
+        ++i; for (; i<n; ++i) { elem1[i]=0;
+}
         return(1);
         }
 
@@ -2073,17 +2328,23 @@ static int next_integer_with_gap(int n,int m,int *elem1,int gap)  // 7.8.2004
         while (1)
             {
             i=n-1;
-            while (elem1[i]==m-1 && i>=0) --i;
-            if (i<0) return(-1);
+            while (elem1[i]==m-1 && i>=0) { --i;
+}
+            if (i<0) { return(-1);
+}
             ++elem1[i];
-            ++i; for (; i<n; ++i) elem1[i]=0;
+            ++i; for (; i<n; ++i) { elem1[i]=0;
+}
             for (i=1; i<n; ++i)
                 {
                 ero=elem1[i]-elem1[i-1];
-                if (ero<=0) continue;
-                if (ero<gap) break;
+                if (ero<=0) { continue;
+}
+                if (ero<gap) { break;
+}
                 }
-            if (i==n) return(1);
+            if (i==n) { return(1);
+}
             }
 
         return(1);
@@ -2095,29 +2356,35 @@ static int lattices()
         char x[LLENGTH];
 
         n=atoi(par[0]);
-        if (n<=0) return(-1);
+        if (n<=0) { return(-1);
+}
 
         i=spfind("MIN");
         if (i<0) { spec_error("MIN"); return(-1); }
         strcpy(x,spb[i]); i=split(x,vv,n);
         if (i<n) { spec_error("MIN"); return(-1); }
-        for (i=0; i<n; ++i) vmin[i]=atoi(vv[i]);
+        for (i=0; i<n; ++i) { vmin[i]=atoi(vv[i]);
+}
 
         i=spfind("MAX");
         if (i<0) { spec_error("MAX"); return(-1); }
         strcpy(x,spb[i]); i=split(x,vv,n);
         if (i<n) { spec_error("MAX"); return(-1); }
-        for (i=0; i<n; ++i) vmax[i]=atoi(vv[i]);
+        for (i=0; i<n; ++i) { vmax[i]=atoi(vv[i]);
+}
 
         line1=line;
-        for (i=0; i<n; ++i) elem1[i]=vmin[i];
+        for (i=0; i<n; ++i) { elem1[i]=vmin[i];
+}
         while (1)
             {
             print_comb(elem1,n,0);
             i=next_lattice_point(n,elem1);
-            if (i<0) break;
+            if (i<0) { break;
+}
             }
-        if (!line || res==1) return(1);
+        if (!line || res==1) { return(1);
+}
         edwrite(space,line1,1);
         muste_sprintf(sbuf,"Lattice points in %d dimensions: N[%s]=%d",
                           n,word[1],n_comb);
@@ -2130,10 +2397,13 @@ static int next_lattice_point(int n,int *elem1)
         int i;
 
         i=n-1;
-        while (elem1[i]==vmax[i] && i>=0) --i;
-        if (i<0) return(-1);
+        while (elem1[i]==vmax[i] && i>=0) { --i;
+}
+        if (i<0) { return(-1);
+}
         ++elem1[i];
-        ++i; for (; i<n; ++i) elem1[i]=vmin[i];
+        ++i; for (; i<n; ++i) { elem1[i]=vmin[i];
+}
         return(1);
         }
 // PRINT
@@ -2143,8 +2413,10 @@ static int print_comb(int *p,int k,int s)
         double cursum; // RS 21.8.2013
 
         ++n_comb;
-        if (line) ++line;
-        if (line && (res==0 || line>r2)) return(1);
+        if (line) { ++line;
+}
+        if (line && (res==0 || line>r2)) { return(1);
+}
         h=0;
         
         if (valsumcheck>0) // RS 21.8.2013
@@ -2158,7 +2430,8 @@ static int print_comb(int *p,int k,int s)
 //            Rprintf("\nsum: %f, ero: %f",cursum,fabs(valsum-cursum));    
             if (fabs(valsum-cursum)>VSEPS)
                 {
-                if (line) line--;
+                if (line) { line--;
+}
                 return(1);
                 }
             }
@@ -2174,7 +2447,8 @@ static int print_comb(int *p,int k,int s)
             case 2:
                 h+=muste_sprintf(sbuf+h,"%s ",symbol2[p[i]]); break;
                 }
-            if (h>LLENGTH-10) break;
+            if (h>LLENGTH-10) { break;
+}
             }
         if (!line)
             {
@@ -2198,7 +2472,8 @@ static int load_restr_matrix(int n)
         int i;
 
         i=matrix_load(matname,&aa,&rdim,&cdim,&rlab,&clab,&lr,&lc,&mtype,expr);
-        if (i<0) return(-1);
+        if (i<0) { return(-1);
+}
         if (cdim!=rdim || rdim!=n)
             {
             muste_sprintf(sbuf,"\nSize of restriction matrix %s must be %d!",
@@ -2207,7 +2482,8 @@ static int load_restr_matrix(int n)
             }
 
         restr_mat=(int *)aa;
-        for (i=0; i<n*n; ++i) restr_mat[i]=aa[i];
+        for (i=0; i<n*n; ++i) { restr_mat[i]=aa[i];
+}
         return(1);
         }
 
@@ -2224,20 +2500,26 @@ static int find_first()
         char y[LLENGTH];
         char *p,*q;
 
-        i=edline2(par[0],1,1); if (i<0) return(-1);
+        i=edline2(par[0],1,1); if (i<0) { return(-1);
+}
         edread(x,i);
-        i=strlen(x)-1; while (i>0 && x[i]==' ') x[i--]=EOS;
+        i=strlen(x)-1; while (i>0 && x[i]==' ') { x[i--]=EOS;
+}
         p=x+1; /* string to be searched for */
         while (1)
             {
             edread(y,line++);
-            if (empty_line(y+1,c2)) return(1);
+            if (empty_line(y+1,c2)) { return(1);
+}
             q=strstr(y,p);
-            if (q==NULL) i=-1;
-            else i=q-y+2;
-            k=strlen(y)-1; while (k>0 && y[k]==' ') --k;
+            if (q==NULL) { i=-1;
+            } else { i=q-y+2;
+}
+            k=strlen(y)-1; while (k>0 && y[k]==' ') { --k;
+}
             k+=2;
-            if (i>0) muste_sprintf(sbuf,"%4d",i); else strcpy(sbuf,"   -");
+            if (i>0) { muste_sprintf(sbuf,"%4d",i); } else { strcpy(sbuf,"   -");
+}
             edwrite(sbuf,line-1,k);
             }
         return(1);
@@ -2279,7 +2561,8 @@ extern char **specs;
 
 static num egy_gcd(num a, num b)
     {
-    if (b==0) return(a);
+    if (b==0) { return(a);
+}
     return(egy_gcd(b,a%b));
     }
 
@@ -2299,7 +2582,8 @@ void fill(num gx,num gy,num *prx,num *pry,int n,int i,int m)
     int hh;
     int d,hmin;
 
-    if (lopeta) return;
+    if (lopeta) { return;
+}
     hmin=0; d=0;
     ++count;
     if (count>100000)
@@ -2325,51 +2609,59 @@ void fill(num gx,num gy,num *prx,num *pry,int n,int i,int m)
                     if (aaa[s]<d) { hmin=s; d=aaa[s]; }
                     }
                 bb[h]=d; aaa[hmin]=MAXJ;
-                if (h>0 && d==bb[h-1]) break;
+                if (h>0 && d==bb[h-1]) { break;
+}
                 }
 
             if (h==n)
                 {
                 kelpaa=0;
                 sum=0.0;
-                for (h=n-1; h>=0; --h) // parempi tarkkuus?
+                for (h=n-1; h>=0; --h) { // parempi tarkkuus?
                     sum+=(double)1.0/(double)bb[h];
-                if(fabs(sum-sum0)/sum0<1e-15) kelpaa=1;
+}
+                if(fabs(sum-sum0)/sum0<1e-15) { kelpaa=1;
+}
 // kelpaa=1;
                 if (save && kelpaa && d<=max_term)
                     {
                     for (h=0; h<n; ++h)
                         {
                         fprintf(list,"%u",bb[h]);
-                        if (h==n-1) fprintf(list,"\n");
-                        else fprintf(list," ");
+                        if (h==n-1) { fprintf(list,"\n");
+                        } else { fprintf(list," ");
+}
                         }
                     }
                 if (d<=minj && kelpaa)
                     {
 //                  minj=d;
 
-                    if (d==minj) // 12.1.2005
+                    if (d==minj) { // 12.1.2005
                         for (h=n-2; h>=0; --h)
                             {
                             if (bb[h]<cc[h])
                                 {
-                                for (hh=h; hh>=0; --hh)
+                                for (hh=h; hh>=0; --hh) {
                                     cc[hh]=bb[hh];
+}
                                 break;
                                 }
-                            else if (bb[h]>cc[h]) break;
+                            else if (bb[h]>cc[h]) { break;
+}
                             }
-                    else
+                    } else
                         {
 
-                        for (h=0; h<n; ++h) cc[h]=bb[h];
+                        for (h=0; h<n; ++h) { cc[h]=bb[h];
+}
 
                         s=muste_sprintf(sbuf,"\n");
                         for (h=0; h<n; ++h)
                             {
                             s+=muste_sprintf(sbuf+s,"1/%u",cc[h]);
-                            if (h<n-1) s+=muste_sprintf(sbuf+s,"+");
+                            if (h<n-1) { s+=muste_sprintf(sbuf+s,"+");
+}
                             }
                         sur_print(sbuf);
                         }
@@ -2379,11 +2671,14 @@ void fill(num gx,num gy,num *prx,num *pry,int n,int i,int m)
             }
         return;
         }
-    if (gx==0) return;
+    if (gx==0) { return;
+}
     j=(gy+gx-1)/gx;
     k=j;
-    if (k<m) k=m;
-    if (k<nmin) k=nmin;
+    if (k<m) { k=m;
+}
+    if (k<nmin) { k=nmin;
+}
 
     while (k<=j*(n-i) && k<=nmax)
         {
@@ -2393,7 +2688,8 @@ void fill(num gx,num gy,num *prx,num *pry,int n,int i,int m)
         d=egy_gcd(cx,cy);
         cx=cx/d; cy=cy/d;
         fill(cx,cy,prx,pry,n,i+1,k+1);
-        if (lopeta) break; // 22.1.2005
+        if (lopeta) { break; // 22.1.2005
+}
         ++k;
         }
     }
@@ -2418,7 +2714,8 @@ static void egypt()
     save=0;
     brief=0;
 
-    i=spec_init(r1+r-1); if (i<0) return;
+    i=spec_init(r1+r-1); if (i<0) { return;
+}
     muste_sprintf(sbuf,"\n%s as Egyptian fraction:   ",word[1]);
     sur_print(sbuf);
     ++scroll_line; // display one step downwards!
@@ -2443,18 +2740,22 @@ static void egypt()
     nterms=atoi(word[2]);
 
     nmin=1;
-    i=spfind("NMIN"); if (i>=0) nmin=atoi(spb[i]);
+    i=spfind("NMIN"); if (i>=0) { nmin=atoi(spb[i]);
+}
     nmax=2147483647;
-    i=spfind("NMAX"); if (i>=0) nmax=atoi(spb[i]);
+    i=spfind("NMAX"); if (i>=0) { nmax=atoi(spb[i]);
+}
     minj=MAXJ;
-    for (i=0; i<nterms; ++i) cc[i]=MAXJ;
+    for (i=0; i<nterms; ++i) { cc[i]=MAXJ;
+}
 
     i=spfind("SAVE");
     if (i>=0)
         {
         strcpy(x,spb[i]); i=split(x,w,2);
         strcpy(name,w[0]);
-        max_term=MAXJ; if (i==2) max_term=atol(w[1]);
+        max_term=MAXJ; if (i==2) { max_term=atol(w[1]);
+}
 
         list=muste_fopen(name,"wt");
         fprintf(list,"Denominators of Egyptian fractions for %s:\n",
@@ -2462,19 +2763,21 @@ static void egypt()
         save=1;
         }
     i=spfind("SHORT"); // 14.1.2005
-    if (i>=0) brief=atoi(spb[i]);
+    if (i>=0) { brief=atoi(spb[i]);
+}
 
     fill(goal1,goal2,terms0,terms1,nterms,0,2);
 
-    if (minj==MAXJ)
+    if (minj==MAXJ) {
         muste_sprintf(sbuf,"No solution found!");
-    else
+    } else
         {
         if (brief)
             {
             s=0;
-            for (h=0; h<nterms; ++h)
+            for (h=0; h<nterms; ++h) {
                 s+=muste_sprintf(sbuf+s,"%u ",cc[h]);
+}
             }
         else
             {
@@ -2482,24 +2785,29 @@ static void egypt()
             for (h=0; h<nterms; ++h)
                 {
                 s+=muste_sprintf(sbuf+s,"1/%u",cc[h]);
-                if (h<nterms-1) s+=muste_sprintf(sbuf+s,"+");
+                if (h<nterms-1) { s+=muste_sprintf(sbuf+s,"+");
+}
                 }
             }
         }
-    if (lopeta==1) strcat(sbuf," ???");
+    if (lopeta==1) { strcat(sbuf," ???");
+}
     --scroll_line;
     j=r1+r-1;
     if (g>3)
         {
         j=edline2(word[3],1,0);
-        if (j==0) j=r1+r-1;
+        if (j==0) { j=r1+r-1;
+}
         }
     if (j==r1+r-1)
         {
         edread(x,j);
-        h=ed1-1; while(x[h]==' ') x[h--]=EOS;
+        h=ed1-1; while(x[h]==' ') { x[h--]=EOS;
+}
         p=strstr(x," /");
-        if (p!=NULL) *p=EOS;
+        if (p!=NULL) { *p=EOS;
+}
         strcat(x," / ");
         strcat(x,sbuf);
         edwrite(space,j,1);
@@ -2510,7 +2818,8 @@ static void egypt()
         edwrite(space,j,1);
         edwrite(sbuf,j,1);
         }
-    if (save) muste_fclose(list);
+    if (save) { muste_fclose(list);
+}
     return;
     }
 

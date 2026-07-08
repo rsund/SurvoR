@@ -107,7 +107,8 @@ static int tutch_touch(void);
 static void tutname(char file[],char name[])
         {
         *file=EOS;
-        if (!muste_is_path(name)) strcat(file,edisk);
+        if (!muste_is_path(name)) { strcat(file,edisk);
+}
         strcat(file,name);
         muste_append_path(file,".TUT"); // RS CHA 18.10.2013
 //        if (strchr(name,'.')==NULL) strcat(file,".TUT");
@@ -117,7 +118,8 @@ static int tutopen(char name[],char mode[])
         {
         tutname(etufile,name);
         tutor=muste_fopen(etufile,mode);
-        if (tutor==NULL) return(0);
+        if (tutor==NULL) { return(0);
+}
         return(1);
         }
 
@@ -125,7 +127,8 @@ static void read_tutword(char s[])
         {
         int i=0,m;
 
-        while ((m=getc(tutor))!='@') s[i++]=m; s[i]=EOS;
+        while ((m=getc(tutor))!='@') { s[i++]=m; 
+}s[i]=EOS;
         }
 
 static void tutsave(int m)
@@ -153,7 +156,8 @@ static int headline_touch()
         pvmaika(aika);
         sur_locate(1,1);
         if (ntut==0) { PR_EUDL; } else { PR_EIN2; }  /* 28.11.92 */
-        dispm2='0'+ntut; if (ntut==0) dispm2=' ';
+        dispm2='0'+ntut; if (ntut==0) { dispm2=' ';
+}
         muste_sprintf(sbuf,"%c%c%4u%3u SURVO TOUCH MODE   ",pref,dispm2,c1+c-1,c1); sur_print(sbuf);
         k=c3-72;
         muste_sprintf(sbuf,"%s     %.5s   %*.*s%7d%5d ",aika,mode[s],k,k,space,r2,c2); sur_print(sbuf);
@@ -174,8 +178,10 @@ static int disp_touch()
 
         CLS;
         headline_touch();
-        lev=c3; if (c2-c1+1<c3) lev=c2-c1+1;
-        for (i=0; i<r3; ++i) displine(r1+i,lev);
+        lev=c3; if (c2-c1+1<c3) { lev=c2-c1+1;
+}
+        for (i=0; i<r3; ++i) { displine(r1+i,lev);
+}
         touch_res("");
         cursor(r,c);
         return(1);
@@ -191,7 +197,8 @@ static int nextkey_touch()
 // RS REM        sur_flush_input();
         while (1)
             {
-            if (sur_kbhit()) break;
+            if (sur_kbhit()) { break;
+}
             time(&time2);
             if (difftime(time2,time1)>0.5)
                 {
@@ -336,22 +343,27 @@ static int nextch_touch()
                   case T_DISP: tdisp=1-tdisp; break;
                     }
                 }
-            if (chain[nch]=='1') special=1; else special=0;
+            if (chain[nch]=='1') { special=1; } else { special=0;
+}
             nch+=2;
             m=(signed char)chain[nch-1];
-            if (m<0) m=256+m;
+            if (m<0) { m=256+m;
+}
             return(m);
             }
 
         if (etu==2)
             {
             m=tutch_touch();           
-            while (m==255 || m==-1) m=tutch_touch();
-            if (m!=0) return(m);
+            while (m==255 || m==-1) { m=tutch_touch();
+}
+            if (m!=0) { return(m);
+}
             }
         if (etu==1)
             {
-            m=nextkey_touch(); if (wait_save) save_wait(m); tutsave(m); return(m);
+            m=nextkey_touch(); if (wait_save) { save_wait(m); 
+}tutsave(m); return(m);
             }
          m=nextkey_touch(); ;         
         return (m);
@@ -367,7 +379,8 @@ static void press_key(int m)
         if (etu1==1) { Wdisp(); return; }
         k=sur_wait(1000L*tut_wait_c,Wdisp,1);
  
-        if (k) ch=nextkey_touch(); else ch=m;  // piti painaa kahdesti!!??
+        if (k) { ch=nextkey_touch(); } else { ch=m;  // piti painaa kahdesti!!??
+}
 //        ch=m; // RS REM sur_flush_input();
         
 //Rprintf("\nm: %d,ch: %d, k: %d",m,ch,k);        
@@ -376,7 +389,8 @@ static void press_key(int m)
             if (ch==CODE_HELP) { etu2=0; ch=m; break; }
             BEEP;
             k=sur_wait(1000L*tut_wait_c,Wdisp,1);
-            if (k) ch=nextkey_touch(); else ch=m;
+            if (k) { ch=nextkey_touch(); } else { ch=m;
+}
 //Rprintf("\nch: %d",ch);            
             }
         special=spec;
@@ -410,7 +424,8 @@ static void tut_special_touch()
                 prompt("Control word ? ",sana,64); // RS CHA FIXME? sprompt -> prompt
                 if (*sana=='X') { *sana=(char)TUT_EFFECTS_OFF;
                                   sana[1]=EOS; muste_fseek(tutor,-2L,1); }
-                for (i=0; i<strlen(sana); ++i) tutsave((int)sana[i]);
+                for (i=0; i<strlen(sana); ++i) { tutsave((int)sana[i]);
+}
                 }
 
             cursor(r3+1,1); ERASE; PR_ENRM;
@@ -423,9 +438,10 @@ static void tut_special_touch()
                 {
               case 'W':
                 read_tutword(sana);
-                if (etu1>1 && etu2!=2)
+                if (etu1>1 && etu2!=2) {
                     sur_wait((long)(5*tut_wait_c)*atoi(sana)*etu1,Wdisp,1);
-                else Wdisp();
+                } else { Wdisp();
+}
                 break;
               case 'L':
                 read_tutword(sana);
@@ -434,7 +450,8 @@ static void tut_special_touch()
                 break;
               case 's':
                 read_tutword(sana);
-                if (etu1>1) etu1=atoi(sana);
+                if (etu1>1) { etu1=atoi(sana);
+}
                 break;
               case 'D':
                 read_tutword(sana);
@@ -475,12 +492,14 @@ static int tutch_touch()
         char nimi[16];
 
         m=getc(tutor);
-        while (m==TUT_COMMENT_CODE) m=getc(tutor);
+        while (m==TUT_COMMENT_CODE) { m=getc(tutor);
+}
         if (m==10) { m=13; muste_fixme("\nFIXME: Check LF in sucro!!!"); } // RS 17.11.2013
         if (m==CODE_PRE)
             {
             ch=getc(tutor); ungetc(ch,tutor);
-            if (ch=='T') tut_special_code=1;
+            if (ch=='T') { tut_special_code=1;
+}
             }
         if (!feof(tutor))
             {
@@ -489,17 +508,21 @@ static int tutch_touch()
                 ch=sur_getch(); // nextkey_touch();
                 switch (ch)
                     {
-                  case '+': --etu1; --etu1; if (etu1<=0) etu1=1; break;
-                  case '-': ++etu1; ++etu1; if (etu1>40) etu1=40; break;
+                  case '+': --etu1; --etu1; if (etu1<=0) { etu1=1; 
+}break;
+                  case '-': ++etu1; ++etu1; if (etu1>40) { etu1=40; 
+}break;
                   case '.': etu=0; muste_fclose(tutor); return(0);
                   case CODE_HELP:
-                            etu2=2; if (etu1<2) etu1=2; break;
+                            etu2=2; if (etu1<2) { etu1=2; 
+}break;
 
                   default: break; // RS CHA FIXME  while(!sur_kbhit()) ; getck(); break;
                     }
                 }
             special=0;
-            if (etu1>1 && etu2!=2) sur_wait((long)tut_wait_c*etu1,nop,0);
+            if (etu1>1 && etu2!=2) { sur_wait((long)tut_wait_c*etu1,nop,0);
+}
             switch (m)
                 {
               case CODE_EXIT:
@@ -537,14 +560,17 @@ static int tutch_touch()
                 }
             if (etu2>0)
                 {
-                if (etu2==2 && tut_special_code) return(m);
+                if (etu2==2 && tut_special_code) { return(m);
+}
                 CURSOR_OFF; cursor(r3+1,c3-16);
-             if (etu2==1) sur_print("      "); else { PR_EBLD; sur_print("Press "); }
+             if (etu2==1) { sur_print("      "); } else { PR_EBLD; sur_print("Press "); }
                 PR_EINV; label(m,nimi); muste_sprintf(sbuf,"%s",nimi); sur_print(sbuf);
                 PR_ENRM; cursor(r,c); CURSOR_ON;
 //Rprintf("\npress %s, etu2: %d, etu1: %d",sbuf,etu2,etu1);                                
-                if (etu2==1) { if (etu1>1) sur_wait((long)tut_wait_c*etu1,Wdisp,0); }
-                else press_key(m);
+                if (etu2==1) { if (etu1>1) { sur_wait((long)tut_wait_c*etu1,Wdisp,0); 
+}}
+                else { press_key(m);
+}
                 CURSOR_OFF; cursor(r3+1,c3-16);
             /*  Rprintf("%s","              "); */
                 sur_print("              ");
@@ -560,7 +586,8 @@ static int touch_res(char riv[])
         {
         static char alarivi[LLENGTH];
 
-        if (*riv!=EOS) strcpy(alarivi,riv);
+        if (*riv!=EOS) { strcpy(alarivi,riv);
+}
    /*   if (s==2 && R_ind!=1) return;     */
         sur_locate(r3+2,1); ERASE;
         if (prompts)
@@ -591,8 +618,10 @@ static void seek_line_end()
 
         edread(x,r1+r-1);
         i=c2;
-        while (i>0 && x[i]==' ') --i;
-        if (i<c2) ++i;
+        while (i>0 && x[i]==' ') { --i;
+}
+        if (i<c2) { ++i;
+}
         c1=1; c=i;
         col_display();
         }
@@ -601,12 +630,14 @@ static int clear_res()
         {
         t=0;
 // Rprintf("\nprompts=%d s=%d|",prompts,s); getch();
-        if (s==2) return(1);
+        if (s==2) { return(1);
+}
         *trivi=EOS;
-        if (prompts)
+        if (prompts) {
             touch_res("TOUCH MODE  (To stop, press ENTER)");
-        else
+        } else {
             touch_res("");
+}
         return(1);
         }
 
@@ -673,9 +704,9 @@ static void stop_res()
         {
         s=0; r=ar; c=ac;
         if (tdisp==0) { tdisp=1; disp_touch(); }
-        if (t==0)
+        if (t==0) {
             strcpy(tsana,"0");
-        else
+        } else
             {
             eval();
             fconv(opnd[0],oform,tsana);
@@ -721,7 +752,8 @@ static int touch()
               case ')':
               case '/':
               case '*':
-                if (z[j1]=='+' && take_also_plus) --j1; // 17.10.2001
+                if (z[j1]=='+' && take_also_plus) { --j1; // 17.10.2001
+}
                 if (s==2 && j==j1)
                     {
                     if (R_ind)
@@ -769,12 +801,16 @@ static int touch()
                 }
             }
 
-        if (j1>j2) return(-1);
+        if (j1>j2) { return(-1);
+}
         muste_fieldcopy(tsana,z+j1,j2-j1+1); tsana[j2-j1+1]=EOS;
-        if (r>r3 || r<1 || tdisp==0) return(1);
+        if (r>r3 || r<1 || tdisp==0) { return(1);
+}
 /*      if (j1-jmin-c1+2<1 || j2-jmin-c1+2>c3) return(1);     */
-        if (j2-jmin-c1+2>c3) return(1);
-        if ((int)(j1-jmin-c1+2)<1) return(1);   /* miksi (int) tarvitaan??? 24.7.88 */
+        if (j2-jmin-c1+2>c3) { return(1);
+}
+        if ((int)(j1-jmin-c1+2)<1) { return(1);   /* miksi (int) tarvitaan??? 24.7.88 */
+}
 
         write_string(tsana,j2-j1+1,'7',r+1,8+j1-jmin-c1+2);
         return(1);
@@ -803,7 +839,8 @@ static void comp(int m)
         switch (t)
             {
           case 0:
-            if (v==2) opnd[0]=-opnd[0];
+            if (v==2) { opnd[0]=-opnd[0];
+}
             t=1;
             break;
           case 1:
@@ -849,16 +886,19 @@ static void print_res(int m)    /* m on = tai ! tai ; */
             }
         else
             {
-            if (t==0) return;
+            if (t==0) { return;
+}
             fconv(opnd[0],oform,tsana);
             len=strlen(tsana);
             p=strchr(tsana,'.');
-            if (p==NULL) piste=len; else piste=p-tsana;
+            if (p==NULL) { piste=len; } else { piste=p-tsana;
+}
             }
 
         if (m=='!' || m==';')
             {
-            if (m=='!') *tut_info=EOS;
+            if (m=='!') { *tut_info=EOS;
+}
             if (strlen(tut_info)+strlen(tsana)+1>LLENGTH-1)
                 {
                 PR_EINV;
@@ -870,8 +910,10 @@ static void print_res(int m)    /* m on = tai ! tai ; */
             }
         jmin=(r1+r-2)*ed1+1; jmax=jmin+ed1-2;
         i=0; j=j0=jmin+c1+c-1-piste;
-        if (jmin+c1+c-1<=piste) return; /* 29.5.89 liikaa kentÑn alussa */
-        if (j<jmin) j=jmin;
+        if (jmin+c1+c-1<=piste) { return; /* 29.5.89 liikaa kentÑn alussa */
+}
+        if (j<jmin) { j=jmin;
+}
 
 
         while ( i<len && j<=jmax )
@@ -885,14 +927,16 @@ static void print_res(int m)    /* m on = tai ! tai ; */
         j=j2;
         while ( j<=jmax && z[j]!=' ' ) { z[j]=' '; ++j; } j2=j-1;
 
-        if ((int)(j1-jmin+1)<c1) j1=jmin+c1-1;          /* (int) 24.7.88 */
-        if ((int)(j2-jmin+1)>c1+c3-1) j2=jmin-1+c1+c3-1;
+        if ((int)(j1-jmin+1)<c1) { j1=jmin+c1-1;          /* (int) 24.7.88 */
+}
+        if ((int)(j2-jmin+1)>c1+c3-1) { j2=jmin-1+c1+c3-1;
+}
 
      if (r<=r3 && r>0 && c<=c3 && c>0 && tdisp==1 && j1<=j2)
         {
-        if (ibm)
+        if (ibm) {
             write_string(z+j1,j2-j1+1,'1',r+1,8+j1-jmin-c1+2);
-        else
+        } else
             {
             PR_EBLD;
             cursor(r,j1-jmin-c1+2);
@@ -909,7 +953,8 @@ static void print_res(int m)    /* m on = tai ! tai ; */
 
 static void disp_res()
         {
-        if (s==2) return;
+        if (s==2) { return;
+}
         fconv(opnd[0],oform,trivi);
         touch_res(trivi);
         }
@@ -917,7 +962,8 @@ static void disp_res()
 
 static int touch_data_close()
         {
-        if (!tch_open) return(1);
+        if (!tch_open) { return(1);
+}
         muste_fclose(touchdata);
         if (tch_open==1 && del_permitted)
              {
@@ -940,8 +986,8 @@ static int touch_data_open(char *tsana)
         if (!muste_is_path(tsana)) { strcpy(tch_data,edisk); strcat(tch_data,tsana); }
 
         touchdata=muste_fopen(tch_data,"r");
-        if (touchdata==NULL) del_permitted=1;
-        else { muste_fclose(touchdata); del_permitted=0; }
+        if (touchdata==NULL) { del_permitted=1;
+        } else { muste_fclose(touchdata); del_permitted=0; }
 
         touchdata=muste_fopen(tch_data,"at+");
         if (touchdata==NULL)
@@ -983,7 +1029,8 @@ static int collect_lines()
         int j,col,k;
         char *p;
 
-        if (collect==2) return(1);
+        if (collect==2) { return(1);
+}
         j=r1+r-1; col=c1+c-1;
         edread(x,j);
         if (!collect && empty_line(x+1,c2))
@@ -995,17 +1042,20 @@ static int collect_lines()
         else if (collect==0)
             {
             k=collect_open("wt");
-            if (k<0) return(-1);
+            if (k<0) { return(-1);
+}
             collect=1;
             col_open=1;
             }
         edread(x,j);
         p=x+col;
         fprintf(collect_file,"%s\n",p);
-        k=strlen(p); while (p[k-1]==' ') p[--k]=EOS;
+        k=strlen(p); while (p[k-1]==' ') { p[--k]=EOS;
+}
         PR_EINV; muste_sprintf(sbuf,"%.*s",c3-c+1,p); sur_print(sbuf); PR_ENRM;
         if (zs[j]==0) { *x=EOS; strncat(x,space,c2-col); }
-        else edread(x,zs[j]);
+        else { edread(x,zs[j]);
+}
         fprintf(collect_file,"%s\n",x+col);
         ++n_lines;
         muste_sprintf(sbuf,"Collecting lines: %d   (Print collected lines by `='. Exit by ENTER)",
@@ -1019,18 +1069,23 @@ static int collect_results() /* by '=' */
         int i,j,col,k;
         char x[LLENGTH],xs[LLENGTH];
 
-        if (col_open) muste_fclose(collect_file);
-        i=collect_open("rt"); if (i<0) return(-1);
+        if (col_open) { muste_fclose(collect_file);
+}
+        i=collect_open("rt"); if (i<0) { return(-1);
+}
         j=r1+r-1; col=c1+c-1;
         while (!feof(collect_file))
             {
             muste_fgets(x,LLENGTH,collect_file);
             k=strlen(x)-1; x[k]=EOS;
-            if (feof(collect_file)) break;
-            while (x[k-1]==' ') x[--k]=EOS;
+            if (feof(collect_file)) { break;
+}
+            while (x[k-1]==' ') { x[--k]=EOS;
+}
             edwrite(x,j,col);
             muste_fgets(x,LLENGTH,collect_file);
-            if (zs[j]==0) shadow_create(j);
+            if (zs[j]==0) { shadow_create(j);
+}
             edread(xs,zs[j]);
             muste_fieldcopy(xs+col,x,k);
             edwrite(xs,zs[j],0);
@@ -1055,7 +1110,8 @@ static int print_words() // 25.11.2009
     while (1)
         {
         p=strchr(trivi+1,'+');
-        if (p==NULL) break;
+        if (p==NULL) { break;
+}
         *p=' ';
         }
 
@@ -1081,7 +1137,8 @@ static void not_enough_space()
 static int waraa_tilat()
         {
 
-        if (wr!=NULL) return(1);
+        if (wr!=NULL) { return(1);
+}
         nmax=WMAX;
         wr=(int *)muste_malloc(nmax*sizeof(int));
         if (wr==NULL) { not_enough_space(); return(-1); }
@@ -1108,7 +1165,8 @@ static int write_worm()
         int j,k;
         char sch;
 
-        --wf; if (wf<0) wf=wn-1;
+        --wf; if (wf<0) { wf=wn-1;
+}
         ii=wf;
         for (i=wn-1; i>=0; --i)
             {
@@ -1128,14 +1186,17 @@ static int write_worm()
                 if (zs[j]==0)
                     {
                     k=shadow_create(j);
-                    if (k<0) return(-1);
+                    if (k<0) { return(-1);
+}
                     }
                 *(z+(zs[j]-1)*ed1+wc[ii])=sch;
                 }
-            --ii; if (ii<0) ii=wn-1;
+            --ii; if (ii<0) { ii=wn-1;
+}
             }
         disp_touch();
-        ++wf; if (wf==wn) wf=0;  /* 21.8.1994 */
+        ++wf; if (wf==wn) { wf=0;  /* 21.8.1994 */
+}
         return(1);
         }
 
@@ -1172,18 +1233,21 @@ static int worm_mode(int vaihe,int m) /* int m;  edell. nappi */
                 wn=0;
                 worm=1;
                 wprevr=wprevc=-1;
-                if (i>0) touch_res("Define a worm by arrow keys! Stop definition by alt-F2!");
+                if (i>0) { touch_res("Define a worm by arrow keys! Stop definition by alt-F2!");
+}
                 return(i);
               case 1:
                 worm=2;
                 wf=0;
-           if (prompts)
+           if (prompts) {
            touch_res("Move the worm by arrow keys! Print by '='! Cancel by alt-F2! Reverse by R!");
+}
                 return(1);
               case 2:
                 worm=0;
                 disp_touch();
-                if (*trivi) touch_res(trivi); else clear_res();
+                if (*trivi) { touch_res(trivi); } else { clear_res();
+}
                 return(1);
                 }
             }
@@ -1211,13 +1275,16 @@ static int worm_mode(int vaihe,int m) /* int m;  edell. nappi */
                 }
             wrr=r1+r-1;
             wcc=c1+c-1;
-            if (wrr==wprevr && wcc==wprevc) break;
+            if (wrr==wprevr && wcc==wprevc) { break;
+}
             wprevr=wrr; wprevc=wcc;
             wr[wn]=wrr; wc[wn]=wcc;
             wch[wn]=*(z+(wrr-1)*ed1+wcc);
-            if (zs[wrr]==0) wsh[wn]=' ';
-            else wsh[wn]=*(z+(zs[wrr]-1)*ed1+wcc);
-            if (!worm_shad) write_string(&wch[wn],1,'8',r+1,c+8);
+            if (zs[wrr]==0) { wsh[wn]=' ';
+            } else { wsh[wn]=*(z+(zs[wrr]-1)*ed1+wcc);
+}
+            if (!worm_shad) { write_string(&wch[wn],1,'8',r+1,c+8);
+}
             ++wn;
             break;
           case 2:
@@ -1227,9 +1294,11 @@ static int worm_mode(int vaihe,int m) /* int m;  edell. nappi */
             if (m=='R')
                 {
                 reverse_worm();
-                --wf; if (wf<0) wf=wn-1;
+                --wf; if (wf<0) { wf=wn-1;
+}
                 }
-            else if (wrr==wprevr && wcc==wprevc) break;
+            else if (wrr==wprevr && wcc==wprevc) { break;
+}
             wprevr=wrr; wprevc=wcc;
             wpr=wr[wf]; wpc=wc[wf];
             wr[wf]=wrr; wc[wf]=wcc;
@@ -1238,9 +1307,12 @@ static int worm_mode(int vaihe,int m) /* int m;  edell. nappi */
                 {
                 rr=wr[ii]-r1+1;  /* testaa rajat */
                 cc=wc[ii]-c1+1;
-                if (worm_shad) sh=wsh[i]; else sh='8';
-                if (rr<r3+1) write_string(&wch[i],1,sh,rr+1,cc+8);
-                --ii; if (ii<0) ii=wn-1;
+                if (worm_shad) { sh=wsh[i]; } else { sh='8';
+}
+                if (rr<r3+1) { write_string(&wch[i],1,sh,rr+1,cc+8);
+}
+                --ii; if (ii<0) { ii=wn-1;
+}
                 }
             if (m!='R')
                 {
@@ -1248,12 +1320,16 @@ static int worm_mode(int vaihe,int m) /* int m;  edell. nappi */
                 cc=wpc-c1+1;
                 ch=*(z+(wpr-1)*ed1+wpc);
                 if (erase_by_worm) { ch=' '; *(z+(wpr-1)*ed1+wpc)=' '; }
-                if (erase_temporarily) ch=' ';
-                if (zs[wpr]==0) sh=' ';
-                else sh=*(z+(zs[wpr]-1)*ed1+wpc);
-                if (rr<r3+1) write_string(&ch,1,sh,rr+1,cc+8);
+                if (erase_temporarily) { ch=' ';
+}
+                if (zs[wpr]==0) { sh=' ';
+                } else { sh=*(z+(zs[wpr]-1)*ed1+wpc);
+}
+                if (rr<r3+1) { write_string(&ch,1,sh,rr+1,cc+8);
+}
                 }
-            ++wf; if (wf==wn) wf=0;
+            ++wf; if (wf==wn) { wf=0;
+}
             break;
             }
         return(1);
@@ -1269,7 +1345,8 @@ static void tfilerr()
 static void tfilename(char chainfile[],char tchain[])
         {
         *chainfile=EOS;
-        if (!muste_is_path(tchain)) strcat(chainfile,edisk);
+        if (!muste_is_path(tchain)) { strcat(chainfile,edisk);
+}
         strcat(chainfile,tchain);
         muste_append_path(chainfile,".TCH"); // RS CHA 18.10.2013
 //        if (strchr(tchain+strlen(tchain)-4,'.')==NULL) strcat(chainfile,".TCH");
@@ -1283,13 +1360,15 @@ static int tsave(char chain[],char tchain[])
 
         tfilename(chainfile,tchain);
         file=muste_fopen(chainfile,"wb");
-        if (file==NULL) return(0);
+        if (file==NULL) { return(0);
+}
 
 // RS DEBUG        i=0; while (chain[i]!='\0') Rprintf("\n%d",(unsigned int)chain[i++]);
         
         
         i=0;
-        while (chain[i]!='\0') putc((int)chain[i++],file);
+        while (chain[i]!='\0') { putc((int)chain[i++],file);
+}
         putc('\0',file);
         i=1;
         if (ferror(file)) { tfilerr(); i=-1; }
@@ -1305,9 +1384,11 @@ static int tload(char chain[],char tchain[])
 
         tfilename(chainfile,tchain);
         file=muste_fopen(chainfile,"rb");
-        if (file==NULL) return(0);
+        if (file==NULL) { return(0);
+}
         i=0;
-        while (!feof(file)) chain[i++]=(char)getc(file);
+        while (!feof(file)) { chain[i++]=(char)getc(file);
+}
         if (ferror(file)) { tfilerr(); i=-1; }
         muste_fclose(file);
         return(i-1);
@@ -1326,14 +1407,16 @@ static void ch_save(char type,int m)
 static void save_word(char word[])
         {
         int i;
-        for (i=0; i<strlen(word); ++i) chain[nch++]=word[i];
+        for (i=0; i<strlen(word); ++i) { chain[nch++]=word[i];
+}
         chain[nch++]='@';
         }
 
 static void load_word(char word[])
         {
         int i=0;
-        while (chain[nch]!='@') word[i++]=chain[nch++];
+        while (chain[nch]!='@') { word[i++]=chain[nch++];
+}
         word[i]=EOS; ++nch;
         }          
 
@@ -1365,13 +1448,15 @@ static int compf(char f[])
         if (strncmp(F,"ABS",3)==0)
               { opnd[0]=fabs(opnd[0]); return(1); }
         if (strncmp(F,"SGN",3)==0)
-              { if (opnd[0]>0.0) opnd[0]=1.0;
-                else if (opnd[0]<0.0) opnd[0]=-1.0;
+              { if (opnd[0]>0.0) { opnd[0]=1.0;
+                } else if (opnd[0]<0.0) { opnd[0]=-1.0;
+}
                 return(1);
               }
         if (strncmp(F,"INT",3)==0)
-              { if (opnd[0]>0.0) opnd[0]=1.0;
-                else opnd[0]=0.0;
+              { if (opnd[0]>0.0) { opnd[0]=1.0;
+                } else { opnd[0]=0.0;
+}
                 return(1);
               }
         if (strncmp(F,"RND",3)==0)
@@ -1386,7 +1471,8 @@ static int compf(char f[])
 // RS NYI FIXME        i=f_tiedosto(f,dmemory,0,&opnd[0]);
                              /* 0= n tuntematon */
         dmemory[0]=mvara;
-        if (i>0) return(1);
+        if (i>0) { return(1);
+}
 
         muste_sprintf(sbuf,"Error in function %s!",f); sur_print(sbuf);
         WAIT; return(-1);
@@ -1398,7 +1484,8 @@ static void funct()
 
         if (s!=2)
             {
-            if (t==0) return;
+            if (t==0) { return;
+}
             if (f_ind==0)
                 {
                 fr=r; fc=c; f_ind=s+1; s=0;
@@ -1406,10 +1493,12 @@ static void funct()
                 return;
                 }
 
-            k=touch(); if (k<0) *tsana=EOS;
+            k=touch(); if (k<0) { *tsana=EOS;
+}
             r=fr; c=fc; cursor(r,c); s=f_ind-1; f_ind=0;
 
-            if (s==1) save_word(tsana);
+            if (s==1) { save_word(tsana);
+}
             k=compf(tsana); if (k<0) { s=0; ar=r; ac=c; stop_res(); return; }
             fconv(opnd[0],"",tsana);
             strcpy(trivi,tsana);
@@ -1432,7 +1521,8 @@ static void key_M()
 
         if (s!=2)
             {
-            if (t==0) return;
+            if (t==0) { return;
+}
             if (M_ind==0)
                 {
                 fr=r; fc=c; M_ind=s+1; s=0;
@@ -1444,7 +1534,8 @@ static void key_M()
                 }
 
 
-            k=touch(); if (k<0) k=0; else k=atoi(tsana);
+            k=touch(); if (k<0) { k=0; } else { k=atoi(tsana);
+}
             if (k>=0 && k<NMEMORY)
                 {
                 muste_strncpy(memory[k],memsana,LMEMORY);
@@ -1458,7 +1549,8 @@ static void key_M()
             fconv((double)k,"",tsana); strcat(x,tsana);
             touch_res(x);
 
-            if (s==1) save_word(tsana);
+            if (s==1) { save_word(tsana);
+}
             return;
             }
 
@@ -1490,7 +1582,8 @@ static void touch_memory(int m)
 
         if (s!=2)
             {
-            k=touch(); if (k<0) k=0; else k=atoi(tsana);
+            k=touch(); if (k<0) { k=0; } else { k=atoi(tsana);
+}
             r=fr; c=fc; cursor(r,c); s=K_ind-1; K_ind=0;
 
             if (s==1) { save_word(tsana); ch_save('0',m); }
@@ -1517,17 +1610,19 @@ static void key_F()
                 }
 
 
-            k=touch(); if (k<0) *oform=EOS; else strcpy(oform,tsana);
+            k=touch(); if (k<0) { *oform=EOS; } else { strcpy(oform,tsana);
+}
             r=fr; c=fc; cursor(r,c); s=F_ind-1; F_ind=0;
 
-            if (*oform==EOS)
+            if (*oform==EOS) {
                 touch_res("Free format selected!");
-            else
+            } else
                 {
                 strcpy(x,"Format "); strcat(x,oform); strcat(x," selected!");
                 touch_res(x);
                 }
-            if (s==1) save_word(oform);
+            if (s==1) { save_word(oform);
+}
             return;
 
             }
@@ -1556,7 +1651,8 @@ static void touch_const(int m)
 
         if (s!=2)
             {
-            k=touch(); if (k<0) strcpy(tsana,"0");
+            k=touch(); if (k<0) { strcpy(tsana,"0");
+}
             r=fr; c=fc; cursor(r,c); s=C_ind-1; C_ind=0;
 
             if (s==1) { save_word(tsana); ch_save('0',m); }
@@ -1572,7 +1668,8 @@ static void key_T()
         int k;
         char x[LLENGTH];
 
-        k=touch(); if (k<0) return;
+        k=touch(); if (k<0) { return;
+}
         strcpy(tchain,tsana);
         k=tsave(chain,tchain);
         if (k<=0)
@@ -1590,7 +1687,8 @@ static int key_L()
         int k;
         char x[LLENGTH];
 
-        k=touch(); if (k<0) return(-1);
+        k=touch(); if (k<0) { return(-1);
+}
         strcpy(tchain,tsana);
         k=tload(chain,tchain);
         if (k<=0)
@@ -1631,37 +1729,46 @@ static void std_keys(int m)
                 int k;
                 char x[LLENGTH], x1[LLENGTH];
 
-                if (worm) return;
+                if (worm) { return;
+}
                 if (collect && m=='=') { collect_results(); return; }
-                if (s==1) ch_save('0',m);
-                if (s!=2) key=m;
+                if (s==1) { ch_save('0',m);
+}
+                if (s!=2) { key=m;
+}
                 switch (m)
                     {
                   case '+': v=1;
-                    if (K_ind) touch_memory(m);
-                    else
-                    if (C_ind) touch_const(m);
-                    else {  k=touch(); if (k<0) return; }
+                    if (K_ind) { touch_memory(m);
+                    } else
+                    if (C_ind) { touch_const(m);
+                    } else {  k=touch(); if (k<0) { return; 
+}}
                     comp(m); break;
                   case '-': v=2;
-                    if (K_ind) touch_memory(m);
-                    else
-                    if (C_ind) touch_const(m);
-                    else {  k=touch(); if (k<0) return; }
+                    if (K_ind) { touch_memory(m);
+                    } else
+                    if (C_ind) { touch_const(m);
+                    } else {  k=touch(); if (k<0) { return; 
+}}
                     comp(m); break;
-                  case '*': if (t==0) return;
+                  case '*': if (t==0) { return;
+}
                     v=3;
-                    if (K_ind) touch_memory(m);
-                    else
-                    if (C_ind) touch_const(m);
-                    else {  k=touch(); if (k<0) return; }
+                    if (K_ind) { touch_memory(m);
+                    } else
+                    if (C_ind) { touch_const(m);
+                    } else {  k=touch(); if (k<0) { return; 
+}}
                     comp(m); break;
-                  case '/': if (t==0) return;
+                  case '/': if (t==0) { return;
+}
                     v=4;
-                    if (K_ind) touch_memory(m);
-                    else
-                    if (C_ind) touch_const(m);
-                    else {  k=touch(); if (k<0) return; }
+                    if (K_ind) { touch_memory(m);
+                    } else
+                    if (C_ind) { touch_const(m);
+                    } else {  k=touch(); if (k<0) { return; 
+}}
                     comp(m); break;
                   case '=':
                   case '!':
@@ -1672,7 +1779,8 @@ static void std_keys(int m)
                             break;
                   case 'S': eval(); disp_res();
                             break;
-                  case 'P': if (R_ind) break;
+                  case 'P': if (R_ind) { break;
+}
                             if (P_ind) { P_ind=0; r=pr; c=pc; break; }
                             P_ind=1; pr=r; pc=c; break;
                   case 'R':
@@ -1681,7 +1789,8 @@ printf("\ns=%d R_ind=%d nch=%d\n",s,R_ind,nch); getch();
 */
 
 
-                            if (s==0) break;
+                            if (s==0) { break;
+}
                             if (s==1) { R_ind=1; s=2; R_nch=nch; nch=0; break; }
                   /* s=2 */ if (R_ind==0) { R_ind=2; R_nch=nch; nch=0; break; }
                             if (R_ind==1) { R_ind=1; nch=0; break; }
@@ -1700,32 +1809,39 @@ printf("\ns=%d R_ind=%d nch=%d\n",s,R_ind,nch); getch();
                   case 'U': take_also_plus=1; // 17.10.2001
                   case 'W': k=touch(); if (k<0) { *wsana=EOS; break; }
                             strcpy(wsana,tsana);
-                            if (tch_open) touch_data_save(wsana);
+                            if (tch_open) { touch_data_save(wsana);
+}
                             take_also_plus=0;
                             break;
                   case 'B': *wsana=*(z+ed1*(r1+r-2)+c1+c-1);
                             wsana[1]=EOS;
                             PR_EINV; muste_sprintf(sbuf,"%c",*wsana); sur_print(sbuf); PR_ENRM;
-                            if (tch_open) touch_data_save(wsana);
+                            if (tch_open) { touch_data_save(wsana);
+}
                             break;
                   case 'E': edread(x,r1+r-1);
                             strcpy(wsana,x+c1+c-1);
-                            k=strlen(wsana); while (wsana[k-1]==' ') wsana[--k]=EOS;
+                            k=strlen(wsana); while (wsana[k-1]==' ') { wsana[--k]=EOS;
+}
                             PR_EINV; muste_sprintf(sbuf,"%.*s",c3-c+1,wsana); sur_print(sbuf); PR_ENRM;
-                            if (tch_open) touch_data_save(wsana);
+                            if (tch_open) { touch_data_save(wsana);
+}
                             break;
                   case 'A': edread(x,r1+r-1);
                             *wsana=EOS; strncat(wsana,x+1,c1+c-1);
                             write_string(wsana+c1-1,c,'7',r+1,9);
-                            if (tch_open) touch_data_save(wsana);
+                            if (tch_open) { touch_data_save(wsana);
+}
                             break;
 
-                  case 'D': k=touch(); if (k<0) strcpy(tsana,"TOUCH.TXT");
+                  case 'D': k=touch(); if (k<0) { strcpy(tsana,"TOUCH.TXT");
+}
                             touch_data_open(tsana);
                             break;
 
                   case 'V': k=collect_lines();
-                            if (k<0) return; // RS CHA exit(0);
+                            if (k<0) { return; // RS CHA exit(0);
+}
                             break;
 
                   default: key=' ';
@@ -1749,15 +1865,16 @@ printf("\ns=%d R_ind=%d nch=%d\n",s,R_ind,nch); getch();
                             edread(x,r1+r-1); i=c1+c-2;
                             while (i>10)
                                 {
-                                if (x[i]==' ') break;
+                                if (x[i]==' ') { break;
+}
                                 --i;
                                 }
                             if (i<=10) { BEEP; break; }
                             for (j=i+1; j<=c1+c-2; ++j)
                                 { x1[c1+j-i-1]=x[j]; x[j]=' '; }
                             edwrite(x,r1+r-1,0); edwrite(x1,r1+r,0);
-                            if (r<r3) ++r;
-                            else
+                            if (r<r3) { ++r;
+                            } else
                                 {
                                 ++r1;
                                 SCROLL_UP(1,r3,1);
@@ -1822,17 +1939,20 @@ static void insertl()
                     strcpy(x,"*"); strncat(x,space,c2);
                     edwrite(x,r1+r,0);
                     j=ed2-1;
-                    for (; j>r1+r-1; --j) zs[j+1]=zs[j];
+                    for (; j>r1+r-1; --j) { zs[j+1]=zs[j];
+}
                     zs[r1+r]=0;
                     if (r<r3)
                         {
                         SCROLL_DOWN(r+1,r3,1);
                         displine2(r1+r);
-                        for (j=r1+r+1; j<r1+r3; ++j)
+                        for (j=r1+r+1; j<r1+r3; ++j) {
                             displine(j,0);
+}
                         }
 
-                    if (r<r3) ++r;
+                    if (r<r3) { ++r;
+}
         }
 
 static void deletel()
@@ -1844,13 +1964,15 @@ static void deletel()
                     strcpy(x,"*"); strncat(x,space,c2);
                     edwrite(x,r2,0);
                     l=ed2-1;
-                    for (j=r1+r-1; j<=l; ++j) zs[j]=zs[j+1];
+                    for (j=r1+r-1; j<=l; ++j) { zs[j]=zs[j+1];
+}
                     zs[l+1]=0;
                     if (r<r3)
                         {
                         SCROLL_UP(r,r3,1);
-                        for (j=r1+r-1; j<r1+r3; ++j)
+                        for (j=r1+r-1; j<r1+r3; ++j) {
                             displine(j,0);
+}
                         }
                     displine2(r1+r3-1);
         }
@@ -1884,8 +2006,9 @@ static void erase()
                             }
                         era(j);
                         }
-                    else
+                    else {
                         era(j);
+}
         }
 
 
@@ -1893,14 +2016,18 @@ static int find_right(int c)
         {
         unsigned int i;
         int k, lim;
-        if (s==2) lim=c2-c1; else lim=c3;
+        if (s==2) { lim=c2-c1; } else { lim=c3;
+}
         i=ed1*(r1+r-2)+c1+c-1; k=c;
         while ( z[i]!=' ' && z[i]!=',' && k<lim ) { ++i; ++k; }
-        if (k==lim) return(-1);
+        if (k==lim) { return(-1);
+}
         while ( (z[i]==' ' || z[i]==',') && k<lim ) { ++i; ++k; }
-        if (k==lim) return(-1);
+        if (k==lim) { return(-1);
+}
         while ( z[i]!=' ' && z[i]!=',' && z[i]!='.' && k<lim ) { ++i; ++k; }
-        if (k==lim) return(-1);
+        if (k==lim) { return(-1);
+}
         --k;
         return(k-c);
         }
@@ -1910,16 +2037,20 @@ static int find_down(int r)
         unsigned int i;
         int k, lim, haku=1;
 
-        if (s==2) lim=r2-r1; else lim=r3;
+        if (s==2) { lim=r2-r1; } else { lim=r3;
+}
         i=ed1*(r1+r-1)+c1+c-1; k=r+1;
         while (haku)
             {
             while ( z[i]==' ' &&  k<lim ) { i+=ed1; ++k; }
-            if (z[i]!='.') break;
-            if (strncmp(z+i-c1-c+2,"..........",10)==0) k=lim;
+            if (z[i]!='.') { break;
+}
+            if (strncmp(z+i-c1-c+2,"..........",10)==0) { k=lim;
+}
             break;
             }
-        if (k==lim) return(-1);
+        if (k==lim) { return(-1);
+}
         return(k-r);
         }
 
@@ -1945,28 +2076,34 @@ static void prefix()
             switch(m)
                 {
               case CODE_PRE:
-                if (c<c3) { c=c3; if (c>c2) c=c2; break; }
-                if (c1==c2-c3+1) break;
-                c1+=c3; if (c1>c2-c3+1) c1=c2-c3+1;
+                if (c<c3) { c=c3; if (c>c2) { c=c2; 
+}break; }
+                if (c1==c2-c3+1) { break;
+}
+                c1+=c3; if (c1>c2-c3+1) { c1=c2-c3+1;
+}
                 disp_touch(); break;
               case CODE_RIGHT:
                 k=find_right(c);
                 if (k<0) { BEEP; break; }
                 c+=k;
-                if (s==1)
+                if (s==1) {
                     last_right=k;
+}
                     free_save(m);
                 break;
               case CODE_DOWN:
                 k=find_down(r);
                 if (k<0) { BEEP; break; }
                 r+=k;
-                if (s==1)
+                if (s==1) {
                     last_down=k;
+}
                     free_save(m);
                 break;
               case CODE_EXEC:
-                if (s==0) { if (nch==0) break;
+                if (s==0) { if (nch==0) { break;
+}
                             tdisp=0; touch_run();
                             break;
                           }
@@ -1984,7 +2121,8 @@ static void prefix()
             switch(m)
                 {
               case '0': clear_res();
-                        if (s==1) ch_save('1',ERASE);
+                        if (s==1) { ch_save('1',ERASE);
+}
                         break;
               case 'T': tut_special_touch(); break;
 
@@ -2000,7 +2138,8 @@ static void scat(char *sana,int *pi)
         int i=*pi;
         int len=strlen(sana);
 
-        while (chain[++i]!='@') sana[len++]=chain[i]; sana[len]=EOS;
+        while (chain[++i]!='@') { sana[len++]=chain[i]; 
+}sana[len]=EOS;
         *pi=i;
         }
 
@@ -2010,7 +2149,8 @@ static void cat(char *sana,int i)
         int k;
 
         k=chain[i];
-        if (k==1) return;
+        if (k==1) { return;
+}
         if (k==255) { strcat(sana,"n"); return; }
         muste_sprintf(luku,"%d",k);
         strcat(sana,luku);
@@ -2102,9 +2242,10 @@ static void jatka2(int koodi,char *sana,int *pi)
         i=*pi;
         chain[i++]='1';
         chain[i++]=(unsigned char)koodi;
-        if (*sana=='n') h=255;
-        else if (*sana==EOS) h=1;
-        else h=atoi(sana);
+        if (*sana=='n') { h=255;
+        } else if (*sana==EOS) { h=1;
+        } else { h=atoi(sana);
+}
         chain[i++]=(unsigned char)h;
         *pi=i;
         }
@@ -2117,7 +2258,8 @@ static void jatka3(char *sana,int *pi)
         i=*pi;
         p=sana;
         chain[i++]='0';
-        while (*p) chain[i++]=*p++;
+        while (*p) { chain[i++]=*p++;
+}
         chain[i++]='@';
         *pi=i;
         }
@@ -2189,9 +2331,11 @@ static void tsaveload(char *siirtop)
         {
 // RS REM        s_init(siirtop);
 
-		if (g<2) return; // RS ADD
+		if (g<2) { return; // RS ADD
+}
         if (muste_strcmpi(word[0],"TCHLOAD")==0) { load(word[1]); s_end(siirtop); }
-        else if (muste_strcmpi(word[0],"TCHSAVE")==0) save(word[1]);
+        else if (muste_strcmpi(word[0],"TCHSAVE")==0) { save(word[1]);
+}
         }
 
 static void help()
@@ -2352,17 +2496,21 @@ n_lines=0;
         touch_init();
         trun=1;
         m=0;
-        if (etu==1) lue_hetki(&wait_hetki);
+        if (etu==1) { lue_hetki(&wait_hetki);
+}
 
         while (trun)
             {
             if (worm)
                 {
                 k=worm_mode(1,m);
-                if (k<0) return;
+                if (k<0) { return;
+}
                 }
-            if (rikottu) return;
-            if ((s!=2 || !ibm) && r<=r3 && r>0 && tdisp==1) cursor(r,c);
+            if (rikottu) { return;
+}
+            if ((s!=2 || !ibm) && r<=r3 && r>0 && tdisp==1) { cursor(r,c);
+}
 /*
 printf("\n"); ERASE; Rprintf("Chain:");
 for (k=0; k<nch; ++k) Rprintf(" %d",(int)(signed char)chain[k]); Rprintf("\n"); getch();
@@ -2370,7 +2518,8 @@ for (k=0; k<nch; ++k) Rprintf(" %d",(int)(signed char)chain[k]); Rprintf("\n"); 
             prevkey=m;
             m=nextch_touch(); key=' ';
 /* Rprintf("\n%d\n",m); getch(); */
-            if (worm && strchr("SCDREe=",(char)m)!=NULL) continue;
+            if (worm && strchr("SCDREe=",(char)m)!=NULL) { continue;
+}
             if (special)
                 {
                 switch (m)
@@ -2391,7 +2540,8 @@ for (k=0; k<nch; ++k) Rprintf(" %d",(int)(signed char)chain[k]); Rprintf("\n"); 
                                     {
                                     k=find_right(c);
                                     if (k<0) { k=last_right;
-                                               if (k<=0) k=10;
+                                               if (k<=0) { k=10;
+}
                                              }
                                     last_right=k;
                                     }
@@ -2399,7 +2549,8 @@ for (k=0; k<nch; ++k) Rprintf(" %d",(int)(signed char)chain[k]); Rprintf("\n"); 
                                 if (c1+c-1>c2) { stop_res(); break; }
                                 break;
                               }
-                    if (s==1) arrow_save(m);
+                    if (s==1) { arrow_save(m);
+}
                     key=K_RIGHT;
                     if (c<c3 && c<c2) { ++c; break; }
                     if (c2-c1+1>c3) { ++c1; disp_touch(); break; }
@@ -2410,7 +2561,8 @@ for (k=0; k<nch; ++k) Rprintf(" %d",(int)(signed char)chain[k]); Rprintf("\n"); 
                                 if (c1+c-1<1) { stop_res(); break; }
                                 break;
                               }
-                    if (s==1) arrow_save(m);
+                    if (s==1) { arrow_save(m);
+}
                     key=K_LEFT;
                     if (c>1) { --c; break; }
                     if (c1>1) { --c1; disp_touch(); break; }
@@ -2427,7 +2579,8 @@ for (k=0; k<nch; ++k) Rprintf(" %d",(int)(signed char)chain[k]); Rprintf("\n"); 
                                 if (r1+r-1<1) { stop_res(); break; }
                                 break;
                               }
-                    if (s==1) arrow_save(m);
+                    if (s==1) { arrow_save(m);
+}
                     key=K_UP;
                     if (r>1) { --r; break; }
                     if (r1>1)
@@ -2444,7 +2597,8 @@ for (k=0; k<nch; ++k) Rprintf(" %d",(int)(signed char)chain[k]); Rprintf("\n"); 
                                     {
                                     k=find_down(r);
                                     if (k<0) { k=last_down;
-                                               if (k<=0) k=1;
+                                               if (k<=0) { k=1;
+}
                                              }
                                     last_down=k;
                                     }
@@ -2452,12 +2606,15 @@ for (k=0; k<nch; ++k) Rprintf(" %d",(int)(signed char)chain[k]); Rprintf("\n"); 
                                 i=ed1*(r1+r-2);
                                 if (z[i]=='E' || r1+r-1>r2)
                                     { stop_res(); break; }
-                                if (z[i+c1+c-1]!='.') break;
-                                if (strncmp(z+i+1,"..........",10)==0)
+                                if (z[i+c1+c-1]!='.') { break;
+}
+                                if (strncmp(z+i+1,"..........",10)==0) {
                                       stop_res();
+}
                                 break;
                               }
-                    if (s==1) arrow_save(m);
+                    if (s==1) { arrow_save(m);
+}
                     key=K_DOWN;
                     if (r<r3) { ++r; break; }
                     if (r1<r2-r3+1)
@@ -2469,7 +2626,8 @@ for (k=0; k<nch; ++k) Rprintf(" %d",(int)(signed char)chain[k]); Rprintf("\n"); 
                         }
                     break;
                   case CODE_HOME:
-                    if (s==1) ch_save('1',m);
+                    if (s==1) { ch_save('1',m);
+}
                     if (c>1) { c=1; break; }
                     if (c1>1) { c1=1; disp_touch(); break; }
                     if (r>1) { r=1; break; }
@@ -2488,11 +2646,13 @@ for (k=0; k<nch; ++k) Rprintf(" %d",(int)(signed char)chain[k]); Rprintf("\n"); 
                     erase(); break;
                   case CODE_NEXT:
                     r1+=r3;
-                    if (r1>r2-r3+1) r1=r2-r3+1;
+                    if (r1>r2-r3+1) { r1=r2-r3+1;
+}
                     disp_touch();
                     break;
                   case CODE_PREV:
-                    if (r1<r3+2) r1=1; else r1-=r3;
+                    if (r1<r3+2) { r1=1; } else { r1-=r3;
+}
                     disp_touch();
                     break;
                   case CODE_DISK:
@@ -2502,7 +2662,8 @@ for (k=0; k<nch; ++k) Rprintf(" %d",(int)(signed char)chain[k]); Rprintf("\n"); 
                   case CODE_EXEC:
                   /* touch_run() mÑÑritelty tÑssÑ tiedostossa! */
                     key=K_RUN;
-                    if (s==0) { if (nch>0) touch_run(); break; }
+                    if (s==0) { if (nch>0) { touch_run(); 
+}break; }
                     if (s==1) { ch_save('1',m);
                                 chain[nch]='\0';
        /*       Rprintf("\n%s",chain); getch();          */
@@ -2514,7 +2675,8 @@ for (k=0; k<nch; ++k) Rprintf(" %d",(int)(signed char)chain[k]); Rprintf("\n"); 
 
                   case CODE_EXIT:
                     key=K_STOP;
-                    if (s==0) break;
+                    if (s==0) { break;
+}
                     if (s==1) { ch_save('1',m);
                                 chain[nch]='\0';
                                 s=0;
@@ -2545,7 +2707,8 @@ for (k=0; k<nch; ++k) Rprintf(" %d",(int)(signed char)chain[k]); Rprintf("\n"); 
                   }
                 } /* end special */
 
-            else std_keys(m);
+            else { std_keys(m);
+}
 
             }
         }

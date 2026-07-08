@@ -80,12 +80,15 @@ void muste_t2test(char *argv)
         if (g>3)
             {
             tulosrivi=edline2(word[3],1,1);
-            if (tulosrivi==0) return;
+            if (tulosrivi==0) { return;
+}
             }
 
         simumax=10000;
-        i=spec_init(r1+r-1); if (i<0) return;
-        if ((i=spfind("RESULTS"))>=0) results=atoi(spb[i]);
+        i=spec_init(r1+r-1); if (i<0) { return;
+}
+        if ((i=spfind("RESULTS"))>=0) { results=atoi(spb[i]);
+}
 
     x=NULL;
     v=NULL;
@@ -102,16 +105,21 @@ void muste_t2test(char *argv)
     ss_apu2=NULL;
     ero=NULL;
 
-        i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
-        if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);
+        i=hae_apu("prind",sbuf); if (i) { prind=atoi(sbuf);
+}
+        if ((i=spfind("PRIND"))>=0) { prind=atoi(spb[i]);
+}
 
-        if ((i=spfind("SIMUMAX"))>=0) simumax=atol(spb[i]);
+        if ((i=spfind("SIMUMAX"))>=0) { simumax=atol(spb[i]);
+}
 
         method=1;
-        if ((i=spfind("METHOD"))>=0) method=atoi(spb[i]);
+        if ((i=spfind("METHOD"))>=0) { method=atoi(spb[i]);
+}
 
         fixed=0;
-        if ((i=spfind("FIXED"))>=0) fixed=atoi(spb[i]);
+        if ((i=spfind("FIXED"))>=0) { fixed=atoi(spb[i]);
+}
         orig_samples=1;
         spec_rnd();
         strcpy(tempname,etmpd); strcat(tempname,"SURVOHOT.TMP");
@@ -123,8 +131,10 @@ void muste_t2test(char *argv)
             }
 
         strcpy(aineisto[0],word[1]);
-        i=data_read_open(aineisto[0],&d); if (i<0) return;
-        i=mask(&d); if (i<0) return;
+        i=data_read_open(aineisto[0],&d); if (i<0) { return;
+}
+        i=mask(&d); if (i<0) { return;
+}
         m=d.m_act;
         if (m==0)
             {
@@ -137,15 +147,18 @@ void muste_t2test(char *argv)
         v=(int *)muste_malloc(m*sizeof(int));
         if (v==NULL) { not_enough_memory(); return; }
 
-        for (i=0; i<m; ++i) v[i]=d.v[i];
+        for (i=0; i<m; ++i) { v[i]=d.v[i];
+}
 
         sur_print("\n");
         talleta(1);   /* data 1 */
         data_close(&d);
 
         strcpy(aineisto[1],word[2]);
-        i=data_read_open(aineisto[1],&d); if (i<0) return;
-        i=mask(&d); if (i<0) return;
+        i=data_read_open(aineisto[1],&d); if (i<0) { return;
+}
+        i=mask(&d); if (i<0) { return;
+}
 
         if (d.m_act!=m) { data_error(); return; }
         for (i=0; i<m; ++i)
@@ -174,7 +187,8 @@ void muste_t2test(char *argv)
         if (s2==NULL) { not_enough_memory(); return; }
 
 
-        for (l=0; l<n[0]; ++l) ind[l]='1';
+        for (l=0; l<n[0]; ++l) { ind[l]='1';
+}
         laske_summat(s,s2);
 // Rprintf("s: %g %g\n",s[0],s[1]); getch();
 
@@ -200,8 +214,10 @@ void muste_t2test(char *argv)
 
 
 // Todelliset otokset
-        for (l=0; l<n[0]; ++l) ind[l]='0';
-        for (l=0; l<n[1]; ++l) ind[l]='1';
+        for (l=0; l<n[0]; ++l) { ind[l]='0';
+}
+        for (l=0; l<n[1]; ++l) { ind[l]='1';
+}
 
         t2_0=T2();
         p_hot=1.0-muste_cdf_f((double)(n[0]-m-1)/(n[0]-2)/(double)m*t2_0,
@@ -214,25 +230,30 @@ void muste_t2test(char *argv)
             print_t2_yao();
             }
 // Rprintf("\nt2: %g %g",t2_0,t2_BF0); getch();
-        else
+        else {
             print_t2_hot();
+}
 
-        if (fixed) orig_samples=0;
+        if (fixed) { orig_samples=0;
+}
 
         ++scroll_line;
         nn1=0L; k=0;
-        if (simumax) sur_print("\nInterrupt by '.'");
+        if (simumax) { sur_print("\nInterrupt by '.'");
+}
 
         for (nn=1; nn<=simumax; ++nn)
             {
 // Rprintf("\nnn=%d",nn);
-            for (l=0; l<n[0]; ++l) ind[l]='0';
+            for (l=0; l<n[0]; ++l) { ind[l]='0';
+}
             for (l=0; l<n[1]; ++l)
                 {
                 while (1)
                     {
                     l2=n[0]*uniform_dev();
-                    if (ind[l2]=='1') continue;
+                    if (ind[l2]=='1') { continue;
+}
                     ind[l2]='1'; break;
                     }
                 }
@@ -241,13 +262,15 @@ void muste_t2test(char *argv)
                 {
                 t2_1=T2();
 // Rprintf("t2: %g %g\n",t2_1,t2_0); getch();
-                if (t2_1>t2_0) ++nn1;
+                if (t2_1>t2_0) { ++nn1;
+}
                 }
             else
                 {
                 t2_1=T2_BF();
 // Rprintf("t2: %g %g\n",t2_1,t2_BF0); getch();
-                if (t2_1>t2_BF0) ++nn1;
+                if (t2_1>t2_BF0) { ++nn1;
+}
                 }
 
             ++k;
@@ -308,14 +331,17 @@ static int talleta(int k)
         n[k]=0L;
         for (l=d.l1; l<=d.l2; ++l)
             {
-            if (unsuitable(&d,l)) continue;
+            if (unsuitable(&d,l)) { continue;
+}
             for (i=0; i<m; ++i)
                 {
                 data_load(&d,l,v[i],&x[i]);
-                if (x[i]==MISSING8) break;
+                if (x[i]==MISSING8) { break;
+}
 
                 }
-            if (i<m) continue;
+            if (i<m) { continue;
+}
 //          if (prind)
 //              {
 //              muste_sprintf(sbuf,"%d ",l); sur_print(sbuf);
@@ -323,8 +349,9 @@ static int talleta(int k)
             for (i=0; i<m; ++i)
                 {
                 p=(char *)&x[i];
-                for (h=0; h<sizeof(double); ++h)
+                for (h=0; h<sizeof(double); ++h) {
                     fputc((int)p[h],tempfile);
+}
                 }
             ++n[k];
             }
@@ -344,19 +371,25 @@ static int laske_summat(double *s,double *s2)
         int l,r;
 
         rewind(tempfile);
-        for (i=0; i<m; ++i) s[i]=0.0;
-        if (s2!=NULL) for (i=0; i<m*m; ++i) s2[i]=0.0;
+        for (i=0; i<m; ++i) { s[i]=0.0;
+}
+        if (s2!=NULL) { for (i=0; i<m*m; ++i) { s2[i]=0.0;
+}
+}
 
         for (l=0; l<n[0]; ++l)
             {
-            if (ind[l]!='1') continue;
+            if (ind[l]!='1') { continue;
+}
             r=l*m;
             for (i=0; i<m; ++i)
                 {
                 s[i]+=xx[i+r];
 
-                if (s2!=NULL)
-                    for (j=0; j<=i; ++j) s2[i+m*j]+=xx[i+r]*xx[j+r];
+                if (s2!=NULL) {
+                    for (j=0; j<=i; ++j) { s2[i+m*j]+=xx[i+r]*xx[j+r];
+}
+}
                 }
             }
         return(1);
@@ -375,12 +408,14 @@ static double T2()
             for (i=0; i<m; ++i)
                 {
                 ss[1][i]=s[i]-ss[0][i];
-                for (j=0; j<=i; ++j) ss2[1][i+m*j]=s2[i+m*j]-ss2[0][i+m*j];
+                for (j=0; j<=i; ++j) { ss2[1][i+m*j]=s2[i+m*j]-ss2[0][i+m*j];
+}
                 }
             }
 
-        else
+        else {
             laske_summat(ss[0],NULL);
+}
 
         for (i=0; i<m; ++i)
             {
@@ -393,20 +428,22 @@ static double T2()
 
         if (orig_samples)
           {
-          for (i=0; i<m; ++i)
+          for (i=0; i<m; ++i) {
               for (j=0; j<=i; ++j)
                   {
                   ss2[0][i+m*j]+=-n[1]*ss[0][i]*ss[0][j]
                                  +ss2[1][i+m*j]-n[2]*ss[1][i]*ss[1][j];
                   ss2[0][j+m*i]=ss2[0][i+m*j];
                   }
+}
 
-          for (i=0; i<m; ++i)
+          for (i=0; i<m; ++i) {
               for (j=0; j<=i; ++j)
                   {
                   ss2[0][i+m*j]/=n[0]-2;
                   ss2[0][j+m*i]=ss2[0][i+m*j];
                   }
+}
 // mprint(ss2[0],m,m);
           mat_inv(ss2[1],ss2[0],m,&det);
 // mat_inv() ->  mat_gj() joka varaa 3 vektoritilaa, mutta vapauttaa ne
@@ -416,14 +453,16 @@ static double T2()
 // mprint(ss2[1],m,m);
           }
 
-        for (i=0; i<m; ++i) ss[0][i]-=ss[1][i];
+        for (i=0; i<m; ++i) { ss[0][i]-=ss[1][i];
+}
 
         t2=0.0;
         for (i=0; i<m; ++i)
             {
             t2+=ss[0][i]*ss[0][i]*ss2[1][i*(m+1)];
-            for (j=0; j<i; ++j)
+            for (j=0; j<i; ++j) {
                 t2+=2*ss[0][i]*ss[0][j]*ss2[1][i+m*j];
+}
             }
         t2*=(double)n[1]*(double)n[2]/(double)n[0];
         return (t2);
@@ -454,10 +493,11 @@ static double T2_BF()
             for (i=0; i<m; ++i)
                 {
                 ss[1][i]=s[i]-ss[0][i];
-                for (j=0; j<=i; ++j) ss2[1][i+m*j]=s2[i+m*j]-ss2[0][i+m*j];
+                for (j=0; j<=i; ++j) { ss2[1][i+m*j]=s2[i+m*j]-ss2[0][i+m*j];
+}
                 }
 
-            for (i=0; i<m; ++i)
+            for (i=0; i<m; ++i) {
                 for (j=0; j<=i; ++j)
                     {
                     ss_apu[i+m*j]=
@@ -465,26 +505,30 @@ static double T2_BF()
                     +(ss2[1][i+m*j]-ss[1][i]*ss[1][j]/n[2])/(n[2]*(n[2]-1));
                     ss_apu[j+m*i]=ss_apu[i+m*j];
                     }
+}
 
             mat_inv(ss_inv,ss_apu,m,&det);
 // mprint(ss_inv,m,m);
             }
-        else
+        else {
             laske_summat(ss[0],NULL);
+}
 
         for (i=0; i<m; ++i)
             {
             ss[0][i]/=n[1];
             ss[1][i]/=n[2];
             }
-        for (i=0; i<m; ++i) ss_apu[i]=ss[0][i]-ss[1][i];
+        for (i=0; i<m; ++i) { ss_apu[i]=ss[0][i]-ss[1][i];
+}
 
         t2=0.0;
         for (i=0; i<m; ++i)
             {
             t2+=ss_apu[i]*ss_apu[i]*ss_inv[i*(m+1)];
-            for (j=0; j<i; ++j)
+            for (j=0; j<i; ++j) {
                 t2+=2*ss_apu[i]*ss_apu[j]*ss_inv[i+m*j];
+}
             }
         return (t2);
         }   /* T2_BF */
@@ -502,17 +546,19 @@ mprint(ss[1],1,m);
 mprint(ss2[0],m,m);
 ********************/
 
-    for (i=0; i<m; ++i) ero[i]=ss[0][i]-ss[1][i];
+    for (i=0; i<m; ++i) { ero[i]=ss[0][i]-ss[1][i];
+}
 
     f=0.0;
     for (k=0; k<2; ++k)
         {
-        for (i=0; i<m; ++i)
+        for (i=0; i<m; ++i) {
             for (j=0; j<=i; ++j)
                  {
           ss_apu2[i+m*j]=(ss2[k][i+m*j]-n[k+1]*ss[k][i]*ss[k][j])/(double)(n[k+1]-1);
           ss_apu2[j+m*i]=ss_apu2[i+m*j];
                  }
+}
         mat_mlt(ss_apu,ss_inv,ss_apu2,m,m,m);
         mat_mlt(ss_apu2,ss_apu,ss_inv,m,m,m);
 
@@ -560,7 +606,8 @@ static int not_enough_memory()
 static int eoutput(char *rivi)
         {
         output_line(rivi,eout,tulosrivi);
-        if (tulosrivi) ++tulosrivi;
+        if (tulosrivi) { ++tulosrivi;
+}
         return(1);
         }
 

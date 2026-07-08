@@ -75,12 +75,14 @@ void muste_simplex(char *argv)
     clab2=NULL;
 
         i=matrix_load(word[1],&B,&mb,&nb,&rlab,&clab,&lr,&lc,&type,expr);
-        if (i<0) return;
+        if (i<0) { return;
+}
 
         results_line=0;
         if (g>5)
             {
-            results_line=edline2(word[5],1,1); if (!results_line) return;
+            results_line=edline2(word[5],1,1); if (!results_line) { return;
+}
             }
         m=mb-1; n=nb-1;
 
@@ -100,8 +102,10 @@ void muste_simplex(char *argv)
         izrov=(int *)muste_malloc(n*sizeof(int));
         if (izrov==NULL) { not_enough_memory(); return; }
 
-        for (i=0; i<mb; ++i)
-            for (j=0; j<nb; ++j) A[i+mp*j]=B[i+mb*j];
+        for (i=0; i<mb; ++i) {
+            for (j=0; j<nb; ++j) { A[i+mp*j]=B[i+mb*j];
+}
+}
 
         icase=simplx(A,m,n,mp,np,m1,m2,m3,izrov,iposv);
 /*
@@ -110,7 +114,8 @@ void muste_simplex(char *argv)
   Rprintf("\n"); for (i=0; i<m; ++i) Rprintf("%d ",iposv[i]);
   Rprintf("\n"); for (i=0; i<n; ++i) Rprintf("%d ",izrov[i]);  getch();
 */
-        i=output_open(eout); if (i<0) return;
+        i=output_open(eout); if (i<0) { return;
+}
         switch (icase)
             {
           case  0: printout(); break;
@@ -130,7 +135,8 @@ static int not_enough_memory()
 static int eoutput(char *line)
         {
         output_line(line,eout,results_line);
-        if (results_line) ++results_line; return(1);
+        if (results_line) { ++results_line; 
+}return(1);
         }
 
 
@@ -142,29 +148,37 @@ static int simplx(double *A,int m,int n,int mp,int np,
 
         l1=l2=l3=NULL;
         l1=(int *)muste_malloc(np*sizeof(int));
-        if (l1==NULL) return(-3);
+        if (l1==NULL) { return(-3);
+}
         l2=(int *)muste_malloc(mp*sizeof(int));
-        if (l2==NULL) return(-3);
+        if (l2==NULL) { return(-3);
+}
         l3=(int *)muste_malloc(mp*sizeof(int));
-        if (l3==NULL) return(-3);
+        if (l3==NULL) { return(-3);
+}
 
-        if (m!=m1+m2+m3) return(-4);  /* bad input constraints counts */
+        if (m!=m1+m2+m3) { return(-4);  /* bad input constraints counts */
+}
         nl1=n;
         for (k=1; k<=n; ++k) { l1[k-1]=k; izrov[k-1]=k; }
         nl2=m;
         for (i=1; i<=m; ++i)
             {
-            if (A[i]<0) return(-5);  /* bad input tableau */
+            if (A[i]<0) { return(-5);  /* bad input tableau */
+}
             l2[i-1]=i; iposv[i-1]=n+i;
             }
-        for (i=1; i<=m2; ++i) l3[i-1]=1;
+        for (i=1; i<=m2; ++i) { l3[i-1]=1;
+}
         ir=0;
-        if (m2+m3==0) goto L30;
+        if (m2+m3==0) { goto L30;
+}
         ir=1;
         for (k=1; k<=n+1; ++k)
             {
             q1=0.0;
-            for (i=m1+1; i<=m; ++i) q1+=A[i+mp*(k-1)];
+            for (i=m1+1; i<=m; ++i) { q1+=A[i+mp*(k-1)];
+}
             A[m+1+mp*(k-1)]=-q1;
             }
 L10:
@@ -172,7 +186,8 @@ L10:
 /*      Rprintf("\nbmax=%g A[m+1]=%g",bmax,A[m+1]); getch();
         mprint(A,mp,np); getch();
 */
-        if (bmax<=eps && A[m+1]<-eps) return(-1); /* no feasible solution */
+        if (bmax<=eps && A[m+1]<-eps) { return(-1); /* no feasible solution */
+}
         if (bmax<=eps && A[m+1]<=eps)
             {
             m12=m1+m2+1;
@@ -183,58 +198,71 @@ L10:
                     if (iposv[ip-1]==ip+n)
                         {
                         simp1(A,mp,np,ip,l1,nl1,1,&kp,&bmax);
-                        if (bmax>0) goto L1;
+                        if (bmax>0) { goto L1;
+}
                         }
                     }
                 }
 
             ir=0;
             --m12;
-            if (m1+1>m12) goto L30;
+            if (m1+1>m12) { goto L30;
+}
             for (i=m1+1; i<=m12; ++i)
                 {
                 if (l3[i-m1-1]==1)
                     {
-                    for (k=1; k<=n+1; ++k) A[i+mp*(k-1)]=-A[i+mp*(k-1)];
+                    for (k=1; k<=n+1; ++k) { A[i+mp*(k-1)]=-A[i+mp*(k-1)];
+}
                     }
                 }
             goto L30;
             }
 
         simp2(A,m,n,mp,np,l2,nl2,&ip,&kp,&q1);
-        if (ip==0) return(-2); /* unbounded objective function */
+        if (ip==0) { return(-2); /* unbounded objective function */
+}
 L1:
         simp3(A,mp,np,m+1,n,ip,kp);
         if (iposv[ip-1]>=n+m1+m2+1)
             {
-            for (k=1; k<=nl1; ++k)
-                if (l1[k-1]==kp) break;
+            for (k=1; k<=nl1; ++k) {
+                if (l1[k-1]==kp) { break;
+}
+}
             --nl1;
-            for (is=k; is<=nl1; ++is) l1[is-1]=l1[is];
+            for (is=k; is<=nl1; ++is) { l1[is-1]=l1[is];
+}
             }
         else
             {
-            if (iposv[ip-1]<n+m1+1) goto L20;
+            if (iposv[ip-1]<n+m1+1) { goto L20;
+}
             kh=iposv[ip-1]-m1-n;
-            if (l3[kh-1]==0) goto L20;
+            if (l3[kh-1]==0) { goto L20;
+}
             l3[kh-1]=0;
             }
         A[m+1+mp*kp]+=1.0;
-        for (i=1; i<=m+2; ++i)
+        for (i=1; i<=m+2; ++i) {
             A[i-1+mp*kp]=-A[i-1+mp*kp];
+}
 L20:
         is=izrov[kp-1];
         izrov[kp-1]=iposv[ip-1];
         iposv[ip-1]=is;
-        if (ir!=0) goto L10;
+        if (ir!=0) { goto L10;
+}
 
 
 
 L30:
         simp1(A,mp,np,0,l1,nl1,0,&kp,&bmax);
-        if (bmax<=0.0) return(0);
+        if (bmax<=0.0) { return(0);
+}
         simp2(A,m,n,mp,np,l2,nl2,&ip,&kp,&q1);
-        if (ip==0) return(-2);
+        if (ip==0) { return(-2);
+}
         simp3(A,mp,np,m,n,ip,kp);
         goto L20;
 
@@ -251,11 +279,13 @@ static int simp1(double *A,int mp,int np,int mm,int *ll,int nll,
 
         *pkp=ll[0];
         *pbmax=A[mm+mp*(*pkp)];
-        if (nll<2) return(1);
+        if (nll<2) { return(1);
+}
         for (k=2; k<=nll; ++k)
             {
-            if (iabf==0) test=A[mm+mp*ll[k-1]]-*pbmax;
-            else test=fabs(A[mm+mp*ll[k-1]])-fabs(*pbmax);
+            if (iabf==0) { test=A[mm+mp*ll[k-1]]-*pbmax;
+            } else { test=fabs(A[mm+mp*ll[k-1]])-fabs(*pbmax);
+}
             if (test>0.0) { *pbmax=A[mm+mp*ll[k-1]]; *pkp=ll[k-1]; }
             }
         return(1);
@@ -268,13 +298,18 @@ static int simp2(double *A,int m,int n,int mp,int np,
         double qp,q0,q;
 
         *pip=0; qp=q0=0;
-        if (nl2<1) return(1);
-        for (i=1; i<=nl2; ++i)
-            if (A[l2[i-1]+mp*(*pkp)]<-eps) break;
-        if (i>nl2) return(1);
+        if (nl2<1) { return(1);
+}
+        for (i=1; i<=nl2; ++i) {
+            if (A[l2[i-1]+mp*(*pkp)]<-eps) { break;
+}
+}
+        if (i>nl2) { return(1);
+}
         *pq1=-A[l2[i-1]]/A[l2[i-1]+mp*(*pkp)];
         *pip=l2[i-1];
-        if (i+1>nl2) return(1);
+        if (i+1>nl2) { return(1);
+}
         for (i=i+1; i<=nl2; ++i)
             {
             ii=l2[i-1];
@@ -291,9 +326,11 @@ static int simp2(double *A,int m,int n,int mp,int np,
                         {
                         qp=-A[*pip+mp*k]/A[*pip+mp*(*pkp)];
                         q0=-A[ii+mp*k]/A[ii+mp*(*pkp)];
-                        if (q0!=qp) break;
+                        if (q0!=qp) { break;
+}
                         }
-                    if (q0<qp) *pip=ii;
+                    if (q0<qp) { *pip=ii;
+}
                     }
                 }
             }
@@ -313,15 +350,19 @@ static int simp3(double *A,int mp,int np,int i1,int k1,int ip,int kp)
                 if (ii-1!=ip)
                     {
                     A[ii-1+mp*kp]*=piv;
-                    for (kk=1; kk<=k1+1; ++kk)
-                        if (kk-1!=kp)
+                    for (kk=1; kk<=k1+1; ++kk) {
+                        if (kk-1!=kp) {
                             A[ii-1+mp*(kk-1)]-=A[ip+mp*(kk-1)]*A[ii-1+mp*kp];
+}
+}
                     }
                 }
             }
-        for (kk=1; kk<=k1+1; ++kk)
-            if (kk-1!=kp)
+        for (kk=1; kk<=k1+1; ++kk) {
+            if (kk-1!=kp) {
                 A[ip+mp*(kk-1)]*=-piv;
+}
+}
         A[ip+mp*kp]=piv;
         return(1);
         }
@@ -358,8 +399,11 @@ static int printout()
         muste_sprintf(x,"Max.value=%s of %s obtained for: (SIMPLEX.M)",spois(s),spois(t)); eoutput(x);
         for (i=0; i<n; ++i)
             {
-            for (k=0; k<m; ++k) if (iposv[k]==i+1) break;
-            if (k<m) y=A[k+1]; else y=0.0;
+            for (k=0; k<m; ++k) { if (iposv[k]==i+1) { break;
+}
+}
+            if (k<m) { y=A[k+1]; } else { y=0.0;
+}
             fnconv(y,accuracy,s); xx[i]=y;
             muste_sprintf(x," %.*s %s",lc,clab+(i+1)*lc,s); eoutput(x);
             }
@@ -372,9 +416,11 @@ static int printout()
             {
             for (k=m; k<m+m1+m2; ++k)
                 {
-                y=B[k-m+1]; for (i=0; i<n; ++i) y+=xx[i]*B[k-m+1+(i+1)*mb];
+                y=B[k-m+1]; for (i=0; i<n; ++i) { y+=xx[i]*B[k-m+1+(i+1)*mb];
+}
                 yy[k-m]=y;
-                if (y<0.0 && y>-1e-10) y=0.0;
+                if (y<0.0 && y>-1e-10) { y=0.0;
+}
                 fnconv(y,accuracy,s);
                 muste_sprintf(x," %.*s %s",lr,rlab+(k+1-m)*lr,s); eoutput(x);
                 }
@@ -392,7 +438,8 @@ static int printout()
 static char *spois(char *s)
         {
         char *p;
-        p=s; while (*p && *p==' ') ++p; return(p);
+        p=s; while (*p && *p==' ') { ++p; 
+}return(p);
         }
 
 static char lab0[]="????????";
@@ -411,19 +458,21 @@ static int save_tableau()
         for (i=0; i<m; ++i)
             {
             k=iposv[i];
-            if (k>n) cop(rlab2,i+1,rlab,k-n);
-            else cop(rlab2,i+1,clab,k);
+            if (k>n) { cop(rlab2,i+1,rlab,k-n);
+            } else { cop(rlab2,i+1,clab,k);
+}
             }
 
         cop(clab2,0,clab,0);
         for (j=0; j<n; ++j)
             {
             k=izrov[j];
-            if (k<=n) cop(clab2,j+1,clab,k);
-            else
+            if (k<=n) { cop(clab2,j+1,clab,k);
+            } else
                 {
-                if (k>n+m1+m2) cop(clab2,j+1,lab0,0);
-                else cop(clab2,j+1,rlab,k-n);
+                if (k>n+m1+m2) { cop(clab2,j+1,lab0,0);
+                } else { cop(clab2,j+1,rlab,k-n);
+}
                 }
             }
 
@@ -440,7 +489,8 @@ static int save_tableau()
                     --n0; break;
                     }
                 }
-            if (i==n0) break;
+            if (i==n0) { break;
+}
             }
 
         matrix_save("TSIMPLEX.M",A,mp-1,n0,rlab2,clab2,8,8,-1,
@@ -453,7 +503,8 @@ static int cop(char *lab2,int i,char *lab1,int j)
         int k,g,h;
 
         k=8*i; g=8*j;
-        for (h=0; h<8; ++h) lab2[k+h]=lab1[g+h];
+        for (h=0; h<8; ++h) { lab2[k+h]=lab1[g+h];
+}
 /* Rprintf("\nlab=%.8s",lab2[k]); getch();  */
         return(1);
         }
@@ -469,14 +520,17 @@ static int mat_del_row(int k,double *A,int m,int n,
             {
             for (i=0; i<m; ++i)
                 {
-                if (i==k) ++h;
-                else A[g++]=A[h++];
+                if (i==k) { ++h;
+                } else { A[g++]=A[h++];
+}
                 }
             }
 
-        if (k==m-1) return(1);
-        for (i=k*lr; i<(m-1)*lr; ++i)
+        if (k==m-1) { return(1);
+}
+        for (i=k*lr; i<(m-1)*lr; ++i) {
             rlab[i]=rlab[i+lr];
+}
         return(1);
         }
 
@@ -485,7 +539,8 @@ static int mat_del_col(int k,double *A,int m,int n,
         {
         int i,j,g,h;
 
-        if (k==n-1) return(1);
+        if (k==n-1) { return(1);
+}
         g=h=0;
         for (j=0; j<n; ++j)
             {
@@ -496,8 +551,9 @@ static int mat_del_col(int k,double *A,int m,int n,
                 }
             }
 
-        for (i=k*lc; i<(n-1)*lc; ++i)
+        for (i=k*lc; i<(n-1)*lc; ++i) {
             clab[i]=clab[i+lc];
+}
         return(1);
         }
 

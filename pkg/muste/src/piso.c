@@ -49,7 +49,8 @@ static int readfile() {
     apu=1; i=XKOKO; j=1;
     while ((apu=fgetc(fp)) != EOF) {
       if ( apu >= '0') { dama[i]=apu-'0'; i++; }
-      if ( apu == '\n') j++;
+      if ( apu == '\n') { j++;
+}
     }
   muste_fclose(fp);
   if (ferror(fp)) { sur_print("\nFile error!");  WAIT; return(-1); }
@@ -104,7 +105,8 @@ static int comparerivi (int rivi1, int rivi2) {
   int i,kust;
   kust=0;
   for (i=0; i<XKOKO; i++) {
-    if (dama[rivi1*XKOKO+i]!=dama[rivi2*XKOKO+i]) kust++;
+    if (dama[rivi1*XKOKO+i]!=dama[rivi2*XKOKO+i]) { kust++;
+}
 //    if (dama[rivi1*XKOKO+i]!=dama[rivi2*XKOKO+i]) kust+=abs((dama[rivi1*XKOKO+i]-dama[rivi2*XKOKO+i])^2);
   }
  return kust;
@@ -209,7 +211,8 @@ static void sortdatamin() {
    sorted[sortsolmu].prev=-1;
    sorted[sortsolmu].next=0;
    sortedalku=0;
-   for (i=0; i<XKOKO; i++) dama[(maara+1)*XKOKO+i]=4;
+   for (i=0; i<XKOKO; i++) { dama[(maara+1)*XKOKO+i]=4;
+}
 
    sortmaara=1;
    kust=0; minsolmu1=0; minsolmu2=0;
@@ -248,7 +251,8 @@ static void sortdatamin() {
      apusolmunext=order[minsolmu1].next;
      order[apusolmuprev].next=apusolmunext;
      order[apusolmunext].prev=apusolmuprev;
-     if (minsolmu1==orderalku) orderalku=apusolmunext;
+     if (minsolmu1==orderalku) { orderalku=apusolmunext;
+}
 
      sorted[sortmaara+1].index=order[minsolmu1].index;
 
@@ -315,14 +319,17 @@ int muste_piso(int argc, char *argv[]) {
   }
 
   tulosrivi=0;
-  if (g>2) tulosrivi=edline2(word[2],1,1);
+  if (g>2) { tulosrivi=edline2(word[2],1,1);
+}
 
-  i=spec_init(r1+r-1); if (i<0) return -1;
+  i=spec_init(r1+r-1); if (i<0) { return -1;
+}
 
   strcpy(aineisto,word[1]);
 
   maara=readfile();
-  if (maara<=0) return(-1);
+  if (maara<=0) { return(-1);
+}
 
   for (j=1; j<=maara; j++) {
    order[j].index=j;

@@ -214,8 +214,9 @@ static void tutname(char *file,char *name)
         *file=EOS;
         if (!muste_is_path(name)) 
             {
-            if (*name=='.') strcat(file,esysd);
-            else strcat(file,edisk);
+            if (*name=='.') { strcat(file,esysd);
+            } else { strcat(file,edisk);
+}
             }
         strcat(file,name);
         file_name_ext(file,".TUT");
@@ -231,7 +232,8 @@ static int tutopen(char s[],char mode[])
 
         strcpy(tiednimi,filename); /* 11.2.90 */
         tutor=muste_fopen(filename,mode);
-        if (tutor==NULL) return(-1);
+        if (tutor==NULL) { return(-1);
+}
         o1=1;
         return(1);
 // RS REM        kommentti_pos=0L;
@@ -242,7 +244,8 @@ static void read_tutword(char s[])
         int i,m;
 
         i=0;
-        while ((m=getc(tutor))!=(int)'@' && i<100) s[i++]=m; s[i]=EOS;
+        while ((m=getc(tutor))!=(int)'@' && i<100) { s[i++]=m; 
+}s[i]=EOS;
 /*      if (i==100) tut_virhe();      */
         }
 
@@ -252,7 +255,8 @@ static int tee_sucrodir(char *nimi)
         char x[LLENGTH];
         char *p;
 
-        i=tutopen(nimi,"rb"); if (i<0) return(-1);
+        i=tutopen(nimi,"rb"); if (i<0) { return(-1);
+}
 
         read_tutword(x);  /* SURVO 84C SUCROS */
         read_tutword(x);
@@ -260,7 +264,8 @@ static int tee_sucrodir(char *nimi)
         for (i=0; i<nosat; ++i)
             {
             read_tutword(x);
-            p=x+1; while (*p!=' ') ++p; *p=EOS;
+            p=x+1; while (*p!=' ') { ++p; 
+}*p=EOS;
             osaosoite[i]=atol(p+1); ++p;
             strcpy(osasukro[i],x+1);
             }
@@ -272,7 +277,8 @@ static void alusta_nimet()
         {
         int i;
 
-        for (i=0; i<MAXNIMET; ++i) wnimi[i][0]=EOS;
+        for (i=0; i<MAXNIMET; ++i) { wnimi[i][0]=EOS;
+}
         max_indeksi=0;
         }
 
@@ -280,8 +286,9 @@ static void codetut(int code,char ch,int mode)
         {
         if (mode==1)
             { tutpref[code]='1'; tutcode[code]=ch; }
-        else
+        else {
               tutcode[(int)ch]=(char)code;
+}
         }
 
 
@@ -370,7 +377,8 @@ static int etsi_koodin_loppu()
                 WAIT; return(-1);
                 }
             m=getc(tutor);
-            if (m!=255) continue;
+            if (m!=255) { continue;
+}
 /* 13.10.88 m=getc(tutor);
             if (m!=255)
                 {
@@ -393,11 +401,13 @@ static int etsi_koodin_loppu()
 
 static int kirjoita(char *x)
         {
-        if (*x=='*' && x[1]==EOS) return(1);
+        if (*x=='*' && x[1]==EOS) { return(1);
+}
         if (x[strlen(x)-1]==' ')
             {
-            if (koodi==0) strcat(x,loppumerkit);
-            else strcat(x,"{}");
+            if (koodi==0) { strcat(x,loppumerkit);
+            } else { strcat(x,"{}");
+}
             }
         if (!*txt_file_name)
             {
@@ -420,11 +430,13 @@ static int rcat(char *sana)
         int k;
         int lev;
 
-        lev=ed1-1; if (lev>c3) lev=c3;       // 20.1.2002
+        lev=ed1-1; if (lev>c3) { lev=c3;       // 20.1.2002
+}
 //      if (strlen(rivi)+strlen(sana)>c3-2)
         if (strlen(rivi)+strlen(sana)>lev-2) // 20.1.2002
             {
-            k=kirjoita(rivi); if (k<0) return(-1);
+            k=kirjoita(rivi); if (k<0) { return(-1);
+}
             init_rivi(rivi);
             }
         strcat(rivi,sana);
@@ -462,14 +474,15 @@ static char *w_prompt(char *rivi,char *s)
         p=q+1; q=strchr(p,'@'); *q=EOS;
         length=p;
 
-        if (*prompt==EOS)
+        if (*prompt==EOS) {
             muste_sprintf(x,"- prompt");
-        else
+        } else {
             muste_sprintf(x,"- prompt %s",prompt);
+}
         i=kirjoita(x); if (i<0) return(NULL);
-        if (*def=='C')
+        if (*def=='C') {
             muste_sprintf(x,"-   default %s",def+1);
-        else
+        } else
             {
             hae_wnimi(atoi(def),y);
             muste_sprintf(x,"-   default %s",y);
@@ -486,9 +499,9 @@ static char *w_prompt(char *rivi,char *s)
 
         muste_sprintf(x,"-   length %s",length);
         i=kirjoita(x); if (i<0) return(NULL);
-        if (*wait=='C')
+        if (*wait=='C') {
             muste_sprintf(x,"-   wait %s",wait+1);
-        else
+        } else
             {
             hae_wnimi(atoi(wait),y);
             muste_sprintf(x,"-   wait %s",y);
@@ -522,23 +535,26 @@ static char *w_switch(char *rivi,char *s)
         p=q+1;
         while (1)
             {
-            if (*p=='@') break;
+            if (*p=='@') { break;
+}
             q=strchr(p,'@'); *q=EOS;
-            while ((q2=strchr(p,' '))!=NULL) *q2='_';
+            while ((q2=strchr(p,' '))!=NULL) { *q2='_';
+}
             q2=strchr(p2,'@');
             if (q2==NULL) { sur_print("\nError in switch code!"); WAIT; return(NULL);
                           }
             *q2=EOS; h=1;
-            if (*p2=='G') strcpy(sana,"goto");
-            else if (*p2=='L') strcpy(sana,"load");
-            else if (*p2==EOS) { h=0; strcpy(sana,"continue"); }
+            if (*p2=='G') { strcpy(sana,"goto");
+            } else if (*p2=='L') { strcpy(sana,"load");
+            } else if (*p2==EOS) { h=0; strcpy(sana,"continue"); }
             else { sur_print("\nError in switch code (G or L missing)!");
                    WAIT; return(NULL);
                  }
-            if (h)
+            if (h) {
                 muste_sprintf(x,"-   case %s: %s %s",p,sana,p2+1);
-            else
+            } else {
                 muste_sprintf(x,"-   case %s: continue",p);
+}
             i=kirjoita(x); if (i<0) return(NULL);
             p=q+1; p2=q2+1;
             }
@@ -546,16 +562,17 @@ static char *w_switch(char *rivi,char *s)
         if (q2==NULL) { sur_print("\nError in switch code!"); WAIT; return(NULL);
                       }
         *q2=EOS; h=1;
-        if (*p2=='G') strcpy(sana,"goto");
-        else if (*p2=='L') strcpy(sana,"load");
-        else if (*p2==EOS) h=0;
-        else { muste_sprintf(sbuf,"\nError in switch code (G or L missing)! %s",p2);
+        if (*p2=='G') { strcpy(sana,"goto");
+        } else if (*p2=='L') { strcpy(sana,"load");
+        } else if (*p2==EOS) { h=0;
+        } else { muste_sprintf(sbuf,"\nError in switch code (G or L missing)! %s",p2);
                sur_print(sbuf); WAIT; return(NULL);
              }
-        if (h)
+        if (h) {
             muste_sprintf(x,"-   default: %s %s",sana,p2+1);
-        else
+        } else {
             muste_sprintf(x,"-   default: continue");
+}
         i=kirjoita(x); if (i<0) return(NULL);
         p=q2+1;
         return(p);
@@ -590,62 +607,91 @@ static char *w_key(char *rivi,char *s)
                            WAIT; return(NULL);
                          }
             *q=EOS; h=1;
-            if (*p=='G') strcpy(sana,"goto");
-            else if (*p=='L') strcpy(sana,"load");
-            else if (*p==EOS) { h=0; strcpy(sana,"continue"); }
+            if (*p=='G') { strcpy(sana,"goto");
+            } else if (*p=='L') { strcpy(sana,"load");
+            } else if (*p==EOS) { h=0; strcpy(sana,"continue"); }
             else { sur_print("\n G or L missing in 'on key' code!");
                    WAIT; return(NULL);
                  }
 
             *nappi=keys[i]; nappi[1]=EOS;
-            if (keys[i]==' ') strcpy(nappi,"SPACE");
-            else if (keys[i]==':') strcpy(nappi,"COLON");
+            if (keys[i]==' ') { strcpy(nappi,"SPACE");
+            } else if (keys[i]==':') { strcpy(nappi,"COLON");
                     // RS CHA '\010'
-            else if (keys[i]==10) strcpy(nappi,"BACKSP");
+            } else if (keys[i]==10) { strcpy(nappi,"BACKSP");
                                                    // RS CHA '\375'
-            else if ((unsigned char)keys[i]==(unsigned char) TUTCODE)
+            } else if ((unsigned char)keys[i]==(unsigned char) TUTCODE)
                 {
                 ++i;
-                if (keys[i]=='R') strcpy(nappi,"ENTER");
-                if (keys[i]=='r') strcpy(nappi,"RIGHT");
-                if (keys[i]=='l') strcpy(nappi,"LEFT");
-                if (keys[i]=='u') strcpy(nappi,"UP");
-                if (keys[i]=='d') strcpy(nappi,"DOWN");
-                if (keys[i]=='H') strcpy(nappi,"HOME");
-                if (keys[i]=='h') strcpy(nappi,"HELP");
-                if (keys[i]=='D') strcpy(nappi,"ESC");
-                if (keys[i]=='i') strcpy(nappi,"INSERT");
-                if (keys[i]=='I') strcpy(nappi,"INS_LINE");
-                if (keys[i]=='v') strcpy(nappi,"DELETE");
-                if (keys[i]=='V') strcpy(nappi,"DEL_LINE");
-                if (keys[i]=='e') strcpy(nappi,"ERASE");
-                if (keys[i]=='n') strcpy(nappi,"NEXT");
-                if (keys[i]=='p') strcpy(nappi,"PREV");
-                if (keys[i]=='4') strcpy(nappi,"DISK");
+                if (keys[i]=='R') { strcpy(nappi,"ENTER");
+}
+                if (keys[i]=='r') { strcpy(nappi,"RIGHT");
+}
+                if (keys[i]=='l') { strcpy(nappi,"LEFT");
+}
+                if (keys[i]=='u') { strcpy(nappi,"UP");
+}
+                if (keys[i]=='d') { strcpy(nappi,"DOWN");
+}
+                if (keys[i]=='H') { strcpy(nappi,"HOME");
+}
+                if (keys[i]=='h') { strcpy(nappi,"HELP");
+}
+                if (keys[i]=='D') { strcpy(nappi,"ESC");
+}
+                if (keys[i]=='i') { strcpy(nappi,"INSERT");
+}
+                if (keys[i]=='I') { strcpy(nappi,"INS_LINE");
+}
+                if (keys[i]=='v') { strcpy(nappi,"DELETE");
+}
+                if (keys[i]=='V') { strcpy(nappi,"DEL_LINE");
+}
+                if (keys[i]=='e') { strcpy(nappi,"ERASE");
+}
+                if (keys[i]=='n') { strcpy(nappi,"NEXT");
+}
+                if (keys[i]=='p') { strcpy(nappi,"PREV");
+}
+                if (keys[i]=='4') { strcpy(nappi,"DISK");
+}
                     // RS CHA '\010'
-                if (keys[i]==10) strcpy(nappi,"BACKSP");
-                if (keys[i]=='7') strcpy(nappi,"REF");
-                if (keys[i]=='6') strcpy(nappi,"MERGE");
-                if (keys[i]=='B') strcpy(nappi,"COPY");
-                if (keys[i]=='x') strcpy(nappi,"TAB");
-                if (keys[i]=='h') strcpy(nappi,"HELP");
-                if (keys[i]=='9') strcpy(nappi,"SRCH");
-                if (keys[i]=='z') strcpy(nappi,"ACTIV");
-                if (keys[i]=='M') strcpy(nappi,"MOVE");
-                if (keys[i]=='E') strcpy(nappi,"END");
-                if (keys[i]=='W') strcpy(nappi,"WORDS");
-                if (keys[i]=='s') strcpy(nappi,"SOFT");
+                if (keys[i]==10) { strcpy(nappi,"BACKSP");
+}
+                if (keys[i]=='7') { strcpy(nappi,"REF");
+}
+                if (keys[i]=='6') { strcpy(nappi,"MERGE");
+}
+                if (keys[i]=='B') { strcpy(nappi,"COPY");
+}
+                if (keys[i]=='x') { strcpy(nappi,"TAB");
+}
+                if (keys[i]=='h') { strcpy(nappi,"HELP");
+}
+                if (keys[i]=='9') { strcpy(nappi,"SRCH");
+}
+                if (keys[i]=='z') { strcpy(nappi,"ACTIV");
+}
+                if (keys[i]=='M') { strcpy(nappi,"MOVE");
+}
+                if (keys[i]=='E') { strcpy(nappi,"END");
+}
+                if (keys[i]=='W') { strcpy(nappi,"WORDS");
+}
+                if (keys[i]=='s') { strcpy(nappi,"SOFT");
+}
                 }
-            if (h)
+            if (h) {
                 muste_sprintf(x,"-    key %s: %s %s",nappi,sana,p+1);
-            else
+            } else {
                 muste_sprintf(x,"-    key %s: continue",nappi);
+}
             k=kirjoita(x); if (k<0) return(NULL);
             p=q+1;
             }
-        if (*wait=='C')
+        if (*wait=='C') {
             muste_sprintf(x,"-   wait %s",wait+1);
-        else
+        } else
             {
             hae_wnimi(atoi(wait),y);
             muste_sprintf(x,"-   wait %s",y);
@@ -672,9 +718,9 @@ static void korvaa2_sp(char *s)
 
 static int lg_muunto(char *jump,char *s)
         {
-        if (*jump=='G') muste_sprintf(s,"goto %s",jump+1);
-        else if (*jump=='L') muste_sprintf(s,"load %s",jump+1);
-        else { if_error(); return(-1); }
+        if (*jump=='G') { muste_sprintf(s,"goto %s",jump+1);
+        } else if (*jump=='L') { muste_sprintf(s,"load %s",jump+1);
+        } else { if_error(); return(-1); }
         return(1);
         }
 
@@ -685,7 +731,8 @@ static int set_wexpr2(char *w)
     char s[32];
 
     strcpy(s,w);
-    if (*s!='W') return(1);
+    if (*s!='W') { return(1);
+}
 
     hae_wnimi(atoi(s+1),w);
     return(1);
@@ -709,14 +756,17 @@ static int if2_muunto2(char *s,char *t)
             {
             op=*p;
             *p=EOS; strcpy(w1,sbuf); strcpy(w2,p+1);
-            i=set_wexpr2(w1); if (i<0) return(-1);
-            i=set_wexpr2(w2); if (i<0) return(-1);
+            i=set_wexpr2(w1); if (i<0) { return(-1);
+}
+            i=set_wexpr2(w2); if (i<0) { return(-1);
+}
             muste_sprintf(t,"%s%c%s",w1,op,w2);
             return(1);
             }
         ++p;
         }
-    i=set_wexpr2(sbuf); if (i<0) return(-1); strcpy(t,sbuf);
+    i=set_wexpr2(sbuf); if (i<0) { return(-1); 
+}strcpy(t,sbuf);
     return(0);
     }
 
@@ -752,9 +802,12 @@ static char *w_if2(char *rivi,char *s)
         p=q+1; q=strchr(p,'@'); *q=EOS;
         jump[2]=p;
         tapaus=0;
-        if (*jump[0]) ++tapaus;
-        if (*jump[1]) tapaus+=2;
-        if (*jump[2]) tapaus+=4;
+        if (*jump[0]) { ++tapaus;
+}
+        if (*jump[1]) { tapaus+=2;
+}
+        if (*jump[2]) { tapaus+=4;
+}
 
         j2=-1; j1=0; // RS j1 init
         switch (tapaus)
@@ -763,19 +816,23 @@ static char *w_if2(char *rivi,char *s)
           case 1: strcpy(vert,"<"); j1=0; break;
           case 2: strcpy(vert,"="); j1=1; break;
           case 3: if (strcmp(jump[0],jump[1])==0) { strcpy(vert,"<="); j1=0; }
-                  else branch3(tapaus);
+                  else { branch3(tapaus);
+}
                   break;
           case 4: strcpy(vert,">"); j1=2; break;
           case 5: if (strcmp(jump[0],jump[2])==0) { strcpy(vert,"<>"); j1=0; }
-                  else branch3(tapaus);
+                  else { branch3(tapaus);
+}
                   break;
           case 6: if (strcmp(jump[1],jump[2])==0) { strcpy(vert,">="); j1=1; }
-                  else branch3(tapaus);
+                  else { branch3(tapaus);
+}
                   break;
           case 7: if (strcmp(jump[0],jump[1])==0) { strcpy(vert,">"); j1=2; j2=0; }
              else if (strcmp(jump[0],jump[2])==0) { strcpy(vert,"="); j1=1; j2=0; }
              else if (strcmp(jump[1],jump[2])==0) { strcpy(vert,"<"); j1=0; j2=1; }
-             else branch3(tapaus);
+             else { branch3(tapaus);
+}
 
             }
 
@@ -827,9 +884,12 @@ static char *w_if(char *rivi,char *s)
         p=q+1; q=strchr(p,'@'); *q=EOS;
         jump[2]=p;
         tapaus=0;
-        if (*jump[0]) ++tapaus;
-        if (*jump[1]) tapaus+=2;
-        if (*jump[2]) tapaus+=4;
+        if (*jump[0]) { ++tapaus;
+}
+        if (*jump[1]) { tapaus+=2;
+}
+        if (*jump[2]) { tapaus+=4;
+}
 
         j2=-1; j1=0; // RS j1 init
         switch (tapaus)
@@ -838,32 +898,43 @@ static char *w_if(char *rivi,char *s)
           case 1: strcpy(vert,"<"); j1=0; break;
           case 2: strcpy(vert,"="); j1=1; break;
           case 3: if (strcmp(jump[0],jump[1])==0) { strcpy(vert,"<="); j1=0; }
-                  else branch3(tapaus);
+                  else { branch3(tapaus);
+}
                   break;
           case 4: strcpy(vert,">"); j1=2; break;
           case 5: if (strcmp(jump[0],jump[2])==0) { strcpy(vert,"<>"); j1=0; }
-                  else branch3(tapaus);
+                  else { branch3(tapaus);
+}
                   break;
           case 6: if (strcmp(jump[1],jump[2])==0) { strcpy(vert,">="); j1=1; }
-                  else branch3(tapaus);
+                  else { branch3(tapaus);
+}
                   break;
           case 7: if (strcmp(jump[0],jump[1])==0) { strcpy(vert,">"); j1=2; j2=0; }
              else if (strcmp(jump[0],jump[2])==0) { strcpy(vert,"="); j1=1; j2=0; }
              else if (strcmp(jump[1],jump[2])==0) { strcpy(vert,"<"); j1=0; j2=1; }
-             else branch3(tapaus);
+             else { branch3(tapaus);
+}
 
             }
 
-        if (laji=='A') muste_sprintf(vert2,"'%s'",vert); else strcpy(vert2,vert);
-        if (*word1=='C') strcpy(w1,word1+1);
-        else hae_wnimi(atoi(word1),w1);
-        if (*w1==EOS) strcpy(w1,"{}");
-        while ((p=strchr(w1,' '))!=NULL) *p='_';
+        if (laji=='A') { muste_sprintf(vert2,"'%s'",vert); } else { strcpy(vert2,vert);
+}
+        if (*word1=='C') { strcpy(w1,word1+1);
+        } else { hae_wnimi(atoi(word1),w1);
+}
+        if (*w1==EOS) { strcpy(w1,"{}");
+}
+        while ((p=strchr(w1,' '))!=NULL) { *p='_';
+}
         korvaa2_sp(w1);
-        if (*word2=='C') strcpy(w2,word2+1);
-        else hae_wnimi(atoi(word2),w2);
-        if (*w2==EOS) strcpy(w2,"{}");
-        while ((p=strchr(w2,' '))!=NULL) *p='_';
+        if (*word2=='C') { strcpy(w2,word2+1);
+        } else { hae_wnimi(atoi(word2),w2);
+}
+        if (*w2==EOS) { strcpy(w2,"{}");
+}
+        while ((p=strchr(w2,' '))!=NULL) { *p='_';
+}
         korvaa2_sp(w2);
         i=lg_muunto(jump[j1],go); if (i<0) return(NULL);
         k=muste_sprintf(x,"- if %s %s %s then %s",w1,vert2,w2,go);
@@ -909,7 +980,8 @@ static char *w_gotoload(char *rivi,char *s)    /* \375GTL  */
                        return(NULL); }
         *q=EOS;
         if (*p=='G') { strcpy(sana,"goto"); ++p; }
-        else strcpy(sana,"load");
+        else { strcpy(sana,"load");
+}
         if (*p=='?')
             {
             ++p;
@@ -917,8 +989,9 @@ static char *w_gotoload(char *rivi,char *s)    /* \375GTL  */
             hae_wnimi(i,wstr);
             muste_sprintf(x,"{load sucro %s}",wstr);
             }
-        else
+        else {
             muste_sprintf(x,"{%s %s}",sana,p);
+}
         rcat(x);
         p=q+1;
         return(p);
@@ -964,7 +1037,8 @@ static int selkomuunto(char *rivi,char *crivi)
 */       
         while (1)
             {
-            if (t_virhe) return(-1);
+            if (t_virhe) { return(-1);
+}
             if (*p==EOS)
                 {
                 *crivi=EOS; return(1);
@@ -998,7 +1072,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                 switch ((unsigned char)*p)
                                     {
                                   case 'J': p=w_switch(rivi,p-2);
-                                            if (p==NULL) return(-1);
+                                            if (p==NULL) { return(-1);
+}
                                             break;
                                   case 'K':
                                             if (strncmp(p+1,"C~",2)==0)
@@ -1016,24 +1091,30 @@ static int selkomuunto(char *rivi,char *crivi)
                                                 break;
                                                 }
                                             p=w_prompt(rivi,p-2);
-                                            if (p==NULL) return(-1);
+                                            if (p==NULL) { return(-1);
+}
                                             break;
                                   case 'V': p=w_key(rivi,p-2);
-                                            if (p==NULL) return(-1);
+                                            if (p==NULL) { return(-1);
+}
                                             break;
                                   case 'I': p=w_if(rivi,p-2);
-                                            if (p==NULL) return(-1);
+                                            if (p==NULL) { return(-1);
+}
                                             break;
                           // 17.11.2000
                                   case 'i': p=w_if2(rivi,p-2);
-                                            if (p==NULL) return(-1);
+                                            if (p==NULL) { return(-1);
+}
                                             break;
 
                                   case 'X': p=w_label(rivi,p-2);
-                                            if (p==NULL) return(-1);
+                                            if (p==NULL) { return(-1);
+}
                                             break;
                                   case 'L': p=w_gotoload(rivi,p-2);
-                                            if (p==NULL) return(-1);
+                                            if (p==NULL) { return(-1);
+}
                                             break;
                                   case (unsigned char) TUTCODE: ++p;  // RS CHA '\375'
                                             if (*p=='S')
@@ -1049,8 +1130,9 @@ static int selkomuunto(char *rivi,char *crivi)
                                                            return(-1);
                                                          }
                                             *q=EOS;
-                          /* 26.5.1995 */   if (wait_save) muste_sprintf(x,"{%s}",p);
-                                            else muste_sprintf(x,"{wait %s}",p);
+                          /* 26.5.1995 */   if (wait_save) { muste_sprintf(x,"{%s}",p);
+                                            } else { muste_sprintf(x,"{wait %s}",p);
+}
                                             rcat(x);
                                             p=q+1;
                                             break;
@@ -1083,8 +1165,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                                          }
                                             *q=EOS;
                                             strcpy(x,"{tempo ");
-                                            if (*p=='C') strcat(x,p+1);
-                                            else
+                                            if (*p=='C') { strcat(x,p+1);
+                                            } else
                                                 {
                                                 hae_wnimi(atoi(p),wstr);
                                                 strcat(x,wstr);
@@ -1100,7 +1182,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                                            return(-1);
                                                          }
                                             *q=EOS;
-                                       if (*p=='-') {ch='+'; ++p;} else ch='-';
+                                       if (*p=='-') {ch='+'; ++p;} else { ch='-';
+}
                                             muste_sprintf(x,"{tempo %c%s}",ch,p);
                                             rcat(x);
                                             p=q+1;
@@ -1112,8 +1195,9 @@ static int selkomuunto(char *rivi,char *crivi)
                                                          }
                                             *q=EOS;
                                             i=atoi(p);
-                                            if (i) rcat("{break off}");
-                                            else rcat("{break on}");
+                                            if (i) { rcat("{break off}");
+                                            } else { rcat("{break on}");
+}
                                             p=q+1;
                                             break;
                                   case 'g':
@@ -1132,17 +1216,20 @@ static int selkomuunto(char *rivi,char *crivi)
                                                         {
                                                         if (*(p+1)=='!')
                                                             { p=q; continue; }
-                                                        else i+=2;
+                                                        else { i+=2;
+}
                                                         }
                                                     strcat(x,p+1);
                                                     }
                                                 else
                                                     {
-                                                    if (i==2) i+=2;
+                                                    if (i==2) { i+=2;
+}
                                                     hae_wnimi(atoi(p),wstr);
                                                     strcat(x,wstr);
                                                     }
-                                                if (i<4) strcat(x,",");
+                                                if (i<4) { strcat(x,",");
+}
                                                 p=q;
                                                 }
                                             strcat(x,"}");
@@ -1165,8 +1252,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                                            return(-1);
                                                          }
                                             *q=EOS;
-                                            if (*p=='C') strcat(x,p+1);
-                                            else
+                                            if (*p=='C') { strcat(x,p+1);
+                                            } else
                                                 {
                                                 hae_wnimi(atoi(p),wstr);
                                                 strcat(x,wstr);
@@ -1184,9 +1271,9 @@ static int selkomuunto(char *rivi,char *crivi)
                                                            return(-1);
                                                          }
                                             *q=EOS;
-                                            if (*p=='V')
+                                            if (*p=='V') {
                                                 strcat(x,p);
-                                            else
+                                            } else
                                               {
                                               hae_wnimi(atoi(p),wstr);
                                               strcat(x,wstr);
@@ -1198,9 +1285,9 @@ static int selkomuunto(char *rivi,char *crivi)
                                                            return(-1);
                                                          }
                                             *q=EOS;
-                                            if (*p=='V')
+                                            if (*p=='V') {
                                                 strcat(x,p);
-                                            else
+                                            } else
                                               {
                                               hae_wnimi(atoi(p),wstr);
                                               strcat(x,wstr);
@@ -1228,8 +1315,9 @@ static int selkomuunto(char *rivi,char *crivi)
                                             *q=EOS;
                                             if (*p=='C')
                                                 {
-                                     if (strcmp(p+1,"0")!=0 || *(q+1)!='-')
+                                     if (strcmp(p+1,"0")!=0 || *(q+1)!='-') {
                                                     strcat(x,p+1);
+}
                                                 }
                                             else
                                                 {
@@ -1249,8 +1337,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                                            return(-1);
                                                          }
                                             *q=EOS;
-                                            if (*p=='C') strcat(x,p+1);
-                                            else
+                                            if (*p=='C') { strcat(x,p+1);
+                                            } else
                                                 {
                                                 hae_wnimi(atoi(p),wstr);
                                                 strcat(x,wstr);
@@ -1298,8 +1386,9 @@ static int selkomuunto(char *rivi,char *crivi)
                                                            return(-1);
                                                          }
                                             *q=EOS;
-                                            if (*p=='C') strcpy(wstr,p+1);
-                                            else hae_wnimi(atoi(p),wstr);
+                                            if (*p=='C') { strcpy(wstr,p+1);
+                                            } else { hae_wnimi(atoi(p),wstr);
+}
                                             muste_sprintf(x,"{save stack %s}",wstr);
                                             rcat(x);
                                             p=q+1;
@@ -1310,8 +1399,9 @@ static int selkomuunto(char *rivi,char *crivi)
                                                            return(-1);
                                                          }
                                             *q=EOS;
-                                            if (*p=='C') strcpy(wstr,p+1);
-                                            else hae_wnimi(atoi(p),wstr);
+                                            if (*p=='C') { strcpy(wstr,p+1);
+                                            } else { hae_wnimi(atoi(p),wstr);
+}
                                             muste_sprintf(x,"{load stack %s}",wstr);
                                             rcat(x);
                                             p=q+1;
@@ -1335,8 +1425,9 @@ static int selkomuunto(char *rivi,char *crivi)
                                                            return(-1);
                                                          }
                                             *q=EOS;
-                                            if (*p=='C') strcpy(wstr,p+1);
-                                            else hae_wnimi(atoi(p),wstr);
+                                            if (*p=='C') { strcpy(wstr,p+1);
+                                            } else { hae_wnimi(atoi(p),wstr);
+}
                                             muste_sprintf(x,"{message %s}",wstr);
                                             rcat(x);
                                             p=q+1;
@@ -1376,8 +1467,9 @@ static int selkomuunto(char *rivi,char *crivi)
                                                            return(-1);
                                                          }
                                             *q=EOS;
-                                            if (*p=='C') strcpy(wstr,p+1);
-                                            else hae_wnimi(atoi(p),wstr);
+                                            if (*p=='C') { strcpy(wstr,p+1);
+                                            } else { hae_wnimi(atoi(p),wstr);
+}
                                             muste_sprintf(x,"{play sound %s}",wstr);
                                             rcat(x);
                                             p=q+1;
@@ -1434,7 +1526,8 @@ static int selkomuunto(char *rivi,char *crivi)
                             if (*p=='i')
                                 {
                                 ++p;
-                                if (*p<'0') return(-3);  /* 6.3.1991 */  //RS CHA exit
+                                if (*p<'0') { return(-3);  /* 6.3.1991 */  //RS CHA exit
+}
                                 tut_index=*p-'0'; ++p;
                                 break;
                                 }
@@ -1496,7 +1589,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                     rcat(x);
                                     tut_index=0;
                                     }
-                                else rcat("{stack word}");
+                                else { rcat("{stack word}");
+}
                                 ++p;
                                 break;
                                 }
@@ -1509,14 +1603,16 @@ static int selkomuunto(char *rivi,char *crivi)
                                     rcat(x);
                                     tut_index=0;
                                     }
-                                else rcat("{stack char}");
+                                else { rcat("{stack char}");
+}
                                 ++p;
                                 break;
                                 }
                             if (*p=='C')
                                 {
                                 ++p; x3[0]=*p; x3[1]=EOS;
-                                if (*p==' ') strcpy(x3,"sp");
+                                if (*p==' ') { strcpy(x3,"sp");
+}
                                 muste_sprintf(x,"{find %s}",x3); ++p;
                                 rcat(x);
                                 break;
@@ -1535,7 +1631,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                     rcat(x);
                                     tut_index=0;
                                     }
-                                else rcat("{get key}");
+                                else { rcat("{get key}");
+}
                                 ++p;
                                 break;
                                 }
@@ -1672,7 +1769,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                         muste_sprintf(x,"{save fieldtype %s}",wstr);
                                         tut_index=0;
                                         }
-                                    else strcpy(x,"{save fieldtype}");
+                                    else { strcpy(x,"{save fieldtype}");
+}
                                     }
                                 else if (*p=='f') // 4.9.2000
                                     {
@@ -1682,7 +1780,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                         muste_sprintf(x,"{save dataname %s}",wstr);
                                         tut_index=0;
                                         }
-                                    else strcpy(x,"{save dataname}");
+                                    else { strcpy(x,"{save dataname}");
+}
                                     }
                                 else if (*p=='s') // 23.2.2003
                                     {
@@ -1692,7 +1791,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                         muste_sprintf(x,"{save version %s}",wstr);
                                         tut_index=0;
                                         }
-                                    else strcpy(x,"{save version}");
+                                    else { strcpy(x,"{save version}");
+}
                                     }
                                 else if (*p=='n') // 7.2.2006
                                     {
@@ -1702,7 +1802,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                         muste_sprintf(x,"{save netsurvo %s}",wstr);
                                         tut_index=0;
                                         }
-                                    else strcpy(x,"{save netsurvo}");
+                                    else { strcpy(x,"{save netsurvo}");
+}
                                     }
                                 else if (*p=='N') // 7.2.2006
                                     {
@@ -1712,7 +1813,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                         muste_sprintf(x,"{save netpath %s}",wstr);
                                         tut_index=0;
                                         }
-                                    else strcpy(x,"{save netpath}");
+                                    else { strcpy(x,"{save netpath}");
+}
                                     }
 
                                 else
@@ -1735,7 +1837,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                     rcat(x);
                                     tut_index=0;
                                     }
-                                else rcat("{save line}");
+                                else { rcat("{save line}");
+}
                                 ++p;
                                 break;
                                 }
@@ -1748,7 +1851,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                     rcat(x);
                                     tut_index=0;
                                     }
-                                else rcat("{save datapath}");
+                                else { rcat("{save datapath}");
+}
                                 ++p;
                                 break;
                                 }
@@ -1761,7 +1865,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                     rcat(x);
                                     tut_index=0;
                                     }
-                                else rcat("{save systemdisk}");
+                                else { rcat("{save systemdisk}");
+}
                                 ++p;
                                 break;
                                 }
@@ -1774,7 +1879,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                     rcat(x);
                                     tut_index=0;
                                     }
-                                else rcat("{save systempath}");
+                                else { rcat("{save systempath}");
+}
                                 ++p;
                                 break;
                                 }
@@ -1787,7 +1893,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                     rcat(x);
                                     tut_index=0;
                                     }
-                                else rcat("{save time}");
+                                else { rcat("{save time}");
+}
                                 ++p;
                                 break;
                                 }
@@ -1800,7 +1907,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                     rcat(x);
                                     tut_index=0;
                                     }
-                                else rcat("{save tempdisk}");
+                                else { rcat("{save tempdisk}");
+}
                                 ++p;
                                 break;
                                 }
@@ -1826,7 +1934,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                 }
                             if (*p=='!' || *p==';')
                                 {
-                                strcpy(x2,"call"); if (*p=='!') strcat(x2,"s");
+                                strcpy(x2,"call"); if (*p=='!') { strcat(x2,"s");
+}
                                 ++p; i=0;
                                                                // RS CHA '\375'
                                 while ((unsigned char)*p!=(unsigned char) TUTCODE) 
@@ -1861,7 +1970,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                     hae_wnimi(tut_index,wstr);
                                     muste_sprintf(x,"{save system %s %s}",x1,wstr);
                                     }
-                                else muste_sprintf(x,"{save system %s}",x1);
+                                else { muste_sprintf(x,"{save system %s}",x1);
+}
                                 rcat(x);
                                 ++p; /* R */
                                 ++p; break;
@@ -1874,9 +1984,9 @@ static int selkomuunto(char *rivi,char *crivi)
                             if (*p=='u')
                                 {
                                 ++p;
-                                if (*p==' ')
+                                if (*p==' ') {
                                     rcat("{message shadow}");
-                                else
+                                } else
                                     {
                                     muste_sprintf(x,"{message shadow %c}",*p);
                                     rcat(x);
@@ -1893,7 +2003,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                     rcat(x);
                                     tut_index=0;
                                     }
-                                else rcat("{save survotype}");
+                                else { rcat("{save survotype}");
+}
                                 ++p;
                                 break;
                                 }
@@ -1907,7 +2018,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                     rcat(x);
                                     tut_index=0;
                                     }
-                                else rcat("{save language}");
+                                else { rcat("{save language}");
+}
                                 ++p;
                                 break;
                                 }
@@ -1921,7 +2033,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                     rcat(x);
                                     tut_index=0;
                                     }
-                                else rcat("{save survo.apu}");
+                                else { rcat("{save survo.apu}");
+}
                                 ++p;
                                 break;
                                 }
@@ -1935,7 +2048,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                     rcat(x);
                                     tut_index=0;
                                     }
-                                else rcat("{save survo2.apu}");
+                                else { rcat("{save survo2.apu}");
+}
                                 ++p;
                                 break;
                                 }
@@ -1949,7 +2063,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                     rcat(x);
                                     tut_index=0;
                                     }
-                                else rcat("{save user}");
+                                else { rcat("{save user}");
+}
                                 ++p;
                                 break;
                                 }
@@ -1962,7 +2077,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                     rcat(x);
                                     tut_index=0;
                                     }
-                                else rcat("{save insertmode}");
+                                else { rcat("{save insertmode}");
+}
                                 ++p;
                                 break;
                                 }
@@ -1975,7 +2091,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                     rcat(x);
                                     tut_index=0;
                                     }
-                                else rcat("{save os}");
+                                else { rcat("{save os}");
+}
                                 ++p;
                                 break;
                                 }
@@ -2028,8 +2145,10 @@ static int selkomuunto(char *rivi,char *crivi)
                             break;
             case 'r': case 'l': case 'u': case 'd': case 'v': case '5':
                             x3[0]=*p; x3[1]=EOS;
-                            if (*p=='v') strcpy(x3,"del");
-                            if (*p=='5') strcpy(x3,"form");
+                            if (*p=='v') { strcpy(x3,"del");
+}
+                            if (*p=='5') { strcpy(x3,"form");
+}
                             if (!crivin_alku)
 // RS 2026-07-02 change to memmove    { strcpy(crivi,p-1); crivin_alku=1; return(1); }
                             { memmove(crivi, p-1, strlen(p-1) + 1); crivin_alku=1; return(1); }
@@ -2040,10 +2159,12 @@ static int selkomuunto(char *rivi,char *crivi)
                                                                // RS CHA '\375'
                                 if ((unsigned char)*(p+1)==(unsigned char) TUTCODE && *(p+2)==ch)
                                     { ++k; p+=2; }
-                                else break;
+                                else { break;
+}
                                 }
-                            if (k==1) muste_sprintf(x,"{%s}",x3);
-                            else muste_sprintf(x,"{%s%d}",x3,k);
+                            if (k==1) { muste_sprintf(x,"{%s}",x3);
+                            } else { muste_sprintf(x,"{%s%d}",x3,k);
+}
                             rcat(x); ++p;
 // RS 2026-07-02             strcpy(crivi,p); return(1);
                             memmove(crivi, p, strlen(p) + 1); return(1);
@@ -2159,18 +2280,21 @@ static int kopioi_alku()
                 }
             o2=1;
             }
-        if (uusi_tiedosto) osaosoite[0]=JAKSO1+JAKSO2+3;
+        if (uusi_tiedosto) { osaosoite[0]=JAKSO1+JAKSO2+3;
+}
         talleta_dir();
 
         if (!uusi_tiedosto)
             {
             muste_fseek(tutor2,(long)osaosoite[0],SEEK_SET);
-            if (!uusi_sukro) l1=osaosoite[is];
-            else l1=10000000L;
+            if (!uusi_sukro) { l1=osaosoite[is];
+            } else { l1=10000000L;
+}
             for (li=osaosoite[0]; li<l1; ++li)
                 {
                 i=fgetc(tutor2);
-                if (feof(tutor2)) break;
+                if (feof(tutor2)) { break;
+}
                 fputc(i,tutor);
                 }
 /* Rprintf("\nväli: %ld - %ld",osaosoite[0],li); getch();
@@ -2211,10 +2335,14 @@ static int etsi_end_koodi()
         for (j=r1+r; j<=r2; ++j)
              {
              edread(x,j);
-             if (strstr(x+1,"{end}")!=NULL) return(1);
-             if (strstr(x+1,"{repeat}")!=NULL) return(1);
-             if (strstr(x+1,x2)!=NULL) return(1);
-             if (strstr(x+1,x3)!=NULL) return(1);
+             if (strstr(x+1,"{end}")!=NULL) { return(1);
+}
+             if (strstr(x+1,"{repeat}")!=NULL) { return(1);
+}
+             if (strstr(x+1,x2)!=NULL) { return(1);
+}
+             if (strstr(x+1,x3)!=NULL) { return(1);
+}
              }
         return(-1);
         }
@@ -2228,14 +2356,17 @@ static int tutki_wnimet(char *rivi)
 
         strcpy(x,rivi);
         i=split(x,osa,1);
-        if (i==0) return(1);
-        if (strcmp(osa[0],"def")!=0) return(1);
+        if (i==0) { return(1);
+}
+        if (strcmp(osa[0],"def")!=0) { return(1);
+}
         strcpy(x,rivi);
         p=x;
         while (1)
             {
             q=strstr(p,"=W");
-            if (q==NULL) break;
+            if (q==NULL) { break;
+}
             *q=EOS;
             i=atoi(q+2);
             if (i<1 || i>MAXNIMET)
@@ -2244,10 +2375,12 @@ static int tutki_wnimet(char *rivi)
                                      i,rivi);
                 sur_print(sbuf); WAIT; return(-1);
                 }
-            p=q; while (p>x && *p!=' ') --p;
+            p=q; while (p>x && *p!=' ') { --p;
+}
             ++p;
             muste_strncpy(wnimi[i-1],p,MAXPITUUS); wnimi[i-1][MAXPITUUS-1]=EOS;
-            if (i>max_indeksi) max_indeksi=i;
+            if (i>max_indeksi) { max_indeksi=i;
+}
             p=q+2;
             }
         return(1);
@@ -2273,8 +2406,10 @@ static int lue()
                 strcpy(rivi+1,comment_code); ++n_comments;
                 return(1);
                 }
-            if (*rivi=='%') return(1);
-            i=strlen(rivi); while (rivi[i-1]==' ') rivi[--i]=EOS;
+            if (*rivi=='%') { return(1);
+}
+            i=strlen(rivi); while (rivi[i-1]==' ') { rivi[--i]=EOS;
+}
             return(1);
             }
   /* koodi=1 */
@@ -2289,7 +2424,8 @@ static void kopioi_loppu()
         int i;
 
 
-        if (uusi_tiedosto) return;
+        if (uusi_tiedosto) { return;
+}
         uusi_paikka2=muste_ftell(tutor);
 /*
 printf("\nuusi koko on %d",(int)(uusi_paikka2-uusi_paikka1));
@@ -2302,7 +2438,8 @@ getch();
             while (1)
                 {
                 i=fgetc(tutor2);
-                if (feof(tutor2)) break;
+                if (feof(tutor2)) { break;
+}
                 fputc(i,tutor);
                 }
                 muutos=uusi_paikka2-uusi_paikka1-osaosoite[is+1]+osaosoite[is];
@@ -2315,11 +2452,13 @@ getch();
         if (uusi_sukro)
             {
             osaosoite[is]=uusi_paikka1-JAKSO2;
-            for (i=0; i<nosat; ++i) osaosoite[i]+=JAKSO2;
+            for (i=0; i<nosat; ++i) { osaosoite[i]+=JAKSO2;
+}
             }
 
-        if (uusi_sukro || is<nosat-1)
+        if (uusi_sukro || is<nosat-1) {
             talleta_dir();
+}
         }
 
 static void talleta_kommentit(int j1,int j2)
@@ -2329,23 +2468,28 @@ static void talleta_kommentit(int j1,int j2)
         while (j2<=r2)
             {
             edread(rivi,j2);
-            if (*rivi!='/') break;
+            if (*rivi!='/') { break;
+}
             putc(TUT_COMMENT_CODE,tutor);
             ++n_comments;
             ++j2;
             }
 
-        if (!n_comments) return;
+        if (!n_comments) { return;
+}
 /*      putc(255,tutor);       13.10.88 */
         j=j1;
         while (1)
             {
-            if (j>r2) return;
+            if (j>r2) { return;
+}
             edread(rivi,j);
-            if (j>j2-1 && *rivi!='/') return;
+            if (j>j2-1 && *rivi!='/') { return;
+}
             if (*rivi!='/') { ++j; continue; }
             i=strlen(rivi);
-            while (i>0 && rivi[i-1]==' ') rivi[--i]=EOS;
+            while (i>0 && rivi[i-1]==' ') { rivi[--i]=EOS;
+}
             fprintf(tutor,"%s\n",rivi+1);
             ++j;
             }
@@ -2366,8 +2510,10 @@ getch();
         for (i=0; i<ngo; ++i)
             {
             pgo=tutgo[i];
-            for (j=0; j<nlab; ++j)
-                if (strcmp(pgo,tutlab[j])==0) break;
+            for (j=0; j<nlab; ++j) {
+                if (strcmp(pgo,tutlab[j])==0) { break;
+}
+}
             if (j==nlab)
                 {
                 if (!ilm) { PR_EBLD; sur_print("\nMissing labels:"); ++ilm; }
@@ -2395,7 +2541,8 @@ static void labcat(char *s)
             no_labcheck=1;
             return;
             }
-        p=s; while (*p) *plab++=*p++;
+        p=s; while (*p) { *plab++=*p++;
+}
         *plab++=EOS;
         }
 
@@ -2404,7 +2551,8 @@ static int add_label(char *s)
         {
         int i;
 
-        if (no_labcheck) return(1);
+        if (no_labcheck) { return(1);
+}
         for (i=0; i<nlab; ++i)
             {
             if (strcmp(s,tutlab[i])==0)
@@ -2424,11 +2572,14 @@ static int indeksi(char *s)
         {
         int i;
 
-        if (*s!='W') return(atoi(s));
-        i=atoi(s+1); if (i>0) return(i);
+        if (*s!='W') { return(atoi(s));
+}
+        i=atoi(s+1); if (i>0) { return(i);
+}
         for (i=0; i<max_indeksi; ++i)
             {
-            if (strcmp(s,wnimi[i])==0) return(i+1);
+            if (strcmp(s,wnimi[i])==0) { return(i+1);
+}
             }
         muste_sprintf(sbuf,"\nWord %s is not defined!",s);
         sur_print(sbuf); WAIT; return(-1);
@@ -2439,11 +2590,14 @@ static int indeksi2(char *s) // without error message!
         {
         int i;
 
-        if (*s!='W') return(atoi(s));
-        i=atoi(s+1); if (i>0) return(i);
+        if (*s!='W') { return(atoi(s));
+}
+        i=atoi(s+1); if (i>0) { return(i);
+}
         for (i=0; i<max_indeksi; ++i)
             {
-            if (strcmp(s,wnimi[i])==0) return(i+1);
+            if (strcmp(s,wnimi[i])==0) { return(i+1);
+}
             }
         return(-1);
         }
@@ -2453,7 +2607,8 @@ static int indeksich(char *s,char *t)
         int i;
 
         i=indeksi(s);
-        if (i<0) return(-1);
+        if (i<0) { return(-1);
+}
         muste_sprintf(t,"%d",i);
         return(1);
         }
@@ -2463,7 +2618,8 @@ static int indeksich2(char *s,char *t)
         int i;
 
         i=indeksi2(s);
-        if (i<0) return(-1);
+        if (i<0) { return(-1);
+}
         muste_sprintf(t,"%d",i);
         return(1);
         }
@@ -2473,7 +2629,8 @@ static int tee_indeksi(char *s,char *koodi)
         {
         int i;
 
-        i=indeksi(s); if (i<0) return(-1);
+        i=indeksi(s); if (i<0) { return(-1);
+}
         strcpy(koodi,"\375Gi");
         koodi[3]=(char)('0'+i); koodi[4]=EOS;
         return(1);
@@ -2483,8 +2640,11 @@ static int add_goto(char *s)
         {
         int i;
 
-        if (no_labcheck) return(1);
-        for (i=0; i<ngo; ++i) if (strcmp(s,tutgo[i])==0) return(1);
+        if (no_labcheck) { return(1);
+}
+        for (i=0; i<ngo; ++i) { if (strcmp(s,tutgo[i])==0) { return(1);
+}
+}
         if (ngo>=LABMAX) { no_labcheck=1; return(1); }
         goline[ngo]=eol-1;
         tutgo[ngo++]=plab;
@@ -2510,9 +2670,10 @@ static int c_switch(char *rivi,char *x)
                  }
 
         strcpy(s,osa[1]);
-        if (*osa[1]=='W')
+        if (*osa[1]=='W') {
             i=indeksich(osa[1],s);
-        else i=atoi(osa[1]);
+        } else { i=atoi(osa[1]);
+}
         if (i<=0) { muste_sprintf(sbuf,"\nError on line %d: Illegal tutword index!",eol-1);
                     sur_print(sbuf); WAIT; return(-1);
                   }
@@ -2552,16 +2713,17 @@ static int c_switch(char *rivi,char *x)
                     return(-1);
                     }
                 osa[1][i-1]=EOS;
-                while ((p=strchr(osa[1],'_'))!=NULL) *p=' ';
+                while ((p=strchr(osa[1],'_'))!=NULL) { *p=' ';
+}
                 strcat(rivi,osa[1]); strcat(rivi,"@");
                 h=1;
                 if (strcmp(osa[2],"goto")==0)
                     { strcat(swlist,"G"); add_goto(osa[3]); }
-                else if (strcmp(osa[2],"load")==0)
+                else if (strcmp(osa[2],"load")==0) {
                     strcat(swlist,"L");
-                else if (strcmp(osa[2],"continue")==0)
+                } else if (strcmp(osa[2],"continue")==0) {
                     h=0;
-                else
+                } else
                     {
                     muste_sprintf(sbuf,"\nError on line %d: goto, load or continue missing!",eol-1);
                     sur_print(sbuf); WAIT; return(-1);
@@ -2569,7 +2731,8 @@ static int c_switch(char *rivi,char *x)
                 if (h && k<4) { muste_sprintf(sbuf,"\nError on line %d: Incomplete case line!",eol-1);
                                 sur_print(sbuf); WAIT; return(-1);
                               }
-                if (h) strcat(swlist,osa[3]); strcat(swlist,"@");
+                if (h) { strcat(swlist,osa[3]); 
+}strcat(swlist,"@");
                 continue;
                 }
             h=1;
@@ -2577,16 +2740,17 @@ static int c_switch(char *rivi,char *x)
                 {
                 if (strcmp(osa[1],"goto")==0)
                     { strcat(swlist,"G"); add_goto(osa[2]); }
-                else if (strcmp(osa[1],"load")==0)
+                else if (strcmp(osa[1],"load")==0) {
                     strcat(swlist,"L");
-                else if (strcmp(osa[1],"continue")==0)
+                } else if (strcmp(osa[1],"continue")==0) {
                     h=0;
-                else
+                } else
                     {
                     muste_sprintf(sbuf,"\nError on line %d: goto, load or continue missing!",eol-1);
                     sur_print(sbuf); WAIT; return(-1);
                     }
-                if (h) strcat(swlist,osa[2]);
+                if (h) { strcat(swlist,osa[2]);
+}
                 strcat(swlist,"@");
                 strcat(rivi,"@"); strcat(rivi,swlist);
                 return(1);
@@ -2619,13 +2783,17 @@ static int c_prompt(char *rivi,char *x)
         char *p;
 
         strcpy(y,x+1);
-        p=y; while (*p==' ') ++p;
-        while (*p && *p!=' ') ++p;
+        p=y; while (*p==' ') { ++p;
+}
+        while (*p && *p!=' ') { ++p;
+}
         if (*p==EOS) { *prompt=EOS; }
         else
             {
-            ++p; i=strlen(p); while (p[i-1]==' ') p[--i]=EOS;
-            if (p[i-1]=='}') p[i-2]=EOS;
+            ++p; i=strlen(p); while (p[i-1]==' ') { p[--i]=EOS;
+}
+            if (p[i-1]=='}') { p[i-2]=EOS;
+}
             strcpy(prompt,p);
             }
         edread(x,eol); ++eol;
@@ -2643,12 +2811,15 @@ static int c_prompt(char *rivi,char *x)
                 {
                 k=osa[1]-y; strcpy(y,x+k+1);
                 *def='C'; def[1]=EOS; strcat(def,y);
-                k=strlen(def); while(k>1 && def[k-1]==' ') def[--k]=EOS;
-                if (strcmp(def,"C{}")==0) def[1]=EOS;
+                k=strlen(def); while(k>1 && def[k-1]==' ') { def[--k]=EOS;
+}
+                if (strcmp(def,"C{}")==0) { def[1]=EOS;
+}
                 }
             else
                 {
-                i=indeksich(osa[1],def); if (i<0) return(-1);
+                i=indeksich(osa[1],def); if (i<0) { return(-1);
+}
                 }
             }
 
@@ -2658,7 +2829,8 @@ static int c_prompt(char *rivi,char *x)
 
         if (strcmp(osa[0],"answer")==0)
             {
-            i=tee_indeksi(osa[1],length); if (i<0) return(-1);
+            i=tee_indeksi(osa[1],length); if (i<0) { return(-1);
+}
             strcat(rivi,length);
             edread(x,eol); ++eol;
             strcpy(y,x+1);
@@ -2684,7 +2856,8 @@ static int c_prompt(char *rivi,char *x)
      /* else  strcpy(wait,osa[1]+1);  */
         else
             {
-            i=indeksich(osa[1],wait); if (i<0) return(-1);
+            i=indeksich(osa[1],wait); if (i<0) { return(-1);
+}
             }
         muste_sprintf(y,"\375GTK%s@%s@%s@%s@",wait,prompt,def,length);
         strcat(rivi,y);
@@ -2705,50 +2878,52 @@ static int c_key(char *rivi,char *x)
             edread(x,eol); ++eol;
             strcpy(y,x+1);
             k=split(y,osa,4);
-            if (strcmp(osa[0],"wait")==0) break;
+            if (strcmp(osa[0],"wait")==0) { break;
+}
             if (k<3 || strcmp(osa[0],"key")!=0)
                 {
                 muste_sprintf(sbuf,"\nError on line %d: wait or key expected!",eol-1);
                 sur_print(sbuf); WAIT; return(-1);
                 }
-            if (muste_strnicmp(osa[1],"ENTER",5)==0) keys[i]=CODE_RETURN;
-            else if (muste_strnicmp(osa[1],"RIGHT",5)==0) keys[i]=CODE_RIGHT;
-            else if (muste_strnicmp(osa[1],"LEFT",4)==0) keys[i]=CODE_LEFT;
-            else if (muste_strnicmp(osa[1],"UP",2)==0) keys[i]=CODE_UP;
-            else if (muste_strnicmp(osa[1],"DOWN",4)==0) keys[i]=CODE_DOWN;
-            else if (muste_strnicmp(osa[1],"HOME",4)==0) keys[i]=CODE_HOME;
-            else if (muste_strnicmp(osa[1],"HELP",4)==0) keys[i]=(unsigned char)CODE_HELP;
-            else if (muste_strnicmp(osa[1],"ESC",3)==0) keys[i]=(unsigned char)CODE_EXEC;
-            else if (muste_strnicmp(osa[1],"SP",2)==0) keys[i]=' ';
-            else if (muste_strnicmp(osa[1],"COLON",5)==0) keys[i]=':';
-            else if (muste_strnicmp(osa[1],"INSERT",6)==0) keys[i]=CODE_INSERT;
-            else if (muste_strnicmp(osa[1],"INS_LINE",8)==0) keys[i]=CODE_INSERTL;
-            else if (muste_strnicmp(osa[1],"DELETE",6)==0) keys[i]=CODE_DELETE;
-            else if (muste_strnicmp(osa[1],"DEL_LINE",8)==0) keys[i]=CODE_DELETEL;
-            else if (muste_strnicmp(osa[1],"ERASE",5)==0) keys[i]=CODE_ERASE;
-            else if (muste_strnicmp(osa[1],"NEXT",4)==0) keys[i]=CODE_NEXT;
-            else if (muste_strnicmp(osa[1],"PREV",4)==0) keys[i]=CODE_PREV;
-            else if (muste_strnicmp(osa[1],"DISK",4)==0) keys[i]=(unsigned char)CODE_DISK;
-            else if (muste_strnicmp(osa[1],"BACKSP",6)==0) keys[i]=CODE_BACKSP;
-            else if (muste_strnicmp(osa[1],"REF",3)==0) keys[i]=(unsigned char)CODE_REF;
-            else if (muste_strnicmp(osa[1],"MERGE",5)==0) keys[i]=(unsigned char)CODE_MERGE;
-            else if (muste_strnicmp(osa[1],"COPY",4)==0) keys[i]=(unsigned char)CODE_COPY;
-            else if (muste_strnicmp(osa[1],"TAB",3)==0) keys[i]=CODE_TAB;
-            else if (muste_strnicmp(osa[1],"HELP",4)==0) keys[i]=(unsigned char)CODE_HELP;
-            else if (muste_strnicmp(osa[1],"SRCH",4)==0) keys[i]=(unsigned char)CODE_SRCH;
-            else if (muste_strnicmp(osa[1],"ACTIV",5)==0) keys[i]=CODE_ACTIV;
-            else if (muste_strnicmp(osa[1],"MOVE",4)==0) keys[i]=(unsigned char)CODE_MOVE;
-            else if (muste_strnicmp(osa[1],"END",3)==0) keys[i]=(unsigned char)CODE_END;
-            else if (muste_strnicmp(osa[1],"WORDS",3)==0) keys[i]=(unsigned char)CODE_WORDS;
+            if (muste_strnicmp(osa[1],"ENTER",5)==0) { keys[i]=CODE_RETURN;
+            } else if (muste_strnicmp(osa[1],"RIGHT",5)==0) { keys[i]=CODE_RIGHT;
+            } else if (muste_strnicmp(osa[1],"LEFT",4)==0) { keys[i]=CODE_LEFT;
+            } else if (muste_strnicmp(osa[1],"UP",2)==0) { keys[i]=CODE_UP;
+            } else if (muste_strnicmp(osa[1],"DOWN",4)==0) { keys[i]=CODE_DOWN;
+            } else if (muste_strnicmp(osa[1],"HOME",4)==0) { keys[i]=CODE_HOME;
+            } else if (muste_strnicmp(osa[1],"HELP",4)==0) { keys[i]=(unsigned char)CODE_HELP;
+            } else if (muste_strnicmp(osa[1],"ESC",3)==0) { keys[i]=(unsigned char)CODE_EXEC;
+            } else if (muste_strnicmp(osa[1],"SP",2)==0) { keys[i]=' ';
+            } else if (muste_strnicmp(osa[1],"COLON",5)==0) { keys[i]=':';
+            } else if (muste_strnicmp(osa[1],"INSERT",6)==0) { keys[i]=CODE_INSERT;
+            } else if (muste_strnicmp(osa[1],"INS_LINE",8)==0) { keys[i]=CODE_INSERTL;
+            } else if (muste_strnicmp(osa[1],"DELETE",6)==0) { keys[i]=CODE_DELETE;
+            } else if (muste_strnicmp(osa[1],"DEL_LINE",8)==0) { keys[i]=CODE_DELETEL;
+            } else if (muste_strnicmp(osa[1],"ERASE",5)==0) { keys[i]=CODE_ERASE;
+            } else if (muste_strnicmp(osa[1],"NEXT",4)==0) { keys[i]=CODE_NEXT;
+            } else if (muste_strnicmp(osa[1],"PREV",4)==0) { keys[i]=CODE_PREV;
+            } else if (muste_strnicmp(osa[1],"DISK",4)==0) { keys[i]=(unsigned char)CODE_DISK;
+            } else if (muste_strnicmp(osa[1],"BACKSP",6)==0) { keys[i]=CODE_BACKSP;
+            } else if (muste_strnicmp(osa[1],"REF",3)==0) { keys[i]=(unsigned char)CODE_REF;
+            } else if (muste_strnicmp(osa[1],"MERGE",5)==0) { keys[i]=(unsigned char)CODE_MERGE;
+            } else if (muste_strnicmp(osa[1],"COPY",4)==0) { keys[i]=(unsigned char)CODE_COPY;
+            } else if (muste_strnicmp(osa[1],"TAB",3)==0) { keys[i]=CODE_TAB;
+            } else if (muste_strnicmp(osa[1],"HELP",4)==0) { keys[i]=(unsigned char)CODE_HELP;
+            } else if (muste_strnicmp(osa[1],"SRCH",4)==0) { keys[i]=(unsigned char)CODE_SRCH;
+            } else if (muste_strnicmp(osa[1],"ACTIV",5)==0) { keys[i]=CODE_ACTIV;
+            } else if (muste_strnicmp(osa[1],"MOVE",4)==0) { keys[i]=(unsigned char)CODE_MOVE;
+            } else if (muste_strnicmp(osa[1],"END",3)==0) { keys[i]=(unsigned char)CODE_END;
+            } else if (muste_strnicmp(osa[1],"WORDS",3)==0) { keys[i]=(unsigned char)CODE_WORDS;
 
-            else
+            } else {
                 keys[i]=*osa[1];
+}
             h=1;
             if (strcmp(osa[2],"goto")==0)
                 { strcat(keylist,"G"); add_goto(osa[3]); }
-            else if (strcmp(osa[2],"load")==0) strcat(keylist,"L");
-            else if (strcmp(osa[2],"continue")==0) h=0;
-            else     /* 26.5.93 */
+            else if (strcmp(osa[2],"load")==0) { strcat(keylist,"L");
+            } else if (strcmp(osa[2],"continue")==0) { h=0;
+            } else     /* 26.5.93 */
                 {
                 muste_sprintf(sbuf,"\nError on line %d: `%s' not permitted!",eol-1,osa[2]);
                 sur_print(sbuf); WAIT; return(-1);
@@ -2758,7 +2933,8 @@ static int c_key(char *rivi,char *x)
                 muste_sprintf(sbuf,"\nError on line %d: %s ???",eol-1,osa[2]);
                 sur_print(sbuf); WAIT; return(-1);
                 }
-            if (h) strcat(keylist,osa[3]);
+            if (h) { strcat(keylist,osa[3]);
+}
             strcat(keylist,"@");
             ++i;
             }
@@ -2770,7 +2946,8 @@ static int c_key(char *rivi,char *x)
         keys[i]=EOS;
         if (*osa[1]=='W')
             {
-            i=indeksich(osa[1],wait); if (i<0) return(-1);
+            i=indeksich(osa[1],wait); if (i<0) { return(-1);
+}
             }
         else { strcpy(wait,"C"); strcat(wait,osa[1]); }
         muste_sprintf(y,"\375GTV%s@%s@%s",wait,keys,keylist);
@@ -2784,9 +2961,11 @@ static int set_wexpr(char *w)
     char s[32];
 
     strcpy(s,w);
-    if (*s!='W') return(1);
+    if (*s!='W') { return(1);
+}
 
-    i=indeksich(s,w+1); if (i<0) return(-1);
+    i=indeksich(s,w+1); if (i<0) { return(-1);
+}
     *w='W';
     return(1);
     }
@@ -2807,22 +2986,25 @@ static int if2_muunto1(char *s,char *t)
             {
             op=*p;
             *p=EOS; strcpy(w1,sbuf); strcpy(w2,p+1);
-            i=set_wexpr(w1); if (i<0) return(-1);
-            i=set_wexpr(w2); if (i<0) return(-1);
+            i=set_wexpr(w1); if (i<0) { return(-1);
+}
+            i=set_wexpr(w2); if (i<0) { return(-1);
+}
             muste_sprintf(t,"%s%c%s",w1,op,w2);
             return(1);
             }
         ++p;
         }
-    i=set_wexpr(sbuf); if (i<0) return(-1); strcpy(t,sbuf);
+    i=set_wexpr(sbuf); if (i<0) { return(-1); 
+}strcpy(t,sbuf);
     return(0);
     }
 
 static int lgmuunto(char *s1,char *s2,char *jump)
         {
         if (strcmp(s1,"goto")==0) { strcpy(jump,"G"); add_goto(s2); }
-        else if (strcmp(s1,"load")==0) strcpy(jump,"L");
-        else { sur_print("\ngoto or load missing!"); return(-1); }
+        else if (strcmp(s1,"load")==0) { strcpy(jump,"L");
+        } else { sur_print("\ngoto or load missing!"); return(-1); }
         strcat(jump,s2);
         return(1);
         }
@@ -2860,12 +3042,14 @@ static int c_if2(char *rivi,char *x)
         strcpy(y,x+1);
         k=split(y,osa,10);
 
-        if (*osa[2]=='\'') return(0); // sivuutetaan ei-num.ehdot
+        if (*osa[2]=='\'') { return(0); // sivuutetaan ei-num.ehdot
+}
 
         i=if2_muunto1(osa[1],expr1);
         i+=if2_muunto1(osa[3],expr2);
 // Rprintf("\ni=%d expr1=%s expr2=%s|",i,expr1,expr2); getch();
-        if (i==0) return(0); // simple if
+        if (i==0) { return(0); // simple if
+}
 
 
         strcpy(vert,osa[2]);
@@ -2943,24 +3127,32 @@ static int c_if(char *rivi,char *x)
 
 // 17.11.2000:
         i=c_if2(rivi,x); // generalized if lauseke rel lauseke ...
-        if (i==1) return(1);
-        if (i<0) return(-1);
+        if (i==1) { return(1);
+}
+        if (i<0) { return(-1);
+}
 
-        if (strcmp(osa[1],"{}")==0) *osa[1]=EOS;
+        if (strcmp(osa[1],"{}")==0) { *osa[1]=EOS;
+}
         if (*osa[1]=='W') /* strcpy(word1,osa[1]+1);  */
             {
-            i=indeksich(osa[1],word1); if (i<0) return(-1);
+            i=indeksich(osa[1],word1); if (i<0) { return(-1);
+}
             }
         else { strcpy(word1,"C"); strcat(word1,osa[1]); }
-        while ((p=strchr(word1,'_'))!=NULL) *p=' ';
+        while ((p=strchr(word1,'_'))!=NULL) { *p=' ';
+}
         korvaa_sp(word1);
-        if (strcmp(osa[3],"{}")==0) *osa[3]=EOS;
+        if (strcmp(osa[3],"{}")==0) { *osa[3]=EOS;
+}
         if (*osa[3]=='W' && osa[3][1]!=EOS) /* strcpy(word2,osa[3]+1); */
             {
-            i=indeksich(osa[3],word2); if (i<0) return(-1);
+            i=indeksich(osa[3],word2); if (i<0) { return(-1);
+}
             }
         else { strcpy(word2,"C"); strcat(word2,osa[3]); }
-        while ((p=strchr(word2,'_'))!=NULL) *p=' ';
+        while ((p=strchr(word2,'_'))!=NULL) { *p=' ';
+}
         korvaa_sp(word2);
         if (*osa[2]=='\'')
             {
@@ -3021,7 +3213,8 @@ static int spec_code(char *rivi,char *x)
 
         if (*x=='+')  /* label */
             {
-            p=x+1; while (*p && *p==' ') ++p;
+            p=x+1; while (*p && *p==' ') { ++p;
+}
             if (*p==EOS) { muste_sprintf(sbuf,"\nError on line %d: Label missing!",eol);
                            sur_print(sbuf); WAIT; return(-1);
                          }
@@ -3031,7 +3224,8 @@ static int spec_code(char *rivi,char *x)
                          }
             *q=EOS;
             strcat(rivi,"\375GTX"); strcat(rivi,p); strcat(rivi,"@");
-            i=add_label(p); if (i<0) return(-1);
+            i=add_label(p); if (i<0) { return(-1);
+}
             p=q+2;  /* + label: jatko  */
             *x='*'; 
             memmove(x+1, p, strlen(p)+1);  // RS 2026-07-04 strcpy(x+1,p);
@@ -3041,7 +3235,8 @@ static int spec_code(char *rivi,char *x)
             {
             strcpy(y,x+1);
             k=split(y,osa,2);
-            if (k==0) return(1);  /* tyhjä rivi */
+            if (k==0) { return(1);  /* tyhjä rivi */
+}
             if (strcmp(osa[0],"switch")==0) { i=c_switch(rivi,x); return(i); }
             if (strcmp(osa[0],"prompt")==0) { i=c_prompt(rivi,x); return(i); }
             if (strcmp(osa[0],"on")==0) { i=c_key(rivi,x); return(i); }
@@ -3076,7 +3271,8 @@ static int tutor_op_arit(char *rivi,char *p)
         if (q==NULL) { arit_error("= missing!"); return(-1); }
         *q=EOS; ++q;
 /*      strcat(rivi,p+1); strcat(rivi,"@");    */
-        i=indeksich(p,y); if (i<0) return(-1); strcat(rivi,y); strcat(rivi,"@");
+        i=indeksich(p,y); if (i<0) { return(-1); 
+}strcat(rivi,y); strcat(rivi,"@");
 
         if (*q==EOS) /* {Wi=} 27.4.1994 */
             {
@@ -3089,11 +3285,13 @@ static int tutor_op_arit(char *rivi,char *p)
         p=q;
 
         jono=0; // jono=1, jos esim. {Wi=Survo-ohjelma}
-        if (strchr("+-0123456789W",*p)==NULL) jono=1;
+        if (strchr("+-0123456789W",*p)==NULL) { jono=1;
+}
         ++q;   /* ohita mahdollinen + tai - */
         while (*q)
             {
-            if (strchr("+-*/%&",*q)!=NULL) break;
+            if (strchr("+-*/%&",*q)!=NULL) { break;
+}
             ++q;
             }
         if (!jono && *q)
@@ -3106,18 +3304,21 @@ static int tutor_op_arit(char *rivi,char *p)
             {
             *(loppu+3)='!';       /* \375GT! */
      /*     if (*p=='W') strcat(rivi,p+1);     */
-            if (*p=='W') { i=indeksich(p,y); if (i<0) return(-1); strcat(rivi,y); }
+            if (*p=='W') { i=indeksich(p,y); if (i<0) { return(-1); 
+}strcat(rivi,y); }
             else { strcat(rivi,"C"); strcat(rivi,p); }
             strcat(rivi,"@");
             return(1);
             }
     /*  if (*p=='W') strcat(rivi,p+1);      */
-        if (*p=='W') { i=indeksich(p,y); if (i<0) return(-1); strcat(rivi,y); }
+        if (*p=='W') { i=indeksich(p,y); if (i<0) { return(-1); 
+}strcat(rivi,y); }
         else { strcat(rivi,"C"); strcat(rivi,p); }
         strcat(rivi,"@");
         *p=op; *(p+1)=EOS; strcat(rivi,p); strcat(rivi,"@");
    /*   if (*q=='W') strcat(rivi,q+1);     */
-        if (*q=='W') { i=indeksich(q,y); if (i<0) return(-1); strcat(rivi,y); }
+        if (*q=='W') { i=indeksich(q,y); if (i<0) { return(-1); 
+}strcat(rivi,y); }
         else { strcat(rivi,"C"); strcat(rivi,q); }
         strcat(rivi,"@");
         return(1);
@@ -3135,7 +3336,8 @@ static int muunna(char *rivi,char *s)
         char x[LLENGTH];
         char y[2];
 
-        if (*s==EOS) return(1); /* {} rivin lopussa */
+        if (*s==EOS) { return(1); /* {} rivin lopussa */
+}
         i=atoi(s);
         if (i>0)  /* {23} = {wait 23} 26.5.1995 */
             {
@@ -3157,7 +3359,8 @@ static int muunna(char *rivi,char *s)
                 {
                // RS CHA '\375'
                 sana[0]=(unsigned char)TUTCODE; sana[1]=*s; sana[2]=EOS;
-                for (i=0; i<n; ++i) strcat(rivi,sana);
+                for (i=0; i<n; ++i) { strcat(rivi,sana);
+}
                 return(1);
                 }
             }
@@ -3167,7 +3370,8 @@ static int muunna(char *rivi,char *s)
             n=atoi(s+3);
             if (n>0)
                 {
-                for (i=0; i<n; ++i) strcat(rivi,bt[6]);
+                for (i=0; i<n; ++i) { strcat(rivi,bt[6]);
+}
                 return(1);
                 }
             }
@@ -3176,14 +3380,16 @@ static int muunna(char *rivi,char *s)
             n=atoi(s+4);
             if (n>0)
                 {
-                for (i=0; i<n; ++i) strcat(rivi,bt[19]);
+                for (i=0; i<n; ++i) { strcat(rivi,bt[19]);
+}
                 return(1);
                 }
             }
 
         if (strncmp(s,"goto ",5)==0)
             {
-            p=s+5; while (*p==' ') ++p;
+            p=s+5; while (*p==' ') { ++p;
+}
             strcat(rivi,"\375GTLG"); strcat(rivi,p); strcat(rivi,"@");
             add_goto(p);
             return(1);
@@ -3202,9 +3408,11 @@ static int muunna(char *rivi,char *s)
                 p=osa[2]; strcpy(x,p);
                 if (*p=='W')
                     {
-                    n=indeksich(p,x); if (n<0) return(-1);
+                    n=indeksich(p,x); if (n<0) { return(-1);
+}
                     }
-                else strcat(rivi,"C");
+                else { strcat(rivi,"C");
+}
                 strcat(rivi,x); strcat(rivi,"@");
                 return(1);
                 }
@@ -3214,7 +3422,8 @@ static int muunna(char *rivi,char *s)
                 if (*p=='W')
                     {
                     strcat(rivi,"\375GTL?");
-                    n=indeksich(p,x); if (n<0) return(-1);
+                    n=indeksich(p,x); if (n<0) { return(-1);
+}
                     strcat(rivi,x); strcat(rivi,"@");
                     return(1);
                     }
@@ -3235,13 +3444,15 @@ static int muunna(char *rivi,char *s)
                 }
             if (strcmp(osa[1],"word")==0)
                 {
-                i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[2],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375Gw");
                 return(1);
                 }
             if (strcmp(osa[1],"char")==0)
                 {
-                i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[2],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375Gx");
                 return(1);
                 }
@@ -3252,9 +3463,11 @@ static int muunna(char *rivi,char *s)
                     muste_sprintf(sbuf,"\nError on line %d: Invalid save cursor!",eol-1);
                     sur_print(sbuf); WAIT; return(-1);
                     }
-                i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[2],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375GL1");
-                i=tee_indeksi(osa[3],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[3],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375GL2");
                 return(1);
                 }
@@ -3265,9 +3478,11 @@ static int muunna(char *rivi,char *s)
                     muste_sprintf(sbuf,"\nError on line %d: Invalid save corner!",eol-1);
                     sur_print(sbuf); WAIT; return(-1);
                     }
-                i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[2],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375GL3");
-                i=tee_indeksi(osa[3],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[3],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375GL4");
                 return(1);
                 }
@@ -3278,9 +3493,11 @@ static int muunna(char *rivi,char *s)
                     muste_sprintf(sbuf,"\nError on line %d: Invalid save dim!",eol-1);
                     sur_print(sbuf); WAIT; return(-1);
                     }
-                i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[2],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375GL5");
-                i=tee_indeksi(osa[3],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[3],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375GL6");
                 return(1);
                 }
@@ -3291,9 +3508,11 @@ static int muunna(char *rivi,char *s)
                     muste_sprintf(sbuf,"\nError on line %d: Invalid save shadowdim!",eol-1);
                     sur_print(sbuf); WAIT; return(-1);
                     }
-                i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[2],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375GL7");
-                i=tee_indeksi(osa[3],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[3],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375GL8");
                 return(1);
                 }
@@ -3304,45 +3523,53 @@ static int muunna(char *rivi,char *s)
                     muste_sprintf(sbuf,"\nError on line %d: Invalid save winsize!",eol-1);
                     sur_print(sbuf); WAIT; return(-1);
                     }
-                i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[2],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375GLZ");
-                i=tee_indeksi(osa[3],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[3],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375GLz");
                 return(1);
                 }
             if (strcmp(osa[1],"line")==0)
                 {
-                i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[2],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375GX");
                 return(1);
                 }
             if (strcmp(osa[1],"datapath")==0)
                 {
-                i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[2],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375Gd");
                 return(1);
                 }
             if (strcmp(osa[1],"systemdisk")==0)
                 {
-                i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[2],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375Gg");
                 return(1);
                 }
             if (strcmp(osa[1],"systempath")==0)
                 {
-                i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[2],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375G^");
                 return(1);
                 }
             if (strcmp(osa[1],"time")==0)
                 {
-                i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[2],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375G/");
                 return(1);
                 }
             if (strcmp(osa[1],"tempdisk")==0)
                 {
-                i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[2],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375Gh");
                 return(1);
                 }
@@ -3352,9 +3579,11 @@ static int muunna(char *rivi,char *s)
                 p=osa[2]; strcpy(x,p);
                 if (*p=='W')
                     {
-                    n=indeksich(p,x); if (n<0) return(-1);
+                    n=indeksich(p,x); if (n<0) { return(-1);
+}
                     }
-                else strcat(rivi,"C");
+                else { strcat(rivi,"C");
+}
                 strcat(rivi,x); strcat(rivi,"@");
                 return(1);
                 }
@@ -3371,7 +3600,8 @@ static int muunna(char *rivi,char *s)
                     muste_sprintf(sbuf,"\nError on line %d: Invalid save system!",eol-1);
                     sur_print(sbuf); WAIT; return(-1);
                     }
-                i=tee_indeksi(osa[3],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[3],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375G%");
                 strcat(rivi,osa[2]); strcat(rivi,"\375R");
                 return(1);
@@ -3383,7 +3613,8 @@ static int muunna(char *rivi,char *s)
                     muste_sprintf(sbuf,"\nError on line %d: Invalid save spec!",eol-1);
                     sur_print(sbuf); WAIT; return(-1);
                     }
-                i=tee_indeksi(osa[3],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[3],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375GTKC~");
                 strcat(rivi,osa[2]); strcat(rivi,"@");
                 return(1);
@@ -3397,80 +3628,94 @@ static int muunna(char *rivi,char *s)
                     sur_print(sbuf); WAIT; return(-1);
                     }
                 strcat(rivi,"\375GTy");
-                i=indeksich(osa[2],y); if (i<0) return(-1); strcat(rivi,y); strcat(rivi,"@");
-                i=indeksich(osa[3],y); if (i<0) return(-1); strcat(rivi,y); strcat(rivi,"@");
+                i=indeksich(osa[2],y); if (i<0) { return(-1); 
+}strcat(rivi,y); strcat(rivi,"@");
+                i=indeksich(osa[3],y); if (i<0) { return(-1); 
+}strcat(rivi,y); strcat(rivi,"@");
                 return(1);
                 }
 
             if (strcmp(osa[1],"survotype")==0)
                 {
-                i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[2],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375G~");
                 return(1);
                 }
             if (strcmp(osa[1],"language")==0)
                 {
-                i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[2],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375G\234");
                 return(1);
                 }
             if (strcmp(osa[1],"survo.apu")==0)
                 {
-                i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[2],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375G\204");
                 return(1);
                 }
             if (strcmp(osa[1],"survo2.apu")==0)
                 {
-                i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[2],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375G\216");
                 return(1);
                 }
             if (strcmp(osa[1],"user")==0)
                 {
-                i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[2],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375G\224");
                 return(1);
                 }
             if (strcmp(osa[1],"insertmode")==0)
                 {
-                i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[2],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375GU");
                 return(1);
                 }
             if (strcmp(osa[1],"fieldtype")==0)
                 {
-                i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[2],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375GLF");
                 return(1);
                 }
             if (strcmp(osa[1],"dataname")==0)
                 {
-                i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[2],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375GLf");
                 return(1);
                 }
             if (strcmp(osa[1],"os")==0)
                 {
-                i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[2],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375Gk");
                 return(1);
                 }
             if (strcmp(osa[1],"version")==0)
                 {
-                i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[2],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375GLs");
                 return(1);
                 }
             if (strcmp(osa[1],"netsurvo")==0)
                 {
-                i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[2],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375GLn");
                 return(1);
                 }
             if (strcmp(osa[1],"netpath")==0)
                 {
-                i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[2],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375GLN");
                 return(1);
                 }
@@ -3492,7 +3737,8 @@ static int muunna(char *rivi,char *s)
                 }
             if (strcmp(osa[1],"key")==0)
                 {
-                i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
+                i=tee_indeksi(osa[2],sana); if (i<0) { return(-1);
+}
                 strcat(rivi,sana); strcat(rivi,"\375Gy");
                 return(1);
                 }
@@ -3506,7 +3752,8 @@ static int muunna(char *rivi,char *s)
 
         if (strncmp(s,"print ",6)==0)
             {
-            p=s+6; while (*p==' ') ++p;
+            p=s+6; while (*p==' ') { ++p;
+}
          /* if (*p=='W') ++p;
             n=atoi(p);
          */ n=indeksi(p);
@@ -3528,7 +3775,8 @@ static int muunna(char *rivi,char *s)
             }
         if (strncmp(s,"write ",6)==0)
             {
-            p=s+6; while (*p==' ') ++p;
+            p=s+6; while (*p==' ') { ++p;
+}
         /*  if (*p=='W') ++p;
             n=atoi(p);
         */  n=indeksi(p);
@@ -3548,17 +3796,20 @@ static int muunna(char *rivi,char *s)
             }
         if (strncmp(s,"tempo ",6)==0)
             {
-            p=s+6; while (*p==' ') ++p;
+            p=s+6; while (*p==' ') { ++p;
+}
             if (*p=='+' || *p=='-')
                 {
-                if (*p=='+') *p='-'; else ++p;
+                if (*p=='+') { *p='-'; } else { ++p;
+}
                 strcat(rivi,"\375GTa"); strcat(rivi,p); strcat(rivi,"@");
                 }
             else
                 {
 /* -24.9.92     strcat(rivi,"\375GTs"); strcat(rivi,s+6); strcat(rivi,"@"); */
                 strcat(rivi,"\375GTt");
-                if (*p=='W') { i=indeksich(p,x); if (i<0) return(-1); strcat(rivi,x); }
+                if (*p=='W') { i=indeksich(p,x); if (i<0) { return(-1); 
+}strcat(rivi,x); }
                 else { strcat(rivi,"C"); strcat(rivi,p); }
                 strcat(rivi,"@");
                 }
@@ -3566,14 +3817,18 @@ static int muunna(char *rivi,char *s)
             }
         if (strncmp(s,"find ",5)==0)
             {
-            p=s+5; while (*p && *p==' ') ++p;
-            if (*p==EOS || strcmp(p,"sp")==0) *p=' ';
+            p=s+5; while (*p && *p==' ') { ++p;
+}
+            if (*p==EOS || strcmp(p,"sp")==0) { *p=' ';
+}
 
             if (strncmp(p,"string ",7)==0)
                 {
-                p+=7; while (*p && *p==' ') ++p;
+                p+=7; while (*p && *p==' ') { ++p;
+}
                 strcat(rivi,"\375GTw");
-                if (*p=='W') { i=indeksich(p,x); if (i<0) return(-1); strcat(rivi,x); }
+                if (*p=='W') { i=indeksich(p,x); if (i<0) { return(-1); 
+}strcat(rivi,x); }
                 else { strcat(rivi,"C"); strcat(rivi,p); }
                 strcat(rivi,"@");
                 return(1);
@@ -3584,7 +3839,8 @@ static int muunna(char *rivi,char *s)
                 strcat(rivi,"\375GTc");
 
           /*    strcat(rivi,p+1); strcat(rivi,"@");   */
-                i=indeksich(p,x); if (i<0) return(-1);
+                i=indeksich(p,x); if (i<0) { return(-1);
+}
                 strcat(rivi,x); strcat(rivi,"@");
 
                 return(1);
@@ -3595,7 +3851,8 @@ static int muunna(char *rivi,char *s)
             }
         if (strncmp(s,"del stack ",10)==0)
             {
-            p=s+10; while (*p==' ') ++p;
+            p=s+10; while (*p==' ') { ++p;
+}
      /*     if (*p=='W') ++p;
             n=atoi(p);
      */     n=indeksich(p,x);
@@ -3609,7 +3866,8 @@ static int muunna(char *rivi,char *s)
             }
         if (strncmp(s,"jump ",5)==0)
             {
-            p=s+5; while (*p==' ') ++p;
+            p=s+5; while (*p==' ') { ++p;
+}
             strcat(rivi,"\375GTg");
             k=split(p,osa,4);
             if (k<3)
@@ -3619,13 +3877,16 @@ static int muunna(char *rivi,char *s)
                 }
             for (i=0; i<k; ++i)
                 {
-                if (k==4 && i==2) strcat(rivi,"C!@");
+                if (k==4 && i==2) { strcat(rivi,"C!@");
+}
                 p=osa[i]; strcpy(x,p);
                 if (*p=='W')
                     {
-                    n=indeksich(p,x); if (n<0) return(-1);
+                    n=indeksich(p,x); if (n<0) { return(-1);
+}
                     }
-                else strcat(rivi,"C");
+                else { strcat(rivi,"C");
+}
                 strcat(rivi,x); strcat(rivi,"@");
                 }
             return(1);
@@ -3636,20 +3897,23 @@ static int muunna(char *rivi,char *s)
             }
         if (strncmp(s,"keys ",5)==0)
             {
-            p=s+5; while (*p==' ') ++p;
+            p=s+5; while (*p==' ') { ++p;
+}
             strcat(rivi,"\375GTD"); strcat(rivi,p); strcat(rivi,"@");
             return(1);
             }
         if (strncmp(s,"call ",5)==0)
             {
-            strcat(rivi,"\375G;"); p=s+5; while (*p==' ') ++p;
+            strcat(rivi,"\375G;"); p=s+5; while (*p==' ') { ++p;
+}
 
             strcpy(x,p);
             if (*p=='W')
                 {
                 n=indeksich2(p,x);
-                if (n<0) strcpy(x,p);
-                else strcat(rivi,"W");
+                if (n<0) { strcpy(x,p);
+                } else { strcat(rivi,"W");
+}
                 }
 
             strcat(rivi,x); strcat(rivi,"\375R");
@@ -3657,13 +3921,15 @@ static int muunna(char *rivi,char *s)
             }
         if (strncmp(s,"calls ",6)==0)
             {
-            strcat(rivi,"\375G!"); p=s+6; while (*p==' ') ++p;
+            strcat(rivi,"\375G!"); p=s+6; while (*p==' ') { ++p;
+}
             strcpy(x,p); // 20.11.2001
             if (*p=='W')
                 {
                 n=indeksich2(p,x);
-                if (n<0) strcpy(x,p);
-                else strcat(rivi,"W");
+                if (n<0) { strcpy(x,p);
+                } else { strcat(rivi,"W");
+}
                 }
 
             strcat(rivi,x); strcat(rivi,"\375R");
@@ -3671,33 +3937,41 @@ static int muunna(char *rivi,char *s)
             }
         if (strncmp(s,"error handler ",14)==0)
             {
-            p=s+14; while (*p==' ') ++p;
-            if (*p=='G') *p='g';  /* jotta tut_continue toimisi */
+            p=s+14; while (*p==' ') { ++p;
+}
+            if (*p=='G') { *p='g';  /* jotta tut_continue toimisi */
+}
             strcat(rivi,"\375GTE"); strcat(rivi,p); strcat(rivi,"@");
             return(1);
             }
         if (strncmp(s,"message shadow",14)==0)
             {
-            p=s+14; while (*p==' ') ++p;
-            if (*p==EOS) *sana=' '; else *sana=*p;
+            p=s+14; while (*p==' ') { ++p;
+}
+            if (*p==EOS) { *sana=' '; } else { *sana=*p;
+}
             muste_sprintf(x,"\375Gu%c",*sana); strcat(rivi,x);
             return(1);
             }
         if (strncmp(s,"message ",8)==0)
             {
-            p=s+8; while (*p==' ') ++p;
+            p=s+8; while (*p==' ') { ++p;
+}
             strcat(rivi,"\375GTq"); strcpy(x,p);
             if (*p=='W')
                 {
-                n=indeksich(p,x); if (n<0) return(-1);
+                n=indeksich(p,x); if (n<0) { return(-1);
+}
                 }
-            else strcat(rivi,"C");
+            else { strcat(rivi,"C");
+}
             strcat(rivi,x); strcat(rivi,"@");
             return(1);
             }
         if (strncmp(s,"ref ",4)==0)    /* {ref set i} {ref jump i}  */
             {
-            p=s+4; while (*p==' ') ++p;
+            p=s+4; while (*p==' ') { ++p;
+}
             i=0;
             if (strncmp(p,"set ",4)==0) { i=1; p+=4; }
             if (strncmp(p,"jump ",5)==0) { i=2; p+=5; }
@@ -3717,7 +3991,8 @@ static int muunna(char *rivi,char *s)
 
         if (strncmp(s,"soft ",5)==0)    /* {soft Wi=Vj} etc. */
             {
-            p=s+5; while (*p==' ') ++p;
+            p=s+5; while (*p==' ') { ++p;
+}
 // Rprintf("\np=%s|",p); getch();
             q=strchr(p,'=');
             if (q==NULL)
@@ -3732,7 +4007,8 @@ static int muunna(char *rivi,char *s)
                 { strcpy(x,p+1); strcpy(y,"V"); }
             else // *p=='W'
                 {
-                n=indeksich(p,x); if (n<0) return(-1);
+                n=indeksich(p,x); if (n<0) { return(-1);
+}
                 *y=EOS;
                 }
             muste_sprintf(sbuf,"\375GTv%s%s@",y,x); strcat(rivi,sbuf);
@@ -3741,7 +4017,8 @@ static int muunna(char *rivi,char *s)
                 { strcpy(x,q+1); strcpy(y,"V"); }
             else // *q=='W'
                 {
-                n=indeksich(q,x); if (n<0) return(-1);
+                n=indeksich(q,x); if (n<0) { return(-1);
+}
                 *y=EOS;
                 }
             muste_sprintf(sbuf,"%s%s@",y,x); strcat(rivi,sbuf);
@@ -3751,13 +4028,16 @@ static int muunna(char *rivi,char *s)
 
         if (strncmp(s,"play sound",10)==0)
                 {
-                p=s+10; while (*p==' ') ++p;
-                if (*p==EOS) return(-1);
+                p=s+10; while (*p==' ') { ++p;
+}
+                if (*p==EOS) { return(-1);
+}
                 strcat(rivi,"\375GT");
                 if (*p=='W')
                     {
                     strcat(rivi,"T");
-                    n=indeksich(p,x); if (n<0) return(-1);
+                    n=indeksich(p,x); if (n<0) { return(-1);
+}
                     strcat(rivi,x);
                     }
                 else { strcat(rivi,"S"); strcat(rivi,p); }
@@ -3779,21 +4059,26 @@ static int tulkitse_rivi(char *rivi)
 
         strcpy(rivi,"*");  /* kontr.merkki */
         edread(x,eol); ++eol;
-        i=strlen(x); while (x[i-1]==' ') x[--i]=EOS;
+        i=strlen(x); while (x[i-1]==' ') { x[--i]=EOS;
+}
 
         if (*x=='/')
             {
             i=tutki_wnimet(x+1);
-            if (i<0) return(-1);
+            if (i<0) { return(-1);
+}
             ++n_comments; strcat(rivi,comment_code);
             return(1);
             }
-        if (*x=='%') return(1);
+        if (*x=='%') { return(1);
+}
         if (*x=='-' || *x=='+')
             {
             i=spec_code(rivi,x);
-            if (i<0) return(-1);
-            if (i==1) return(1);
+            if (i<0) { return(-1);
+}
+            if (i==1) { return(1);
+}
             /* i=2 label-rivi jatkaa  */
             }
         p=x+1;
@@ -3811,7 +4096,8 @@ static int tulkitse_rivi(char *rivi)
                 }
             *p=EOS;
             i=muunna(rivi,q);
-            if (i<0) return(-1);
+            if (i<0) { return(-1);
+}
             ++p;
 
             }
@@ -3871,7 +4157,8 @@ static int op_tutload()
             
             while (p>=name)
                 {
-                if (*p=='-') break;
+                if (*p=='-') { break;
+}
                 if (strchr("\\:/",*p)!=NULL) { p=NULL; break; } // RS FIXME path "/" lisätty
                 --p;
                 }
@@ -3889,7 +4176,8 @@ static int op_tutload()
 
             for (i=0; i<nosat; ++i)
                 {
-                if (muste_strcmpi(etusukro,osasukro[i])==0) break;
+                if (muste_strcmpi(etusukro,osasukro[i])==0) { break;
+}
                 }
             if (i==nosat)
                 {
@@ -3932,12 +4220,15 @@ static int op_tutload()
                 {
                 if (kommentti_pos==0L)
                     {
-                    i=etsi_koodin_loppu(); if (i<0) return(-1);
+                    i=etsi_koodin_loppu(); if (i<0) { return(-1);
+}
                     }
                 lue_kommentti(x);
-                if (koodi)
+                if (koodi) {
                     while (*crivi)
-                     { k=selkomuunto(rivi,crivi); if (k<0) return(-1); }
+                     { k=selkomuunto(rivi,crivi); if (k<0) { return(-1); 
+}}
+}
                 kirjoita(rivi);
                 tutki_wnimet(x);   /* 24.3.91 aikaisemmin ennen selkomuuntoa */
                 *rivi='/'; strcpy(rivi+1,x);
@@ -3945,8 +4236,9 @@ static int op_tutload()
                 init_rivi(rivi);
                 continue;
                 }
-            if (m==255)
+            if (m==255) {
                 kesken=0;
+}
             if (tutpref[m]=='1')
                 {
                 sana[0]=(unsigned char)TUTCODE; sana[1]=tutcode[m]; sana[2]=EOS;
@@ -3959,14 +4251,17 @@ static int op_tutload()
 // RS FIXME check if koodi=0 is needed as it was commented out in the beginning
             if (koodi==0)
                 {
-                k=rcat(sana); if (k<0) return(1);
+                k=rcat(sana); if (k<0) { return(1);
+}
                 if (m==CODE_RETURN)
-                 { k=kirjoita(rivi); if (k<0) return(-1); init_rivi(rivi); }
+                 { k=kirjoita(rivi); if (k<0) { return(-1); 
+}init_rivi(rivi); }
                 p=strstr(rivi+2,labelcode); /* +2 olennainen */
                 if (p!=NULL)
                     {
                     strcpy(x,p); *p=EOS;
-                    k=kirjoita(rivi); if (k<0) return(-1);
+                    k=kirjoita(rivi); if (k<0) { return(-1);
+}
                     init_rivi(rivi);
                     strcat(rivi,x);
                     }
@@ -3986,11 +4281,14 @@ static int op_tutload()
           sur_print("\nWarning: Add more comment lines!  Press ENTER!");
                     sur_getch(); com_warning=1;
                     }
-                k=selkomuunto(rivi,crivi); if (k<0) return(-1);
+                k=selkomuunto(rivi,crivi); if (k<0) { return(-1);
+}
                 }
             }
-        if (koodi==1) while (*crivi)
-            { k=selkomuunto(rivi,crivi); if (k<0) return(-1); }
+        if (koodi==1) { while (*crivi)
+            { k=selkomuunto(rivi,crivi); if (k<0) { return(-1); 
+}}
+}
         kirjoita(rivi);
         for (i=0; i<n_end_comments; ++i)
             {
@@ -4002,7 +4300,8 @@ static int op_tutload()
 /*
 for (i=0; i<10; ++i) Rprintf("\nW%d=%s",i+1,wnimi[i]); getch();
 */
-		if (txt_file!=NULL) muste_fclose(txt_file); // RS ADD
+		if (txt_file!=NULL) { muste_fclose(txt_file); // RS ADD
+}
 
         return(1);
         }
@@ -4041,7 +4340,8 @@ static int op_tutsave()
             
             while (p>=name)
                 {
-                if (*p=='-') break;
+                if (*p=='-') { break;
+}
                 if (strchr("\\:/",*p)!=NULL) { p=NULL; break; } // RS FIXME path "/" lisätty
                 --p;
                 }
@@ -4065,7 +4365,8 @@ static int op_tutsave()
 */
             for (is=0; is<nosat; ++is)
                 {
-                if (muste_strcmpi(etusukro,osasukro[is])==0) break;
+                if (muste_strcmpi(etusukro,osasukro[is])==0) { break;
+}
                 }
             if (is==nosat)
                 {
@@ -4075,36 +4376,43 @@ static int op_tutsave()
 /*  Rprintf("\nis=%d nosat=%d",is,nosat); getch();
 */
             if (tutor!=NULL) { muste_fclose(tutor); tutor=NULL; o1=0; }
-            i=kopioi_alku(); if (i<0) return(-1);
+            i=kopioi_alku(); if (i<0) { return(-1);
+}
             }
         else
-            { k=tutopen(word[1],"wb"); if (k<0) return(-1); }
+            { k=tutopen(word[1],"wb"); if (k<0) { return(-1); 
+}}
         ens_rivi=eol=r1+r;
         if (eol>r2) { tilavirhe2(); return(-1); }
 
         koodi=1;
-        if (g>2) koodi=atoi(word[2]);
+        if (g>2) { koodi=atoi(word[2]);
+}
         init_words();
         init_labels();
         tutcoding(2);
-        k=lue(); if (k<0) return(-1);
+        k=lue(); if (k<0) { return(-1);
+}
         pos=1;
         kesken=1;
         while (kesken)
             {
             m=(unsigned char)rivi[pos++];
 // RS DEBUG Rprintf("char: %d\n",m);
-            if (m==EOS) { k=lue(); if (k<0) return(-1); pos=1; continue; }
+            if (m==EOS) { k=lue(); if (k<0) { return(-1); 
+}pos=1; continue; }
             if (m==TUTCODE)
                 {
                 m=(unsigned char)rivi[pos++];
 // RS DEBUG Rprintf("tutcode-char: %d\n",m);
                 m=(unsigned char)tutcode[m];
 // RS DEBUG Rprintf("tutcode[m]: %d\n",m);
-                if (m==255) kesken=0;
+                if (m==255) { kesken=0;
+}
                 if (m==TUTCODE || m==EOS)
                     {
-                    k=lue(); if (k<0) return(-1);
+                    k=lue(); if (k<0) { return(-1);
+}
                     pos=1;
                     continue;
                     }
@@ -4113,10 +4421,11 @@ static int op_tutsave()
             }
         viim_rivi=eol;
         talleta_kommentit(ens_rivi,viim_rivi);
-        if (*etusukro) kopioi_loppu();
-        else { muste_fclose(tutor); o1=0; }
+        if (*etusukro) { kopioi_loppu();
+        } else { muste_fclose(tutor); o1=0; }
         check_gotos();  /* vain ilmoitukset */
-        if (*etusukro) lopeta_talletus();
+        if (*etusukro) { lopeta_talletus();
+}
 /*
 for (i=0; i<10; ++i) Rprintf("\nW%d=%s",i+1,wnimi[i]); getch();
 */
@@ -4135,12 +4444,15 @@ static int op_tutinfo()
             edread(x,r1+r-1);
             i=osa[1]-x;
             strcpy(tut_info,x+i);
-            i=strlen(tut_info); while (tut_info[i-1]==' ') tut_info[--i]=EOS;
-            if (tut_info[i-1]=='@') return(1);
+            i=strlen(tut_info); while (tut_info[i-1]==' ') { tut_info[--i]=EOS;
+}
+            if (tut_info[i-1]=='@') { return(1);
+}
             tut_info[i]='@'; tut_info[i+1]=EOS;
             return(1);
             }
-        if (r1+r-1>=r2) return(1);
+        if (r1+r-1>=r2) { return(1);
+}
         edwrite(space,r1+r,1);
         edwrite(tut_info,r1+r,1);
         return(1);
@@ -4173,7 +4485,8 @@ static int op_tutdel()
             
             while (p>=name)
                 {
-                if (*p=='-') break;
+                if (*p=='-') { break;
+}
                 if (strchr("\\:/",*p)!=NULL) { p=NULL; break; } // RS FIXME path "/" lisätty
                 --p;
                 }
@@ -4199,7 +4512,8 @@ static int op_tutdel()
 
         for (is=0; is<nosat; ++is)
             {
-            if (muste_strcmpi(etusukro,osasukro[is])==0) break;
+            if (muste_strcmpi(etusukro,osasukro[is])==0) { break;
+}
             }
         if (is==nosat)
             {
@@ -4219,8 +4533,9 @@ static int op_tutdel()
 
         if (is==0) { v11=-1L; v12=-1L; }  // RS v12 init
         else { v11=osaosoite[0]; v12=osaosoite[is]; }
-        if (is==nosat-1) v2=-1L;
-        else v2=osaosoite[is+1];
+        if (is==nosat-1) { v2=-1L;
+        } else { v2=osaosoite[is+1];
+}
 
         if (is<nosat-1)
             {
@@ -4232,7 +4547,8 @@ static int op_tutdel()
                 }
             }
         --nosat;
-        for (i=0; i<nosat; ++i) osaosoite[i]-=JAKSO2;
+        for (i=0; i<nosat; ++i) { osaosoite[i]-=JAKSO2;
+}
 
         strcpy(apunimi,etmpd); strcat(apunimi,"SURVO.XXX");
         tutor=muste_fopen(apunimi,"wb");
@@ -4266,7 +4582,8 @@ static int op_tutdel()
             while (1)
                 {
                 i=fgetc(tutor2);
-                if (feof(tutor2)) break;
+                if (feof(tutor2)) { break;
+}
                 fputc(i,tutor);
                 }
             }

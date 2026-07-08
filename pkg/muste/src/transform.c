@@ -104,26 +104,35 @@ rem_pr("          and <var> variable to save state after <n> steps (starting fro
         strcpy(lauseke,word[3]);
 
         cent_std=0;  /* 24.3.1997 */
-        if (muste_strnicmp(lauseke,"CENTER",6)==0) cent_std=1;
-        else if (muste_strnicmp(lauseke,"STD",3)==0 || muste_strnicmp(lauseke,"STAND",5)==0) cent_std=2;
+        if (muste_strnicmp(lauseke,"CENTER",6)==0) { cent_std=1;
+        } else if (muste_strnicmp(lauseke,"STD",3)==0 || muste_strnicmp(lauseke,"STAND",5)==0) { cent_std=2;
+}
 
         special=0; /* 10.5.1998 */
-        if (*lauseke=='#') special=1;
+        if (*lauseke=='#') { special=1;
+}
 
-        if (strchr(lauseke,'X')!=NULL) muuttuja_mukana=1; else muuttuja_mukana=0;
-        if (strstr(lauseke,"MISSING")!=NULL) muuttuja_mukana=0;
-        i=data_open2(word[1],&d,1,1,0); if (i<0) return;
-        i=spec_init(r1+r-1); if (i<0) return;
-        i=mask(&d); if (i<0) return;
+        if (strchr(lauseke,'X')!=NULL) { muuttuja_mukana=1; } else { muuttuja_mukana=0;
+}
+        if (strstr(lauseke,"MISSING")!=NULL) { muuttuja_mukana=0;
+}
+        i=data_open2(word[1],&d,1,1,0); if (i<0) { return;
+}
+        i=spec_init(r1+r-1); if (i<0) { return;
+}
+        i=mask(&d); if (i<0) { return;
+}
 
-        i=conditions(&d); if (i<0) return;
+        i=conditions(&d); if (i<0) { return;
+}
         v=(int *)muste_malloc(d.m_act*sizeof(int));
         if (v==NULL)
             {
             sur_print("\nNot enough memory! (TRANSFORM)");
             WAIT; return;
             }
-        for (i=0; i<d.m_act; ++i) v[i]=d.v[i];
+        for (i=0; i<d.m_act; ++i) { v[i]=d.v[i];
+}
   /* TRANSFORM <data> BY <function X#> AS <letter>  */
   /* 0         1      2  3             4  5         */
         if (g>5)
@@ -131,32 +140,39 @@ rem_pr("          and <var> variable to save state after <n> steps (starting fro
             if (muste_strcmpi(word[4],"AS")==0)
                 {
                 letter=*word[5];
-                if (word[5][1]==':') type=word[5][2]; else type='4';
+                if (word[5][1]==':') { type=word[5][2]; } else { type='4';
+}
 
                 for (i=0; i<d.m_act; ++i)
                     {
                     *newname=letter;
-                    for (k=0; k<7; ++k) newname[k+1]=d.varname[d.v[i]][k];
+                    for (k=0; k<7; ++k) { newname[k+1]=d.varname[d.v[i]][k];
+}
                     newname[8]=EOS;
                     v[i]=varfind2(&d,newname,0);
                     if (v[i]<0)
                         {
                         v[i]=create_newvar(&d,newname,type,1);
-                        if (v[i]<0) return;
+                        if (v[i]<0) { return;
+}
                         }
                     }
                 }
             }
-        i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
-        if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);
+        i=hae_apu("prind",sbuf); if (i) { prind=atoi(sbuf);
+}
+        if ((i=spfind("PRIND"))>=0) { prind=atoi(spb[i]);
+}
         if (cent_std) { centstd(); return; }
         if (special) { special_transf(); return; }
 
         sur_print("\n");
         for (jj=d.l1; jj<=d.l2; ++jj)  // j->jj globaaliksi! 17.3.2010
             {
-            if (exit_virhe) break; // RS 1.8.2013
-            if (unsuitable(&d,jj)) continue;
+            if (exit_virhe) { break; // RS 1.8.2013
+}
+            if (unsuitable(&d,jj)) { continue;
+}
     //      if (kbhit()) { getch(); if (kbhit()) getch(); prind=1-prind; }
             if (prind) { muste_sprintf(sbuf," %d",jj); sur_print(sbuf); }
 
@@ -164,8 +180,8 @@ rem_pr("          and <var> variable to save state after <n> steps (starting fro
                 {
                 data_load(&d,jj,d.v[i],&xarvo);
   // 8.9.2009   if (xarvo==MISSING8 && muuttuja_mukana) continue;
-                if (xarvo==MISSING8 && muuttuja_mukana) yarvo=MISSING8;
-                else
+                if (xarvo==MISSING8 && muuttuja_mukana) { yarvo=MISSING8;
+                } else
                   {
                   l_virhe=0;
                   k=laske(lauseke,&yarvo);
@@ -176,11 +192,13 @@ rem_pr("          and <var> variable to save state after <n> steps (starting fro
                       data_close(&d); // RS 1.8.2013
                       return;
                       }
-                  if (exit_virhe) break; // RS 1.8.2013
+                  if (exit_virhe) { break; // RS 1.8.2013
+}
                   }
                 if (d.vartype[v[i]][0]!='S' || xarvo!=0) // RS 11.8.2013
                     {
-                    k=data_save(&d,jj,v[i],yarvo); if (k<0) return;
+                    k=data_save(&d,jj,v[i],yarvo); if (k<0) { return;
+}
                     }
                 }
             }
@@ -199,7 +217,8 @@ static int centstd()
 
         df=1L;
         i=spfind("DF_CORRECTION");
-        if (i>=0) df=atol(spb[i]);
+        if (i>=0) { df=atol(spb[i]);
+}
 
         m=d.m_act;
         mean=(double *)muste_malloc(m*sizeof(double));
@@ -211,22 +230,26 @@ static int centstd()
             {
             stddev=(double *)muste_malloc(m*sizeof(double));
             if (stddev==NULL) { not_enough_memory(); return(-1); }
-            for (i=0; i<m; ++i) stddev[i]=0.0;
+            for (i=0; i<m; ++i) { stddev[i]=0.0;
+}
             }
 
         sur_print("\nComputing means etc. ... ");
         for (j=d.l1; j<=d.l2; ++j)
             {
-            if (unsuitable(&d,j)) continue;
+            if (unsuitable(&d,j)) { continue;
+}
     //      if (kbhit()) { getch(); if (kbhit()) getch(); prind=1-prind; }
             if (prind) { muste_sprintf(sbuf," %d",j); sur_print(sbuf); }
 
             for (i=0; i<d.m_act; ++i)
                 {
                 data_load(&d,j,d.v[i],&xarvo);
-                if (xarvo==MISSING8) continue;
+                if (xarvo==MISSING8) { continue;
+}
                 ++n[i]; mean[i]+=xarvo;
-                if (cent_std==2) stddev[i]+=xarvo*xarvo;
+                if (cent_std==2) { stddev[i]+=xarvo*xarvo;
+}
                 }
             }
 
@@ -255,17 +278,21 @@ static int centstd()
         sur_print("\nMaking transformations ... ");
         for (j=d.l1; j<=d.l2; ++j)
             {
-            if (unsuitable(&d,j)) continue;
+            if (unsuitable(&d,j)) { continue;
+}
    //       if (kbhit()) { getch(); if (kbhit()) getch(); prind=1-prind; }
             if (prind) { muste_sprintf(sbuf," %d",j); sur_print(sbuf); }
 
             for (i=0; i<d.m_act; ++i)
                 {
                 data_load(&d,j,d.v[i],&xarvo);
-                if (xarvo==MISSING8) continue;
+                if (xarvo==MISSING8) { continue;
+}
                 yarvo=xarvo-mean[i];
-                if (cent_std==2) yarvo/=stddev[i];
-                k=data_save(&d,j,d.v[i],yarvo); if (k<0) return(-1);
+                if (cent_std==2) { yarvo/=stddev[i];
+}
+                k=data_save(&d,j,d.v[i],yarvo); if (k<0) { return(-1);
+}
                               // 3.12.2004 v[i]=d.v[i]: ei siis virhe!
                 }
             }
@@ -319,7 +346,8 @@ static int init_rnd()
         char x[LLENGTH];
 
         i=spfind("RND");
-        if (i<0) strcpy(x,"123456789"); else strcpy(x,spb[i]);
+        if (i<0) { strcpy(x,"123456789"); } else { strcpy(x,spb[i]);
+}
         if (muste_strnicmp(x,"rand(",5)==0) { rand_type=1; i=5; }
         else if (muste_strnicmp(x,"urand(",6)==0) { rand_type=2; i=6; }
         else if (muste_strnicmp(x,"mrand(",6)==0) { rand_type=4; i=6; }
@@ -339,7 +367,8 @@ static int tr_uniform()
 //        extern double sur_rand0();
 
         strcpy(x,word[3]);
-        p=strchr(x,'('); if (p==NULL) return(-1); // RS CHA exit(0)
+        p=strchr(x,'('); if (p==NULL) { return(-1); // RS CHA exit(0)
+}
         par1=atof(p+1);
         par2=atof(word[4]);
         par2-=par1;
@@ -347,7 +376,8 @@ static int tr_uniform()
         sur_print("\nMaking transformations ... ");
         for (j=d.l1; j<=d.l2; ++j)
             {
-            if (unsuitable(&d,j)) continue;
+            if (unsuitable(&d,j)) { continue;
+}
   //        if (kbhit()) { getch(); if (kbhit()) getch(); prind=1-prind; }
             if (prind) { muste_sprintf(sbuf," %d",j); sur_print(sbuf); }
 
@@ -356,7 +386,8 @@ static int tr_uniform()
                 {
                 a=sur_rand0(seed,rand_type);
                 a=par2*a+par1;
-                k=data_save(&d,j,v[i],a); if (k<0) return(-1);
+                k=data_save(&d,j,v[i],a); if (k<0) { return(-1);
+}
                 }
             }
         data_close(&d);
@@ -375,11 +406,14 @@ static int distr()
 //        extern double sur_rand0();
 
         strcpy(x,word[3]);
-        p=strchr(x,'('); if (p==NULL) return(-1); // RS CHA exit(0);
+        p=strchr(x,'('); if (p==NULL) { return(-1); // RS CHA exit(0);
+}
         strcpy(matname,p+1);
-        i=strlen(matname)-1; if (matname[i]==')') matname[i]=EOS;
+        i=strlen(matname)-1; if (matname[i]==')') { matname[i]=EOS;
+}
         i=matrix_load(matname,&aa,&rdim,&cdim,&rlab,&clab,&lr,&lc,&mtype,expr);
-        if (i<0) return(-1);
+        if (i<0) { return(-1);
+}
         if (cdim<2)
             {
             sur_print("The distribution must be given as n x 2 matrix!");
@@ -387,17 +421,21 @@ static int distr()
             WAIT; return(-1);
             }
         i=spfind("BINLIMIT");
-        binlimit=30; if (i>=0) binlimit=atoi(spb[i]);
+        binlimit=30; if (i>=0) { binlimit=atoi(spb[i]);
+}
 
         prob=aa+rdim;
-        a=0; for (i=0; i<rdim; ++i) a+=prob[i];
-        for (i=0; i<rdim; ++i) prob[i]/=a;
+        a=0; for (i=0; i<rdim; ++i) { a+=prob[i];
+}
+        for (i=0; i<rdim; ++i) { prob[i]/=a;
+}
         a=0; for (i=0; i<rdim; ++i) { a+=prob[i]; prob[i]=a; }
 
         sur_print("\nMaking transformations ... ");
         for (j=d.l1; j<=d.l2; ++j)
             {
-            if (unsuitable(&d,j)) continue;
+            if (unsuitable(&d,j)) { continue;
+}
   //        if (kbhit()) { getch(); if (kbhit()) getch(); prind=1-prind; }
             if (prind) { muste_sprintf(sbuf," %d",j); sur_print(sbuf); }
 
@@ -406,13 +444,17 @@ static int distr()
                 a=sur_rand0(seed,rand_type);
                 if (rdim<binlimit)
                     {
-                    for (k=0; k<rdim; ++k)
-                        if (a<prob[k]) break;
+                    for (k=0; k<rdim; ++k) {
+                        if (a<prob[k]) { break;
+}
+}
                     }
-                else
+                else {
                     k=bin_search(a,prob,rdim);
+}
 
-                k=data_save(&d,j,v[i],aa[k]); if (k<0) return(-1);
+                k=data_save(&d,j,v[i],aa[k]); if (k<0) { return(-1);
+}
                 }
             }
         data_close(&d);
@@ -427,9 +469,11 @@ static int bin_search(double a,double *tab,int n)
         while (k2-k1>1)
             {
             k=(k1+k2)/2;
-            if (a<tab[k]) k2=k; else k1=k;
+            if (a<tab[k]) { k2=k; } else { k1=k;
+}
             }
-        if (a<tab[k1+1]) return(k1+1);
+        if (a<tab[k1+1]) { return(k1+1);
+}
         return(k1+2);
         }
 
@@ -450,16 +494,20 @@ static int markov()
 
         type_ind_var=' ';
         strcpy(x,word[3]);
-        p=strchr(x,'('); if (p==NULL) return(-1); // RS CHA exit(0);
+        p=strchr(x,'('); if (p==NULL) { return(-1); // RS CHA exit(0);
+}
         strcpy(matname,p+1);
-        i=strlen(matname)-1; if (matname[i]==')') matname[i]=EOS;
+        i=strlen(matname)-1; if (matname[i]==')') { matname[i]=EOS;
+}
         i=matrix_load(matname,&aa,&rdim,&cdim,&rlab,&clab,&lr,&lc,&mtype,expr);
-        if (i<0) return(-1);
+        if (i<0) { return(-1);
+}
 
         aste=1; k=cdim;
         while (1)
             {
-            if (rdim==k) break;
+            if (rdim==k) { break;
+}
             if (rdim<k) { aste=0; break; }
             ++aste; k*=cdim;
             }
@@ -478,7 +526,8 @@ static int markov()
         if (g>5) /* TRANSFORM <data> BY #MARKOV(P,var,n) */
             {
             var=varfind(&d,word[4]);
-            if (var<0) return(-1);
+            if (var<0) { return(-1);
+}
             ind_var=1;
             type_ind_var=d.vartype[var][0];
             n=atoi(word[5]);
@@ -500,65 +549,84 @@ static int markov()
 // if (aste>1) { Rprintf("\naste=%d",aste); WAIT; return(1); }
 
         start_state=0; // 1.4.2001
-        if (aste>1) for (k=0; k<aste; ++k) start_states[k]=0; // 24.4.2002
+        if (aste>1) { for (k=0; k<aste; ++k) { start_states[k]=0; // 24.4.2002
+}
+}
 
         i=spfind("START");
-        if (i>=0) start_state=atoi(spb[i])-1;
+        if (i>=0) { start_state=atoi(spb[i])-1;
+}
 
         if (aste>1 && i>=0)
             {
             muste_ltoa((int)start_state,sbuf,cdim);
-            for (i=0; i<cdim; ++i) x[i]='0'; x[cdim]=EOS;
+            for (i=0; i<cdim; ++i) { x[i]='0'; 
+}x[cdim]=EOS;
             strcpy(x+aste-strlen(sbuf),sbuf);
 // Rprintf("\nx=%s|",x); getch();
-            for (k=0; k<aste; ++k) start_states[k]=(int)(x[k]-'0');
+            for (k=0; k<aste; ++k) { start_states[k]=(int)(x[k]-'0');
+}
             }
 
         sur_print("\nMaking transformations ... ");
         for (j=d.l1; j<=d.l2; ++j)
             {
-            if (unsuitable(&d,j)) continue;
+            if (unsuitable(&d,j)) { continue;
+}
   //        if (kbhit()) { getch(); if (kbhit()) getch(); prind=1-prind; }
             if (prind) { muste_sprintf(sbuf," %d",j); sur_print(sbuf); }
 
             prev_state=start_state; /* states 0,1,2,...,rdim-1 internally */
-            if (aste>1) for (k=0; k<aste; ++k)
+            if (aste>1) { for (k=0; k<aste; ++k) {
                                prev_states[k]=start_states[k];
+}
+}
 
             for (i=0; i<n; ++i)
                 {
                 a=sur_rand0(seed,rand_type);
                 if (aste==1)
                     {
-                    for (k=0; k<rdim; ++k)
-                        if (a<aa[prev_state+rdim*k]) break;
+                    for (k=0; k<rdim; ++k) {
+                        if (a<aa[prev_state+rdim*k]) { break;
+}
+}
                     prev_state=k;
                     }
                 else
                     {
                     prev_state=prev_states[0];
-                    for (k=1; k<aste; ++k)
+                    for (k=1; k<aste; ++k) {
                         prev_state=cdim*prev_state+prev_states[k];
-                    for (k=0; k<rdim; ++k)
-                        if (a<aa[prev_state+rdim*k]) break;
-                    for (h=0; h<aste-1; ++h)
+}
+                    for (k=0; k<rdim; ++k) {
+                        if (a<aa[prev_state+rdim*k]) { break;
+}
+}
+                    for (h=0; h<aste-1; ++h) {
                         prev_states[h]=prev_states[h+1];
+}
                     prev_states[aste-1]=k;
                     }
-                if (ind_var) continue;
-                if (d.vartype[v[i]][0]=='S')
+                if (ind_var) { continue;
+}
+                if (d.vartype[v[i]][0]=='S') {
                      k=data_alpha_save(&d,j,v[i],clab+lc*k);
-                else k=data_save(&d,j,v[i],(double)(k+1));
-                if (k<0) return(-1);
+                } else { k=data_save(&d,j,v[i],(double)(k+1));
+}
+                if (k<0) { return(-1);
+}
                 }
             if (ind_var)
                 {
-                if (type_ind_var=='S')
+                if (type_ind_var=='S') {
                      k=data_alpha_save(&d,j,var,rlab+lr*prev_state);
 //                   k=data_alpha_save(&d,j,var,clab+lc*k);
-                else k=data_save(&d,j,var,(double)(prev_state+1));
+                } else { k=data_save(&d,j,var,(double)(prev_state+1));
+}
            //   else k=data_save(&d,j,var,(double)(k+1));
-                if (k<0) return(-1);
+                if (k<0) { return(-1);
+}
                 }
             }
         data_close(&d);
@@ -575,14 +643,16 @@ static int tr_linear()
         double a;
 
         strcpy(x,word[3]);
-        p=strchr(x,'('); if (p==NULL) return(-1); // RS CHA exit(0);
+        p=strchr(x,'('); if (p==NULL) { return(-1); // RS CHA exit(0);
+}
         par1=atof(p+1);
         par2=atof(word[4]);
 
         sur_print("\nMaking transformations ... ");
         for (j=d.l1; j<=d.l2; ++j)
             {
-            if (unsuitable(&d,j)) continue;
+            if (unsuitable(&d,j)) { continue;
+}
   //        if (kbhit()) { getch(); if (kbhit()) getch(); prind=1-prind; }
             if (prind) { muste_sprintf(sbuf," %d",j); sur_print(sbuf); }
 
@@ -591,7 +661,8 @@ static int tr_linear()
                 {
                 data_load(&d,j,v[i],&a);
                 a=par1*a+par2;
-                k=data_save(&d,j,v[i],a); if (k<0) return(-1);
+                k=data_save(&d,j,v[i],a); if (k<0) { return(-1);
+}
                 }
             }
         data_close(&d);
@@ -625,7 +696,8 @@ static int tr_diff()
             for (i=0; i<d.m_act; ++i)
                 {
                 data_load(&d,j,v[i],&a);
-                k=data_save(&d,j,v[i],a-obs_lag[i]); if (k<0) return(-1);
+                k=data_save(&d,j,v[i],a-obs_lag[i]); if (k<0) { return(-1);
+}
                 obs_lag[i]=a;
                 }
             }
@@ -648,8 +720,10 @@ static int lue_muuttujan_arvo(char *s,double *py)  // 17.3.2010
     {
     int i;
 
-    for (i=0; i<n_v2; ++i)
-        if (strcmp(s,v2_name[i])==0) break;
+    for (i=0; i<n_v2; ++i) {
+        if (strcmp(s,v2_name[i])==0) { break;
+}
+}
     if (i==n_v2)
         {
         if (n_v2>=100)
@@ -659,7 +733,8 @@ static int lue_muuttujan_arvo(char *s,double *py)  // 17.3.2010
             }
         i=varfind2(&d,s,0);
 // Rprintf("\ns=%s i=%d",s,i);
-        if (i<0) return(-1);
+        if (i<0) { return(-1);
+}
         strcpy(v2_name[n_v2],s);
         v2[n_v2]=i;
         i=n_v2++;
@@ -692,8 +767,9 @@ static int laske(char *lauseke,double *y)
 
         if (*lauseke=='i')
             {
-            if (strncmp(lauseke,"if(",3)==0)
+            if (strncmp(lauseke,"if(",3)==0) {
                 return(varif(lauseke,y));
+}
             }
 
         strcpy(x,lauseke);
@@ -703,12 +779,14 @@ static int laske(char *lauseke,double *y)
 
         while (*p)
             {
-            if (l_virhe) return(-1);
+            if (l_virhe) { return(-1);
+}
             switch (*p)
                 {
               case '+':
                 if (len==0) { ++p; break; }
-                if (len>0) opnd[t]=luku(sana,len); len=0;
+                if (len>0) { opnd[t]=luku(sana,len); 
+}len=0;
                 op[t]='+'; v[t++]=1;
                 supista(&t,opnd,op,v);
                 ++p;
@@ -716,7 +794,8 @@ static int laske(char *lauseke,double *y)
 
               case '-':
                 if (len==0) { sana[len++]=*p; ++p; break; }
-                if (len>0) opnd[t]=luku(sana,len); len=0;
+                if (len>0) { opnd[t]=luku(sana,len); 
+}len=0;
                 op[t]='-'; v[t++]=1;
                 supista(&t,opnd,op,v);
                 ++p;
@@ -724,7 +803,8 @@ static int laske(char *lauseke,double *y)
 
               case '*':
                 if (len==0) { syntax_error(lauseke); return(-1); }
-                if (len>0) opnd[t]=luku(sana,len); len=0;
+                if (len>0) { opnd[t]=luku(sana,len); 
+}len=0;
                 op[t]='*'; v[t++]=2;
                 supista(&t,opnd,op,v);
                 ++p;
@@ -732,7 +812,8 @@ static int laske(char *lauseke,double *y)
 
               case '/':
                 if (len==0) { syntax_error(lauseke); return(-1); }
-                if (len>0) opnd[t]=luku(sana,len); len=0;
+                if (len>0) { opnd[t]=luku(sana,len); 
+}len=0;
                 op[t]='/'; v[t++]=2;
                 supista(&t,opnd,op,v);
                 ++p;
@@ -740,7 +821,8 @@ static int laske(char *lauseke,double *y)
 
               case '^':
                 if (len==0) { syntax_error(lauseke); return(-1); }
-                if (len>0) opnd[t]=luku(sana,len); len=0;
+                if (len>0) { opnd[t]=luku(sana,len); 
+}len=0;
                 op[t]='^'; v[t++]=3;
                 supista(&t,opnd,op,v);
                 ++p;
@@ -778,7 +860,8 @@ static int laske(char *lauseke,double *y)
                 *p=EOS; ++p;
 /*   Rprintf("\nq=%s",q); getch();   */
                 i=laske(q,&opnd[t]);
-                if (i<0 || l_virhe) return(-1);
+                if (i<0 || l_virhe) { return(-1);
+}
 /*   Rprintf("\ntulos1=%f",opnd[t]); getch();  */
                 if (len==0) { len=-1; break; }
                 sana[len]=EOS;
@@ -800,11 +883,13 @@ static int laske(char *lauseke,double *y)
                     }
 */
                 /* Yhden muuttujan funktiot */
-                if (*sana=='-')
+                if (*sana=='-') {
                     opnd[t]=-funktio(sana+1,opnd[t]);
-                else
+                } else {
                     opnd[t]=funktio(sana,opnd[t]);
-                if (l_virhe) return(-1);
+}
+                if (l_virhe) { return(-1);
+}
                 len=-1;
                 break;
 
@@ -815,7 +900,8 @@ static int laske(char *lauseke,double *y)
                 if (strchr("+-.0123456789",sana[0])!=NULL)
                     {
                     sana[len++]=*p; ++p;
-                    if (*p!='+' && *p!='-') break;
+                    if (*p!='+' && *p!='-') { break;
+}
                     }
               default:
                 /* tarkistukset puuttuvat */
@@ -841,11 +927,14 @@ static double luku(char *sana,int len)
         int i;
 
         sana[len]=EOS;
-        p=sana; if (*p=='-') ++p;
+        p=sana; if (*p=='-') { ++p;
+}
         if (strchr("1234567890.",*p)==NULL)
             {
-            i=laske2(p,&tulos); if (i<0) return((double)1.0);
-            if (*sana=='-') return(-tulos);
+            i=laske2(p,&tulos); if (i<0) { return((double)1.0);
+}
+            if (*sana=='-') { return(-tulos);
+}
             return(tulos);
             }
         return(atof(sana));
@@ -855,7 +944,8 @@ static double oper(double x1,double x2,char laji)
         {
 //        double power();
 
-        if (x1==MISSING8 || x2==MISSING8) return(MISSING8); // 19.3.2010
+        if (x1==MISSING8 || x2==MISSING8) { return(MISSING8); // 19.3.2010
+}
 
         switch (laji)
             {
@@ -881,7 +971,8 @@ static double power(double x,double y)
         if (y>=0 && y==floor(y) && y<10)
                 {
                 f=1;
-                for (i=0; i<(short)y; ++i) f*=x;
+                for (i=0; i<(short)y; ++i) { f*=x;
+}
                 return(f);
                 }
         return (pow(x,y));
@@ -904,7 +995,8 @@ static int supista(int *t,double opnd[],char op[],int v[])
 
         while (*t>1)
             {
-            if (v[*t-1]>v[*t-2]) return(1);
+            if (v[*t-1]>v[*t-2]) { return(1);
+}
             opnd[*t-2]=oper(opnd[*t-2],opnd[*t-1],op[*t-2]);
             op[*t-2]=op[*t-1]; v[*t-2]=v[*t-1];
             --(*t);
@@ -921,24 +1013,40 @@ static double funktio(char *s,double x)
 //        extern double uniform();
 //        extern double sur_rand0();
 
-        if (*s==EOS) return(x);
+        if (*s==EOS) { return(x);
+}
         muste_fieldcopy(S,s,31); S[31]=EOS; muste_strupr(S);
 
-        if (strcmp(S,"RAND")==0) return(sur_rand0(x,1));
-        if (strcmp(S,"URAND")==0) return(sur_rand0(x,2));
-        if (strcmp(S,"SRAND")==0) return(sur_rand0(x,3));
-        if (strncmp(S,"SQR",3)==0) return(muste_sqrt(x));
-        if (strcmp(S,"LOG")==0) return(muste_log(x));
-        if (strcmp(S,"EXP")==0) return(muste_exp(x));
-        if (strcmp(S,"SIN")==0) return(muste_sin(x));
-        if (strcmp(S,"COS")==0) return(muste_cos(x));
-        if (strcmp(S,"TAN")==0) return(muste_tan(x));
-        if (strcmp(S,"ATN")==0) return(muste_atan(x));
-        if (strcmp(S,"ABS")==0) return(fabs(x));
-        if (strcmp(S,"INT")==0) return(floor(x));
-        if (strcmp(S,"PROBIT")==0) return(probit(x));
-        if (strcmp(S,"RND")==0) return(uniform(x));
-        if (strcmp(S,"ROUND")==0) return(round(x));
+        if (strcmp(S,"RAND")==0) { return(sur_rand0(x,1));
+}
+        if (strcmp(S,"URAND")==0) { return(sur_rand0(x,2));
+}
+        if (strcmp(S,"SRAND")==0) { return(sur_rand0(x,3));
+}
+        if (strncmp(S,"SQR",3)==0) { return(muste_sqrt(x));
+}
+        if (strcmp(S,"LOG")==0) { return(muste_log(x));
+}
+        if (strcmp(S,"EXP")==0) { return(muste_exp(x));
+}
+        if (strcmp(S,"SIN")==0) { return(muste_sin(x));
+}
+        if (strcmp(S,"COS")==0) { return(muste_cos(x));
+}
+        if (strcmp(S,"TAN")==0) { return(muste_tan(x));
+}
+        if (strcmp(S,"ATN")==0) { return(muste_atan(x));
+}
+        if (strcmp(S,"ABS")==0) { return(fabs(x));
+}
+        if (strcmp(S,"INT")==0) { return(floor(x));
+}
+        if (strcmp(S,"PROBIT")==0) { return(probit(x));
+}
+        if (strcmp(S,"RND")==0) { return(uniform(x));
+}
+        if (strcmp(S,"ROUND")==0) { return(round(x));
+}
 
 // RS ADD
             if (*s=='R' && strncmp(s,"R>",2)==0)
@@ -995,7 +1103,8 @@ static int laske2(char *muuttuja,double *y)
         if (i<0)
             {
             i=lue_muuttujan_arvo(muuttuja,y); // 17.3.2010
-            if (i==1) return(1);
+            if (i==1) { return(1);
+}
             muste_sprintf(sbuf,"\nValue for %s not found!",muuttuja);
             sur_print(sbuf); WAIT;
             exit_virhe=1; // RS 1.8.2013
@@ -1155,7 +1264,8 @@ static int varif(char *lauseke,double *y)
             if (*p=='(') { ++sulut; ++p; continue; }
             if (*p==')')
                 {
-                if (!sulut) break;
+                if (!sulut) { break;
+}
                 --sulut;
                 }
             ++p;
@@ -1170,7 +1280,8 @@ static int varif(char *lauseke,double *y)
             if (*p=='(') { ++sulut; ++p; continue; }
             if (*p==')')
                 {
-                if (!sulut) break;
+                if (!sulut) { break;
+}
                 --sulut;
                 }
             ++p;
@@ -1189,16 +1300,23 @@ getch();
         tosi=0;
         switch (rel)
             {
-          case '=': if (*y==y1) tosi=1; break;
-          case '<': if (*y<y1) tosi=1; break;
-          case '>': if (*y>y1) tosi=1; break;
-          case 'E': if (*y!=y1) tosi=1; break;
-          case 'P': if (*y<=y1) tosi=1; break;
-          case 'S': if (*y>=y1) tosi=1; break;
+          case '=': if (*y==y1) { tosi=1; 
+}break;
+          case '<': if (*y<y1) { tosi=1; 
+}break;
+          case '>': if (*y>y1) { tosi=1; 
+}break;
+          case 'E': if (*y!=y1) { tosi=1; 
+}break;
+          case 'P': if (*y<=y1) { tosi=1; 
+}break;
+          case 'S': if (*y>=y1) { tosi=1; 
+}break;
             }
 
-        if (tosi) laske(c,y);
-        else      laske(d,y);
+        if (tosi) { laske(c,y);
+        } else {      laske(d,y);
+}
         return(1);
         }
 

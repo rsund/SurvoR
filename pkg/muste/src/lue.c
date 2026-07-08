@@ -122,11 +122,12 @@ void muste_lue(char *argv)
         if (g>1)
             {
             tulosrivi=edline2(word[g-1],1,0);
-            if (tulosrivi) --g;
+            if (tulosrivi) { --g;
+}
             }
-        if (g==1)
+        if (g==1) {
             edrivi=r1+r-1;
-        else
+        } else
             {
             if (*word[1]=='?')
                 {
@@ -214,18 +215,22 @@ void muste_lue(char *argv)
 
         *lukijan2_nimi=EOS;
         i=spfind("MITTAUS");
-        if (i<0) mittaus=0; else { mittaus=1; strcpy(lukijan2_nimi,spb[i]); }
+        if (i<0) { mittaus=0; } else { mittaus=1; strcpy(lukijan2_nimi,spb[i]); }
 
         sur_print("\n"); PR_EUDL; sarake=0;
-        if (scroll_line>r3-15) scroll_line=5;
+        if (scroll_line>r3-15) { scroll_line=5;
+}
 
-        for (i=0; i<r3-scroll_line+3; ++i) sur_print("                                                                               \n");
+        for (i=0; i<r3-scroll_line+3; ++i) { sur_print("                                                                               \n");
+}
 
-        i=aloita_aika(); if (i<0) return;
+        i=aloita_aika(); if (i<0) { return;
+}
         kokoa_tiedot();
         wiio();
         tulostus();
-        if (*lukijan2_nimi) { i=talleta_lukija(); if (i<0) return; }
+        if (*lukijan2_nimi) { i=talleta_lukija(); if (i<0) { return; 
+}}
         tut_end();
         s_end(argv);
         }
@@ -235,7 +240,8 @@ static int uusi_aloitus()
         int i;
 
         nsanat=nlauseet=nkirjaimet=nluvut=nvokaalit=0L;
-        for (i=0; i<256; ++i) nmerkki[i]=nmerkki2[i]=0L;
+        for (i=0; i<256; ++i) { nmerkki[i]=nmerkki2[i]=0L;
+}
         ns=0;
         nsanat_lauseessa=0;
         lause_loppu=0;
@@ -245,11 +251,13 @@ static int uusi_aloitus()
         nluvut=0L;
         strcpy(lukijan_nimi,lukijan2_nimi);
 
-        if (edrivi) edrivi=r1+r-1;
-        else rewind(teksti);
+        if (edrivi) { edrivi=r1+r-1;
+        } else { rewind(teksti);
+}
         mittaus=0;
         uusinta=1;
-        i=aloita_aika(); if (i<0) return(1);
+        i=aloita_aika(); if (i<0) { return(1);
+}
         sur_print("\n\n\n");
         return(1);
         }
@@ -264,31 +272,39 @@ static int kokoa_tiedot()
             {
             if (sur_kbhit())
                 {
-                i=sur_getch(); if (i=='.') break;
+                i=sur_getch(); if (i=='.') { break;
+}
                 }
             if (edrivi)
                 {
                 while (1)
                     {
                     ++edrivi;
-                    if (edrivi>r2) break;
+                    if (edrivi>r2) { break;
+}
                     edread(rivi,edrivi);
-                    if (strchr("-&",*rivi)==NULL) break;
+                    if (strchr("-&",*rivi)==NULL) { break;
+}
                     }
-                if (edrivi>r2) break;
+                if (edrivi>r2) { break;
+}
                 *rivi=EOS; p=rivi+1;
                 }
             else
                 {
                 muste_fgets(rivi+1,MAXRIVI,teksti);
-                if (feof(teksti)) break;
+                if (feof(teksti)) { break;
+}
                 len=strlen(rivi);
-                if (rivi[len-1]=='\n') rivi[len-1]=EOS;
+                if (rivi[len-1]=='\n') { rivi[len-1]=EOS;
+}
                 *rivi=EOS; p=rivi+1;
                 }
-            while (*p && *p==' ') ++p;
+            while (*p && *p==' ') { ++p;
+}
             if (*p==EOS) { lopeta_lause(); continue; }  /* tyhj\204 rivi */
-            len=strlen(p); while (p[len-1]==' ') p[--len]=EOS;
+            len=strlen(p); while (p[len-1]==' ') { p[--len]=EOS;
+}
             --p;
             while (1)
                 {
@@ -297,12 +313,13 @@ static int kokoa_tiedot()
                 if (*p==EOS) { tutki_sana(); break; }
                 if (strchr(haittamerkit,*p)!=NULL)
                     {
-                    if (*(p+1)) continue; else { tutki_sana(); break; }
+                    if (*(p+1)) { continue; } else { tutki_sana(); break; }
                     }
                 if (*p==' ') { tutki_sana(); continue; }
                 if (*p=='-')
                     {
-                    if (*(p+1)==EOS) break;
+                    if (*(p+1)==EOS) { break;
+}
                     if (*(p-1)==' ' || *(p-1)==EOS)
                         {             /* "rivin" edess\204 aina EOS */
                         sana[ns++]=*p; sana[ns]=EOS;
@@ -317,8 +334,10 @@ static int kokoa_tiedot()
                     mv=*p;
                     while (1)
                         {
-                        if (*(p+1)==EOS) break;
-                        if (strchr(vmerkit,*(p+1))==NULL) break;
+                        if (*(p+1)==EOS) { break;
+}
+                        if (strchr(vmerkit,*(p+1))==NULL) { break;
+}
                         ++p;
                         }
 
@@ -330,8 +349,9 @@ static int kokoa_tiedot()
                             i=tutki_lyhenteet(); /* 1=lyhenne 0=ei */
                             if (i!=1)
                                 {
-                                if (*(p+1)==' ' && iso_kirjain(*(p+2)))
+                                if (*(p+1)==' ' && iso_kirjain(*(p+2))) {
                                     i=0;
+}
                                 }
                             if (i==2)  /* 2=luku */
                                 {
@@ -377,17 +397,20 @@ static int tutki_sana()
             while (1)
                 {
                 q=strchr(p,' ');
-                if (q!=NULL) *q=EOS;
+                if (q!=NULL) { *q=EOS;
+}
                 strcpy(sana,p);
                 ns=strlen(sana);
                 lyhenn=1;
                 tutki_sana2();
                 lyhenn=0;
-                if (q==NULL) return(1);
+                if (q==NULL) { return(1);
+}
                 p=q+1;
                 }
             }
-        else tutki_sana2();
+        else { tutki_sana2();
+}
         return(1);
         }
 
@@ -395,19 +418,23 @@ static int tutki_sana2()
         {
         int i,k;
 
-        if (ns==0) return(1);
+        if (ns==0) { return(1);
+}
         sana[ns]=EOS;
         k=mittaa_aika(sana,mv,lause_loppu);
             /* k<0: merkkijono ei tavutu, siis koodi tai esim. jjjjjjjjjj */
 
         if (sarake+ns>c3+6) { sur_print("\n"); sarake=0; }
 
-        for (i=0; i<ns; ++i) ++nmerkki[(int)(unsigned char)sana[i]];
+        for (i=0; i<ns; ++i) { ++nmerkki[(int)(unsigned char)sana[i]];
+}
 
         tutki_kieli();
 
-        if (lyhenn) PR_EIN2;
-        if (k<0) PR_EINV;
+        if (lyhenn) { PR_EIN2;
+}
+        if (k<0) { PR_EINV;
+}
         if (mv)
             {
             muste_sprintf(sbuf," %s%c",sana,mv); sur_print(sbuf);
@@ -419,14 +446,16 @@ static int tutki_sana2()
             sarake+=ns+1;
             }
         if (lyhenn) { PR_EUDL; lyhenn=0; }
-        if (k<0) { PR_EUDL; ns=0; if (!lause_loppu) return(1); }
+        if (k<0) { PR_EUDL; ns=0; if (!lause_loppu) { return(1); 
+}}
         mv=EOS;
         ++nsanat_lauseessa;
 
         ++nsanat;
         nkirjaimet+=ns;
 
-        if (lause_loppu) lopeta_lause();
+        if (lause_loppu) { lopeta_lause();
+}
 
         ns=0;
         return(1);
@@ -434,11 +463,14 @@ static int tutki_sana2()
 
 static int lopeta_lause()
         {
-        if (nsanat_lauseessa==0) return(1);
+        if (nsanat_lauseessa==0) { return(1);
+}
         sur_print("_\n"); lause_loppu=0;
         sarake=0;
-        if (mittaus) mittaa_lukuaika();
-        if (nsanat_lauseessa>1) ++nlauseet;
+        if (mittaus) { mittaa_lukuaika();
+}
+        if (nsanat_lauseessa>1) { ++nlauseet;
+}
         nsanat_lauseessa=0;
         return(1);
         }
@@ -462,9 +494,11 @@ static int tutki_lyhenteet()   /* ja luvut */
         int i;
 
         n_lyhenne=10;
-        if (strchr("+-*/.0123456789",*sana)!=NULL) return(2); /* luku */
+        if (strchr("+-*/.0123456789",*sana)!=NULL) { return(2); /* luku */
+}
         sana[ns]=EOS;
-        if (strchr(sana,'.')!=NULL) return(2);  /* esim. O.A. */
+        if (strchr(sana,'.')!=NULL) { return(2);  /* esim. O.A. */
+}
         for (i=0; i<n_lyhenne; ++i)
             {
             if (muste_strcmpi(sana,lyhenne[2*i])==0)
@@ -476,7 +510,8 @@ static int tutki_lyhenteet()   /* ja luvut */
                 }
             }
 
-        if (ns<2) return(2); /* esim. O. */
+        if (ns<2) { return(2); /* esim. O. */
+}
         return(0); /* ei lyhenne */
         }
 
@@ -494,14 +529,16 @@ static int tutki_kieli()
 
 static int iso_kirjain(char ch)
         {
-        if ((ch>='A' && ch<='Z') || ch=='\216' || ch=='\231' || ch=='\217')
+        if ((ch>='A' && ch<='Z') || ch=='\216' || ch=='\231' || ch=='\217') {
             return(1);
+}
         return(0);
         }
 
 static int wiio()
         {
-        if (nlauseet==0) nlauseet=1;
+        if (nlauseet==0) { nlauseet=1;
+}
         if (nkirjaimet<=50 || nsanat<=10) { luettavuus=-9999; return(1); }
 /*
 printf("\nKirjaimia=%d sanoja=%d lauseita=%d",nkirjaimet,nsanat,nlauseet);
@@ -527,9 +564,9 @@ static int tulostus()
 
         PR_EINV;
 
-        if (luettavuus==-9999)
+        if (luettavuus==-9999) {
             muste_sprintf(y," Liian v\204h\204n teksti\204 luettavuuden selvitt\204miseen!");
-        else
+        } else
             {
             if ((double)nruotsi>10.0+(double)nsanat/50.0)
                 {
@@ -554,12 +591,13 @@ static int tulostus()
             else
                 {
                 muste_sprintf(y," Luettavuus=%d",luettavuus);
-                if (luettavuus>100) strcat(y," (Teksti eritt\204in vaikeata)");
-                else if (luettavuus>=68) strcat(y," (Hyvin vaikeata = tiedelehtien ylin nelj\204nnes)");
-                else if (luettavuus>=60) strcat(y," (Teksti muistuttaa tiedelehti\204)");
-                else if (luettavuus>=44) strcat(y," (Teksti sanomalehtikielen rajoissa)");
-                else if (luettavuus>=35) strcat(y," (Teksti muistuttaa lastenlehti\204)");
-                else strcat(y," (Eritt\204in helppoa = lastenlehtien alin nelj\204nnes)");
+                if (luettavuus>100) { strcat(y," (Teksti eritt\204in vaikeata)");
+                } else if (luettavuus>=68) { strcat(y," (Hyvin vaikeata = tiedelehtien ylin nelj\204nnes)");
+                } else if (luettavuus>=60) { strcat(y," (Teksti muistuttaa tiedelehti\204)");
+                } else if (luettavuus>=44) { strcat(y," (Teksti sanomalehtikielen rajoissa)");
+                } else if (luettavuus>=35) { strcat(y," (Teksti muistuttaa lastenlehti\204)");
+                } else { strcat(y," (Eritt\204in helppoa = lastenlehtien alin nelj\204nnes)");
+}
                 }
             }
         strcpy(wiio_vastaus,y);
@@ -569,11 +607,13 @@ static int tulostus()
             {
             muste_sprintf(x2,"rivit %d -",r1+r);
             }
-        else muste_sprintf(x2,"tekstitiedosto %s",nimi);
+        else { muste_sprintf(x2,"tekstitiedosto %s",nimi);
+}
         muste_sprintf(x," Tutkittu teksti: %s",x2);
         tulosta_rivi(x);
 
-        if (nsanat==0L) nlauseet=0L;
+        if (nsanat==0L) { nlauseet=0L;
+}
 
         muste_sprintf(x," Tekstiss\204 on %d virkett\204, %d sanaa ja %d kirjainta.",
                       nlauseet,nsanat,nkirjaimet);
@@ -586,13 +626,15 @@ static int tulostus()
             {
             muste_sprintf(x," Tekstin lukeminen kest\204\204 %.1f minuuttia",lukunopeus*aika/60.0);
             tulosta_rivi(x);
-            if (*lukijan2_nimi) strcpy(lukijan_nimi,lukijan2_nimi);
-            if (*lukijan_nimi)
+            if (*lukijan2_nimi) { strcpy(lukijan_nimi,lukijan2_nimi);
+}
+            if (*lukijan_nimi) {
                 muste_sprintf(x," lukijan ollessa %s parametrein %.2f,%.2f,%.2f .",
                                       lukijan_nimi,pisteaika,sanaaika,tavkerroin);
-            else
+            } else {
                 muste_sprintf(x," nopeusparametreilla %.2f,%.2f,%.2f",
                                                   pisteaika,sanaaika,tavkerroin);
+}
             tulosta_rivi(x);
             }
 
@@ -617,12 +659,15 @@ static int tulostus()
             if (p==NULL)
                 {
                 i=strlen(x);
-                while (x[i-1]==' ') --i;
+                while (x[i-1]==' ') { --i;
+}
                 ++i;
                 }
-            else i=p-x;
+            else { i=p-x;
+}
 
-            if (luettavuus==-9999) strcpy(x,"?"); else muste_sprintf(x,"%d",luettavuus);
+            if (luettavuus==-9999) { strcpy(x,"?"); } else { muste_sprintf(x,"%d",luettavuus);
+}
             muste_sprintf(y," / Lukuaika=%.1f min. Luettavuus=%s",lukunopeus*aika/60.0,x);
 
 /*          muste_sprintf(y," / Lukuaika=%.1f min.",lukunopeus*aika/60.0);
@@ -642,7 +687,8 @@ static int tulostus()
 static int tulosta_rivi(char *rivi)
         {
         output_line(rivi,eout,tulosrivi);
-        if (tulosrivi) ++tulosrivi;
+        if (tulosrivi) { ++tulosrivi;
+}
         return(1);
         }
 
@@ -657,9 +703,11 @@ static int aloita_aika()
         aika=aika0=0.0;
         aseta_vokaalit();
         nollaa_laskurit();
-        if (uusinta) return(1);
+        if (uusinta) { return(1);
+}
 
-        if (scroll_line>r3-15) scroll_line=5;
+        if (scroll_line>r3-15) { scroll_line=5;
+}
 
         pisteaika=5.2;
         sanaaika=1.2;
@@ -673,7 +721,8 @@ static int aloita_aika()
                 {
                 strcpy(lukijan_nimi,osa[0]);
                 i=lue_lukija(osa[0],x);
-                if (i<0) return(-1);
+                if (i<0) { return(-1);
+}
                 i=split(x,osa,3);
                 }
             if (i<3)
@@ -715,7 +764,8 @@ static int aloita_aika()
             sur_print("\n");
             sur_print("\n  Paina nyt nappia ENTER saadaksesi luettavaksi ensimm\204iset lauseet!");
             i=nextch(""); PR_EUDL;
-            for (i=0; i<r3-scroll_line+1; ++i) sur_print("                                                                                \n");
+            for (i=0; i<r3-scroll_line+1; ++i) { sur_print("                                                                                \n");
+}
             }
 
         if (mittaus)
@@ -756,7 +806,8 @@ static int nollaa_laskurit()
         ntsanat=0;
         ntkirjaimet=0;
         ntpilkut=0;
-        for (i=0; i<ntavutyypit; ++i) nttyyppi[i]=0;
+        for (i=0; i<ntavutyypit; ++i) { nttyyppi[i]=0;
+}
         nmuutavu=0;
         aika0=aika;
         nmpisteet=0;
@@ -770,16 +821,19 @@ static int mittaa_aika(char *sana,char mv,int lause_loppu)
         char *p,*q;
 
         k=tavuta(sana,tavut,tavut2);
-        if (k<0) return(-1);
+        if (k<0) { return(-1);
+}
         ntkirjaimet+=strlen(sana);
         p=tavut2;
         while (*p)
             {
             q=strchr(p,'-');
-            if (q!=NULL) *q=EOS;
+            if (q!=NULL) { *q=EOS;
+}
             for (i=0; i<ntavutyypit; ++i)
                 {
-                if (strcmp(p,tavutyyppi[i])==0) break;
+                if (strcmp(p,tavutyyppi[i])==0) { break;
+}
                 }
             if (i<ntavutyypit) { aika+=tavkerroin*tavuaika[i]; ++nttyyppi[i]; }
             else
@@ -804,7 +858,8 @@ static int mittaa_lukuaika()
         double odotettu_aika;
 
         ++nmpisteet;
-        if (nmpisteet<nmkerrat) return(1);;
+        if (nmpisteet<nmkerrat) { return(1);
+};
 
         nmkerrat=3-nmkerrat;
         sur_print("\n\n");
@@ -835,7 +890,8 @@ static int mittaa_lukuaika()
 
 
         nollaa_laskurit();
-        for (i=0; i<r3-scroll_line+1; ++i) sur_print("\n");
+        for (i=0; i<r3-scroll_line+1; ++i) { sur_print("\n");
+}
         return(1);
         }
 
@@ -858,11 +914,13 @@ static int init_regressio()
         XY[1]=sanaaika;
         XY[2]=tavkerroin;
 
-        for (i=0; i<M; ++i) XY[i]*=lukunopeus*3.0;
+        for (i=0; i<M; ++i) { XY[i]*=lukunopeus*3.0;
+}
 
         for (i=0; i<M; ++i)
             {
-            for (j=0; j<M; ++j) XX[i+M*j]=0.0;
+            for (j=0; j<M; ++j) { XX[i+M*j]=0.0;
+}
             XX[i+M*i]=1.0*3.0;
             }
 /*
@@ -888,30 +946,37 @@ static int regressio()
         X[1]=ntsanat;
 
         X[2]=MUU_TAVUAIKA*nmuutavu;
-        for (i=0; i<NTAVUTYYPIT; ++i) X[2]+=tavuaika[i]*nttyyppi[i];
+        for (i=0; i<NTAVUTYYPIT; ++i) { X[2]+=tavuaika[i]*nttyyppi[i];
+}
 
         if (*mittadata)
             {
             fprintf(mittatiedot,"%.2f %.2f %.2f %.2f ",y,X[0],X[1],X[2]);
             fprintf(mittatiedot,"%d ",ntkirjaimet);
-            for (i=0; i<NTAVUTYYPIT; ++i)
+            for (i=0; i<NTAVUTYYPIT; ++i) {
                 fprintf(mittatiedot," %d",nttyyppi[i]);
+}
             fprintf(mittatiedot,"\n");
             }
 
         for (i=0; i<M; ++i)
             {
             XY[i]+=y*X[i];
-            for (j=0; j<=i; ++j) XX[i+M*j]+=X[i]*X[j];
+            for (j=0; j<=i; ++j) { XX[i+M*j]+=X[i]*X[j];
+}
             }
-        for (i=0; i<M; ++i)
-            for (j=0; j<=i; ++j) XX[j+M*i]=XX[i+M*j];
+        for (i=0; i<M; ++i) {
+            for (j=0; j<=i; ++j) { XX[j+M*i]=XX[i+M*j];
+}
+}
 
-        for (i=0; i<M*M; ++i) XX2[i]=XX[i];
+        for (i=0; i<M*M; ++i) { XX2[i]=XX[i];
+}
         mat_inv(XXINV,XX2,M,&det);
         mat_mlt(A,XXINV,XY,M,M,1);
 
-        for (i=0; i<M; ++i) A[i]/=lukunopeus;
+        for (i=0; i<M; ++i) { A[i]/=lukunopeus;
+}
         muste_sprintf(sbuf,"\n  Lukuparametrit: Lausev\204lit=%.2f  Sanav\204lit=%.2f Tavut=%.2f",
                          A[0],A[1],A[2]); sur_print(sbuf);
         pisteaika=A[0]; pilkkuaika=PILKKUKERROIN*pisteaika;
@@ -929,11 +994,13 @@ static int lue_lukija(char *nimi,char *tiedot)
         char rivi[LLENGTH],*osa[2];
         int oletuslukija;
 
-        if (strcmp(nimi,"-")==0) oletuslukija=1; else oletuslukija=0;
+        if (strcmp(nimi,"-")==0) { oletuslukija=1; } else { oletuslukija=0;
+}
         lukijat=fopen(luki_tiedosto,"rt");
         if (lukijat==NULL)
             {
-            if (oletuslukija) return(-1);
+            if (oletuslukija) { return(-1);
+}
             muste_sprintf(sbuf,"\nTiedosto %s puuttuu!",luki_tiedosto);
             sur_print(sbuf); WAIT; return(-1);
             }
@@ -942,15 +1009,19 @@ static int lue_lukija(char *nimi,char *tiedot)
             muste_fgets(x,LLENGTH-1,lukijat);
             if (feof(lukijat))
                 {
-                if (oletuslukija) return(-1);
+                if (oletuslukija) { return(-1);
+}
                 muste_sprintf(sbuf,"\nLUKIJA=%s ei tiedostossa %s",nimi,luki_tiedosto);
                 sur_print(sbuf); muste_fclose(lukijat); WAIT; return(-1);
                 }
-            i=strlen(x); if (x[i-1]=='\n') x[i-1]=EOS;
+            i=strlen(x); if (x[i-1]=='\n') { x[i-1]=EOS;
+}
             strcpy(rivi,x);
             split(rivi,osa,2);
-            if (*osa[0]=='/') continue;
-            if (!oletuslukija && strcmp(osa[0],nimi)!=0) continue;
+            if (*osa[0]=='/') { continue;
+}
+            if (!oletuslukija && strcmp(osa[0],nimi)!=0) { continue;
+}
             strcpy(tiedot,x+(osa[1]-rivi));
             muste_fclose(lukijat);
             return(1);
@@ -979,7 +1050,8 @@ static int talleta_lukija()
                 muste_fgets(x,LLENGTH-1,lukijat);
                 if (feof(lukijat))
                     {
-                    if (ei_talletettu) talleta_lukijarivi();
+                    if (ei_talletettu) { talleta_lukijarivi();
+}
                     muste_fclose(lukijat); muste_fclose(lukijat2);
 //                  remove(luki_tiedosto);
                     sur_delete1(luki_tiedosto);
@@ -988,15 +1060,18 @@ static int talleta_lukija()
             */
                     break;
                     }
-                i=strlen(x); if (x[i-1]=='\n') x[i-1]=EOS;
+                i=strlen(x); if (x[i-1]=='\n') { x[i-1]=EOS;
+}
                 strcpy(rivi,x);
                 split(rivi,osa,2);
-                if (*osa[0]=='/') continue;
+                if (*osa[0]=='/') { continue;
+}
                 if (strcmp(osa[0],lukijan2_nimi)==0)
                     {
                     talleta_lukijarivi(); ei_talletettu=0;
                     }
-                else fprintf(lukijat2,"%s\n",x);
+                else { fprintf(lukijat2,"%s\n",x);
+}
                 }
             }
         else
@@ -1023,7 +1098,8 @@ static int aseta_vokaalit()
         {
         int i;
 
-        for (i=0; i<256; ++i) vokaali[i]=0;
+        for (i=0; i<256; ++i) { vokaali[i]=0;
+}
         vokaali[(int)(unsigned char)'A']=1;
         vokaali[(int)(unsigned char)'a']=1;
         vokaali[(int)(unsigned char)'E']=1;
@@ -1051,7 +1127,8 @@ static int tavuta(char *sana,char *tavut,char *tavut2)
         char *p,*q;
         int tavuja;
 
-        if (sama_merkki_kolmasti(sana)) return(-1);
+        if (sama_merkki_kolmasti(sana)) { return(-1);
+}
 
         *tavut=EOS;
         *tavut2=EOS;
@@ -1060,10 +1137,12 @@ static int tavuta(char *sana,char *tavut,char *tavut2)
         while (1)
             {
             q=strchr(p,'-');
-            if (q!=NULL) *q=EOS;
+            if (q!=NULL) { *q=EOS;
+}
             tavuta2(p,tav,tav2);
             strcat(tavut,tav); strcat(tavut2,tav2);
-            if (q==NULL) break;
+            if (q==NULL) { break;
+}
             p=q+1;
             }
 
@@ -1071,11 +1150,14 @@ static int tavuta(char *sana,char *tavut,char *tavut2)
         while (*p)
             {
             p=strchr(p,'-');
-            if (p==NULL) break;
+            if (p==NULL) { break;
+}
             ++tavuja; ++p;
             }
-        if (tavuja<2 && strlen(sana)>5) return(-1);
-        if ((double)strlen(sana)/(double)tavuja>5) return(-1);
+        if (tavuja<2 && strlen(sana)>5) { return(-1);
+}
+        if ((double)strlen(sana)/(double)tavuja>5) { return(-1);
+}
         return(1);
         }
 
@@ -1086,19 +1168,25 @@ static int tavuta2(char *sana,char *tavut,char *tavut2)
         char x[256];
 
         len=strlen(sana);
-        for (i=0; i<len; ++i) if (vokaali[(int)(unsigned char)sana[i]])
-                                   x[i]='O'; else x[i]='K';
+        for (i=0; i<len; ++i) { if (vokaali[(int)(unsigned char)sana[i]]) {
+                                   x[i]='O'; } else { x[i]='K';
+}
+}
         x[len]=EOS;
 
         i=0; i1=0; *tavut=EOS;
         while (i<len)
             {
-            while (i<len && x[i]=='K') ++i;
+            while (i<len && x[i]=='K') { ++i;
+}
             if (i==len) { strncat(tavut,sana+i1,i-i1+1); strcat(tavut,"-"); break; }
-            while (i<len && x[i]=='O') ++i;
+            while (i<len && x[i]=='O') { ++i;
+}
             if (i==len) { strncat(tavut,sana+i1,i-i1+1); strcat(tavut,"-"); break; }
-            while (i<len && x[i]=='K') ++i;
-            if (i<len) i-=2;
+            while (i<len && x[i]=='K') { ++i;
+}
+            if (i<len) { i-=2;
+}
             strncat(tavut,sana+i1,i-i1+1); strcat(tavut,"-");
             i+=1;
             i1=i;
@@ -1110,8 +1198,9 @@ static int tavuta2(char *sana,char *tavut,char *tavut2)
             for (i=0; i<len; ++i)
                 {
                 if (tavut[i]=='-') { tavut2[i]='-'; continue; }
-                if (vokaali[(int)(unsigned char)tavut[i]])
-                    tavut2[i]='O'; else tavut2[i]='K';
+                if (vokaali[(int)(unsigned char)tavut[i]]) {
+                    tavut2[i]='O'; } else { tavut2[i]='K';
+}
                 }
             tavut2[len]=EOS;
             }
@@ -1125,7 +1214,8 @@ static int sama_merkki_kolmasti(char *sana)
         p=sana;
         while (*p)
             {
-            if (*p==*(p+1) && *p==*(p+2)) return(1);
+            if (*p==*(p+1) && *p==*(p+2)) { return(1);
+}
             ++p;
             }
         return(0);
@@ -1149,20 +1239,25 @@ static int luku_sanoina(char *luku,char *sanat)
         char x[100],y[16];
 
         *sanat=EOS;
-        if(!muste_isnumber(luku)) return(0);
+        if(!muste_isnumber(luku)) { return(0);
+}
         p=luku;
-        while (*p==' ') ++p;
+        while (*p==' ') { ++p;
+}
         if (*p=='+') { strcat(sanat,"plus "); ++p; }
         else if (*p=='-') { strcat(sanat,"miinus "); ++p; }
-        if (*p==EOS) return(1);
+        if (*p==EOS) { return(1);
+}
         q=strchr(p,'.');
-        if (q!=NULL) *q=EOS;
+        if (q!=NULL) { *q=EOS;
+}
         arvo=atof(p);
         if (arvo>1e15) { strcpy(sanat,luku); return(0); }
         if (arvo==0.0)
             {
             strcat(sanat,"nolla ");
-            if (q!=NULL) desimaaliosa(q+1,sanat);
+            if (q!=NULL) { desimaaliosa(q+1,sanat);
+}
             return(1);
             }
         x[0]=x[1]=' '; strcpy(x+2,p);
@@ -1176,16 +1271,19 @@ static int luku_sanoina(char *luku,char *sanat)
             if ( (p[m]=='1' || p[m]=='0') && (p[m-1]==' ' || p[m-1]=='0')
                           && (p[m-2]==' ' || p[m-2]=='0') )
                 {
-                if (p[m]=='1')
+                if (p[m]=='1') {
                     strcat(sanat,pot3yks[i]);
-                else continue;
+                } else { continue;
+}
                 }
             else
                 {
                 for (j=2; j>=0; --j)
                     {
-                    if (p[m-j]==' ') continue;
-                    if (p[m-j]=='0') continue;
+                    if (p[m-j]==' ') { continue;
+}
+                    if (p[m-j]=='0') { continue;
+}
                     if (p[m-j]=='1')
                         {
                         if (j==1)
@@ -1201,10 +1299,11 @@ static int luku_sanoina(char *luku,char *sanat)
                                 }
 
                             }
-                        else if (j==2)
+                        else if (j==2) {
                             strcat(sanat,"sata ");
-                        else
+                        } else {
                             strcat(sanat,"yksi");
+}
                         }
                     else
                         {
@@ -1215,8 +1314,9 @@ static int luku_sanoina(char *luku,char *sanat)
                 strcat(sanat,pot3mon[i]);
                 }
             }
-        if (q!=NULL)
+        if (q!=NULL) {
             desimaaliosa(q+1,sanat);
+}
         return(1);
         }
 

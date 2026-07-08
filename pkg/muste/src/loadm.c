@@ -117,7 +117,8 @@ rlab2=NULL;
 //char *s_word[2];
 o2=NULL;
 
-        if (argc==1) return;
+        if (argc==1) { return;
+}
         s_init(argv[1]);
         if (muste_strcmpi(word[0],"POSDIR")==0) { op_posdir(); s_end(argv[1]); return; }
 
@@ -130,11 +131,13 @@ o2=NULL;
             wait_remarks(2);  s_end(argv[1]);       return;
             }
         resline=0;
-        if (g==4) { resline=edline2(word[3],1,1); if (resline==0) return; }
+        if (g==4) { resline=edline2(word[3],1,1); if (resline==0) { return; 
+}}
 
         A=NULL; rlab=NULL; clab=NULL;
         i=matrix_load(word[1],&A,&m,&n,&rlab,&clab,&lr,&lc,&type,expr);
-        if (i<0) return;
+        if (i<0) { return;
+}
 
         posdir(A,m,n);
         first_var=NULL;
@@ -146,16 +149,20 @@ o2=NULL;
         nv=(int *)muste_malloc(n*sizeof(int)); /* 9.12.1999 */
         if (nv==NULL) { not_enough_memory(); return; } // RS CHA exit -> return
 
-        for (i=0; i<m; ++i) o[i]=i;
-        for (i=0; i<n; ++i) nv[i]=i;
+        for (i=0; i<m; ++i) { o[i]=i;
+}
+        for (i=0; i<n; ++i) { nv[i]=i;
+}
         i=spfind("SORT");
         if (i>=0)
             {
             i=row_sort(spb[i],A,m,n,rlab,clab,lr,lc);
-            if (i<0) return; // RS CHA exit -> return
+            if (i<0) { return; // RS CHA exit -> return
+}
             }
 
-        for (i=0; i<m; ++i) mv[i]=o[i];
+        for (i=0; i<m; ++i) { mv[i]=o[i];
+}
         i=spfind("ROWS");
         if (i<0) { m2=m; pmv=NULL; }
         else
@@ -165,7 +172,8 @@ o2=NULL;
                   sur_print("\nError in ROWS specification!");
                   WAIT; return; // RS CHA exit -> return
                   }
-              for (i=0; i<m2; ++i) mv[i]=atoi(osa[i])-1;
+              for (i=0; i<m2; ++i) { mv[i]=atoi(osa[i])-1;
+}
               pmv=mv;
             }
 
@@ -180,14 +188,18 @@ o2=NULL;
                 {
                 sum2=(double *)muste_malloc(n*sizeof(double));
                 if (sum2==NULL) { not_enough_memory(); return; } // RS CHA exit -> return
-                for (j=0; j<n; ++j) sum2[j]=0.0;
-                for (i=0; i<m; ++i)
-                    for (j=0; j<n; ++j) sum2[j]+=A[i+m*j]*A[i+m*j];
+                for (j=0; j<n; ++j) { sum2[j]=0.0;
+}
+                for (i=0; i<m; ++i) {
+                    for (j=0; j<n; ++j) { sum2[j]+=A[i+m*j]*A[i+m*j];
+}
+}
                 for (j=0; j<n; ++j)
                     {
                     a=-1.0; k=-1;
-                    for (i=0; i<n; ++i)
+                    for (i=0; i<n; ++i) {
                         if (sum2[i]>a) { k=i; a=sum2[i]; }
+}
                     nv[j]=k;
                     sum2[k]=-1.0;
                     }
@@ -200,7 +212,8 @@ o2=NULL;
                     sur_print("\nError in COLUMNS specification!");
                     WAIT; return; // RS CHA exit -> return
                     }
-                for (i=0; i<n2; ++i) nv[i]=atoi(osa[i])-1;
+                for (i=0; i<n2; ++i) { nv[i]=atoi(osa[i])-1;
+}
                 }
             pnv=nv;
             }
@@ -210,7 +223,8 @@ o2=NULL;
         if (i>=0)
             {
             strcpy(x,spb[i]); nlimit=split(x,osa,32);
-            for (i=0; i<nlimit; ++i) limit[i]=atof(osa[i]);
+            for (i=0; i<nlimit; ++i) { limit[i]=atof(osa[i]);
+}
             i=spfind("SHADOWS");
             if (i<0) { sur_print("\nSHADOWS missing!"); WAIT; return; }
             strcpy(x,spb[i]); i=split(x,osa,32);
@@ -221,7 +235,8 @@ o2=NULL;
                 }
             for (i=0; i<nlimit; ++i)
                 {
-                if (*osa[i]=='0') *osa[i]=' ';
+                if (*osa[i]=='0') { *osa[i]=' ';
+}
                 shadow[i]=*osa[i];
                 }
             }
@@ -232,12 +247,15 @@ o2=NULL;
             nlimit=-1;
             B=NULL; rlabb=NULL; clabb=NULL;
             i=matrix_load(spb[i],&B,&mb,&nb,&rlabb,&clabb,&lrb,&lcb,&typeb,exprb);
-            if (i<0) return;
+            if (i<0) { return;
+}
             }
 
         k=output_level;
-        i=spfind("PRIND"); if (i>=0) prind=atoi(spb[i]);
-        if (prind==0) output_level=0;
+        i=spfind("PRIND"); if (i>=0) { prind=atoi(spb[i]);
+}
+        if (prind==0) { output_level=0;
+}
 
         strcpy(form,word[2]);
         if (*form=='(')         /* (accuracy) */
@@ -264,7 +282,8 @@ o2=NULL;
                     strcpy(p,form); p+=strlen(form)+1;
                     }
                 }
-            else matrix_format(form,atoi(form+1),A,m,n);
+            else { matrix_format(form,atoi(form+1),A,m,n);
+}
             }
 
 /*      if (!nlimit)      poistettu 26.12.1998
@@ -273,10 +292,13 @@ o2=NULL;
 */
         k=1; // RS 1.6.2013 wide output as default
         i=spfind("WIDE"); /* wide output */
-        if (i>=0) k=atoi(spb[i]);
-        if (k>0) k=c2; else k=c3;
+        if (i>=0) { k=atoi(spb[i]);
+}
+        if (k>0) { k=c2; } else { k=c3;
+}
 
-        if (nlimit==-1) lim_or_sha=B; else lim_or_sha=limit; // 24.6.2007
+        if (nlimit==-1) { lim_or_sha=B; } else { lim_or_sha=limit; // 24.6.2007
+}
 
         matrix_print2(A,m,n,rlab,clab,lr,lc,m2,n2,pmv,pnv,form,k,resline,eout,expr,
                         nlimit,lim_or_sha,shadow,c_form,&one_block);
@@ -294,10 +316,13 @@ o2=NULL;
                 sur_print("\nSUMS=2  marginal sums of squares");
                 WAIT; return; // RS CHA exit -> return
                 }
-            if (k)  { i=write_sums(k,o,nv); if (i<0) return; } // RS ADD exit
+            if (k)  { i=write_sums(k,o,nv); if (i<0) { return; 
+}} // RS ADD exit
             }
-        if (data_names) { i=write_long_names(); if (i<0) return; } // RS ADD exit
-        if (first_var!=NULL) { i=indicate_first_vars(); if (i<0) return; } // RS ADD exit
+        if (data_names) { i=write_long_names(); if (i<0) { return; 
+}} // RS ADD exit
+        if (first_var!=NULL) { i=indicate_first_vars(); if (i<0) { return; 
+}} // RS ADD exit
         s_end(argv[1]);
         }
 
@@ -339,17 +364,20 @@ int lc
         data_names=0;
         i=split(spbi,s_word,2);
         pname=s_word[0];
-        min_loading=0.0; if (i>1) min_loading=atof(s_word[1]);
+        min_loading=0.0; if (i>1) { min_loading=atof(s_word[1]);
+}
         additional_negsort=0;
         if (*pname=='-') { additional_negsort=1; ++pname; }
         if (strcmp(pname,"1")!=0)
             {
             i=data_open2(pname,&dat,0,1,0);
-            if (i<0) return(-1);
+            if (i<0) { return(-1);
+}
             data_names=1;
             }
 
-        for (j=0; j<n; ++j) s_sum2[j]=0.0;
+        for (j=0; j<n; ++j) { s_sum2[j]=0.0;
+}
         for (i=0; i<m; ++i)
             {
             o[i]=i; a=-1.0; k=0;
@@ -366,15 +394,18 @@ int lc
          if (min_loading>0.0)
              {
              k=0;
-             for (i=0; i<m; ++i)
+             for (i=0; i<m; ++i) {
                  if (fabs(A[i+m*s_max[i]])<min_loading)
-                     { o2[i]=0; ++k; } else o2[i]=1;
+                     { o2[i]=0; ++k; } else { o2[i]=1;
+}
+}
              if (k>0)
                  {
                  j=0; h=0;
-                 for (i=0; i<m; ++i)
-                     if (o2[i]) o[j++]=i;
-                     else { o[m-k+h]=i; ++h; }
+                 for (i=0; i<m; ++i) {
+                     if (o2[i]) { o[j++]=i;
+                     } else { o[m-k+h]=i; ++h; }
+}
                  }
              m1=m-k;
              }
@@ -384,11 +415,13 @@ int lc
         for (j=0; j<n; ++j)
             {
             k=0; a=-1.0;
-            for (i=0; i<n; ++i)
+            for (i=0; i<n; ++i) {
                 if (s_sum2[i]>a) { k=i; a=s_sum2[i]; }
+}
             s_sum2[k]=0.0;
 
-            for (i=i0; i<m1; ++i) vv[o[i]]=fabs(A[o[i]+m*k]);
+            for (i=i0; i<m1; ++i) { vv[o[i]]=fabs(A[o[i]+m*k]);
+}
             for (i=i0; i<m1; ++i)
                 {
                 a=-1.0; h=-1;
@@ -401,9 +434,12 @@ int lc
                 }
             for (i=i0; i<m1; ++i)
                 {
-                if (s_max[o[i]]==k) continue;
-                for (h=i+1; h<m1; ++h)
-                    if (s_max[o[h]]==k) break;
+                if (s_max[o[i]]==k) { continue;
+}
+                for (h=i+1; h<m1; ++h) {
+                    if (s_max[o[h]]==k) { break;
+}
+}
                 if (h<m1)
                     {
                     ii=o[i]; o[i]=o[h]; o[h]=ii;
@@ -412,10 +448,12 @@ int lc
                 i1=i;
                 break;
                 }
-            if (i==m1) i1=m1;
+            if (i==m1) { i1=m1;
+}
             if (additional_negsort)
                 {
-                for (i=i0; i<i1; ++i) vv[o[i]]=A[o[i]+m*k];
+                for (i=i0; i<i1; ++i) { vv[o[i]]=A[o[i]+m*k];
+}
                 for (i=i0; i<i1; ++i)
                     {
                     a=-1000.0; h=-1;
@@ -434,13 +472,17 @@ int lc
 printf("\n");
 for (i=0; i<m; ++i) Rprintf("%d ",o[i]); Rprintf("\n"); getch();
 */
-        for (i=0; i<m*n; ++i) A2[i]=A[i];
-        for (i=0; i<lr*m; ++i) rlab2[i]=rlab[i];
+        for (i=0; i<m*n; ++i) { A2[i]=A[i];
+}
+        for (i=0; i<lr*m; ++i) { rlab2[i]=rlab[i];
+}
 
         for (i=0; i<m; ++i)
             {
-            for (j=0; j<n; ++j) A[i+m*j]=A2[o[i]+m*j];
-            for (j=0; j<lr; ++j) rlab[i*lr+j]=rlab2[o[i]*lr+j];
+            for (j=0; j<n; ++j) { A[i+m*j]=A2[o[i]+m*j];
+}
+            for (j=0; j<lr; ++j) { rlab[i*lr+j]=rlab2[o[i]*lr+j];
+}
             }
 
         muste_free(rlab2); muste_free(A2);
@@ -455,14 +497,18 @@ static int write_sums(int k,int *o,int *oc)
         double a,b;
         char x[LLENGTH];
 
-        if (resline==0) return(1);
-        if (c_form!=NULL) return(1);
+        if (resline==0) { return(1);
+}
+        if (c_form!=NULL) { return(1);
+}
         j=resline+2;
         edread(x,j);
-        pos=c2; while (x[pos]==' ') --pos; pos+=2;
+        pos=c2; while (x[pos]==' ') { --pos; 
+}pos+=2;
         if (pos>=c2) { line_error(); return(-1); }
 
-        if (k==1) strcpy(x,"Sum"); else strcpy(x,"Sumsqr");
+        if (k==1) { strcpy(x,"Sum"); } else { strcpy(x,"Sumsqr");
+}
         edwrite(x,j-1,pos+1);
 
         for (i=0; i<m; ++i)
@@ -471,13 +517,15 @@ static int write_sums(int k,int *o,int *oc)
             for (h=0; h<n; ++h)
                 {
                 b=A[i+m*oc[h]];
-                if (k==1) a+=b; else a+=b*b;
+                if (k==1) { a+=b; } else { a+=b*b;
+}
                 }
             fconv(a,form,x);
             edwrite(x,j+i,pos);
             }
 
-        if (k==1) strcpy(x,"Sum"); else strcpy(x,"Sumsqr");
+        if (k==1) { strcpy(x,"Sum"); } else { strcpy(x,"Sumsqr");
+}
         edwrite(space,j+m,1);
         edwrite(x,j+m,1);
         pos=lr+2;
@@ -487,7 +535,8 @@ static int write_sums(int k,int *o,int *oc)
             for (i=0; i<m; ++i)
                 {
                 b=A[i+m*oc[h]];
-                if (k==1) a+=b; else a+=b*b;
+                if (k==1) { a+=b; } else { a+=b*b;
+}
                 }
             fconv(a,form,x);
             edwrite(x,j+m,pos);
@@ -504,22 +553,29 @@ static int write_long_names()
         char nimi[10];
 
 
-        if (resline==0) return(1);
-        if (dat.type!=2) return(1);
-        if (dat.d2.l<10) return(1);
+        if (resline==0) { return(1);
+}
+        if (dat.type!=2) { return(1);
+}
+        if (dat.d2.l<10) { return(1);
+}
         j=resline+2;
         edread(x,j);
-        pos=c2; while (x[pos]==' ') --pos; pos+=2;
+        pos=c2; while (x[pos]==' ') { --pos; 
+}pos+=2;
         if (pos>=c2) { line_error(); return(-1); }
 
         k=0;
         for (i=0; i<m; ++i)
             {
             edread(x,j+i);
-            for (k=0; k<8; ++k) nimi[k]=x[k+1]; nimi[9]=EOS;
-            k=7; while (nimi[k]==' ') nimi[k--]=EOS;
+            for (k=0; k<8; ++k) { nimi[k]=x[k+1]; 
+}nimi[9]=EOS;
+            k=7; while (nimi[k]==' ') { nimi[k--]=EOS;
+}
             var=varfind(&dat,nimi);
-            if (var<0) return(-1);
+            if (var<0) { return(-1);
+}
             edwrite(dat.varname[var]+9,j+i,pos);
             }
         return(1);
@@ -531,17 +587,20 @@ static int indicate_first_vars()
         char x[LLENGTH];
 // RS REM        char nimi[9];
 
-        if (resline==0) return(1);
+        if (resline==0) { return(1);
+}
         j=resline+2;
 
-        if (first_var[n]<m) k1=n+1; else k1=n;
+        if (first_var[n]<m) { k1=n+1; } else { k1=n;
+}
         for (k=0; k<k1; ++k)
             {
             h=j+first_var[k];
             if (zs[h]==0)
                 {
                 i=shadow_create(h);
-                if (i<0) return(-1);
+                if (i<0) { return(-1);
+}
                 }
             edread(x,zs[h]);
             edwrite("1",zs[h],1);
@@ -561,7 +620,8 @@ static int posdir(double *A,int n,int m)
         int i,criterion;
 
         i=spfind("POSDIR");
-        if (i<0) return(-1);
+        if (i<0) { return(-1);
+}
         criterion=atoi(spb[i]);
 
         switch (criterion)
@@ -615,7 +675,8 @@ static void op_posdir()
             sur_print(sbuf); WAIT; return;
             }
         criterion=1;
-        if (g>2) criterion=atoi(word[2]);
+        if (g>2) { criterion=atoi(word[2]);
+}
 
         switch (criterion)
             {
@@ -641,13 +702,15 @@ static void posdir_sqrsum(double *A,int n,int m)
             splus=sminus=0.0;
             for (i=0; i<n; ++i)
                 {
-                if (col[i]>0) splus+=col[i]*col[i];
-                else          sminus+=col[i]*col[i];
+                if (col[i]>0) { splus+=col[i]*col[i];
+                } else {          sminus+=col[i]*col[i];
+}
                 }
             if (sminus>splus)
                 {
-                for (i=0; i<n; ++i)
+                for (i=0; i<n; ++i) {
                     col[i]=-col[i];
+}
                 }
             }
         }
@@ -664,12 +727,14 @@ static void posdir_max(double *A,int n,int m)
             max=0.0;
             for (i=0; i<n; ++i)
                 {
-                if (fabs(col[i])>fabs(max)) max=col[i];
+                if (fabs(col[i])>fabs(max)) { max=col[i];
+}
                 }
             if (max<0.0)
                 {
-                for (i=0; i<n; ++i)
+                for (i=0; i<n; ++i) {
                     col[i]=-col[i];
+}
                 }
             }
         }
@@ -686,12 +751,14 @@ static void posdir_maxcases(double *A,int n,int m)
             nplus=0;
             for (i=0; i<n; ++i)
                 {
-                if (col[i]>=0.0) ++nplus;
+                if (col[i]>=0.0) { ++nplus;
+}
                 }
             if (nplus<n-nplus)
                 {
-                for (i=0; i<n; ++i)
+                for (i=0; i<n; ++i) {
                     col[i]=-col[i];
+}
                 }
             }
         }
@@ -741,16 +808,20 @@ int *p_one
         
         for (i=0; i<LLENGTH; i++) { x[i]=EOS; x2[i]=EOS; } // RS 19.11.2012
 
-        if (nlimit==-1) bb=limit; // 24.6.2007 SHADOW_MATRIX
+        if (nlimit==-1) { bb=limit; // 24.6.2007 SHADOW_MATRIX
+}
 
         output_open(outfile);
-        output_line(header,outfile,editline); if (editline) ++editline;
+        output_line(header,outfile,editline); if (editline) { ++editline;
+}
 
-        if (*form=='%') len=muste_sprintf(x,form,fabs(A[0]))+1;
-        else len=strlen(form);
+        if (*form=='%') { len=muste_sprintf(x,form,fabs(A[0]))+1;
+        } else { len=strlen(form);
+}
 
         nblock=(width-lr-1+1)/(len+1);
-        if (nblock>n2) { nblock=n2; *p_one=1; } else *p_one=0;
+        if (nblock>n2) { nblock=n2; *p_one=1; } else { *p_one=0;
+}
 
         i1=0; i2=m2-1;
         j1=0; j2=nblock-1;
@@ -760,24 +831,29 @@ int *p_one
             k=muste_sprintf(x,"%.*s",lr+1,space);
             for (j=j1; j<=j2; ++j)
                 {
-                if (nv==NULL) jj=j; else jj=nv[j];
+                if (nv==NULL) { jj=j; } else { jj=nv[j];
+}
                 k+=muste_sprintf(x+k,"%*.*s ",len,len,matrix_label2(clab,lc,len,jj,label));
                 }
-            output_line(x,outfile,editline); if (editline) ++editline;
+            output_line(x,outfile,editline); if (editline) { ++editline;
+}
             for (i=i1; i<=i2; ++i)
                 {
-                if (mv==NULL) ii=i; else ii=mv[i];
+                if (mv==NULL) { ii=i; } else { ii=mv[i];
+}
                 k=0; while (k<lr) { label[k]=rlab[ii*lr+k]; ++k; } label[lr]=EOS;
                 k=muste_sprintf(x,"%*.*s ",lr,lr,label);
                 muste_fieldcopy(x2,space,c2);
                 for (j=j1; j<=j2; ++j)
                     {
-                    if (nv==NULL) jj=j; else jj=nv[j];
+                    if (nv==NULL) { jj=j; } else { jj=nv[j];
+}
                     da=A[jj*m+ii];
-                    if (c_form==NULL)
+                    if (c_form==NULL) {
                         h=fconv(da,form,label);
-                    else
+                    } else {
                         h=fconv(da,c_form[jj],label);
+}
 
                     if (h<0) { muste_fieldcopy(label,space,len); label[len-1]='-'; }
                     if (nlimit)
@@ -785,16 +861,21 @@ int *p_one
                         if (nlimit==-1)
                             {
                             h=(int)bb[jj*m+ii];
-                            if (h==0) sh=' ';
-                            else sh=(char)((int)'0'+h);
+                            if (h==0) { sh=' ';
+                            } else { sh=(char)((int)'0'+h);
+}
                             }
                         else
                             {
-                            for (h=0; h<nlimit; ++h)
-                                if (da<=limit[h]) break;
-                            if (h==nlimit) --h; sh=shadow[h];
+                            for (h=0; h<nlimit; ++h) {
+                                if (da<=limit[h]) { break;
+}
+}
+                            if (h==nlimit) { --h; 
+}sh=shadow[h];
                             }
-                        for (h=0; h<len; ++h) x2[k+h]=sh;
+                        for (h=0; h<len; ++h) { x2[k+h]=sh;
+}
                         }
                     k+=muste_sprintf(x+k,"%*.*s ",len,len,label);
                     }
@@ -803,17 +884,22 @@ int *p_one
                     if (zs[editline]==0)
                         {
                         j=shadow_create(editline);
-                        if (j<0) return(-1);
+                        if (j<0) { return(-1);
+}
                         }
                     edwrite(x2,zs[editline],1);
                     }
-                output_line(x,outfile,editline); if (editline) ++editline;
+                output_line(x,outfile,editline); if (editline) { ++editline;
+}
                 }
             strcpy(x," ");
-            output_line(x,outfile,editline); if (editline) ++editline;
-            if (j2==n2-1) break;
+            output_line(x,outfile,editline); if (editline) { ++editline;
+}
+            if (j2==n2-1) { break;
+}
             j1=j2+1;
-            j2+=nblock; if (j2>=n2) j2=n2-1;
+            j2+=nblock; if (j2>=n2) { j2=n2-1;
+}
             }
 
         output_close(outfile);
@@ -825,11 +911,13 @@ char *matrix_label2(char *lablist,int l,int len,int i,char *label)
         int k=0;
         int h=0;
 
-        while (lablist[i*l+h]==' ' && h<l) ++h;
+        while (lablist[i*l+h]==' ' && h<l) { ++h;
+}
 
         while (h<l && k<len) { label[k]=lablist[i*l+h]; ++k; ++h; }
         label[k]=EOS;
-        while (label[k-1]==' ' && k>0) label[--k]=EOS;
+        while (label[k-1]==' ' && k>0) { label[--k]=EOS;
+}
         return(label);
         }
 
@@ -849,8 +937,10 @@ int matrix_format(char *muoto,int minlev,double *A,int m,int n)
         for (i=0; i<m*n; ++i)
             {
             a=A[i]; if (a<0) { neg=1; a=-a; }
-            if (a!=floor(a)) kok=0;
-            if (a>max) max=a;
+            if (a!=floor(a)) { kok=0;
+}
+            if (a>max) { max=a;
+}
             }
 
         if (max>1e10)
@@ -859,13 +949,20 @@ int matrix_format(char *muoto,int minlev,double *A,int m,int n)
             return(1);
             }
 
-        if (max==0) max=1;
-        if (max) lev=lev2=(int)(log(max)/log((double)10))+1;
-        if (lev<minlev) lev=minlev;
-        for (i=0; i<lev; ++i) muoto[i]='#'; muoto[lev]=EOS;
-        if (kok) return(1);
-        if (lev2<1) lev2=1;
-        if (lev2<lev-neg) muoto[lev2+neg]='.';
+        if (max==0) { max=1;
+}
+        if (max) { lev=lev2=(int)(log(max)/log((double)10))+1;
+}
+        if (lev<minlev) { lev=minlev;
+}
+        for (i=0; i<lev; ++i) { muoto[i]='#'; 
+}muoto[lev]=EOS;
+        if (kok) { return(1);
+}
+        if (lev2<1) { lev2=1;
+}
+        if (lev2<lev-neg) { muoto[lev2+neg]='.';
+}
         return(1);
         }
 

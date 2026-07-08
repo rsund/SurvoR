@@ -104,7 +104,8 @@ rem_pr("CORRTEST? ");
     yy=NULL;
     perm=NULL;
 
-        i=spec_init(r1+r-1); if (i<0) return;
+        i=spec_init(r1+r-1); if (i<0) { return;
+}
         results_line=0;
 
         if (muste_strnicmp(word[1],"TWO",3)==0 || muste_strnicmp(word[1],"ONE",3)==0)
@@ -116,10 +117,12 @@ rem_pr("CORRTEST? ");
         if (g>5)
             {
             results_line=edline2(word[5],1,1);
-            if (results_line==0) return;
+            if (results_line==0) { return;
+}
             }
 
-        i=spec_init(r1+r-1); if (i<0) return;
+        i=spec_init(r1+r-1); if (i<0) { return;
+}
 
         strcpy(nimi,etmpd); strcat(nimi,"SURVO.TMP");
         ftemp=muste_fopen(nimi,"w+b");
@@ -136,10 +139,13 @@ rem_pr("CORRTEST? ");
             s_end(argv); return;
             }
 
-        n[0]=talleta(word[1],word[2],0); if (n[0]<0) return;
-        n[1]=talleta(word[3],word[4],1); if (n[1]<0) return;
+        n[0]=talleta(word[1],word[2],0); if (n[0]<0) { return;
+}
+        n[1]=talleta(word[3],word[4],1); if (n[1]<0) { return;
+}
         nn=n[0]+n[1];
-        i=varaa_tilat(); if (i<0) return;
+        i=varaa_tilat(); if (i<0) { return;
+}
         rewind(ftemp);
         pit=0;
         for (i=0; i<n[0]; ++i)
@@ -164,10 +170,12 @@ getch();
 
         maxcount=10000000L;
         i=spfind("SIMUMAX");
-        if (i>=0) maxcount=atol(spb[i]);
+        if (i>=0) { maxcount=atol(spb[i]);
+}
         conf_level=0.95;
         i=spfind("CONF");
-        if (i>=0) conf_level=atof(spb[i]);
+        if (i>=0) { conf_level=atof(spb[i]);
+}
         if (conf_level<0.8 || conf_level>=1.0)
             {
             sur_print("\nError in CONF=p! Confidence level p must be 0.8<p<1");
@@ -178,7 +186,8 @@ getch();
         if (maxcount)
             {
             spec_rnd();
-            i=simulation(); if (i<0) return;
+            i=simulation(); if (i<0) { return;
+}
             }
         g_print=&print_line;
         printout();
@@ -216,20 +225,25 @@ static int talleta(char *s1,char *s2,int k)
 /*
 printf("\n%s %s %s",s1,var1,var2);
 */
-        i=data_read_open(s1,&d); if (i<0) return(-1);
-        i=varfind(&d,var1); if (i<0) return(-1);
+        i=data_read_open(s1,&d); if (i<0) { return(-1);
+}
+        i=varfind(&d,var1); if (i<0) { return(-1);
+}
         varx[k]=i;
-        j=varfind(&d,var2); if (j<0) return(-1);
+        j=varfind(&d,var2); if (j<0) { return(-1);
+}
         vary[k]=j;
         n=0;
         sumx[k]=sumy[k]=sumx2[k]=sumy2[k]=sumxy[k]=0.0;
         for (l=1; l<=d.n; ++l)
             {
             data_load(&d,l,varx[k],&a);
-            if (a==MISSING8) continue;
+            if (a==MISSING8) { continue;
+}
             ff[0]=a;
             data_load(&d,l,vary[k],&b);
-            if (b==MISSING8) continue;
+            if (b==MISSING8) { continue;
+}
             ff[1]=b;
             ++n;
             sumx[k]+=a; sumx2[k]+=a*a;
@@ -303,7 +317,8 @@ static int simulation()
 
         while (1)
             {
-            for (k=0; k<nn; ++k) perm[k]=k;
+            for (k=0; k<nn; ++k) { perm[k]=k;
+}
             sx11=sx21=sy11=sy21=sxy1=0.0;
             for (j=0; j<n[0]; ++j)
                 {
@@ -326,14 +341,16 @@ static int simulation()
 /* Rprintf("\nr1=%g r2=%g t=%g",rs[0],rs[1],t); getch(); continue; */
 
             ++u; ++d;
-            if (t>=test_val) ++u1;
+            if (t>=test_val) { ++u1;
+}
 /* Rprintf("\n%g",(double)u1/(double)u); getch(); */
             if (d==d1)
                 {
                 d=0;
                 corrtest_disp();
                 headline("");
-                if (u>=maxcount) break;
+                if (u>=maxcount) { break;
+}
                 if (sur_kbhit())
                     {
                     i=sur_getch(); break;
@@ -367,10 +384,14 @@ static double fisher_z(double *r,int *n)
         double r1,r2;
 
         r1=r[0]; r2=r[1];
-        if (r1>0.9999999) r1=0.99999999;
-        if (r1<-0.9999999) r1=-0.99999999;
-        if (r2>0.9999999) r2=0.99999999;
-        if (r2<-0.9999999) r2=-0.99999999;
+        if (r1>0.9999999) { r1=0.99999999;
+}
+        if (r1<-0.9999999) { r1=-0.99999999;
+}
+        if (r2>0.9999999) { r2=0.99999999;
+}
+        if (r2<-0.9999999) { r2=-0.99999999;
+}
 //      r1=sqrt((double)(n[0]-3)/8.0)*log((1.0+r1)/(1.0-r1));
 //      r2=sqrt((double)(n[1]-3)/8.0)*log((1.0+r2)/(1.0-r2));
 //      return(r1-r2);
@@ -389,7 +410,8 @@ static int disp0()
         {
         double prob;
 
-        if (r>r3-6) r=1;
+        if (r>r3-6) { r=1;
+}
         LOCATE(r+2,9);
         muste_sprintf(sbuf,"Comparing correlation coefficients in 2 samples:");
         (*g_print)(sbuf);
@@ -408,7 +430,8 @@ static int disp0()
                                  test_val,prob);
         (*g_print)(sbuf);
 
-        if (!maxcount) return(1);
+        if (!maxcount) { return(1);
+}
         LOCATE(r+6,9);
         muste_sprintf(sbuf,"         N    P       Confidence interval (%g)",conf_level);
         (*g_print)(sbuf);
@@ -427,8 +450,10 @@ static int corrtest_disp()
         LOCATE(r+7,9); PR_EUDL;
         p1=(double)u1/(double)u;
         se=sqrt(p1*(1.0-p1)/(double)u);
-        lower=p1-conf_coeff*se; if (lower<0.0) lower=0.0;
-        upper=p1+conf_coeff*se; if (upper>1.0) upper=1.0;
+        lower=p1-conf_coeff*se; if (lower<0.0) { lower=0.0;
+}
+        upper=p1+conf_coeff*se; if (upper>1.0) { upper=1.0;
+}
         muste_sprintf(sbuf,"%10d %.8f %.8f lower limit",
                        u,p1,lower);
         (*g_print)(sbuf);
@@ -443,7 +468,8 @@ static int printout()
         g_print=print_line;
         output_open(eout);
         disp0();
-        if (maxcount) corrtest_disp();
+        if (maxcount) { corrtest_disp();
+}
         output_close(eout);
         return(1);
         }
@@ -451,7 +477,8 @@ static int printout()
 static int print_line(char *line)
         {
         output_line(line,eout,results_line);
-        if (results_line) ++results_line;
+        if (results_line) { ++results_line;
+}
         return(1);
         }
 
@@ -464,7 +491,8 @@ static int vertailu_annetuilla_arvoilla()
     int one;
 
     one=0;
-    if (muste_strnicmp(word[1],"ONE",3)==0) one=1;
+    if (muste_strnicmp(word[1],"ONE",3)==0) { one=1;
+}
 
     if (one && g<6)
         {
@@ -482,16 +510,19 @@ static int vertailu_annetuilla_arvoilla()
         return(-1);
         }
     i=spfind(word[2]);
-    if (i<0) r1=atof(word[2]);
-    else r1=atof(spb[i]);
+    if (i<0) { r1=atof(word[2]);
+    } else { r1=atof(spb[i]);
+}
     if (r1<=-1.0 || r1>=1.0) { r_error(r1); return(1); }
     i=spfind(word[3]);
-    if (i<0) n1=atol(word[3]);
-    else n1=atol(spb[i]);
+    if (i<0) { n1=atol(word[3]);
+    } else { n1=atol(spb[i]);
+}
     if (n1<3L) { n_error(n1); return(1); }
     i=spfind(word[4]);
-    if (i<0) r2=atof(word[4]);
-    else r2=atof(spb[i]);
+    if (i<0) { r2=atof(word[4]);
+    } else { r2=atof(spb[i]);
+}
     if (r2<=-1.0 || r2>=1.0) { r_error(r2); return(1); }
     if (one)
         {
@@ -499,7 +530,8 @@ static int vertailu_annetuilla_arvoilla()
         int neg;
 
         results_line=edline2(word[5],1,1);
-        if (results_line==0) return(-1);
+        if (results_line==0) { return(-1);
+}
         if (r2==0.0)
             {
             output_open(eout);
@@ -508,9 +540,11 @@ static int vertailu_annetuilla_arvoilla()
             muste_sprintf(sbuf,"Sample: R=%g N=%d",r1,n1);
             print_line(sbuf);
             test_val=sqrt((double)(n1-2)/(1.0-r1*r1))*r1;
-            neg=0; if (test_val<0) neg=1;
+            neg=0; if (test_val<0) { neg=1;
+}
             prob=1.0-muste_cdf_t(test_val,(double)(n1-2));
-            if (neg) prob2=2*(1-prob); else prob2=2*prob;
+            if (neg) { prob2=2*(1-prob); } else { prob2=2*prob;
+}
             muste_sprintf(sbuf,"Standard t test value %g  P=%g (2-tailed P=%g)",
                                      test_val,prob,prob2);
             print_line(sbuf);
@@ -522,11 +556,13 @@ static int vertailu_annetuilla_arvoilla()
     else
         {
         i=spfind(word[5]);
-        if (i<0) n2=atol(word[5]);
-        else n2=atol(spb[i]);
+        if (i<0) { n2=atol(word[5]);
+        } else { n2=atol(spb[i]);
+}
         if (n2<3L) { n_error(n2); return(1); }
         results_line=edline2(word[6],1,1);
-        if (results_line==0) return(-1);
+        if (results_line==0) { return(-1);
+}
         }
     lr1=0.5*log((1.0+r1)/(1.0-r1));
     lr2=0.5*log((1.0+r2)/(1.0-r2));
@@ -588,12 +624,15 @@ static int one_sample_test()
         if (g>3)
             {
             results_line=edline2(word[3],1,1);
-            if (results_line==0) return(1);
+            if (results_line==0) { return(1);
+}
             }
 
-        n[0]=talleta(word[1],word[2],0); if (n[0]<0) return(1);
+        n[0]=talleta(word[1],word[2],0); if (n[0]<0) { return(1);
+}
         nn=n[0];
-        i=varaa_tilat1(); if (i<0) return(1);
+        i=varaa_tilat1(); if (i<0) { return(1);
+}
         rewind(ftemp);
         pit=0;
         for (i=0; i<nn; ++i)
@@ -614,10 +653,12 @@ static int one_sample_test()
 
         maxcount=10000000L;
         i=spfind("SIMUMAX");
-        if (i>=0) maxcount=atol(spb[i]);
+        if (i>=0) { maxcount=atol(spb[i]);
+}
         conf_level=0.95;
         i=spfind("CONF");
-        if (i>=0) conf_level=atof(spb[i]);
+        if (i>=0) { conf_level=atof(spb[i]);
+}
         if (conf_level<0.8 || conf_level>=1.0)
             {
             sur_print("\nError in CONF=p! Confidence level p must be 0.8<p<1");
@@ -628,7 +669,8 @@ static int one_sample_test()
         if (maxcount)
             {
             spec_rnd();
-            i=simulation1(); if (i<0) return(1);
+            i=simulation1(); if (i<0) { return(1);
+}
             }
         g_print=&print_line;
         printout1();
@@ -658,7 +700,8 @@ static int simulation1()
 
         while (1)
             {
-            for (k=0; k<nn; ++k) perm[k]=k;
+            for (k=0; k<nn; ++k) { perm[k]=k;
+}
             sxy1=0.0;
 
             for (j=0; j<nn; ++j)
@@ -671,15 +714,18 @@ static int simulation1()
                 }
 
             ++u; ++d;
-            if (sxy1>=sxy) ++u1;
-            if(fabs(sxy1-asxy)>=adev) ++u2;
+            if (sxy1>=sxy) { ++u1;
+}
+            if(fabs(sxy1-asxy)>=adev) { ++u2;
+}
 
             if (d==d1)
                 {
                 d=0;
                 disp1();
                 headline("");
-                if (u>=maxcount) break;
+                if (u>=maxcount) { break;
+}
                 if (sur_kbhit())
                     {
                     i=sur_getch(); break;
@@ -711,7 +757,8 @@ static int disp01()
 //        int k;
         double prob,prob2;
 
-        if (r>r3-6) r=1;
+        if (r>r3-6) { r=1;
+}
         LOCATE(r+2,9);
         muste_sprintf(sbuf,"Testing hypothesis correlation coefficient = 0:");
         (*g_print)(sbuf);
@@ -721,14 +768,17 @@ static int disp01()
         (*g_print)(sbuf);
         LOCATE(r+4,9);
         test_val=sqrt((double)(nn-2)/(1.0-rr[0]*rr[0]))*rr[0];
-        neg=0; if (test_val<0) neg=1;
+        neg=0; if (test_val<0) { neg=1;
+}
         prob=1.0-muste_cdf_t(test_val,(double)(nn-2));
-        if (neg) prob2=2*(1-prob); else prob2=2*prob;
+        if (neg) { prob2=2*(1-prob); } else { prob2=2*prob;
+}
         muste_sprintf(sbuf,"Standard t test value %g  P=%g (2-tailed P=%g)",
                                  test_val,prob,prob2);
         (*g_print)(sbuf);
 
-        if (!maxcount) return(1);
+        if (!maxcount) { return(1);
+}
         LOCATE(r+5,9);
         muste_sprintf(sbuf,"           1-tailed test         2-tailed test");
         (*g_print)(sbuf);
@@ -752,12 +802,16 @@ static int disp1()
         LOCATE(r+7,9); PR_EUDL;
         p1=(double)u1/(double)u;
         se=sqrt(p1*(1.0-p1)/(double)u);
-        lower=p1-conf_coeff*se; if (lower<0.0) lower=0.0;
-        upper=p1+conf_coeff*se; if (upper>1.0) upper=1.0;
+        lower=p1-conf_coeff*se; if (lower<0.0) { lower=0.0;
+}
+        upper=p1+conf_coeff*se; if (upper>1.0) { upper=1.0;
+}
         p2=(double)u2/(double)u;
         se2=sqrt(p2*(1.0-p2)/(double)u);
-        lower2=p2-conf_coeff*se2; if (lower2<0.0) lower2=0.0;
-        upper2=p2+conf_coeff*se2; if (upper2>1.0) upper2=1.0;
+        lower2=p2-conf_coeff*se2; if (lower2<0.0) { lower2=0.0;
+}
+        upper2=p2+conf_coeff*se2; if (upper2>1.0) { upper2=1.0;
+}
         muste_sprintf(sbuf,"%10d %.8f %.8f %.8f %.8f lower limit",
                        u,p1,lower,p2,lower2);
         (*g_print)(sbuf);
@@ -772,7 +826,8 @@ static int printout1()
         g_print=print_line;
         output_open(eout);
         disp01();
-        if (maxcount) disp1();
+        if (maxcount) { disp1();
+}
         output_close(eout);
         return(1);
         }

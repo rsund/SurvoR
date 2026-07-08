@@ -172,7 +172,8 @@ void muste_geom(char *argv)
 //  if (argc==1) return;
     s_init(argv);
 
-    i=spec_init(r1+r-1); if (i<0) return;
+    i=spec_init(r1+r-1); if (i<0) { return;
+}
     spec_rnd();
 
     n_disp=10000;
@@ -185,40 +186,50 @@ void muste_geom(char *argv)
     
     samples=0;
     i=spfind("SAMPLES");
-    if (i>=0) samples=n_samples=atoi(spb[i]);
+    if (i>=0) { samples=n_samples=atoi(spb[i]);
+}
     if (samples)
         {
         stddev=0.001;
         i=spfind("STDDEV");
-        if (i>=0) stddev=muste_arit_atof(spb[i]);
+        if (i>=0) { stddev=muste_arit_atof(spb[i]);
+}
 
         distr=1; model=0;
         i=spfind("DISTR");
-        if (i>=0) distr=atoi(spb[i]);
+        if (i>=0) { distr=atoi(spb[i]);
+}
         i=spfind("MODEL"); // alternative spec.
         if (i>=0)
             {
             model=i=atoi(spb[i]);
-            if (i==0) distr=1;
-            else if (i==2) distr=3;
-            else if (i==3) distr=4; // 29.6.2008
-            else distr=2;
+            if (i==0) { distr=1;
+            } else if (i==2) { distr=3;
+            } else if (i==3) { distr=4; // 29.6.2008
+            } else { distr=2;
+}
             }
         muste_sprintf(sbuf,"\nMODEL=%d",model); sur_print(sbuf);
         strcpy(result_name,"Geom.TXT");
-        if (g>=5) strcpy(result_name,word[4]);
+        if (g>=5) { strcpy(result_name,word[4]);
+}
         result=muste_fopen(result_name,"wt");
         }
-    else n_samples=1;
+    else { n_samples=1;
+}
 
-    i=spfind("RESULTS"); if (i>=0) results=atoi(spb[i]);
+    i=spfind("RESULTS"); if (i>=0) { results=atoi(spb[i]);
+}
 
-    j1=edline2(word[1],1,1); if (j1==0) return;
-    j2=edline2(word[2],j1,1); if (j2==0) return;
+    j1=edline2(word[1],1,1); if (j1==0) { return;
+}
+    j2=edline2(word[2],j1,1); if (j2==0) { return;
+}
     res_line=0;
     if (g>3 && strcmp("0",word[3])!=0 )
       {
-      res_line=edline2(word[3],1,1); if (res_line==0) return;
+      res_line=edline2(word[3],1,1); if (res_line==0) { return;
+}
 // Rprintf("\nres_line=%d j1=%d J2=%d|",res_line,j1,j2); getch();
       if (res_line<j2+1)
           {
@@ -233,7 +244,8 @@ void muste_geom(char *argv)
     for (j=j1+1; j<=j2; ++j)
         {
         n_param=parsi(j);
-        if (n_param==0) continue;
+        if (n_param==0) { continue;
+}
 
 //     Rprintf("\ns[0]=%s s[1]=%s s[2]=%s",s[0],s[1],s[2]); getch();
         if (muste_strcmpi(s[0],"save")==0)
@@ -300,8 +312,10 @@ void muste_geom(char *argv)
         object[n_objects]=i;
 
         strcpy(param[n_objects][0],s[0]);
-        for (i=2; i<n_param; ++i) strcpy(param[n_objects][i-1],s[i]);
-        for (i=n_param; i<MAXPAR; ++i) *param[n_objects][i-1]=EOS;
+        for (i=2; i<n_param; ++i) { strcpy(param[n_objects][i-1],s[i]);
+}
+        for (i=n_param; i<MAXPAR; ++i) { *param[n_objects][i-1]=EOS;
+}
 
         ++n_objects;
         } // j
@@ -333,7 +347,8 @@ void muste_geom(char *argv)
         if (!samples)
             {
             k=muste_sprintf(sbuf,"\n%d: %s ",j,object_name[object[j]]);
-            for (i=0; i<MAXPAR-1; ++i) k+=muste_sprintf(sbuf+k,"%s ",param[j][i]);
+            for (i=0; i<MAXPAR-1; ++i) { k+=muste_sprintf(sbuf+k,"%s ",param[j][i]);
+}
             sur_print(sbuf);
             }
         switch (object[j])
@@ -362,7 +377,8 @@ void muste_geom(char *argv)
                           else
                               {
                               il=get_line(&x1,&y1,&x2,&y2,param[j][1]);
-                              if (il<0) return;
+                              if (il<0) { return;
+}
                               x0=muste_arit_atof(param[j][2]);
                               y0=muste_arit_atof(param[j][3]);
                               randomize(&xv,&yv,x0,y0,1.0,-1.0,stddev);
@@ -393,12 +409,14 @@ void muste_geom(char *argv)
                           else
                               {
                               ic=get_circle(&x1,&y1,&radius,param[j][1]);
-                              if (ic<0) return;
+                              if (ic<0) { return;
+}
                               x2=muste_arit_atof(param[j][2]);
                               y2=muste_arit_atof(param[j][3]);
 
                               randomize(&radius2,&a,radius,0.0,1.0,-1.0,stddev); // a ylim„„r„isesti
-                              if (x1!=x2) a=atan((y2-y1)/(x2-x1)); else a=pih;
+                              if (x1!=x2) { a=atan((y2-y1)/(x2-x1)); } else { a=pih;
+}
 
                               point_x[n_points]=x1+radius2*muste_cos(a);
                               point_y[n_points]=y1+radius2*muste_sin(a);
@@ -425,23 +443,32 @@ void muste_geom(char *argv)
                       if (!samples || (samples && exact) )
                           {
                           i=get_point(&ex,&line_x1[n_lines],&line_y1[n_lines],param[j][1]);
-                          if (i<0) return;
-                          if (!ex) ++k;
+                          if (i<0) { return;
+}
+                          if (!ex) { ++k;
+}
                           i=get_point(&ex,&line_x2[n_lines],&line_y2[n_lines],param[j][2]);
-                          if (i<0) return;
-                          if (!ex) ++k;
-                          if (!exact) gs1+=k;
+                          if (i<0) { return;
+}
+                          if (!ex) { ++k;
+}
+                          if (!exact) { gs1+=k;
+}
                           }
                       else
                           {
                           i=get_point(&ex,&x,&y,param[j][1]);
-                          if (i<0) return;
+                          if (i<0) { return;
+}
                           if (ex) { line_x1[n_lines]=x; line_y1[n_lines]=y; }
-                          else randomize(&line_x1[n_lines],&line_y1[n_lines],x,y,point_k1[i],point_k2[i],stddev);
+                          else { randomize(&line_x1[n_lines],&line_y1[n_lines],x,y,point_k1[i],point_k2[i],stddev);
+}
                           i=get_point(&ex,&x,&y,param[j][2]);
-                          if (i<0) return;
+                          if (i<0) { return;
+}
                           if (ex) { line_x2[n_lines]=x; line_y2[n_lines]=y; }
-                          else randomize(&line_x2[n_lines],&line_y2[n_lines],x,y,point_k1[i],point_k2[i],stddev);
+                          else { randomize(&line_x2[n_lines],&line_y2[n_lines],x,y,point_k1[i],point_k2[i],stddev);
+}
                           }
 
 //              Rprintf("\nLine: %g %g %g %g",line_x1[n_lines],line_y1[n_lines],line_x2[n_lines],line_y2[n_lines]);
@@ -462,7 +489,8 @@ void muste_geom(char *argv)
                             ++gc3;
                             if (!exact)
                                 {
-                                if (*sbuf!='*' && !point_on_line) ++gc1;
+                                if (*sbuf!='*' && !point_on_line) { ++gc1;
+}
                                 }
                             }
                         point_on_line=0;
@@ -470,14 +498,17 @@ void muste_geom(char *argv)
                         if (!samples || (samples && exact) )
                             {
                             i=get_point(&ex,&circle_x[n_circles],&circle_y[n_circles],sbuf);
-                            if (i<0) return;
+                            if (i<0) { return;
+}
                             }
                         else
                             {
                             i=get_point(&ex,&x,&y,sbuf);
-                            if (i<0) return;
+                            if (i<0) { return;
+}
                             if (ex) { circle_x[n_circles]=x; circle_y[n_circles]=y; }
-                       else randomize(&circle_x[n_circles],&circle_y[n_circles],x,y,point_k1[i],point_k2[i],stddev);
+                       else { randomize(&circle_x[n_circles],&circle_y[n_circles],x,y,point_k1[i],point_k2[i],stddev);
+}
                             }
 
                        current_center=i;
@@ -485,20 +516,23 @@ void muste_geom(char *argv)
                        strcpy(sbuf,param[j][2]);
                        if (!samples && !exact)
                             {
-                            if (*sbuf!='*') gc1+=2;
+                            if (*sbuf!='*') { gc1+=2;
+}
                             }
 
-                       if (*sbuf=='*') strcpy(sbuf,param[j][2]+1);
+                       if (*sbuf=='*') { strcpy(sbuf,param[j][2]+1);
+}
 // Rprintf("\nsbuf=%s spfind=%d isnumber=%d",sbuf,spfind(sbuf),isnumber(sbuf)); getch();
                        i=get_edge(&circle_r[n_circles],sbuf,0);
                        if (i<0)
                          {
-                         if (spfind(sbuf)>=0 || muste_isnumber(sbuf))
+                         if (spfind(sbuf)>=0 || muste_isnumber(sbuf)) {
                              circle_r[n_circles]=muste_arit_atof(sbuf);
-                         else
+                         } else
                             {
                             i=get_edge(&circle_r[n_circles],sbuf,1); // To error message only!
-                            if (i<0) return;
+                            if (i<0) { return;
+}
                             }
                          }
                         circle_a1[n_circles]=1.0;
@@ -528,29 +562,37 @@ void muste_geom(char *argv)
                         if (!samples)
                             {
                             ++gc3;
-                            if (*param[j][2]!='*') ++gc1;
-                            if (*sbuf!='*' && !point_on_line) ++gc1;
+                            if (*param[j][2]!='*') { ++gc1;
+}
+                            if (*sbuf!='*' && !point_on_line) { ++gc1;
+}
                      //     if (*sbuf!='*') ++gc1;
 
                             }
-                        if (*sbuf=='*') strcpy(sbuf,point_name[current_center]);
+                        if (*sbuf=='*') { strcpy(sbuf,point_name[current_center]);
+}
 
                         if (!samples || (samples && exact) )
                             {
                             ic=get_point(&ex,&x1,&y1,sbuf);
-                            if (ic<0) return;
+                            if (ic<0) { return;
+}
                             get_point(&ex,&x2,&y2,param[j][2]);
                             }
                         else
                             {
                             ic=get_point(&ex,&x,&y,sbuf);
-                            if (ic<0) return;
+                            if (ic<0) { return;
+}
                             if (ex) { x1=x; y1=y; }
-                            else randomize(&x1,&y1,x,y,point_k1[ic],point_k2[ic],stddev);
+                            else { randomize(&x1,&y1,x,y,point_k1[ic],point_k2[ic],stddev);
+}
                             i=get_point(&ex,&x,&y,param[j][2]);
-                            if (i<0) return;
+                            if (i<0) { return;
+}
                             if (ex) { x2=x; y2=y; }
-                            else randomize(&x2,&y2,x,y,point_k1[i],point_k2[i],stddev);
+                            else { randomize(&x2,&y2,x,y,point_k1[i],point_k2[i],stddev);
+}
                             }
 
                         current_center=ic;
@@ -577,19 +619,24 @@ void muste_geom(char *argv)
                       if (!samples)
                           {
                           i=get_point(&ex,&x1,&y1,param[j][1]);
-                          if (i<0) return;
+                          if (i<0) { return;
+}
                           i=get_point(&ex,&x2,&y2,param[j][2]);
-                          if (i<0) return;
+                          if (i<0) { return;
+}
                      //   gs1+=2;   30.3.2008
                           }
                       else
                           {
                           i=get_point(&ex,&x,&y,param[j][1]);
-                          if (i<0) return;
+                          if (i<0) { return;
+}
                           if (ex) { x1=x; y1=y; }
-                          else randomize(&x1,&y1,x,y,point_k1[i],point_k2[i],stddev);
+                          else { randomize(&x1,&y1,x,y,point_k1[i],point_k2[i],stddev);
+}
                           i=get_point(&ex,&x,&y,param[j][2]);
-                          if (i<0) return;
+                          if (i<0) { return;
+}
                           if (ex) { x2=x; y2=y; }
                           randomize(&x2,&y2,x,y,point_k1[i],point_k2[i],stddev);
                           }
@@ -604,9 +651,11 @@ void muste_geom(char *argv)
 // P=cross(L1,L2)
           case CROSS:  strcpy(point_name[n_points],param[j][0]);
                        il=get_line(&x1,&y1,&x2,&y2,param[j][1]);
-                       if (il<0) return;
+                       if (il<0) { return;
+}
                        ic=get_line(&x3,&y3,&x4,&y4,param[j][2]);
-                       if (ic<0) return;
+                       if (ic<0) { return;
+}
                        b=(x1-x2)*(y4-y3)+(x4-x3)*(y2-y1);
                        if (fabs(b)<0.0000000000001)  // 6.10.2008
                            {
@@ -642,7 +691,8 @@ void muste_geom(char *argv)
                        x2=point_k2[il];
                        y1=(x1+x2)/2.0;
                        y2=y1+pih;
-                       y=y1; if (fabs(y2-a)<fabs(y1-a)) y=y2;
+                       y=y1; if (fabs(y2-a)<fabs(y1-a)) { y=y2;
+}
                        il=n_points;
         randomize(&x1,&y1,point_x[il],point_y[il],point_k1[il],point_k2[il],stddev);
                        line_x1[n_lines]=x1;
@@ -655,9 +705,11 @@ void muste_geom(char *argv)
 
           case CROSS_CL:  strcpy(point_name[n_points],param[j][0]);
                         ic=get_circle(&x0,&y0,&radius,param[j][1]);
-                        if (ic<0) return;
+                        if (ic<0) { return;
+}
                         il=get_line(&x1,&y1,&x2,&y2,param[j][2]);
-                        if (il<0) return;
+                        if (il<0) { return;
+}
                     //  get_point(&ex,&xv,&yv,param[j][3]);
                         xv=muste_arit_atof(param[j][3]); yv=muste_arit_atof(param[j][4]);
 
@@ -725,9 +777,11 @@ void muste_geom(char *argv)
 
           case CROSS_CC:  strcpy(point_name[n_points],param[j][0]);
                         ic=get_circle(&x1,&y1,&radius,param[j][1]);
-                        if (ic<0) return;
+                        if (ic<0) { return;
+}
                         il=get_circle(&x2,&y2,&radius2,param[j][2]);
-                        if (il<0) return;
+                        if (il<0) { return;
+}
          //             get_point(&ex,&xv,&yv,param[j][3]);
                         xv=muste_arit_atof(param[j][3]); yv=muste_arit_atof(param[j][4]);
 
@@ -799,18 +853,21 @@ if (!samples)
                         break;
 
           case SAVE: // Rprintf("\nsave: %s %s %s",param[j][0],param[j][1],param[j][2]); getch();
-                     if (!samples) break;
+                     if (!samples) { break;
+}
                      if (muste_strcmpi(param[j][0],"edge")==0)
                          {
                          i=get_edge(&x,param[j][1],1);
-                         if (i<0) return;
+                         if (i<0) { return;
+}
                          muste_sprintf(sbuf," %16.16g",x);
                          strcat(data_line,sbuf);
                          }
                      else if (muste_strcmpi(param[j][0],"point")==0)
                          {
                          i=get_point(&ex,&x,&y,param[j][1]);
-                         if (i<0) return;
+                         if (i<0) { return;
+}
                          muste_sprintf(sbuf," %16.16g",x);
                          strcat(data_line,sbuf);
                          muste_sprintf(sbuf," %16.16g",y);
@@ -819,7 +876,8 @@ if (!samples)
                      else if (muste_strcmpi(param[j][0],"line")==0)
                          {
                          i=get_line(&x1,&y1,&x2,&y2,param[j][1]);
-                         if (i<0) return;
+                         if (i<0) { return;
+}
                          muste_sprintf(sbuf," %16.16g",x1);
                          strcat(data_line,sbuf);
                          muste_sprintf(sbuf," %16.16g",y1);
@@ -832,7 +890,8 @@ if (!samples)
                      else // circle
                          {
                          i=get_circle(&x,&y,&radius,param[j][1]);
-                         if (i<0) return;
+                         if (i<0) { return;
+}
                          muste_sprintf(sbuf," %16.16g",x);
                          strcat(data_line,sbuf);
                          muste_sprintf(sbuf," %16.16g",y);
@@ -842,17 +901,20 @@ if (!samples)
                          }
                      break;
 // S=sample(P)
-          case SAMPLE: if (!samples) break;
+          case SAMPLE: if (!samples) { break;
+}
                        strcpy(point_name[n_points],param[j][0]);
                        i=get_point(&ex,&x,&y,param[j][1]);
-                       if (i<0) return;
+                       if (i<0) { return;
+}
                        randomize(&point_x[n_points],&point_y[n_points],x,y,point_k1[i],point_k2[i],stddev);
                        point_k1[n_points]=point_k1[i];  point_k2[n_points]=point_k2[i];
                        ++n_points;
 
                      break;
 
-          case SYMBOL: if (samples) break;
+          case SYMBOL: if (samples) { break;
+}
                      gs1=gs2=gc1=gc2=gc3=0;
                      break;
 
@@ -864,7 +926,8 @@ if (!samples)
                      if (!samples)
                          {
                          i=get_point(&ex,&x,&y,param[j][2]);
-                         if (i<0) return;
+                         if (i<0) { return;
+}
                          if (star_point)
                              { gs1+=2; gs2+=1; gc1+=2; gc3+=2; star_point=0; }
                          else
@@ -873,14 +936,18 @@ if (!samples)
                      else
                          {
                          i=get_point(&ex,&x2,&y2,param[j][2]);
-                         if (i<0) return;
-                         if (!ex)
+                         if (i<0) { return;
+}
+                         if (!ex) {
                          randomize(&x,&y,x2,y2,point_k1[i],point_k2[i],stddev);
+}
                          }
                      il=get_line(&x1,&y1,&x2,&y2,param[j][1]);
-                     if (il<0) return;
-                     if (fabs(x2-x1)<1e-10) a=-pih;
-                     else a=atan((y2-y1)/(x2-x1));
+                     if (il<0) { return;
+}
+                     if (fabs(x2-x1)<1e-10) { a=-pih;
+                     } else { a=atan((y2-y1)/(x2-x1));
+}
                      a+=pih;
                      line_x1[n_lines]=x; line_y1[n_lines]=y;
                      line_x2[n_lines]=x+muste_cos(a); line_y2[n_lines]=y+muste_sin(a);
@@ -897,27 +964,31 @@ if (!samples)
                      if (!samples)
                          {
                          i=get_point(&ex,&x1,&y1,param[j][1]);
-                         if (i<0) return;
+                         if (i<0) { return;
+}
                          if (star_point)
                              { gs1+=2; gs2+=1; gc1+=2; gc3+=1; }
                          else
                              { gs1+=2; gs2+=1; gc1+=2; gc3+=2; }
 
                          i=get_point(&ex,&x2,&y2,param[j][2]);
-                         if (i<0) return;
+                         if (i<0) { return;
+}
                          x=(x1+x2)/2.0; y=(y1+y2)/2.0;
                          }
                      else
                          {
                          i=get_point(&ex,&x1,&y1,param[j][1]);
-                         if (i<0) return;
+                         if (i<0) { return;
+}
                          if (!ex)
                              {
                              randomize(&x0,&y0,x1,y1,point_k1[i],point_k2[i],stddev);
                              x1=x0; y1=y0;
                              }
                          i=get_point(&ex,&x2,&y2,param[j][2]);
-                         if (i<0) return;
+                         if (i<0) { return;
+}
                          if (!ex)
                              {
                              randomize(&x0,&y0,x2,y2,point_k1[i],point_k2[i],stddev);
@@ -931,7 +1002,8 @@ if (!samples)
                              WAIT; return;
                              }
                          i=get_midpoint(x1,y1,x2,y2,param[j][3],&x,&y); // 8.7.2008
-                         if (i<0) return;
+                         if (i<0) { return;
+}
 
                          }
                      point_x[n_points]=x; point_y[n_points]=y;
@@ -952,17 +1024,21 @@ if (!samples)
                      if (!samples)
                          {
                          i=get_point(&ex,&x,&y,param[j][2]);
-                         if (i<0) return;
+                         if (i<0) { return;
+}
                          }
                      else
                          {
                          i=get_point(&ex,&x2,&y2,param[j][2]);
-                         if (i<0) return;
-                         if (!ex)
+                         if (i<0) { return;
+}
+                         if (!ex) {
                          randomize(&x,&y,x2,y2,point_k1[i],point_k2[i],stddev);
+}
                          }
                      il=get_line(&x1,&y1,&x2,&y2,param[j][1]);
-                     if (il<0) return;
+                     if (il<0) { return;
+}
                      line_x1[n_lines]=x; line_y1[n_lines]=y;
                      line_x2[n_lines]=x2+x-x1;  line_y2[n_lines]=y2+y-y1;
 
@@ -977,7 +1053,8 @@ if (!samples)
 
           case ORTHO:  strcpy(point_name[n_points],param[j][0]);
                      i=get_point(&ex,&x,&y,param[j][1]);
-                     if (i<0) return;
+                     if (i<0) { return;
+}
                      point_x[n_points]=x; point_y[n_points]=y;
                      point_k1[n_points]=pi4;
                      point_k2[n_points]=-pi4;
@@ -986,9 +1063,11 @@ if (!samples)
 
             }
         }
-  if (samples) fprintf(result,"%s\n",data_line);
+  if (samples) { fprintf(result,"%s\n",data_line);
+}
   } // sample_i
-    if (samples) muste_fclose(result);
+    if (samples) { muste_fclose(result);
+}
     if (create_files) { /* max_distance(); */ save_files(); }
                         // 28.5.2008
     if (res_line && !samples)
@@ -1012,14 +1091,16 @@ if (!samples)
             i=n_object[LINE];
             if (i)
                 {
-                ch='s'; if (i==1) ch=' ';
+                ch='s'; if (i==1) { ch=' ';
+}
                 muste_sprintf(sbuf,"%3d line%c",n_object[LINE],ch);
                 write_line(j++);
                 }
             i=n_object[CIRCLE]+n_object[CIRCLE_P];
             if (i)
                 {
-                ch='s'; if (i==1) ch=' ';
+                ch='s'; if (i==1) { ch=' ';
+}
             muste_sprintf(sbuf,"%3d circle%c (%d+%d)",n_object[CIRCLE]+n_object[CIRCLE_P],ch,
                                                n_object[CIRCLE],n_object[CIRCLE_P]);
                 write_line(j++);
@@ -1027,7 +1108,8 @@ if (!samples)
             i=n_object[EDGE];
             if (i)
                 {
-                ch='s'; if (i==1) ch=' ';
+                ch='s'; if (i==1) { ch=' ';
+}
                 muste_sprintf(sbuf,"%3d edge%c",n_object[EDGE],ch);
                 write_line(j++);
                 }
@@ -1052,7 +1134,8 @@ static int get_midpoint(double x1,double y1,double x2,double y2,char *name,doubl
     double xx1,yy1,xx2,yy2,a,b,c,d,f,aa,bb,cc,dd;
 
     i=get_line(&xl1,&yl1,&xl2,&yl2,name);
-    if (i<0) return(-1);
+    if (i<0) { return(-1);
+}
 // Rprintf("\nP: %g %g Q: %g %g line: (%g,%g) - (%g,%g)",x1,y1,x2,y2,xl1,yl1,xl2,yl2); getch();
 
     radius=sqrt(2.0)*sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
@@ -1100,15 +1183,19 @@ static int get_midpoint(double x1,double y1,double x2,double y2,char *name,doubl
 
 static int minmax_x(double x)
     {
-    if (x<rx_min) rx_min=x;
-    if (x>rx_max) rx_max=x;
+    if (x<rx_min) { rx_min=x;
+}
+    if (x>rx_max) { rx_max=x;
+}
     return(1);
     }
 
 static int minmax_y(double y)
     {
-    if (y<ry_min) ry_min=y;
-    if (y>ry_max) ry_max=y;
+    if (y<ry_min) { ry_min=y;
+}
+    if (y>ry_max) { ry_max=y;
+}
     return(1);
     }
 
@@ -1166,11 +1253,13 @@ static int randomize(double *px,double *py,double x,double y,double a1,double a2
     else if (distr==4)     // DISTR=4 or MODEL=3   29.6.2008
         {
         if (a1<a2) { s=a1; a1=a2; a2=s; }
-        if (fabs(a1-a2)<=pih) p=(a1+a2)/2.0;
-        else p=(a1+a2-pi)/2.0;
+        if (fabs(a1-a2)<=pih) { p=(a1+a2)/2.0;
+        } else { p=(a1+a2-pi)/2.0;
+}
 
         alpha=fabs(p-a1); d2=fabs(p-a2);
-        if (d2<alpha) alpha=d2;
+        if (d2<alpha) { alpha=d2;
+}
 
         d2=h*normal_dev();
         d1=h/muste_sin(2*alpha)*normal_dev();
@@ -1184,11 +1273,13 @@ static int randomize(double *px,double *py,double x,double y,double a1,double a2
 
 // DISTR=2 or MODEL=1
     if (a1<a2) { s=a1; a1=a2; a2=s; }
-    if (fabs(a1-a2)<=pih) p=(a1+a2)/2.0;
-    else p=(a1+a2-pi)/2.0;
+    if (fabs(a1-a2)<=pih) { p=(a1+a2)/2.0;
+    } else { p=(a1+a2-pi)/2.0;
+}
 
     alpha=fabs(p-a1); d2=fabs(p-a2);
-    if (d2<alpha) alpha=d2;
+    if (d2<alpha) { alpha=d2;
+}
 
     d2=h*normal_dev();
     d1=h/tan(alpha)*normal_dev();
@@ -1214,7 +1305,8 @@ static int save_files()
     for (j=0; j<n_points; ++j)
         {
         p=point_name[j];
-        if (islower((int)*p)) continue;
+        if (islower((int)*p)) { continue;
+}
         ++n;
         fi_alpha_save(&fi,n,0,p);
         fi_save(&fi,n,1,&point_x[j]);
@@ -1233,7 +1325,8 @@ static int save_files()
     for (j=0; j<n_lines; ++j)
         {
         p=line_name[j];
-        if (islower((int)*p)) continue;
+        if (islower((int)*p)) { continue;
+}
         ++n;
         fi_alpha_save(&fi,n,0,p);
         fi_save(&fi,n,1,&line_x1[j]);
@@ -1251,7 +1344,8 @@ static int save_files()
     for (j=0; j<n_circles; ++j)
         {
         p=circle_name[j];
-        if (islower((int)*p)) continue;
+        if (islower((int)*p)) { continue;
+}
         ++n;
         fi_alpha_save(&fi,n,0,p);
         fi_save(&fi,n,1,&circle_x[j]);
@@ -1269,7 +1363,8 @@ static int save_files()
     for (j=0; j<n_edges; ++j)
         {
         p=edge_name[j];
-        if (islower((int)*p)) continue;
+        if (islower((int)*p)) { continue;
+}
         ++n;
         fi_alpha_save(&fi,n,0,p);
         fi_save(&fi,n,1,&edge_x1[j]);
@@ -1327,8 +1422,10 @@ static int get_point(int *exact,double *px,double *py,char *pname)
     *exact=0;
     if (*pname=='_') { ++pname; *exact=1; }
     star_point=0; if (*pname=='*') { ++pname; star_point=1; } // 3.5.2008
-    for (i=0; i<n_points; ++i)
-        if (muste_strcmpi(pname,point_name[i])==0) break;
+    for (i=0; i<n_points; ++i) {
+        if (muste_strcmpi(pname,point_name[i])==0) { break;
+}
+}
     if (i==n_points) { muste_sprintf(sbuf,"\nPoint %s not found!",pname); sur_print(sbuf); WAIT; return(-1); }
 // Rprintf("\nget_point: %s %g %g",pname,point_x[i],point_y[i]); getch();
     *px=point_x[i];
@@ -1340,8 +1437,10 @@ static int get_line(double *px1,double *py1,double *px2,double *py2,char *pname)
     {
     int i;
 
-    for (i=0; i<n_lines; ++i)
-        if (muste_strcmpi(pname,line_name[i])==0) break;
+    for (i=0; i<n_lines; ++i) {
+        if (muste_strcmpi(pname,line_name[i])==0) { break;
+}
+}
     if (i==n_lines) { muste_sprintf(sbuf,"\nLine %s not found!",pname); sur_print(sbuf); WAIT; return(-1); }
     *px1=line_x1[i];
     *py1=line_y1[i];
@@ -1354,13 +1453,16 @@ static int get_edge(double *px,char *pname,int error)
     {
     int i;
 
-    for (i=0; i<n_edges; ++i)
-        if (muste_strcmpi(pname,edge_name[i])==0) break;
+    for (i=0; i<n_edges; ++i) {
+        if (muste_strcmpi(pname,edge_name[i])==0) { break;
+}
+}
     if (i==n_edges)
         {
         if (error)
           { muste_sprintf(sbuf,"\nEdge %s not found!",pname); sur_print(sbuf); WAIT; return(-1); }
-        else return(-1);
+        else { return(-1);
+}
         }
     *px=edge_len[i];
     return(i);
@@ -1370,8 +1472,10 @@ static int get_circle(double *px,double *py,double *pr,char *pname)
     {
     int i;
 
-    for (i=0; i<n_circles; ++i)
-        if (muste_strcmpi(pname,circle_name[i])==0) break;
+    for (i=0; i<n_circles; ++i) {
+        if (muste_strcmpi(pname,circle_name[i])==0) { break;
+}
+}
     if (i==n_circles) { muste_sprintf(sbuf,"\nCircle %s not found!",pname); sur_print(sbuf); WAIT; return(-1); }
 // Rprintf("\nCircle: %s x=%g y=%g r=%g",pname,circle_x[i],circle_x[i],circle_r[i]); getch();
 
@@ -1389,27 +1493,35 @@ static int parsi(int j)
     edread(rivi,j);
 
     p=strstr(rivi+1," / ");  // 28.3.2008
-    if (p!=NULL) *p=EOS;
+    if (p!=NULL) { *p=EOS;
+}
     p=strstr(rivi+1," // ");
-    if (p!=NULL) *p=EOS;
+    if (p!=NULL) { *p=EOS;
+}
 
     p=strchr(rivi+1,'=');
-    if (p!=NULL) *p=' ';
+    if (p!=NULL) { *p=' ';
+}
     p=strchr(rivi+1,'(');
-    if (p!=NULL) *p=' ';
+    if (p!=NULL) { *p=' ';
+}
     p=strchr(rivi+1,')');
-    if (p!=NULL) *p=' ';
+    if (p!=NULL) { *p=' ';
+}
 
     k=split(rivi+1,s,MAXPAR);
-    if (k==0) return(0);
-    if (*s[0]=='/') return(0);
+    if (k==0) { return(0);
+}
+    if (*s[0]=='/') { return(0);
+}
 
     return(k);
     }
 
 static int islower(int ch)
     {
-    if (ch>=(int)'a' && ch<=(int)'z') return(1);
+    if (ch>=(int)'a' && ch<=(int)'z') { return(1);
+}
     return(0);
     }
 

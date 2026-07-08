@@ -143,13 +143,18 @@ rem_pr("of the transformed data.");
         if (g>2)
             {
             results_line=edline2(word[2],1,1);
-            if (results_line==0) return;
+            if (results_line==0) { return;
+}
             }
 
-        i=data_read_open(word[1],&d); if (i<0) return;
-        i=spec_init(r1+r-1); if (i<0) return;
-        i=mask(&d); if (i<0) return;
-        i=conditions(&d); if (i<0) return;
+        i=data_read_open(word[1],&d); if (i<0) { return;
+}
+        i=spec_init(r1+r-1); if (i<0) { return;
+}
+        i=mask(&d); if (i<0) { return;
+}
+        i=conditions(&d); if (i<0) { return;
+}
         m_act=d.m_act;
         if (m_act<1)
             {
@@ -161,18 +166,26 @@ rem_pr("of the transformed data.");
         if (i>=0)
             {
             strcpy(x,spb[i]); i=split(x,osa,3);
-            if (muste_strcmpi(osa[0],"MARDIA")==0) test=MARDIA;
-            else if (muste_strcmpi(osa[0],"CUBE")==0)
+            if (muste_strcmpi(osa[0],"MARDIA")==0) { test=MARDIA;
+            } else if (muste_strcmpi(osa[0],"CUBE")==0)
                 {
-                test=CUBE; nf=10; if (i>1) nf=atoi(osa[1]);
-                if (nf>100) nf=100; if (nf<=0) nf=10;
-                for (i=0; i<nf; ++i) fr1[i]=fr2[i]=0L;
+                test=CUBE; nf=10; if (i>1) { nf=atoi(osa[1]);
+}
+                if (nf>100) { nf=100; 
+}if (nf<=0) { nf=10;
+}
+                for (i=0; i<nf; ++i) { fr1[i]=fr2[i]=0L;
+}
                 }
             else if (muste_strcmpi(osa[0],"MAHAL")==0)  /* TEST=MAHAL,nm */
                 {
-                test=MAHAL; nm=10; if (i>1) nm=atoi(osa[1]);
-                if (nm>100) nf=100; if (nm<=0) nm=10;
-                for (i=0; i<nm; ++i) fm[i]=0L;
+                test=MAHAL; nm=10; if (i>1) { nm=atoi(osa[1]);
+}
+                if (nm>100) { nf=100; 
+}if (nm<=0) { nm=10;
+}
+                for (i=0; i<nm; ++i) { fm[i]=0L;
+}
                 }
             else
                 {
@@ -180,20 +193,27 @@ rem_pr("of the transformed data.");
                 sur_print(sbuf); WAIT; return;
                 }
             }
-        i=varaa_tilat(); if (i<0) return;
-        i=talleta_data(); if (i<0) return;
+        i=varaa_tilat(); if (i<0) { return;
+}
+        i=talleta_data(); if (i<0) { return;
+}
         data_close(&d);
-        i=laske_momentit(); if (i<0) return;
+        i=laske_momentit(); if (i<0) { return;
+}
 
         eps_dim=1e-10;
-        i=spfind("EPS"); if (i>=0) eps_dim=atof(spb[i]);
+        i=spfind("EPS"); if (i>=0) { eps_dim=atof(spb[i]);
+}
 
         prind=1;
-        i=spfind("PRIND"); if (i>=0) prind=atoi(spb[i]);
+        i=spfind("PRIND"); if (i>=0) { prind=atoi(spb[i]);
+}
         results1=1;
-        i=spfind("RESULTS"); if (i>=0) results1=atoi(spb[i]);
+        i=spfind("RESULTS"); if (i>=0) { results1=atoi(spb[i]);
+}
 
-        if (n<MAXIFLOAT) ks_stat=1;
+        if (n<MAXIFLOAT) { ks_stat=1;
+}
 
         if ((test==CUBE || test==MAHAL) && ks_stat)
             {
@@ -206,7 +226,8 @@ rem_pr("of the transformed data.");
                 }
             }
 
-        i=principal_comp(); if (i<0) return;
+        i=principal_comp(); if (i<0) { return;
+}
 
         if (test==CUBE) { cube_test(); s_end(argv); return; }
 
@@ -214,10 +235,12 @@ rem_pr("of the transformed data.");
         if (n*(int)dim<=MAXSPACE)
             {
             zz=(double *)muste_malloc((int)n*dim*sizeof(double));
-            if (zz!=NULL) ind_zz=1;
+            if (zz!=NULL) { ind_zz=1;
+}
             }
 
-        if (ind_zz) siirto_zz();
+        if (ind_zz) { siirto_zz();
+}
 
         i=tunnusluvut();
 
@@ -241,8 +264,10 @@ void muste_mntest(char *argv) // RS ADD Confirm that files are closed
     
     muste_mntest2(argv);
     
-    if (temp!=NULL) muste_fclose(temp);
-    if (temp2!=NULL) muste_fclose(temp2);
+    if (temp!=NULL) { muste_fclose(temp);
+}
+    if (temp2!=NULL) { muste_fclose(temp2);
+}
     
 	}
 
@@ -282,15 +307,18 @@ static int talleta_data()
             sur_print(sbuf); WAIT; return(-1);
             }
         n=0L;
-        if (prind) sur_print("\nSaving active data in a temporary file... ");
+        if (prind) { sur_print("\nSaving active data in a temporary file... ");
+}
         for (j=d.l1; j<=d.l2; ++j)
             {
-            if (unsuitable(&d,j)) continue;
+            if (unsuitable(&d,j)) { continue;
+}
             if (prind) { muste_sprintf(sbuf,"%d ",j); sur_print(sbuf); }
             for (i=0; i<m_act; ++i)
                 {
                 data_load(&d,j,d.v[i],&xx[i]);
-                if (xx[i]==MISSING8) break;
+                if (xx[i]==MISSING8) { break;
+}
                 }
             if (i<m_act)
                 {
@@ -317,12 +345,14 @@ static int laske_momentit()
         int i,h;
         int j;
 
-        if (prind) sur_print("\nComputing moments...");
+        if (prind) { sur_print("\nComputing moments...");
+}
         for (i=0; i<m_act; ++i)
             {
             mean[i]=0.0;
-            for (h=0; h<=i; ++h)
+            for (h=0; h<=i; ++h) {
                 S[i+h*m_act]=0.0;
+}
             }
         for (j=0L; j<n; ++j)
             {
@@ -331,19 +361,22 @@ static int laske_momentit()
             for (i=0; i<m_act; ++i)
                 {
                 mean[i]+=xx[i];
-                for (h=0; h<=i; ++h)
+                for (h=0; h<=i; ++h) {
                     S[i+h*m_act]+=xx[i]*xx[h];
+}
                 }
             }  /* j */
 
-        for (i=0; i<m_act; ++i) mean[i]/=n;
-        for (i=0; i<m_act; ++i)
+        for (i=0; i<m_act; ++i) { mean[i]/=n;
+}
+        for (i=0; i<m_act; ++i) {
             for (h=0; h<=i; ++h)
                 {
                 S[i+h*m_act]-=n*mean[i]*mean[h];
     /*          S[h+i*m_act]=S[i+h*m_act]/=(n-1);  */
                 S[h+i*m_act]=S[i+h*m_act]/=n;
                 }
+}
         return (1);
         }
 
@@ -373,14 +406,17 @@ static int principal_comp()
             WAIT; return(-1);
             }
 
-        for (i=m_act-1; i>=0; --i)
-            if (d2[i]/d2[0]>eps_dim) break;
+        for (i=m_act-1; i>=0; --i) {
+            if (d2[i]/d2[0]>eps_dim) { break;
+}
+}
         dim=i+1;
         if (dim==0) { sur_print("\nNo variation in data!!!"); WAIT; return(-1); }
         for (k=0; k<dim; ++k)
             {
             d2[k]=1.0/sqrt(d2[k]);
-            for (i=0; i<m_act; ++i) S[i+m_act*k]*=d2[k];
+            for (i=0; i<m_act; ++i) { S[i+m_act*k]*=d2[k];
+}
             }
         if (prind)
             {
@@ -394,17 +430,21 @@ static int principal_comp()
             muste_fseek(temp,posx,SEEK_SET); muste_fread(xx,sizeof(double),m_act,temp);
             posx=muste_ftell(temp);
             max=-1e10; min=-max; /* CUBE */
-            for (i=0; i<m_act; ++i) xx[i]-=mean[i];
+            for (i=0; i<m_act; ++i) { xx[i]-=mean[i];
+}
 
             for (k=0; k<dim; ++k)
                 {
                 b=0.0;
-                for (i=0; i<m_act; ++i) b+=xx[i]*S[i+m_act*k];
+                for (i=0; i<m_act; ++i) { b+=xx[i]*S[i+m_act*k];
+}
                 yy[k]=b;
                 if (test==CUBE)
                     {
-                    if (b>max) max=b;
-                    if (b<min) min=b;
+                    if (b>max) { max=b;
+}
+                    if (b<min) { min=b;
+}
                     }
                 }
             if (test==CUBE)
@@ -433,7 +473,8 @@ if (test==CUBE)
 i=spfind("CHECK");
 if (i>=0)
     {
-    for (i=0; i<nf; ++i) Rprintf("\n%d %d %d",i,fr1[i],fr2[i]); sur_getch();
+    for (i=0; i<nf; ++i) { Rprintf("\n%d %d %d",i,fr1[i],fr2[i]); 
+}sur_getch();
     }
 }
 
@@ -457,14 +498,16 @@ static int tunnusluvut()
         vin=huip=0.0;
         if (prind)
             {
-            if (test==MAHAL)
+            if (test==MAHAL) {
                    sur_print("\nComputing Mahalanobis' distances ... ");
-            else
+            } else {
                    sur_print("\nComputing skewness and kurtosis ... ");
+}
             }
         for (j=0L; j<n; ++j)
             {
-            if (!ind_zz) muste_fseek(temp,j*(int)dim*(int)sizeof(double),SEEK_SET);
+            if (!ind_zz) { muste_fseek(temp,j*(int)dim*(int)sizeof(double),SEEK_SET);
+}
             lue(xx,j);
             if (prind) { muste_sprintf(sbuf,"%d ",j+1); sur_print(sbuf); }
             if (test==MAHAL)
@@ -476,7 +519,8 @@ static int tunnusluvut()
                 ++fm[i];
                 continue;
                 }
-            if (!ind_zz) rewind(temp);
+            if (!ind_zz) { rewind(temp);
+}
             for (jj=0L; jj<n; ++jj)
                 {
                 lue(yy,jj);
@@ -494,7 +538,8 @@ static int tunnusluvut()
 i=spfind("CHECK");
 if (i>=0 && test==MAHAL)
     {
-    for (i=0; i<=nm; ++i) Rprintf("\n%d %d",i,fm[i]); sur_getch();
+    for (i=0; i<=nm; ++i) { Rprintf("\n%d %d",i,fm[i]); 
+}sur_getch();
     }
 
         return(1);
@@ -525,7 +570,8 @@ static int tulostus()
         int df;
         double a;
 
-        i=output_open(eout);  if (i<0) return(-1);
+        i=output_open(eout);  if (i<0) { return(-1);
+}
 
         if (results1==0)
             {
@@ -562,7 +608,8 @@ static int tulostus()
 static int print_line(char *line)
         {
         output_line(line,eout,results_line);
-        if (results_line) ++results_line;
+        if (results_line) { ++results_line;
+}
         return(1);
         }
 
@@ -570,7 +617,8 @@ static char *spois(char *s)
         {
         char *p;
 
-        while (*s==' ') ++s;
+        while (*s==' ') { ++s;
+}
         p=s+strlen(s)-1; while (*p==' ') { *p=EOS; --p; }
         return(s);
         }
@@ -609,7 +657,8 @@ static int cube_test()
 
     fp=NULL;
 
-        i=output_open(eout); if (i<0) return(-1);
+        i=output_open(eout); if (i<0) { return(-1);
+}
         muste_sprintf(sbuf,"Data %s: %d active variables N=%d",word[1],m_act,n);
         print_line(sbuf);
         muste_sprintf(sbuf,"Dimensionality of the distribution %d",dim);
@@ -626,12 +675,14 @@ static int cube_test()
         muste_sprintf(sbuf,"chi2[min]=%s df=%d P=%s",spois(s1),nf,spois(s2));
         print_line(sbuf);
 
-        if (!ks_stat) return(1);
+        if (!ks_stat) { return(1);
+}
 
         if (zz==NULL)
             {
             zz=(double *)muste_malloc((int)n*sizeof(float));
-            if (zz==NULL) return(-1);
+            if (zz==NULL) { return(-1);
+}
             }
         fp=(float *)zz;
         load_fp(0);
@@ -692,7 +743,8 @@ static int mahal_test()
         double d,prob;
         char s1[LLENGTH],s2[LLENGTH];
 
-        i=output_open(eout); if (i<0) return(-1);
+        i=output_open(eout); if (i<0) { return(-1);
+}
         muste_sprintf(sbuf,"Data %s: %d active variables N=%d",word[1],m_act,n);
         print_line(sbuf);
         muste_sprintf(sbuf,"Dimensionality of the distribution %d",dim);
@@ -704,12 +756,14 @@ static int mahal_test()
         muste_sprintf(sbuf,"chi2=%s df=%d P=%s",spois(s1),nm,spois(s2));
         print_line(sbuf);
 
-        if (!ks_stat) return(1);
+        if (!ks_stat) { return(1);
+}
 
         if (zz==NULL)
             {
             zz=(double *)muste_malloc((int)n*sizeof(float));
-            if (zz==NULL) return(-1);
+            if (zz==NULL) { return(-1);
+}
             }
         fp=(float *)zz;
         load_fp1();
@@ -729,7 +783,8 @@ static int laske_x2(int n,int *f,double *px2,double *pp)
         int nt;
         double a,b,d;
 
-        nt=0L; for (i=0; i<n; ++i) nt+=f[i];
+        nt=0L; for (i=0; i<n; ++i) { nt+=f[i];
+}
         a=0.0; b=(double)nt/(double)n;
         for (i=0; i<n; ++i) { d=f[i]-b; a+=d*d/b; }
         *px2=a;
@@ -742,14 +797,15 @@ static int mntest_heapsort(int n,float *ra)
         unsigned int i,ir,j,l;
         float rra;
 
-        if (n<2) return(1);
+        if (n<2) { return(1);
+}
         l=(n>>1)+1;
         ir=n;
 
         for (;;)
             {
-            if (l>1) rra=ra[--l];
-            else
+            if (l>1) { rra=ra[--l];
+            } else
                 {
                 rra=ra[ir];
                 ra[ir]=ra[1];
@@ -762,13 +818,15 @@ static int mntest_heapsort(int n,float *ra)
             j=l+l;
             while (j<=ir)
                 {
-                if (j<ir && ra[j]<ra[j+1]) ++j;
+                if (j<ir && ra[j]<ra[j+1]) { ++j;
+}
                 if (rra<ra[j])
                     {
                     ra[i]=ra[j]; i=j;
                     j<<=1;
                     }
-                else j=ir+1;
+                else { j=ir+1;
+}
                 }
             ra[i]=rra;
             }
@@ -792,11 +850,14 @@ static int ks_test(float *data,int n,double (*func)(double),double *d,double *pr
         for (j=0; j<n; ++j)
             {
             fn=(double)(j+1)/en;
-            if (func==NULL) ff=data[j];
-            else ff=(*func)(data[j]);
+            if (func==NULL) { ff=data[j];
+            } else { ff=(*func)(data[j]);
+}
             dt=fabs(fo-ff); b=fabs(fn-ff);
-            if (b>dt) dt=b;
-            if (dt>*d) *d=dt;
+            if (b>dt) { dt=b;
+}
+            if (dt>*d) { *d=dt;
+}
             fo=fn;
             }
         *prob=probks(sqrt(en)*(*d));
@@ -816,8 +877,9 @@ static double probks(double alam)
             {
             term=fac*exp((double)(a2*j*j));
             sum+=term;
-            if (fabs(term)<=EPS1*termbf || fabs(term)<EPS2*sum)
+            if (fabs(term)<=EPS1*termbf || fabs(term)<EPS2*sum) {
                 return(sum);
+}
             fac=-fac;
             termbf=fabs(term);
             }

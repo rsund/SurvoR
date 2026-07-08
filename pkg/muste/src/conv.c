@@ -70,8 +70,10 @@ int muste_checkmp() // RS
   char line4[] = "mpbigzvalue<-as.bigz(mpfrstrvalue)";
   char line5[] = "return(as.character(mpbigzvalue,b=outbase)) }";  
   
-  if (!muste_requirepackage("Rmpfr")) return(FALSE);
-  if (!muste_requirepackage("gmp")) return(FALSE);
+  if (!muste_requirepackage("Rmpfr")) { return(FALSE);
+}
+  if (!muste_requirepackage("gmp")) { return(FALSE);
+}
   
   muste_sprintf(sbuf,"%s\n%s\n%s\n%s\n%s\n",line1,line2,line3,line4,line5);
   muste_evalr(sbuf);
@@ -92,17 +94,23 @@ int muste_isnumber_dec(const char * s,char dec) // RS 11.3.2013
 	{
     char *p,*q;
     
-    if (dec=='.') return(muste_isnumber(s));
-    if (s == NULL) return 0;
-    if (*s == '\0')  return 0;
+    if (dec=='.') { return(muste_isnumber(s));
+}
+    if (s == NULL) { return 0;
+}
+    if (*s == '\0') {  return 0;
+}
     muste_strncpy(sbuf,s,LLENGTH);
     q=(char *)sbuf;
-    while (*q==' ') q++; // RS Remove pre-spaces
+    while (*q==' ') { q++; // RS Remove pre-spaces
+}
     p=(char *)(q+strlen(q)-1);
-    while (*p==' ') *p--=EOS; // RS Remove post-spaces
+    while (*p==' ') { *p--=EOS; // RS Remove post-spaces
+}
     p=q; while (*p!=EOS) 
         { 
-        if (*p==dec) *p='.';
+        if (*p==dec) { *p='.';
+}
         p++;
         }	  
     strtod (q, &p); // RS 29.5.2013 sbuf -> q
@@ -113,13 +121,17 @@ int muste_isnumber(const char * s)
 	{
     char *p,*q;
     
-    if (s == NULL) return 0;
-    if (*s == '\0')  return 0;
+    if (s == NULL) { return 0;
+}
+    if (*s == '\0') {  return 0;
+}
     muste_strncpy(sbuf,s,LLENGTH); // RS 29.5.2013
     q=(char *)sbuf;    
-    while (*q==' ') q++; // RS Remove pre-spaces
+    while (*q==' ') { q++; // RS Remove pre-spaces
+}
     p=(char *)(q+strlen(q)-1);
-    while (*p==' ') *p--=EOS; // RS Remove post-spaces      	  
+    while (*p==' ') { *p--=EOS; // RS Remove post-spaces      	  
+}
     strtod (q, &p);
     return *p == '\0';
 	}
@@ -154,8 +166,9 @@ char *muste_ltoa(long N, char *str, int base)
       long uarg;
       char *tail, *head = str, buf[BUFSIZE];
 
-      if (36 < base || 2 > base)
+      if (36 < base || 2 > base) {
             base = 10;                    /* can only use 0-9, A-Z        */
+}
       tail = &buf[BUFSIZE - 1];           /* last character position      */
       *tail-- = '\0';
 
@@ -164,7 +177,8 @@ char *muste_ltoa(long N, char *str, int base)
             *head++ = '-';
             uarg    = -N;
       }
-      else  uarg = N;
+      else {  uarg = N;
+}
 
       if (uarg)
       {
@@ -178,7 +192,8 @@ char *muste_ltoa(long N, char *str, int base)
                   uarg    = r.quot;
             }
       }
-      else  *tail-- = '0';
+      else {  *tail-- = '0';
+}
 
       memcpy(head, ++tail, i);
       return str;
@@ -196,18 +211,22 @@ static void caldat(long julian,int *mm,int *id,int *iyyy)
         if (julian >= IGREG1) {
                 jalpha=((double) (julian-1867216)-0.25)/36524.25;
                 ja=julian+1+jalpha-(long) (0.25*jalpha);
-        } else
+        } else {
                 ja=julian;
+}
         jb=ja+1524;
         jc=6680.0+((double) (jb-2439870)-122.1)/365.25;
         jd=365*jc+(0.25*jc);
         je=(jb-jd)/30.6001;
         *id=jb-jd-(int) (30.6001*je);
         *mm=je-1;
-        if (*mm > 12) *mm -= 12;
+        if (*mm > 12) { *mm -= 12;
+}
         *iyyy=jc-4715;
-        if (*mm > 2) --(*iyyy);
-        if (*iyyy <= 0) --(*iyyy);
+        if (*mm > 2) { --(*iyyy);
+}
+        if (*iyyy <= 0) { --(*iyyy);
+}
 }
 
 static long julday(int mm,int id,int iyyy)
@@ -220,7 +239,8 @@ static long julday(int mm,int id,int iyyy)
             sur_print("\nThere is no year 0 !");
             WAIT;
             }
-        if (iyyy < 0) ++iyyy;
+        if (iyyy < 0) { ++iyyy;
+}
         if (mm > 2) {
                 jy=iyyy;
                 jm=mm+1;
@@ -337,20 +357,25 @@ static int eluku_sanoina(char *luku,char *sanat)
         char x[100];
 
         *sanat=EOS;
-        if(!muste_isnumber(luku)) return(0);
+        if(!muste_isnumber(luku)) { return(0);
+}
         p=luku;
-        while (*p==' ') ++p;
+        while (*p==' ') { ++p;
+}
         if (*p=='+') { strcat(sanat,"plus "); ++p; }
         else if (*p=='-') { strcat(sanat,"minus "); ++p; }
-        if (*p==EOS) return(1);
+        if (*p==EOS) { return(1);
+}
         q=strchr(p,'.');
-        if (q!=NULL) *q=EOS;
+        if (q!=NULL) { *q=EOS;
+}
         arvo=atof(p);
         if (arvo>1e15) { strcpy(sanat,luku); return(0); }
         if (arvo==0.0)
             {
             strcat(sanat,"zero ");
-            if (q!=NULL) desimaaliosa(q+1,sanat);
+            if (q!=NULL) { desimaaliosa(q+1,sanat);
+}
             return(1);
             }
         x[0]=x[1]=' '; strcpy(x+2,p);
@@ -364,26 +389,30 @@ static int eluku_sanoina(char *luku,char *sanat)
             if ( (p[m]=='1' || p[m]=='0') && (p[m-1]==' ' || p[m-1]=='0')
                           && (p[m-2]==' ' || p[m-2]=='0') )
                 {
-                if (p[m]=='1')
+                if (p[m]=='1') {
                     strcat(sanat,epot3yks[i]);
-                else continue;
+                } else { continue;
+}
                 }
             else
                 {
                 for (j=2; j>=0; --j)
                     {
-                    if (p[m-j]==' ') continue;
-                    if (p[m-j]=='0') continue;
+                    if (p[m-j]==' ') { continue;
+}
+                    if (p[m-j]=='0') { continue;
+}
                     if (p[m-j]=='1')
                         {
                         if (j==1)
                             {
                             strcat(sanat,e10[p[m]-'0']); break;
                             }
-                        else if (j==2)
+                        else if (j==2) {
                             strcat(sanat,"one hundred ");
-                        else
+                        } else {
                             strcat(sanat,"one");
+}
                         }
                     else
                         {
@@ -391,8 +420,9 @@ static int eluku_sanoina(char *luku,char *sanat)
                         if (*epot[j]=='x')
                             {
                             strcat(sanat,ekym[p[m-j]-'0']);
-                            if (p[m-j+1]=='0') strcat(sanat," ");
-                            else strcat(sanat,"-");
+                            if (p[m-j+1]=='0') { strcat(sanat," ");
+                            } else { strcat(sanat,"-");
+}
                             }
                         else
                             {
@@ -404,8 +434,9 @@ static int eluku_sanoina(char *luku,char *sanat)
                 strcat(sanat,epot3mon[i]);
                 }
             }
-        if (q!=NULL)
+        if (q!=NULL) {
             edesimaaliosa(q+1,sanat);
+}
         return(1);
         }
 
@@ -415,9 +446,10 @@ static int eluku_sanoiksi(char *word,char *par1,char *res)
 //        int i;
         char res1[LLENGTH];
 
-        if (strcmp(par1,"10")==0) strcpy(res1,word);
-        else
+        if (strcmp(par1,"10")==0) { strcpy(res1,word);
+        } else {
             survo_conversion(word,par1,"10",res1);
+}
         eluku_sanoina(res1,res);
         return(1);
         }
@@ -431,20 +463,25 @@ static int luku_sanoina2(char *luku,char *sanat)
         char x[100],y[16];
 
         *sanat=EOS;
-        if(!muste_isnumber(luku)) return(0);
+        if(!muste_isnumber(luku)) { return(0);
+}
         p=luku;
-        while (*p==' ') ++p;
+        while (*p==' ') { ++p;
+}
         if (*p=='+') { strcat(sanat,"plus "); ++p; }
         else if (*p=='-') { strcat(sanat,"miinus "); ++p; }
-        if (*p==EOS) return(1);
+        if (*p==EOS) { return(1);
+}
         q=strchr(p,'.');
-        if (q!=NULL) *q=EOS;
+        if (q!=NULL) { *q=EOS;
+}
         arvo=atof(p);
         if (arvo>1e15) { strcpy(sanat,luku); return(0); }
         if (arvo==0.0)
             {
             strcat(sanat,"nolla ");
-            if (q!=NULL) desimaaliosa(q+1,sanat);
+            if (q!=NULL) { desimaaliosa(q+1,sanat);
+}
             return(1);
             }
         x[0]=x[1]=' '; strcpy(x+2,p);
@@ -458,16 +495,19 @@ static int luku_sanoina2(char *luku,char *sanat)
             if ( (p[m]=='1' || p[m]=='0') && (p[m-1]==' ' || p[m-1]=='0')
                           && (p[m-2]==' ' || p[m-2]=='0') )
                 {
-                if (p[m]=='1')
+                if (p[m]=='1') {
                     strcat(sanat,spot3yks[i]);
-                else continue;
+                } else { continue;
+}
                 }
             else
                 {
                 for (j=2; j>=0; --j)
                     {
-                    if (p[m-j]==' ') continue;
-                    if (p[m-j]=='0') continue;
+                    if (p[m-j]==' ') { continue;
+}
+                    if (p[m-j]=='0') { continue;
+}
                     if (p[m-j]=='1')
                         {
                         if (j==1)
@@ -483,10 +523,11 @@ static int luku_sanoina2(char *luku,char *sanat)
                                 }
 
                             }
-                        else if (j==2)
+                        else if (j==2) {
                             strcat(sanat,"sata ");
-                        else
+                        } else {
                             strcat(sanat,"yksi ");
+}
                         }
                     else
                         {
@@ -497,8 +538,9 @@ static int luku_sanoina2(char *luku,char *sanat)
                 strcat(sanat,spot3mon[i]);
                 }
             }
-        if (q!=NULL)
+        if (q!=NULL) {
             sdesimaaliosa(q+1,sanat);
+}
         return(1);
         }
 
@@ -508,9 +550,10 @@ static int luku_sanoiksi2(char *word,char *par1,char *res)
 //        int i;
         char res1[LLENGTH];
 
-        if (strcmp(par1,"10")==0) strcpy(res1,word);
-        else
+        if (strcmp(par1,"10")==0) { strcpy(res1,word);
+        } else {
             survo_conversion(word,par1,"10",res1);
+}
         luku_sanoina2(res1,res);
         return(1);
         }
@@ -524,20 +567,25 @@ static int luku_sanoina(char *luku,char *sanat)
         char x[100],y[16];
 
         *sanat=EOS;
-        if(!muste_isnumber(luku)) return(0);
+        if(!muste_isnumber(luku)) { return(0);
+}
         p=luku;
-        while (*p==' ') ++p;
+        while (*p==' ') { ++p;
+}
         if (*p=='+') { strcat(sanat,"plus "); ++p; }
         else if (*p=='-') { strcat(sanat,"miinus "); ++p; }
-        if (*p==EOS) return(1);
+        if (*p==EOS) { return(1);
+}
         q=strchr(p,'.');
-        if (q!=NULL) *q=EOS;
+        if (q!=NULL) { *q=EOS;
+}
         arvo=atof(p);
         if (arvo>1e15) { strcpy(sanat,luku); return(0); }
         if (arvo==0.0)
             {
             strcat(sanat,"nolla ");
-            if (q!=NULL) desimaaliosa(q+1,sanat);
+            if (q!=NULL) { desimaaliosa(q+1,sanat);
+}
             return(1);
             }
         x[0]=x[1]=' '; strcpy(x+2,p);
@@ -551,16 +599,19 @@ static int luku_sanoina(char *luku,char *sanat)
             if ( (p[m]=='1' || p[m]=='0') && (p[m-1]==' ' || p[m-1]=='0')
                           && (p[m-2]==' ' || p[m-2]=='0') )
                 {
-                if (p[m]=='1')
+                if (p[m]=='1') {
                     strcat(sanat,pot3yks[i]);
-                else continue;
+                } else { continue;
+}
                 }
             else
                 {
                 for (j=2; j>=0; --j)
                     {
-                    if (p[m-j]==' ') continue;
-                    if (p[m-j]=='0') continue;
+                    if (p[m-j]==' ') { continue;
+}
+                    if (p[m-j]=='0') { continue;
+}
                     if (p[m-j]=='1')
                         {
                         if (j==1)
@@ -576,10 +627,11 @@ static int luku_sanoina(char *luku,char *sanat)
                                 }
 
                             }
-                        else if (j==2)
+                        else if (j==2) {
                             strcat(sanat,"sata ");
-                        else
+                        } else {
                             strcat(sanat,"yksi ");
+}
                         }
                     else
                         {
@@ -590,8 +642,9 @@ static int luku_sanoina(char *luku,char *sanat)
                 strcat(sanat,pot3mon[i]);
                 }
             }
-        if (q!=NULL)
+        if (q!=NULL) {
             desimaaliosa(q+1,sanat);
+}
         return(1);
         }
 
@@ -601,9 +654,10 @@ static int luku_sanoiksi(char *word,char *par1,char *res)
 //        int i;
         char res1[LLENGTH];
 
-        if (strcmp(par1,"10")==0) strcpy(res1,word);
-        else
+        if (strcmp(par1,"10")==0) { strcpy(res1,word);
+        } else {
             survo_conversion(word,par1,"10",res1);
+}
         luku_sanoina(res1,res);
         return(1);
         }
@@ -627,9 +681,11 @@ static int factlist(char *res,unsigned long factor,int n,int *pjatko)
         int i;
 
         i=0;
-        if (*pjatko) i+=muste_sprintf(res,"*");
+        if (*pjatko) { i+=muste_sprintf(res,"*");
+}
         i+=muste_sprintf(res+i,"%lu",factor);
-        if (n>1) i+=muste_sprintf(res+i,"^%d",n);
+        if (n>1) { i+=muste_sprintf(res+i,"^%d",n);
+}
         *pjatko=1;
         return(i);
         }
@@ -668,11 +724,13 @@ static int factors(char *word,char *base,char *res)
             WAIT; return(-1);
             }
 */            
-        if (d<0.0) return(-1);
+        if (d<0.0) { return(-1);
+}
         if (d<2.0) { strcpy(res,word); return(1); }
 
         i=base_atol(word,atoi(base),&luku);
-        if (i<0) return(-1);        
+        if (i<0) { return(-1);        
+}
         
         if (i==2) // RS i=2 from base_atol above indicates multiple precision
           {                    
@@ -703,8 +761,8 @@ static int factors(char *word,char *base,char *res)
             muste_sprintf(sbuf,".muste$mpoutstr.comp<-as.character(.muste$mpoutstr[%d])",i);
             muste_evalr(sbuf);
             muste_get_R_string(factres,".muste$mpoutstr.comp",LLENGTH);
-            if(strcmp(factres,factresold)==0) j++;
-            else
+            if(strcmp(factres,factresold)==0) { j++;
+            } else
               {
               if (j>1) { muste_sprintf(sbuf,"^%d",j); strcat(res,sbuf); j=1; }            
               strcat(res,"*");
@@ -717,7 +775,8 @@ static int factors(char *word,char *base,char *res)
           {
             k=0;
             i=nfact_conv(&luku,2L);           
-            if (i) k=factlist(res,2L,i,&jatko);
+            if (i) { k=factlist(res,2L,i,&jatko);
+}
             factor=3L;
             maxfactor=(unsigned long)sqrt((double)(luku));
             while (maxfactor>=factor)
@@ -730,7 +789,8 @@ static int factors(char *word,char *base,char *res)
                     }
                 factor+=2;
                 }
-            if (luku>1L) k+=factlist(res+k,luku,1,&jatko);
+            if (luku>1L) { k+=factlist(res+k,luku,1,&jatko);
+}
           }
         
         return(1);
@@ -745,15 +805,20 @@ static int numeric(char *word,char *par1,char *par2,char *res,
 printf("\nnumeric: xpar1=%s xpar2=%s laji1=%c laji2=%c",xpar1,xpar2,laji1,laji2); getch();
 */
         *base1=*base2=EOS;
-        if (laji1=='X' && *xpar1=='N')  strcpy(base1,xpar1+1);
-        if (laji1=='0') strcpy(base1,par1);
-        if (laji2=='X' && *xpar2=='N')  strcpy(base2,xpar2+1);
-        if (laji2=='0') strcpy(base2,par2);
+        if (laji1=='X' && *xpar1=='N') {  strcpy(base1,xpar1+1);
+}
+        if (laji1=='0') { strcpy(base1,par1);
+}
+        if (laji2=='X' && *xpar2=='N') {  strcpy(base2,xpar2+1);
+}
+        if (laji2=='0') { strcpy(base2,par2);
+}
 
         if (*base1==EOS || *base2==EOS)
             { conversion_impossible(par1,par2); return(-1); }
-        if (strncmp(xpar2+1,"factors",7)==0)
+        if (strncmp(xpar2+1,"factors",7)==0) {
             return( factors(word,base1,res) );
+}
         return( integer_conversion(word,base1,base2,res) );
         }
 
@@ -793,18 +858,20 @@ static int ratio(char *word,char *par1,char *par2,char *res,char laji1,char laji
 // Rprintf("\nratio: word=%s xpar1=%s xpar2=%s laji1=%c laji2=%c",word,xpar1,xpar2,laji1,laji2); // getch();
 
 //		extern int muste_arit_laske();
-        i=muste_arit_laske(word,&x); if (i<0) return(-1); // RS CHA 18.10.2013
+        i=muste_arit_laske(word,&x); if (i<0) { return(-1); // RS CHA 18.10.2013
+}
 //        x=atof(word);
         *sign=EOS;
         if (x<0.0) { x=-x; *sign='-'; sign[1]=EOS; }
-        if (laji1=='0')
+        if (laji1=='0') {
             ear=atof(par1);
-        else
+        } else {
             ear=atof(par2);
+}
         diss(x,ear,&m,&n);
-        if (m==0L && n==0L)
+        if (m==0L && n==0L) {
             strcpy(res,"0");
-        else
+        } else
             {
             fconv(x-(double)n/(double)m,"",y);
             muste_sprintf(res,"%s%ld/%ld (%s)",sign,n,m,y);
@@ -827,7 +894,8 @@ printf("\ntimes: xpar1=%s xpar2=%s laji1=%c laji2=%c",xpar1,xpar2,laji1,laji2); 
         if (strncmp(xpar1,"t d.m.y",7)==0) /* 17.11.1992 */
             {
             if (laji2!='T') { conversion_impossible(par1,par2); return(-1); }
-            i=date_conv1(word,1,&timet); if (i<0) return(-1);
+            i=date_conv1(word,1,&timet); if (i<0) { return(-1);
+}
             a=(double)timet/atof(xpar2)/prefix2*(double)86400;
             fconv(a,"",res);
             return(1);
@@ -836,7 +904,8 @@ printf("\ntimes: xpar1=%s xpar2=%s laji1=%c laji2=%c",xpar1,xpar2,laji1,laji2); 
             {
             if (laji1!='T') { conversion_impossible(par1,par2); return(-1); }
             timet=atof(word)*prefix1*atof(xpar1)/(double)86400;
-            i=date_conv2(timet,1,res); if (i<0) return(-1);
+            i=date_conv2(timet,1,res); if (i<0) { return(-1);
+}
             return(1);
             }
 
@@ -860,7 +929,8 @@ printf("\ntimes: xpar1=%s xpar2=%s laji1=%c laji2=%c",xpar1,xpar2,laji1,laji2); 
             if (laji1!='T') { conversion_impossible(par1,par2); return(-1); }
             a=atof(word)*prefix1*atof(xpar1);  /* sec */
             h2=a/3600; a-=3600*h2;
-            if (a<0.0) a=-a;
+            if (a<0.0) { a=-a;
+}
             m2=a/60; a-=60*m2;
             s2=a+0.5;
             muste_sprintf(res,"%02ld:%02ld:%02ld",h2,m2,s2);
@@ -886,7 +956,8 @@ static int currencies(char *word,char *par1,char *par2,char *res,char *xpar1,cha
         rate1=atof(osa[0]);
         strcpy(x,xpar2);
         i=split(x,osa,2);
-        if (i<2) rate2=atof(osa[0]); else rate2=atof(osa[1]);
+        if (i<2) { rate2=atof(osa[0]); } else { rate2=atof(osa[1]);
+}
         amount=amount*rate1/rate2;
         fconv(amount,"",res);
         return(1);
@@ -949,12 +1020,15 @@ printf("\nword=%s par1=%s par2=%s laji1=%c laji2=%c xpar1=%s xpar2=%s",
           case 'C':  return( currencies(word,par1,par2,res,xpar1,xpar2) );
 
             }
-        if (*xpar1=='t' || *xpar2=='t')
+        if (*xpar1=='t' || *xpar2=='t') {
             return( times(word,par1,par2,res,laji1,laji2,xpar1,xpar2,prefix1,prefix2) );
-        if (*xpar1=='r' || *xpar2=='r')
+}
+        if (*xpar1=='r' || *xpar2=='r') {
             return( ratio(word,par1,par2,res,laji1,laji2,xpar1,xpar2) );
-        if (*xpar1=='N' || *xpar2=='N')
+}
+        if (*xpar1=='N' || *xpar2=='N') {
             return( numeric(word,par1,par2,res,laji1,laji2,xpar1,xpar2) );
+}
         return(0);
         }
 
@@ -970,7 +1044,8 @@ static void qedread(char *s,int j)
         int i;
 
         muste_fseek(measures,(long)(j*qed1),0);  // RS FIXME int vs. long
-        for (i=0; i<qed1; ++i) s[i]=(unsigned char)getc(measures); // RS ADD unsigned
+        for (i=0; i<qed1; ++i) { s[i]=(unsigned char)getc(measures); // RS ADD unsigned
+}
         s[qed1]=EOS;
         }
 
@@ -1006,10 +1081,12 @@ static int etsi(unsigned char *s1)
 //Rprintf("\nhaku=%s alku=%d loppu=%d %s",s,alku,loppu,avain);             
             vert=strncmp(s,avain,len);
             if (vert==0) { jmin=j; jmax=j; break; }
-            if (vert<0) loppu=j; else alku=j;
+            if (vert<0) { loppu=j; } else { alku=j;
+}
             }
 /*  Rprintf("\njmin=%d jmax=%d",jmin,jmax); getch();     */
-        if (jmin==jmax) return(1);
+        if (jmin==jmax) { return(1);
+}
         return(-1);
         }
 
@@ -1018,7 +1095,8 @@ static int avaa(char *edq)    /* lainattu kyselysysteemist‰ cq.c */
         int i;
         char rivi[ELE], *sana[3];
 
-        if (avattu) return(1);
+        if (avattu) { return(1);
+}
         measures=muste_fopen(edq,"rb");
         if (measures==NULL)
             {
@@ -1026,7 +1104,8 @@ static int avaa(char *edq)    /* lainattu kyselysysteemist‰ cq.c */
             WAIT; return(-1);
             }
         avattu=1;
-        for (i=0; i<ELE; ++i) rivi[i]=(char)getc(measures);
+        for (i=0; i<ELE; ++i) { rivi[i]=(char)getc(measures);
+}
         rivi[ELE-1]=EOS;
         i=split(rivi,sana,3);
         qed1=atoi(sana[1]); qed2=atoi(sana[2]);
@@ -1054,7 +1133,8 @@ static int load_codes(unsigned char *code)
             muste_sprintf(sbuf,"\nFilter file %s not found!",nimi); sur_print(sbuf);
             WAIT; return(-1);
             }
-        for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
+        for (i=0; i<256; ++i) { code[i]=(unsigned char)getc(codes);
+}
         muste_fclose(codes);
         return(1);
         }
@@ -1118,7 +1198,8 @@ static int mitta(char *par0,char *plaji,char *kerroin,double *pprefix)
         if (avainrivi[col2+1]=='-')    /* 12.1.90  ennen [col2] */
             {
             strcpy(par,avainrivi+col3);
-            i=strlen(par); while(par[i-1]==' ') par[--i]=EOS;
+            i=strlen(par); while(par[i-1]==' ') { par[--i]=EOS;
+}
             i=etsi((unsigned char *)par); // RS ADD (unsigned char *)
             if (i<0) { not_found(par); return(-1); }
             }
@@ -1139,15 +1220,19 @@ static int num_conversion(char *word,char *par1,char *par2,char *res)
         char x[LLENGTH];
 
         *res=EOS;
-        i=load_codes(code); if (i<0) return(-1);
+        i=load_codes(code); if (i<0) { return(-1);
+}
         col2=19; col3=21;
         i=hae_apu("measures",nimi);
         if (!i) { strcpy(nimi,survo_path); strcat(nimi,"SYS/MEASURES.EDT"); } // RS CHA \\ -> /
         i=avaa(nimi);
-        i=mitta(par1,&laji1,kerroin1,&prefix1); if (i<0) return(-1);
-        i=mitta(par2,&laji2,kerroin2,&prefix2); if (i<0) return(-1);
-        if (laji1=='X' || laji2=='X')
+        i=mitta(par1,&laji1,kerroin1,&prefix1); if (i<0) { return(-1);
+}
+        i=mitta(par2,&laji2,kerroin2,&prefix2); if (i<0) { return(-1);
+}
+        if (laji1=='X' || laji2=='X') {
          return( x_conversion(word,par1,par2,res,laji1,laji2,kerroin1,kerroin2,prefix1,prefix2) );
+}
 /*
 Rprintf("\nkerroin1=%s kerroin2=%s",kerroin1,kerroin2);
 Rprintf("\nlaji1=%c laji2=%c",laji1,laji2); getch();
@@ -1159,7 +1244,8 @@ Rprintf("\nlaji1=%c laji2=%c",laji1,laji2); getch();
             }
 
 //		extern int muste_arit_laske(); // RS ADD
-        i=muste_arit_laske(word,&aa); if (i<0) return(-1); // RS ADD
+        i=muste_arit_laske(word,&aa); if (i<0) { return(-1); // RS ADD
+}
         aa=aa*prefix1*atof(kerroin1)/atof(kerroin2)/prefix2; // RS CHA
 //        aa=atof(word)*prefix1*atof(kerroin1)/atof(kerroin2)/prefix2;
 
@@ -1175,7 +1261,8 @@ Rprintf("\nlaji1=%c laji2=%c",laji1,laji2); getch();
         	    muste_arit_laske("ACCURACY",&a);
             	tarkkuus=a;
         		}
-        	else tarkkuus=0;	           
+        	else { tarkkuus=0;	           
+}
             }
 
     	if (tarkkuus)  // RS CHA from arit.c
@@ -1184,16 +1271,19 @@ Rprintf("\nlaji1=%c laji2=%c",laji1,laji2); getch();
 				{
 					muste_sprintf(x,"%.*f",-tarkkuus,aa);
 					p=x;
-					if (*p==' ') ++p;
+					if (*p==' ') { ++p;
+}
 					strcpy(res,p);
 				}
 				else
 				{
-					if (tarkkuus>20) tarkkuus=20; /* 11.7.2002 */
+					if (tarkkuus>20) { tarkkuus=20; /* 11.7.2002 */
+}
 		
 					fnconv(aa,tarkkuus+3,x);
 					p=x;
-					while (*p && *p==' ') ++p;
+					while (*p && *p==' ') { ++p;
+}
 					strcpy(res,p);
 					if (strchr(res,'.')!=NULL && strchr(res,'e')==NULL)
 					{
@@ -1203,12 +1293,14 @@ Rprintf("\nlaji1=%c laji2=%c",laji1,laji2); getch();
 							*p=EOS;
 							--p;
 						}
-						if (*p=='.') *p=EOS;
+						if (*p=='.') { *p=EOS;
+}
 					}
 				}
 			}
-			else
+			else {
 				fconv(aa,"",res);
+}
             
             
 /* RS REM old           
@@ -1271,19 +1363,23 @@ static int base_atol(char *s,int base,long *pluku)
                 }
             if (ch<'0') { illegal_char(ch,base,s); return(-1); }
             digit=ch-'0';
-            if (digit>9) digit-=7;
-            if (digit>41) digit-=32;
+            if (digit>9) { digit-=7;
+}
+            if (digit>41) { digit-=32;
+}
             if (digit>=base) { illegal_char(ch,base,s); return(-1); }
             lf+=digit*powf;
             powf*=(double)base;
-            if (i==0) break;
+            if (i==0) { break;
+}
             --i;
             }
             
             
         if (muste_fabs(lf)>ULONG_MAX || numdigits(lf)>15) // RS
           {
-          if(muste_checkmp()) return(2);
+          if(muste_checkmp()) { return(2);
+}
           
           sur_print("\nMore precision required for current integer calculation!");
           //WAIT; 
@@ -1307,8 +1403,10 @@ do
   i = n%5;
   if (i < 4)
      {
-     while (--i >= 0)  r[j--] = *p;
-     if ( (n%10) > 4)  r[j--] = *(p+1);
+     while (--i >= 0) {  r[j--] = *p;
+}
+     if ( (n%10) > 4) {  r[j--] = *(p+1);
+}
      }
   else {r[j--] = ((n%10)==4) ? *(p+1) : *(p+2); r[j--] = *p;}
   p+=2;
@@ -1351,7 +1449,8 @@ static int roman_to_int(char *roman,int *pk)
                 q=strchr(roman_chars,*(p+1));
                 i2=roman_val[q-roman_chars];
                 }
-            if (i1>=i2) k+=i1; else k-=i1;
+            if (i1>=i2) { k+=i1; } else { k-=i1;
+}
             ++p;
             }
         *pk=k;
@@ -1369,11 +1468,12 @@ static int integer_conversion(char *word,char *par1,char *par2,char *res)
 /* Rprintf("\nword=%s par1=%s par2=%s",word,par1,par2); getch(); */
 
         i=1;
-        if (muste_strnicmp(par1,"ASCII",5)==0)
+        if (muste_strnicmp(par1,"ASCII",5)==0) {
             luku=(unsigned char)*word;
-        else if (muste_strnicmp(par1,"ROMAN",5)==0)
+        } else if (muste_strnicmp(par1,"ROMAN",5)==0)
             {
-            i=roman_to_int(word,&k); if (i==-1) return(-1);
+            i=roman_to_int(word,&k); if (i==-1) { return(-1);
+}
             luku=k;
 //Rprintf("\nluku: %d",k);
 /* RS ADD Check that ROMAN number is valid by "back transformation" */
@@ -1394,7 +1494,8 @@ static int integer_conversion(char *word,char *par1,char *par2,char *res)
             }
             
 
-        if (luku<0) { neg=1; luku=-luku; } else neg=0;
+        if (luku<0) { neg=1; luku=-luku; } else { neg=0;
+}
         if (muste_strnicmp(par2,"ASCII",5)==0)
             {
             if (luku>255L) { sur_print("\nMax. ASCII value is 255"); return(-1); }
@@ -1403,10 +1504,12 @@ static int integer_conversion(char *word,char *par1,char *par2,char *res)
         else if (muste_strnicmp(par2,"ROMAN",5)==0)
             {
             if (luku>3999L) { sur_print("\nMax. value for ROMAN is 3999"); return(-1); }
-            roman((int)luku,res); if (*par2=='R') muste_strupr(res); return(1);
+            roman((int)luku,res); if (*par2=='R') { muste_strupr(res); 
+}return(1);
             }
 
-        if (i<0) return(-1);
+        if (i<0) { return(-1);
+}
         if (i==2) // RS i=2 from base_atol above indicates multiple precision
           {
           i=atoi(par1);
@@ -1429,7 +1532,8 @@ static int integer_conversion(char *word,char *par1,char *par2,char *res)
                 WAIT; return(-1);
                 }
             muste_ltoa(luku,res+neg,i);
-            if (neg) *res='-';
+            if (neg) { *res='-';
+}
           }
 
         muste_strupr(res);
@@ -1439,22 +1543,28 @@ static int integer_conversion(char *word,char *par1,char *par2,char *res)
 
 static int positive_integer(char *s)
         {
-        while (*s) { if (*s!=' ') break; ++s; }
-        while (*s) { if (isdigit((int)*s)==0) return(0); ++s; }
+        while (*s) { if (*s!=' ') { break; 
+}++s; }
+        while (*s) { if (isdigit((int)*s)==0) { return(0); 
+}++s; }
         return(1);
         }
 
 static int survo_conversion(char *word,char *par1,char *par2,char *res)
         {
 
-        if (positive_integer(par1) && positive_integer(par2))
+        if (positive_integer(par1) && positive_integer(par2)) {
             return( integer_conversion(word,par1,par2,res) );
-        if (muste_strcmpi(par2,"sanoin")==0)
+}
+        if (muste_strcmpi(par2,"sanoin")==0) {
             return( luku_sanoiksi(word,par1,res) );
-        if (muste_strcmpi(par2,"sanoin2")==0)
+}
+        if (muste_strcmpi(par2,"sanoin2")==0) {
             return( luku_sanoiksi2(word,par1,res) );
-        if (muste_strcmpi(par2,"words")==0)
+}
+        if (muste_strcmpi(par2,"words")==0) {
             return( eluku_sanoiksi(word,par1,res) );
+}
 
         return( num_conversion(word,par1,par2,res) );
 
@@ -1472,7 +1582,8 @@ static void kirjoita(char *tulos,int j,int sar)
         len=strlen(tulos);
         muste_fieldcopy(rivi+sar,tulos,len);
         i=sar+len;
-        while (i<LLENGTH && rivi[i]!=' ') rivi[i++]=' ';
+        while (i<LLENGTH && rivi[i]!=' ') { rivi[i++]=' ';
+}
         edwrite(rivi,j,0);
         }
 
@@ -1533,7 +1644,8 @@ static int muunto1(char *lauseke,char *tulos)
 
         i=muunto(lauseke,tulos);       
         p=strstr(lauseke,")(");
-        if (p==NULL || i<0) return(i);
+        if (p==NULL || i<0) { return(i);
+}
         while (1)
             {
             strcpy(laus,tulos);
@@ -1541,7 +1653,8 @@ static int muunto1(char *lauseke,char *tulos)
             i=muunto(laus,tulos);            
             p+=2;
             p=strstr(p,")(");
-            if (p==NULL || i<0) return(i);
+            if (p==NULL || i<0) { return(i);
+}
             }
         return(0); // RS 
         }
@@ -1566,7 +1679,8 @@ int op_conversions(char *inlauseke, double *y)
         avattu=0;
 
 //        s_init("A"); // RS CHA
-        i=spec_init(r1+r-1); if (i<0) return(-1);  /* siirretty 13.1.92 */
+        i=spec_init(r1+r-1); if (i<0) { return(-1);  /* siirretty 13.1.92 */
+}
 
         edread(rivi,r1+r-1);
  
@@ -1585,7 +1699,8 @@ int op_conversions(char *inlauseke, double *y)
  			k=i-1;
  			while (k>0)
  				{
- 				if (lauseke[k]=='(') break;
+ 				if (lauseke[k]=='(') { break;
+}
  				k--;
  				}
  			if (k>0)
@@ -1616,7 +1731,8 @@ int op_conversions(char *inlauseke, double *y)
         lauseke[i]=EOS;
 
         if (lauseke[i-1]=='.') { lauseke[--i]=EOS; monia=1; }
-        while (lauseke[i]!=' ' && i>0) --i;
+        while (lauseke[i]!=' ' && i>0) { --i;
+}
 // Rprintf("\nlauseke=%s",lauseke+i+1);  /* getch();  */
 
         i=muunto1(lauseke+i+1,tulos);
@@ -1628,7 +1744,8 @@ int op_conversions(char *inlauseke, double *y)
             {
             for (k=0; k<spn; ++k)
                 {
-                if (spp[k]!='.') continue;
+                if (spp[k]!='.') { continue;
+}
                 strcpy(lauseke,spa[k]);
                 lauseke[strlen(lauseke)-1]=EOS;
                 i=muunto1(lauseke,tulos);

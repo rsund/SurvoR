@@ -16,11 +16,15 @@ int muste_is_path(char *path)
 	{
 	char *apu;
 	
-	if (*path=='"') apu=path+1; else apu=path;
+	if (*path=='"') { apu=path+1; } else { apu=path;
+}
 	
-    if (strchr(apu,':')!=NULL) return(1);     
-    if (*apu=='/' || *apu=='\\' || *apu=='~' || *apu=='<') return(1);
-    if (*apu=='.' && (*(apu+1)=='.' || *(apu+1)=='/' || *(apu+1)=='\\')) return(1);
+    if (strchr(apu,':')!=NULL) { return(1);     
+}
+    if (*apu=='/' || *apu=='\\' || *apu=='~' || *apu=='<') { return(1);
+}
+    if (*apu=='.' && (*(apu+1)=='.' || *(apu+1)=='/' || *(apu+1)=='\\')) { return(1);
+}
 	
 	return(0);
 	}
@@ -30,7 +34,8 @@ int muste_removequotes(char *path)
 	int i;
 	if (*path=='"' && *(path+strlen(path)-1)=='"')
 		{
-		for (i=1; i<strlen(path); i++) path[i-1]=path[i];
+		for (i=1; i<strlen(path); i++) { path[i-1]=path[i];
+}
 		*(path+strlen(path)-2)=EOS;
 		}
 	return(1);	
@@ -40,8 +45,10 @@ int muste_insertquotes(char *path)
 	{
 	int i;
 	
-	if (strchr(path,' ')==NULL) return(0);
-    for (i=strlen(path); i>0; i--) path[i]=path[i-1];
+	if (strchr(path,' ')==NULL) { return(0);
+}
+    for (i=strlen(path); i>0; i--) { path[i]=path[i-1];
+}
     *(path+strlen(path)+1)=EOS;
     *(path+strlen(path))='"';
     *path='"';
@@ -57,8 +64,10 @@ int muste_standardize_path(char *path)
 //        and substitute \032 to space
     for (i=0; path[i]!='\0'; i++)
         {
-        if (path[i]=='\\') path[i]='/';
-        if (path[i]=='\032') path[i]=' ';       
+        if (path[i]=='\\') { path[i]='/';
+}
+        if (path[i]=='\032') { path[i]=' ';       
+}
         }
      muste_removequotes(path);  
      return(1);   
@@ -71,7 +80,8 @@ int muste_standardize_path2(char *path) // RS 15.11.2012
     for (i=0; path[i]!='\0'; i++)
         {
 //        if (path[i]=='\\') path[i]='/';
-        if (path[i]=='\032') path[i]=' ';       
+        if (path[i]=='\032') { path[i]=' ';       
+}
         }
 //     muste_removequotes(path);  
      return(1);   
@@ -131,9 +141,12 @@ void muste_append_path(char *nimi,char *liite)
 	
 	pit=strlen(nimi); // RS 4.11.2013
 	p5=pit-5; p4=pit-4; p1=pit-1;
-	if (p5<0) p5=0;
-	if (p4<0) p4=0;
-	if (p1<0) p1=0;
+	if (p5<0) { p5=0;
+}
+	if (p4<0) { p4=0;
+}
+	if (p1<0) { p1=0;
+}
 	
 	if (*(nimi+p1)=='"')
         {
@@ -144,7 +157,8 @@ void muste_append_path(char *nimi,char *liite)
         	strcat(nimi,"\"");
 			}
         }
-    else if (strchr(nimi+p4,'.')==NULL) strcat(nimi,liite);
+    else if (strchr(nimi+p4,'.')==NULL) { strcat(nimi,liite);
+}
 
     }
 
@@ -242,7 +256,8 @@ char *muste_getwd()
     muste_get_R_string(komento,".muste$workdir",LLENGTH);
    
     ch=komento[strlen(komento)-1];
-    if (ch!='/' && ch!='\\') strcat(komento,filesep);
+    if (ch!='/' && ch!='\\') { strcat(komento,filesep);
+}
     return(komento);
     }
 
@@ -251,7 +266,8 @@ void muste_updatewd()
     extern char *edisk;	
 	char *polku;
     polku=muste_getwd();
-    if (polku!=NULL) strcpy(edisk, polku);	
+    if (polku!=NULL) { strcpy(edisk, polku);	
+}
 	}
 
 int muste_setwd()
@@ -424,7 +440,8 @@ muste_expand_path(s);
     
     muste_sprintf(komento,"if (!file.exists(\"%s\")) dir.create(\"%s\")",s,s);         
     i=muste_evalr(komento);
-    if (i) return(1);
+    if (i) { return(1);
+}
 
     return(-1);
     }
@@ -434,7 +451,8 @@ int sur_remove_dir(char *s)
     int i;
     
     i=sur_delete1(s);
-    if (i) return(1);
+    if (i) { return(1);
+}
   
     return(-1);
     }
@@ -612,7 +630,8 @@ int sur_find_svo_file(char *nimi,char *pathname)
             { strcpy(pathname,edisk); strcat(pathname,nimi); }
         muste_append_path(pathname,".SVO"); // RS CHA if (strchr(pathname+strlen(pathname)-4,'.')==NULL) strcat(pathname,".SVO");
             
-        if (pathname[strlen(pathname)-1]=='.') pathname[strlen(pathname)-1]=EOS; // RS ADD
+        if (pathname[strlen(pathname)-1]=='.') { pathname[strlen(pathname)-1]=EOS; // RS ADD
+}
               
 		return(sur_find_file(pathname));
 		}
@@ -641,8 +660,9 @@ int muste_copytofile_core(char *sis,char *tied,int usetemp)
         extern char *etmpd;
 //		strcpy(x,tied);
 		
-		if (usetemp) strcpy(out,etmpd);
-		else *out=EOS;
+		if (usetemp) { strcpy(out,etmpd);
+		} else { *out=EOS;
+}
 		
 		strcat(out,tied);
 		muste_strncpy(x,sis,LLENGTH);

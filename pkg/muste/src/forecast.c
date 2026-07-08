@@ -74,7 +74,8 @@ void muste_forecast(char *argv)
             sur_print("\nUsage: FORECAST <SURVO_data>,<variable>,<predictor>,L");
             WAIT; return;
             }
-        i=spec_init(r1+r-1); if (i<0) return;
+        i=spec_init(r1+r-1); if (i<0) { return;
+}
 
     x=NULL;
     xpred=NULL;
@@ -85,15 +86,18 @@ void muste_forecast(char *argv)
     corr=NULL;
     ms=NULL;
 
-        if (g<5) tulosrivi=0;
-        else
+        if (g<5) { tulosrivi=0;
+        } else
             {
             tulosrivi=edline2(word[4],1,1);
-            if (tulosrivi==0) return;
+            if (tulosrivi==0) { return;
+}
             }
-        i=data_open2(word[1],&d,1,0,0); if (i<0) return;
+        i=data_open2(word[1],&d,1,0,0); if (i<0) { return;
+}
                                 /* tilaa uusille muuttujille */
-        i=mask(&d); if (i<0) return;
+        i=mask(&d); if (i<0) { return;
+}
 
         i=spfind("IND");   /* 15.6.1992 */
         if (i>=0)
@@ -110,15 +114,17 @@ void muste_forecast(char *argv)
             }
 
         n=d.l2-d.l1+1;
-        var=varfind(&d,word[2]); if (var<0) return;
-        if (*word[3]=='-') predvar=-1;
-        else
+        var=varfind(&d,word[2]); if (var<0) { return;
+}
+        if (*word[3]=='-') { predvar=-1;
+        } else
             {
             predvar=varfind2(&d,word[3],0);
             if (predvar<0)
                 {
                 predvar=create_newvar(&d,word[3],'4',4);
-                if (predvar<0) return;
+                if (predvar<0) { return;
+}
                 }
             }
         if (predvar==var)
@@ -126,7 +132,8 @@ void muste_forecast(char *argv)
             sur_print("\nDo not select same variable for the predicted values!");
             WAIT; return;
             }
-        i=sp_init(r1+r-1); if (i<0) return;
+        i=sp_init(r1+r-1); if (i<0) { return;
+}
 
         i=spfind("PERIOD");
         if (i<0) { per=-1; nmax=1+n+PERMAX; }
@@ -145,10 +152,13 @@ void muste_forecast(char *argv)
         if (i>=0)
             {
             ahead=atoi(spb[i]);
-            if (per>0 && ahead>per) nmax=1+n+ahead;
-            if (per<0 && ahead>PERMAX) nmax=1+n+ahead;
+            if (per>0 && ahead>per) { nmax=1+n+ahead;
+}
+            if (per<0 && ahead>PERMAX) { nmax=1+n+ahead;
+}
             }
-        i=varaa_tilat2(); if (i<0) return;
+        i=varaa_tilat2(); if (i<0) { return;
+}
 
         j=1;
         sp_outlier();
@@ -182,10 +192,13 @@ void muste_forecast(char *argv)
             }
 
         cc=1.0; i=spfind("C");
-        if (i>=0) { cc=atof(spb[i]); if (cc<0.0) cc=1.0; }
-        if (cc==1.0) type=1; else if (cc==0.0) type=0; else type=2;
+        if (i>=0) { cc=atof(spb[i]); if (cc<0.0) { cc=1.0; 
+}}
+        if (cc==1.0) { type=1; } else if (cc==0.0) { type=0; } else { type=2;
+}
 
-        for (i=0; i<3; ++i) bpar[i]=par[i];
+        for (i=0; i<3; ++i) { bpar[i]=par[i];
+}
 
         if (per<0)
             {
@@ -196,7 +209,8 @@ void muste_forecast(char *argv)
                 sur_print("\nPERIOD=<#_of_obs._in_one_period>");
                 WAIT; return;
                 }
-            if (ahead<0) ahead=per;
+            if (ahead<0) { ahead=per;
+}
             autom_period=per;
             }
 
@@ -216,11 +230,14 @@ void muste_forecast(char *argv)
                 nf=nelder(bpar,&mse,3,hw,step,1.0,0.5,2.0,parnimi,"MSE",0.005);
                 }
             pred_hw(bpar,per);
-            j=-per+1; for (i=n+per; i>n; --i) s[j++]=s[i];
+            j=-per+1; for (i=n+per; i>n; --i) { s[j++]=s[i];
+}
             m[0]=m[n+1]; rr[0]=-rr[n+1];
 
             reverse(x+1,n);
-            if (noutlier==0) for (i=0; i<3; ++i) par[i]=bpar[i];
+            if (noutlier==0) { for (i=0; i<3; ++i) { par[i]=bpar[i];
+}
+}
 
             if (par_fixed)
                 {
@@ -231,7 +248,8 @@ void muste_forecast(char *argv)
                 step[0]=step[1]=step[2]=0.1;
                 nf=nelder(par,&mse,3,hw,step,1.0,0.5,2.0,parnimi,"MSE",0.001);
                 }
-            if (!outliers()) break;
+            if (!outliers()) { break;
+}
             }
 
         pred_hw(par,ahead);
@@ -295,7 +313,8 @@ static int init_hw()
 /*      for (t=1; t<=n; ++t) Rprintf(" %g",x[t]);        */
         for (h=0; h<k; ++h)
             {
-            a=0.0; for (t=h*per+1; t<=(h+1)*per; ++t) a+=x[t];
+            a=0.0; for (t=h*per+1; t<=(h+1)*per; ++t) { a+=x[t];
+}
             mean[h]=a/per;
             }
         rr[0]=(mean[k-1]-mean[0])/((k-1)*per);
@@ -306,7 +325,8 @@ static int init_hw()
             for (t=1; t<=per; ++t)
                 {
                 a=0.0;
-                for (h=0; h<k; ++h) a+=x[h*per+t]-mean[h];
+                for (h=0; h<k; ++h) { a+=x[h*per+t]-mean[h];
+}
                 s[t-per]=a/k;
                 }
             }
@@ -315,18 +335,22 @@ static int init_hw()
             for (t=1; t<=per; ++t)
                 {
                 a=0.0;
-                for (h=0; h<k; ++h) a+=x[h*per+t]/(mean[h]-rr[0]*((per+1.0)/2.0-t));
+                for (h=0; h<k; ++h) { a+=x[h*per+t]/(mean[h]-rr[0]*((per+1.0)/2.0-t));
+}
                 s[t-per]=a/k;
                 }
-            a=0.0; for (t=1; t<=per; ++t) a+=s[t-per]; a/=per;
-            for (t=1; t<=per; ++t) s[t-per]/=a;
+            a=0.0; for (t=1; t<=per; ++t) { a+=s[t-per]; 
+}a/=per;
+            for (t=1; t<=per; ++t) { s[t-per]/=a;
+}
             }
         else
             {
             for (t=1; t<=per; ++t)
                 {
                 a=0.0;
-                for (h=0; h<k; ++h) a+=ff(x[h*per+t],c)-ff(mean[h],c);
+                for (h=0; h<k; ++h) { a+=ff(x[h*per+t],c)-ff(mean[h],c);
+}
                 s[t-per]=gg(a/k,c);
                 }
             }
@@ -380,12 +404,18 @@ static double hw(double *a)
             b=xpred[t]-x[t]; mse+=b*b;
             }
 
-        if (a[0]<0.0) mse*=(1-10*a[0]);
-        if (a[0]>1.0) mse*=(1+10*(a[0]-1));
-        if (a[1]<0.0) mse*=(1-10*a[1]);
-        if (a[1]>1.0) mse*=(1+10*(a[1]-1));
-        if (a[2]<0.0) mse*=(1-10*a[2]);
-        if (a[2]>1.0) mse*=(1+10*(a[2]-1));
+        if (a[0]<0.0) { mse*=(1-10*a[0]);
+}
+        if (a[0]>1.0) { mse*=(1+10*(a[0]-1));
+}
+        if (a[1]<0.0) { mse*=(1-10*a[1]);
+}
+        if (a[1]>1.0) { mse*=(1+10*(a[1]-1));
+}
+        if (a[2]<0.0) { mse*=(1-10*a[2]);
+}
+        if (a[2]>1.0) { mse*=(1+10*(a[2]-1));
+}
         return(mse/nmse);
         }
 
@@ -402,7 +432,8 @@ static int pred_hw(double *a,int ahead)
             if (type==1)
                 {
                 xpred[t]=(m[t-1]+rr[t-1])+s[t-per];
-                if (t>n) x[t]=xpred[t];
+                if (t>n) { x[t]=xpred[t];
+}
                 m[t]=a[0]*(x[t]-s[t-per])+(1.0-a[0])*(m[t-1]+rr[t-1]);
                 s[t]=a[1]*(x[t]-m[t])+(1.0-a[1])*s[t-per];
                 rr[t]=a[2]*(m[t]-m[t-1])+(1.0-a[2])*rr[t-1];
@@ -410,7 +441,8 @@ static int pred_hw(double *a,int ahead)
             if (type==0)
                 {
                 xpred[t]=(m[t-1]+rr[t-1])*s[t-per];
-                if (t>n) x[t]=xpred[t];
+                if (t>n) { x[t]=xpred[t];
+}
                 m[t]=a[0]*(x[t]/s[t-per])+(1.0-a[0])*(m[t-1]+rr[t-1]);
                 s[t]=a[1]*(x[t]/m[t])+(1.0-a[1])*s[t-per];
                 rr[t]=a[2]*(m[t]-m[t-1])+(1.0-a[2])*rr[t-1];
@@ -418,7 +450,8 @@ static int pred_hw(double *a,int ahead)
             else
                 {
                 xpred[t]=gg(ff(m[t-1]+rr[t-1],c)+ff(s[t-per],c),c);
-                if (t>n) x[t]=xpred[t];
+                if (t>n) { x[t]=xpred[t];
+}
                 m[t]=a[0]*gg(ff(x[t],c)-ff(s[t-per],c),c)+(1.0-a[0])*(m[t-1]+rr[t-1]);
                 s[t]=a[1]*gg(ff(x[t],c)-ff(m[t],c),c)+(1.0-a[1])*s[t-per];
                 rr[t]=a[2]*(m[t]-m[t-1])+(1.0-a[2])*rr[t-1];
@@ -455,8 +488,10 @@ static double gg(double x,double c)
 
 static double pow2(double x,double c)
         {
-        if (x==0.0) return(0.0);
-        if (x>0.0) return(pow(x,c));
+        if (x==0.0) { return(0.0);
+}
+        if (x>0.0) { return(pow(x,c));
+}
         return(-pow(-x,c));
         }
 
@@ -473,20 +508,23 @@ static int printout()
         char sana[LLENGTH];
 
         i=output_open(eout);
-        if (i<0) return(-1);
+        if (i<0) { return(-1);
+}
 
         if (type==2)
             {
             i=spfind("C");
-            if (i>=0) muste_sprintf(sana,"(C=%s)",spb[i]);
-            else *sana=EOS;
+            if (i>=0) { muste_sprintf(sana,"(C=%s)",spb[i]);
+            } else { *sana=EOS;
+}
             laji[2]=sana;
             }
 
         muste_sprintf(y,"Holt-Winters' %s Seasonal Forecast: Data %s, Variable %s",
                                 laji[type],word[1],word[2]);
         print_line(y);
-        *sana=EOS; if (autom_period) strcpy(sana,"(judged from data)  ");
+        *sana=EOS; if (autom_period) { strcpy(sana,"(judged from data)  ");
+}
         muste_sprintf(y,"Period=%d obs. %sEstimation on observations %d-%d",
                         per,sana,d.l1,d.l2);
         print_line(y);
@@ -501,12 +539,14 @@ static int printout()
                     data_alpha_load(&d,d.l1+(int)(tout[i]-1),0,sana);
                     k+=muste_sprintf(y+k,"%d(%.8s),",tout[i],sana);
                     }
-                else
+                else {
                     k+=muste_sprintf(y+k,"%d,",tout[i]);
+}
 
                 }
             y[k-1]=EOS;  /* pilkku pois lopusta */
-            if (more_outliers) strcat(y," (+more to be found)");
+            if (more_outliers) { strcat(y," (+more to be found)");
+}
             print_line(y);
             }
 
@@ -517,14 +557,16 @@ static int printout()
         print_line(y);
 
         k=muste_sprintf(y,"Autocorrelations of residuals:");
-        for (t=1; t<=n; ++t) res[t]=x[t]-xpred[t];
+        for (t=1; t<=n; ++t) { res[t]=x[t]-xpred[t];
+}
         autoc(res+1,n,corr,per);
         for (i=0; i<per; ++i)
             {
             k+=muste_sprintf(y+k," r%d=%+5.2f",i+1,corr[i]);
             if (k>c3-10) { print_line(y); k=0; }
             }
-        if (k>0) print_line(y);
+        if (k>0) { print_line(y);
+}
 
 
         print_line("Obs.#   Forecast");
@@ -571,22 +613,26 @@ static int save_pred()
             if (predvar>=0)
                 {
                 i=data_save(&d,l,predvar,xpred[j]);
-                if (i<0) return(-1);
+                if (i<0) { return(-1);
+}
                 }
             if (trend>=0)
                 {
                 i=data_save(&d,l,trend,m[j]);
-                if (i<0) return(-1);
+                if (i<0) { return(-1);
+}
                 }
             if (beta>=0)
                 {
                 i=data_save(&d,l,beta,rr[j]);
-                if (i<0) return(-1);
+                if (i<0) { return(-1);
+}
                 }
             if (seas>=0)
                 {
                 i=data_save(&d,l,seas,s[j]);
-                if (i<0) return(-1);
+                if (i<0) { return(-1);
+}
                 }
             }
         return(1);
@@ -653,14 +699,18 @@ static int nelder(double *x,double *py,int n,double (*f)(double []),double *step
         int nstop=0;
 
         nf=nfi=0;
-        for (i=0; i<n; ++i) xx[0][i]=x[i];
-        for (j=0; j<n; ++j)
+        for (i=0; i<n; ++i) { xx[0][i]=x[i];
+}
+        for (j=0; j<n; ++j) {
             for (i=0; i<n; ++i)
                 {
-                if (i==j) xx[j+1][i]=x[i]+step[j];
-                else      xx[j+1][i]=x[i];
+                if (i==j) { xx[j+1][i]=x[i]+step[j];
+                } else {      xx[j+1][i]=x[i];
+}
                 }
-        for (i=0; i<n+1; ++i) y[i]=(*f)(xx[i]); nf+=n+1;
+}
+        for (i=0; i<n+1; ++i) { y[i]=(*f)(xx[i]); 
+}nf+=n+1;
 
         while (1)
             {
@@ -668,21 +718,25 @@ static int nelder(double *x,double *py,int n,double (*f)(double []),double *step
             for (j=2; j<n+1; ++j)
                 {
                 if (y[j]>y[jh]) { js=jh; jh=j; }
-                else if (y[j]>y[js]) js=j;
-                else if (y[j]<y[jl]) jl=j;
+                else if (y[j]>y[js]) { js=j;
+                } else if (y[j]<y[jl]) { jl=j;
+}
                 }
 
             for (i=0; i<n; ++i)
                 {
                 xc[i]=0.0;
-                for (j=0; j<n+1; ++j)
-                    if (j!=jh) xc[i]+=xx[j][i];
+                for (j=0; j<n+1; ++j) {
+                    if (j!=jh) { xc[i]+=xx[j][i];
+}
+}
                 xc[i]/=n;
                 }
 
             if (sur_kbhit())
                 {
-                i=sur_getch(); if (i=='.') break;
+                i=sur_getch(); if (i=='.') { break;
+}
                 disp=1-disp;
                 }
 
@@ -701,31 +755,37 @@ static int nelder(double *x,double *py,int n,double (*f)(double []),double *step
             if (nstop==stopstep)
                 {
                 nstop=0;
-                if ((ylast-y[jl])/(fabs(ylast)+1e-30)<yeps) break;
+                if ((ylast-y[jl])/(fabs(ylast)+1e-30)<yeps) { break;
+}
                 ylast=y[jl];
                 }
-            for (i=0; i<n; ++i) x0[i]=(1+alpha)*xc[i]-alpha*xx[jh][i];
+            for (i=0; i<n; ++i) { x0[i]=(1+alpha)*xc[i]-alpha*xx[jh][i];
+}
             y0=(*f)(x0); ++nf;
 
             if (y[jl]<=y0 && y0<=y[js])
                 {
-                for (i=0; i<n; ++i) xx[jh][i]=x0[i];
+                for (i=0; i<n; ++i) { xx[jh][i]=x0[i];
+}
                 y[jh]=y0;
                 continue;
                 }
             if (y0<y[jl])
                 {
-                for (i=0; i<n; ++i) x00[i]=gamma*x0[i]+(1-gamma)*xc[i];
+                for (i=0; i<n; ++i) { x00[i]=gamma*x0[i]+(1-gamma)*xc[i];
+}
                 y00=(*f)(x00); ++nf;
                 if (y00<y[jl])
                     {
-                    for (i=0; i<n; ++i) xx[jh][i]=x00[i];
+                    for (i=0; i<n; ++i) { xx[jh][i]=x00[i];
+}
                     y[jh]=y00;
                     continue;
                     }
                 else
                     {
-                    for (i=0; i<n; ++i) xx[jh][i]=x0[i];
+                    for (i=0; i<n; ++i) { xx[jh][i]=x0[i];
+}
                     y[jh]=y0;
                     continue;
                     }
@@ -734,28 +794,34 @@ static int nelder(double *x,double *py,int n,double (*f)(double []),double *step
             /* y0>ys */
             if (y0<y[jh])
                 {
-                for (i=0; i<n; ++i) x00[i]=beta*x0[i]+(1-beta)*xc[i];
+                for (i=0; i<n; ++i) { x00[i]=beta*x0[i]+(1-beta)*xc[i];
+}
                 }
             else
                 {
-                for (i=0; i<n; ++i) x00[i]=beta*xx[jh][i]+(1-beta)*xc[i];
+                for (i=0; i<n; ++i) { x00[i]=beta*xx[jh][i]+(1-beta)*xc[i];
+}
                 }
             y00=(*f)(x00); ++nf;
             if (y00<y[jh] && y00<y0)
                 {
-                for (i=0; i<n; ++i) xx[jh][i]=x00[i];
+                for (i=0; i<n; ++i) { xx[jh][i]=x00[i];
+}
                 y[jh]=y00;
                 continue;
                 }
 
             for (j=0; j<n+1; ++j)
                 {
-                if (j==jl) continue;
-                for (i=0; i<n; ++i) xx[j][i]=(xx[j][i]+xx[jl][i])/2;
+                if (j==jl) { continue;
+}
+                for (i=0; i<n; ++i) { xx[j][i]=(xx[j][i]+xx[jl][i])/2;
+}
                 y[j]=(*f)(xx[j]); ++nf;
                 }
             }
-        for (i=0; i<n; ++i) x[i]=xx[jl][i];
+        for (i=0; i<n; ++i) { x[i]=xx[jl][i];
+}
         *py=y[jl];
         return(nf);
         }
@@ -771,12 +837,15 @@ static int sp_outlier()
 
         maxout=3; outlimit=2.5;
         i=spnfind("OUTLIER");        /* OUTLIER tai OUTLIERS */
-        if (i<0) return(1);
+        if (i<0) { return(1);
+}
         strcpy(x,spb[i]);
         i=split(x,sana,2);
         maxout=atoi(sana[0]);
-        if (maxout>10) maxout=10;
-        if (i<2) return(1);
+        if (maxout>10) { maxout=10;
+}
+        if (i<2) { return(1);
+}
         outlimit=atof(sana[1]); return(1);
         }
 
@@ -798,10 +867,14 @@ static int outliers()
             }
 
         m/=n; s=sqrt((s-n*m*m)/(n-1));
-        if (s<1e-30) return(0);
-        mx/=n; sx=sqrt((sx-n*mx*mx)/(n-1)); if (sx<1e-30) return(0);
-        if (s/sx<1e-5) return(0);
-        if (max<outlimit*s) return(0);
+        if (s<1e-30) { return(0);
+}
+        mx/=n; sx=sqrt((sx-n*mx*mx)/(n-1)); if (sx<1e-30) { return(0);
+}
+        if (s/sx<1e-5) { return(0);
+}
+        if (max<outlimit*s) { return(0);
+}
 
         if (noutlier>maxout-1) { more_outliers=1; return(0); }
         tout[noutlier++]=tmax;
@@ -816,18 +889,22 @@ static int tasoita_puuttuvat()
         int t;
         double a,max;
 
-        if (miss==0) return(1);
+        if (miss==0) { return(1);
+}
         max=0;
         for (t=1; t<=n; ++t)
             {
-            if (x[t]==MISSING8) continue;
+            if (x[t]==MISSING8) { continue;
+}
             a=fabs(x[t]);
-            if (a>max) max=a;
+            if (a>max) { max=a;
+}
             }
 
         for (t=1; t<=n; ++t)
             {
-            if (x[t]==MISSING8) x[t]=2*max;
+            if (x[t]==MISSING8) { x[t]=2*max;
+}
             }
         return(1);
         }
@@ -847,12 +924,14 @@ static int autoc(double *x,int n,double *r,int maxlag)
         m=s=0.0;
         for (t=0; t<n; ++t) { m+=x[t]; s+=x[t]*x[t]; }
         m/=n; s=s/n-m*m;
-        if (s<=0.0) { for (t=0; t<maxlag; ++t) r[t]=0.0; return(1); }
+        if (s<=0.0) { for (t=0; t<maxlag; ++t) { r[t]=0.0; 
+}return(1); }
 
         for (lag=1; lag<=maxlag; ++lag)
             {
             sum=0.0;
-            for (t=0; t<n-lag; ++t) sum+=(x[t]-m)*(x[t+lag]-m);
+            for (t=0; t<n-lag; ++t) { sum+=(x[t]-m)*(x[t+lag]-m);
+}
             r[lag-1]=sum/(n-lag)/s;
             }
         return(1);
@@ -872,7 +951,8 @@ static int find_period(double *x,int n,int permax)
 
 /*      if (n<6) return(1);
 */      maxlag=n/3;
-        if (maxlag>permax) maxlag=permax;
+        if (maxlag>permax) { maxlag=permax;
+}
         ms=(double *)muste_malloc(maxlag*sizeof(double));
         if (ms==NULL)
             {
@@ -889,7 +969,8 @@ static int find_period(double *x,int n,int permax)
             ms[i]=hw(koepar);
             if (ms[i]<min) { min=ms[i]; imin=i; }
             }
-        if (min==0.0) return(imin+1);
+        if (min==0.0) { return(imin+1);
+}
   if (sur_kbhit())
       {
   sur_getch();
@@ -906,12 +987,13 @@ static int find_period(double *x,int n,int permax)
         for (i=1; i<maxlag-1; ++i)
             {
             a1=ms[i-1]/ms[i]; a2=ms[i+1]/ms[i];
-            if (a2<a1) a1=a2;
+            if (a2<a1) { a1=a2;
+}
             if (a1>maxsuhde) { maxsuhde=a1; imin=i; }
             }
 
-        if (maxsuhde<1.5) imin=0;
-        else
+        if (maxsuhde<1.5) { imin=0;
+        } else
             {
             for (i=1; i<imin; ++i)
                 {
@@ -929,7 +1011,8 @@ static int find_period(double *x,int n,int permax)
 static int print_line(char *line)
         {
         output_line(line,eout,tulosrivi);
-        if (tulosrivi) ++tulosrivi;
+        if (tulosrivi) { ++tulosrivi;
+}
         return(1);
         }
 

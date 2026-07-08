@@ -129,7 +129,8 @@ temp=NULL;
 // writefile=TRUE;
 
 
-        if (argc==1) return;
+        if (argc==1) { return;
+}
         s_init(argv[1]);
 
         if (g<6)
@@ -146,8 +147,10 @@ temp=NULL;
 */
 
         i=data_open(word[4],&d_vanha); if (i<0) { s_end(argv[1]); return; }
-        i=spec_init(r1+r-1); if (i<0) return;
-        i=conditions(&d_vanha); if (i<0) return;
+        i=spec_init(r1+r-1); if (i<0) { return;
+}
+        i=conditions(&d_vanha); if (i<0) { return;
+}
 
         i=data_open(word[6],&d_sel); if (i<0) { s_end(argv[1]); return; }
 
@@ -160,7 +163,8 @@ temp=NULL;
                 sur_print("\nKEYS=<var1>,<var2>,... missing!");
                 WAIT; return;
                 }
-            else neg=1;
+            else { neg=1;
+}
             }
 
         strcpy(x,spb[i]);
@@ -229,8 +233,9 @@ WAIT;
         for (k=0; k<n_sel; ++k)
             {
             i_sel[k]=ts_len;
-            if (type[k]=='S') s_len[k]=d_sel.varlen[s_var[k]];
-            else s_len[k]=sizeof(double);
+            if (type[k]=='S') { s_len[k]=d_sel.varlen[s_var[k]];
+            } else { s_len[k]=sizeof(double);
+}
             ts_len+=s_len[k];
             }
         s_tila=muste_malloc(n2*ts_len);
@@ -252,15 +257,18 @@ WAIT;
                     {
                     data_load(&d_sel,l2+1,s_var[k],&b);
                     q=(char *)&b;
-                    for (i=0; i<sizeof(double); ++i)
+                    for (i=0; i<sizeof(double); ++i) {
                         *p++=*q++;
+}
                     }
                 }
             }
         i=spfind("PRIND");
-        if (i>=0) prind=atoi(spb[i]);
+        if (i>=0) { prind=atoi(spb[i]);
+}
 
-        i=luo_uusi(word[2],uusinimi); if (i<0) return;
+        i=luo_uusi(word[2],uusinimi); if (i<0) { return;
+}
         data_open(word[2],&d_uusi);
         muste_fseek(d_uusi.d2.survo_data,d_uusi.d2.data,SEEK_SET);
         len=d_vanha.d2.len;
@@ -271,12 +279,14 @@ WAIT;
 
         for (l=d_vanha.l1; l<=d_vanha.l2; ++l)
             {
-            if (unsuitable(&d_vanha,l)) continue;
+            if (unsuitable(&d_vanha,l)) { continue;
+}
             if (prind) { muste_sprintf(sbuf," %d",l); sur_print(sbuf); } // RS ld->d
             if (sur_kbhit())
                 {
                 i=sur_getch();
-                if (i=='.') prind=1-prind;
+                if (i=='.') { prind=1-prind;
+}
                 }
             p=v_tila;
             for (k=0; k<n_sel; ++k)
@@ -290,8 +300,9 @@ WAIT;
                     {
                     data_load(&d_vanha,l,v_var[k],&b);
                     q=(char *)&b;
-                    for (i=0; i<sizeof(double); ++i)
+                    for (i=0; i<sizeof(double); ++i) {
                         *p++=*q++;
+}
                     }
                 }
 
@@ -305,7 +316,8 @@ WAIT;
                   //    data_alpha_load(&d_sel,l2,s_var[k],sbuf);
 // if (strncmp(x,s_tila+(l2-1)*ts_len+i_sel[k],s_len[k])!=0) break;
 
-   if (strncmp(v_tila+i_sel[k],s_tila+(l2-1)*ts_len+i_sel[k],s_len[k])!=0) break;   
+   if (strncmp(v_tila+i_sel[k],s_tila+(l2-1)*ts_len+i_sel[k],s_len[k])!=0) { break;   
+}
 
                   //    if (strcmp(x,sbuf)!=0) break;
                         }
@@ -314,30 +326,36 @@ WAIT;
                   //    data_load(&d_vanha,l,v_var[k],&a);
                   //    data_load(&d_sel,l2,s_var[k],&b);
 // if (a!=*(double *)(s_tila+(l2-1)*ts_len+i_sel[k])) break;
-   if (*(double *)(v_tila+i_sel[k])!=*(double *)(s_tila+(l2-1)*ts_len+i_sel[k])) break;
+   if (*(double *)(v_tila+i_sel[k])!=*(double *)(s_tila+(l2-1)*ts_len+i_sel[k])) { break;
+}
                         }
                     } /* k */
-                if (k==n_sel) break;
+                if (k==n_sel) { break;
+}
                 } /* l2 */
 
             if (neg) // 25.1.2003
                 {
-                if (l2<=n2) continue;
+                if (l2<=n2) { continue;
+}
                 }
-            else if (l2>n2) continue;
+            else if (l2>n2) { continue;
+}
 
 long apu=muste_ftell(d_vanha.d2.survo_data); // RS ADD
    muste_fseek(d_vanha.d2.survo_data,d_vanha.d2.data+(l-1)*len,SEEK_SET);
    
 
-   for (i=0; i<len; ++i)
+   for (i=0; i<len; ++i) {
        putc(getc(d_vanha.d2.survo_data),d_uusi.d2.survo_data);
+}
    ++nn;
 
 muste_fseek(d_vanha.d2.survo_data,apu,SEEK_SET); // RS ADD
 
-            if (mark_var>=0)
+            if (mark_var>=0) {
                 data_save(&d_vanha,l,mark_var,1.0);
+}
             if (nmatch_var>=0)
                 {
                 data_load(&d_sel,l2,nmatch_var,&a);

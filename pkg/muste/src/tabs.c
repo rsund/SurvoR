@@ -138,23 +138,30 @@ static int tabs()
         if (g>3)
             {
             results_line=edline2(word[3],1,1);
-            if (results_line==0) return(-1);
+            if (results_line==0) { return(-1);
+}
             }
         ptext=text;
         i=read_ftable(word[1],&f,&dim,&ncvar,nc,varname,cname,type,&ndec);
-        if (i<0) return(-1);
+        if (i<0) { return(-1);
+}
 
-        if (nrvar2<0) nrvar2=0;
-        if (nrvar2>dim) nrvar2=dim;
+        if (nrvar2<0) { nrvar2=0;
+}
+        if (nrvar2>dim) { nrvar2=dim;
+}
         strcpy(nimi,word[1]); strcat(nimi,"S");
-        cumnc[0]=0; for (i=1; i<dim; ++i) cumnc[i]=cumnc[i-1]+nc[i-1];
+        cumnc[0]=0; for (i=1; i<dim; ++i) { cumnc[i]=cumnc[i-1]+nc[i-1];
+}
         ctypes(ctype,dim,nc,cname);
         digits=digts(f,dim,nc);
         *s=EOS;
         if (ndec)
             {
-            for (i=0; i<digits; ++i) strcat(s,"1"); strcat(s,".");
-            for (i=0; i<ndec; ++i) strcat(s,"1");
+            for (i=0; i<digits; ++i) { strcat(s,"1"); 
+}strcat(s,".");
+            for (i=0; i<ndec; ++i) { strcat(s,"1");
+}
             }
 print_ftable(nimi,results_line,eout,dim,nc,cumnc,ctype,
              f,ZERO,ZERO,varname,cname,dim-nrvar2,digits,0,0,s,type);
@@ -183,20 +190,24 @@ static int read_ftable(char *name,FREQ **f,int *pdim,int *pncvar,
         i=split(x+1,px,5);
         if (i<5)
             {
-            edread(x,j); i=strlen(x); while (x[i-1]==' ') x[--i]=EOS;
+            edread(x,j); i=strlen(x); while (x[i-1]==' ') { x[--i]=EOS;
+}
             muste_sprintf(sbuf,"\nInvalid definition: %s",x+1); sur_print(sbuf);
             muste_sprintf(sbuf,"\non line %d",j); sur_print(sbuf);
             sur_print("\nCorrect form: TABLE <name>,L1,L2,<type_of_table>");
             WAIT; return(-1);
             }
-        j1=edline2(px[2],1,1); if (j1==0) return(-1);
-        j2=edline2(px[3],j1,1); if (j2==0) return(-1);
+        j1=edline2(px[2],1,1); if (j1==0) { return(-1);
+}
+        j2=edline2(px[3],j1,1); if (j2==0) { return(-1);
+}
         muste_fieldcopy(type,px[4],15); type[15]=EOS;
         ncell=0;
         for (j=j1; j<=j2; ++j)
             {
             edread(x,j);
-            p=strchr(x+1,'*'); if (p!=NULL) break;
+            p=strchr(x+1,'*'); if (p!=NULL) { break;
+}
             }
         if (j>j2)
             {
@@ -209,8 +220,10 @@ muste_sprintf(sbuf,"\nLine of row classifiers ending with *'s missing in table %
             {
             edread(x,j);
             i=split(x+apos,px,EP4);
-            if (i==0) continue;
-            if (k==0) k=i;
+            if (i==0) { continue;
+}
+            if (k==0) { k=i;
+}
             if (i!=k)
                 {
 muste_sprintf(sbuf,"\nNumber of elements on line %d conflicts previous lines!",
@@ -219,10 +232,11 @@ muste_sprintf(sbuf,"\nNumber of elements on line %d conflicts previous lines!",
                 }
             ncell+=k;
             }
-        if (*f==NULL)
+        if (*f==NULL) {
             *f=(FREQ *)muste_malloc(ncell*sizeof(FREQ));
-        else
+        } else {
             *f=(FREQ *)muste_realloc(*f,ncell*sizeof(FREQ));
+}
         if (*f==NULL)
             { not_enough_memory(); return(-1); }
 
@@ -245,7 +259,8 @@ muste_sprintf(sbuf,"\nNumber of elements on line %d conflicts previous lines!",
                 }
             nc[ivar]=h;
             varname[ivar]=ptext;
-            i=store_label(px[0]); if (i<0) return(-1);
+            i=store_label(px[0]); if (i<0) { return(-1);
+}
             for (h=0; h<nc[ivar]; ++h)
                 {
                 if (nlabel>=MAXT)
@@ -278,22 +293,28 @@ muste_sprintf(sbuf,"\nNumber of elements on line %d conflicts previous lines!",
                 {
                 edread(x,j);
                 h=posr[i];
-                while (x[h]==' ' && h<posr[i+1]) ++h;
-                if (h==posr[i+1]) continue;
-                h2=h; while (x[h2]!=' ' && h2<posr[i+1]) ++h2;
+                while (x[h]==' ' && h<posr[i+1]) { ++h;
+}
+                if (h==posr[i+1]) { continue;
+}
+                h2=h; while (x[h2]!=' ' && h2<posr[i+1]) { ++h2;
+}
                 x[h2]=EOS;
                 for (h2=0; h2<nc[ivar]; ++h2)
                     {
-                    if (strcmp(x+h,cname[nlab+h2])==0) break;
+                    if (strcmp(x+h,cname[nlab+h2])==0) { break;
+}
                     }
-                if (h2<nc[ivar]) continue;
+                if (h2<nc[ivar]) { continue;
+}
                 ++nc[ivar];
                 if (nlabel>=MAXT)
                     {
                     sur_print("\nToo many labels!"); WAIT; return(-1);
                     }
                 cname[nlabel++]=ptext;
-                h2=store_label(x+h); if (h2<0) return(-1);
+                h2=store_label(x+h); if (h2<0) { return(-1);
+}
                 }
             ncell2*=nc[ivar];
             ++ivar;
@@ -330,22 +351,25 @@ muste_sprintf(sbuf,"\nNumber of elements on line %d conflicts previous lines!",
             {
             edread(x,j);
             i=split(x+apos,px,k);
-            if (i==0) continue;
+            if (i==0) { continue;
+}
             cell=h;
             for (i=0; i<k; ++i)
                 {
                 len=strlen(px[i])-1;
                 if (px[i][len]=='-')
                     { cvalue=MISSING_VALUE; ++missing_values; }
-                else if (strcmp(px[i],"*0")==0) cvalue=STRUCTURAL_ZERO;
-                else cvalue=atof(px[i]);    /* depends on FREQ */
+                else if (strcmp(px[i],"*0")==0) { cvalue=STRUCTURAL_ZERO;
+                } else { cvalue=atof(px[i]);    /* depends on FREQ */
+}
                 (*f)[cell]=cvalue;
                 cell+=step;
                 p=strchr(px[i],'.');
                 if (p!=NULL)
                     {
                     h2=len-(p-px[i]);
-                    if (h2>*pndec) *pndec=h2;
+                    if (h2>*pndec) { *pndec=h2;
+}
                     }
                 }
             ++h;
@@ -366,7 +390,8 @@ static int store_label(char *s)
             {
             sur_print("\nNot enough space for labels!"); WAIT; return(-1);
             }
-        p=s; while (*p) *ptext++=*p++; *ptext++=EOS;
+        p=s; while (*p) { *ptext++=*p++; 
+}*ptext++=EOS;
         return(1);
         }
 
@@ -379,8 +404,10 @@ static int ctypes(int *ctype,int dim,int *nc,char **cname)
         for (i=0; i<dim; ++i)
             {
             type=1;
-            for (j=0; j<nc[i]; ++j)
-                if (!muste_isnumber(cname[k++])) type=0;
+            for (j=0; j<nc[i]; ++j) {
+                if (!muste_isnumber(cname[k++])) { type=0;
+}
+}
             ctype[i]=type;
             }
         return(1);
@@ -394,16 +421,22 @@ static int digts(FREQ *f,int dim,int *nc)
         double da;
 
         max=0.0; neg=0;
-        l=1L; for (i=0; i<dim; ++i) l*=nc[i];
+        l=1L; for (i=0; i<dim; ++i) { l*=nc[i];
+}
         for (k=0L; k<l; ++k)
             {
             if (f[k]>MISSING_VALUE/100.0)
-                { if (max<10.0) max=10; }  /* aaltosulut pakolliset! */
-            else if (fabs((double)f[k])>max) max=fabs((double)f[k]);
-            if (f[k]<ZERO) neg=1;
+                { if (max<10.0) { max=10; 
+}}  /* aaltosulut pakolliset! */
+            else if (fabs((double)f[k])>max) { max=fabs((double)f[k]);
+}
+            if (f[k]<ZERO) { neg=1;
+}
             }
-        if (max==(FREQ)0) max=1;
-        da=log((double)max)/log(10.0); if (da<0.0) da=0.0;
+        if (max==(FREQ)0) { max=1;
+}
+        da=log((double)max)/log(10.0); if (da<0.0) { da=0.0;
+}
         return ((int)(neg+1.0001+da));
         }
 
@@ -415,7 +448,8 @@ static int check_varname_initials(int dim,char **varname)
             {
             for (k=0; k<i; ++k)
                 {
-                if (*varname[k]!=*varname[i]) continue;
+                if (*varname[k]!=*varname[i]) { continue;
+}
 muste_sprintf(sbuf,"\nSame initials in classifier names %s (#%d) and  %s (#%d)",
                                         varname[k],k+1,varname[i],i+1);
                 sur_print(sbuf); WAIT; return(-1);
@@ -442,14 +476,17 @@ sur_print("\nUsage: TABDIM <table> / results: dimension classifiers");
         else
             {
             i=check_varname_initials(dim,varname);
-            if (i<0) strcpy(type,"?");
+            if (i<0) { strcpy(type,"?");
+}
             }
-        if (*type!='?' && missing_values) strcpy(type,"-");
+        if (*type!='?' && missing_values) { strcpy(type,"-");
+}
         j=r1+r-1;
         edwrite(space,j,1);
         k=muste_sprintf(sbuf,"TABDIM %s / %d %d %s",word[1],dim,ncvar,type);
-        for (i=0; i<dim; ++i)
+        for (i=0; i<dim; ++i) {
             k+=muste_sprintf(sbuf+k," %s",varname[i]);
+}
         edwrite(sbuf,j,1);
         return(1);
         }
@@ -492,15 +529,19 @@ static int tabm()
         if (g>4)
             {
             results_line=edline2(word[4],1,1);
-            if (results_line==0) return(1);
+            if (results_line==0) { return(1);
+}
             }
         ptext=text;
         i=read_ftable(word[1],&f,&dim,&ncvar,nc,varname,cname,type,&ndec);
-        if (i<0) return(1);
+        if (i<0) { return(1);
+}
 
         k=strlen(word[2]);
-        for (i=0; i<dim; ++i)
-            if (strncmp(word[2],varname[i],k)==0) break;
+        for (i=0; i<dim; ++i) {
+            if (strncmp(word[2],varname[i],k)==0) { break;
+}
+}
         if (i==dim)
             {
             muste_sprintf(sbuf,"\nClassifier %s not found!",word[2]);
@@ -508,8 +549,10 @@ static int tabm()
             }
         i1=i;
         k=strlen(word[3]);
-        for (i=0; i<dim; ++i)
-            if (strncmp(word[3],varname[i],k)==0) break;
+        for (i=0; i<dim; ++i) {
+            if (strncmp(word[3],varname[i],k)==0) { break;
+}
+}
         if (i==dim)
             {
             muste_sprintf(sbuf,"\nClassifier %s not found!",word[3]);
@@ -531,10 +574,12 @@ static int tabm()
         cname2=(char **)muste_malloc(nclass*sizeof(char **));
         if (cname2==NULL)
             { not_enough_memory(); return(1); }
-        for (i=0; i<dim; ++i) nc2[i]=nc[i];
+        for (i=0; i<dim; ++i) { nc2[i]=nc[i];
+}
         nc2[i1]=nc[i2]; nc2[i2]=nc[i1];
 
-        for (i=0; i<dim; ++i) pj[i]=0;
+        for (i=0; i<dim; ++i) { pj[i]=0;
+}
         while (1)
             {
             ind1=jindex(dim,nc,pj);
@@ -547,17 +592,23 @@ static int tabm()
                 {
                 if (pj[i]<nc[i]-1) { ++pj[i]; break; }
                 pj[i]=0;
-                ++i; if (i==dim) break;
+                ++i; if (i==dim) { break;
+}
                 }
-            if (i==dim) break;
+            if (i==dim) { break;
+}
             }
-        for (i=0; i<dim; ++i) pj[i]=i;
+        for (i=0; i<dim; ++i) { pj[i]=i;
+}
         pj[i1]=i2; pj[i2]=i1;
-        cumnc[0]=0; for (i=1; i<dim; ++i) cumnc[i]=cumnc[i-1]+nc2[i-1];
+        cumnc[0]=0; for (i=1; i<dim; ++i) { cumnc[i]=cumnc[i-1]+nc2[i-1];
+}
         k=0;
-        for (i=0; i<dim; ++i)
-            for (j=0; j<nc[i]; ++j)
+        for (i=0; i<dim; ++i) {
+            for (j=0; j<nc[i]; ++j) {
                 cname2[cumnc[pj[i]]+j]=cname[k++];
+}
+}
         p=varname[i1]; varname[i1]=varname[i2]; varname[i2]=p;
         strcpy(nimi,word[1]); strcat(nimi,"M");
         ctypes(ctype,dim,nc,cname);
@@ -565,8 +616,10 @@ static int tabm()
         *s=EOS;
         if (ndec)
             {
-            for (i=0; i<digits; ++i) strcat(s,"1"); strcat(s,".");
-            for (i=0; i<ndec; ++i) strcat(s,"1");
+            for (i=0; i<digits; ++i) { strcat(s,"1"); 
+}strcat(s,".");
+            for (i=0; i<ndec; ++i) { strcat(s,"1");
+}
             }
         print_ftable(nimi,results_line,eout,dim,nc2,cumnc,ctype,
              f2,ZERO,ZERO,varname,cname2,ncvar,digits,0,0,s,type);
@@ -579,8 +632,9 @@ static int jindex(int dim,int *nc,int *j)
         int ind;
 
         ind=j[0];
-        for (i=1; i<dim; ++i)
+        for (i=1; i<dim; ++i) {
             ind=nc[i]*ind+j[i];
+}
         return(ind);
         }
 
@@ -610,25 +664,32 @@ static int tabi()
         if (g>5)
             {
             results_line=edline2(word[5],1,1);
-            if (results_line==0) return(1);
+            if (results_line==0) { return(1);
+}
             }
         ptext=text;
         i=read_ftable(word[1],&f,&dim,&ncvar,nc,varname,cname,type,&ndec);
-        if (i<0) return(1);
+        if (i<0) { return(1);
+}
 
         k=strlen(word[2]);
-        for (i=0; i<dim; ++i)
-            if (strncmp(word[2],varname[i],k)==0) break;
+        for (i=0; i<dim; ++i) {
+            if (strncmp(word[2],varname[i],k)==0) { break;
+}
+}
         if (i==dim)
             {
             muste_sprintf(sbuf,"\nClassifier %s not found!",word[2]);
             sur_print(sbuf); WAIT; return(1);
             }
         i1=i;
-        cumnc[0]=0; for (i=1; i<dim; ++i) cumnc[i]=cumnc[i-1]+nc[i-1];
+        cumnc[0]=0; for (i=1; i<dim; ++i) { cumnc[i]=cumnc[i-1]+nc[i-1];
+}
         k=strlen(word[3]);
-        for (i=0; i<nc[i1]; ++i)
-            if (strncmp(word[3],cname[cumnc[i1]+i],k)==0) break;
+        for (i=0; i<nc[i1]; ++i) {
+            if (strncmp(word[3],cname[cumnc[i1]+i],k)==0) { break;
+}
+}
         if (i==nc[i1])
             {
             muste_sprintf(sbuf,"\nClass %s not found!",word[3]);
@@ -636,8 +697,10 @@ static int tabi()
             }
         ic1=i;
         k=strlen(word[4]);
-        for (i=0; i<nc[i1]; ++i)
-            if (strncmp(word[4],cname[cumnc[i1]+i],k)==0) break;
+        for (i=0; i<nc[i1]; ++i) {
+            if (strncmp(word[4],cname[cumnc[i1]+i],k)==0) { break;
+}
+}
         if (i==nc[i1])
             {
             muste_sprintf(sbuf,"\nClass %s not found!",word[4]);
@@ -654,22 +717,27 @@ static int tabi()
         if (pj==NULL)
             { not_enough_memory(); return(1); }
 
-        for (i=0; i<dim; ++i) pj[i]=0;
+        for (i=0; i<dim; ++i) { pj[i]=0;
+}
         while (1)
             {
             ind1=jindex(dim,nc,pj);
-            if (pj[i1]==ic1) pj[i1]=ic2; else if (pj[i1]==ic2) pj[i1]=ic1;
+            if (pj[i1]==ic1) { pj[i1]=ic2; } else if (pj[i1]==ic2) { pj[i1]=ic1;
+}
             ind2=jindex(dim,nc,pj);
             f2[ind2]=f[ind1];
-            if (pj[i1]==ic1) pj[i1]=ic2; else if (pj[i1]==ic2) pj[i1]=ic1;
+            if (pj[i1]==ic1) { pj[i1]=ic2; } else if (pj[i1]==ic2) { pj[i1]=ic1;
+}
             i=0;
             while (1)
                 {
                 if (pj[i]<nc[i]-1) { ++pj[i]; break; }
                 pj[i]=0;
-                ++i; if (i==dim) break;
+                ++i; if (i==dim) { break;
+}
                 }
-            if (i==dim) break;
+            if (i==dim) { break;
+}
             }
         i=cumnc[i1];
         p=cname[i+ic1]; cname[i+ic1]=cname[i+ic2]; cname[i+ic2]=p;
@@ -679,8 +747,10 @@ static int tabi()
         *s=EOS;
         if (ndec)
             {
-            for (i=0; i<digits; ++i) strcat(s,"1"); strcat(s,".");
-            for (i=0; i<ndec; ++i) strcat(s,"1");
+            for (i=0; i<digits; ++i) { strcat(s,"1"); 
+}strcat(s,".");
+            for (i=0; i<ndec; ++i) { strcat(s,"1");
+}
             }
         print_ftable(nimi,results_line,eout,dim,nc,cumnc,ctype,
              f2,ZERO,ZERO,varname,cname,ncvar,digits,0,0,s,type);
@@ -715,11 +785,13 @@ static int tabd()
         if (g>3)
             {
             results_line=edline2(word[3],1,1);
-            if (results_line==0) return(1);
+            if (results_line==0) { return(1);
+}
             }
         ptext=text;
         i=read_ftable(word[1],&f,&dim,&ncvar,nc,varname,cname,type,&ndec);
-        if (i<0) return(1);
+        if (i<0) { return(1);
+}
 
         if (strcmp(type,"X")==0)
             {
@@ -727,8 +799,10 @@ static int tabd()
             return(1);
             }
         k=strlen(word[2]);
-        for (i=0; i<dim; ++i)
-            if (strncmp(word[2],varname[i],k)==0) break;
+        for (i=0; i<dim; ++i) {
+            if (strncmp(word[2],varname[i],k)==0) { break;
+}
+}
         if (i==dim)
             {
             muste_sprintf(sbuf,"\nClassifier %s not found!",word[2]);
@@ -752,37 +826,51 @@ static int tabd()
         if (nc2==NULL)
             { not_enough_memory(); return(1); }
 
-        for (i=0; i<i1; ++i) nc2[i]=nc[i];
-        for (i=i1+1; i<dim; ++i) nc2[i-1]=nc[i];
+        for (i=0; i<i1; ++i) { nc2[i]=nc[i];
+}
+        for (i=i1+1; i<dim; ++i) { nc2[i-1]=nc[i];
+}
 
-        for (i=0; i<ncell; ++i) f2[i]=STRUCTURAL_ZERO;
-        for (i=0; i<dim; ++i) pj[i]=0;
+        for (i=0; i<ncell; ++i) { f2[i]=STRUCTURAL_ZERO;
+}
+        for (i=0; i<dim; ++i) { pj[i]=0;
+}
         while (1)
             {
             ind1=jindex(dim,nc,pj);
-            for (i=0; i<i1; ++i) qj[i]=pj[i];
-            for (i=i1+1; i<dim; ++i) qj[i-1]=pj[i];
+            for (i=0; i<i1; ++i) { qj[i]=pj[i];
+}
+            for (i=i1+1; i<dim; ++i) { qj[i-1]=pj[i];
+}
             ind2=jindex(dim-1,nc2,qj);
-            if (f2[ind2]==MISSING_VALUE || f[ind1]==MISSING_VALUE)
+            if (f2[ind2]==MISSING_VALUE || f[ind1]==MISSING_VALUE) {
                 f2[ind2]=MISSING_VALUE;
-            else if (f2[ind2]==STRUCTURAL_ZERO)
+            } else if (f2[ind2]==STRUCTURAL_ZERO)
                 {
-                if (f[ind1]!=STRUCTURAL_ZERO) f2[ind2]=f[ind1];
+                if (f[ind1]!=STRUCTURAL_ZERO) { f2[ind2]=f[ind1];
+}
                 }
-            else if (f[ind1]!=STRUCTURAL_ZERO) f2[ind2]+=f[ind1];
+            else if (f[ind1]!=STRUCTURAL_ZERO) { f2[ind2]+=f[ind1];
+}
             i=0;
             while (1)
                 {
                 if (pj[i]<nc[i]-1) { ++pj[i]; break; }
                 pj[i]=0;
-                ++i; if (i==dim) break;
+                ++i; if (i==dim) { break;
+}
                 }
-            if (i==dim) break;
+            if (i==dim) { break;
+}
             }
-        for (i=i1+1; i<dim; ++i) varname[i-1]=varname[i];
-        cumnc[0]=0; for (i=1; i<dim; ++i) cumnc[i]=cumnc[i-1]+nc[i-1];
-        for (i=cumnc[i1]; i<nclass; ++i) cname[i]=cname[i+nc[i1]];
-        cumnc[0]=0; for (i=1; i<dim-1; ++i) cumnc[i]=cumnc[i-1]+nc2[i-1];
+        for (i=i1+1; i<dim; ++i) { varname[i-1]=varname[i];
+}
+        cumnc[0]=0; for (i=1; i<dim; ++i) { cumnc[i]=cumnc[i-1]+nc[i-1];
+}
+        for (i=cumnc[i1]; i<nclass; ++i) { cname[i]=cname[i+nc[i1]];
+}
+        cumnc[0]=0; for (i=1; i<dim-1; ++i) { cumnc[i]=cumnc[i-1]+nc2[i-1];
+}
 
         strcpy(nimi,word[1]); strcat(nimi,"D");
         ctypes(ctype,dim-1,nc2,cname);
@@ -790,10 +878,13 @@ static int tabd()
         *s=EOS;
         if (ndec)
             {
-            for (i=0; i<digits; ++i) strcat(s,"1"); strcat(s,".");
-            for (i=0; i<ndec; ++i) strcat(s,"1");
+            for (i=0; i<digits; ++i) { strcat(s,"1"); 
+}strcat(s,".");
+            for (i=0; i<ndec; ++i) { strcat(s,"1");
+}
             }
-        if (i1<ncvar) --ncvar;
+        if (i1<ncvar) { --ncvar;
+}
         print_ftable(nimi,results_line,eout,dim-1,nc2,cumnc,ctype,
              f2,ZERO,ZERO,varname,cname,ncvar,digits,0,0,s,type);
         return(1);
@@ -811,24 +902,30 @@ static int tabdx(int ncvar)
         char s[LLENGTH];
 
         k=strlen(word[2]);
-        for (i=0; i<dim; ++i)
-            if (strncmp(word[2],varname[i],k)==0) break;
+        for (i=0; i<dim; ++i) {
+            if (strncmp(word[2],varname[i],k)==0) { break;
+}
+}
         if (i==dim)
             {
             muste_sprintf(sbuf,"\nClassifier %s not found!",word[2]);
             sur_print(sbuf); WAIT; return(1);
             }
         i1=i;
-        for (i=0; i<dim; ++i) if (strcmp(varname[i],"N")==0) break;
+        for (i=0; i<dim; ++i) { if (strcmp(varname[i],"N")==0) { break;
+}
+}
         if (i==dim)
             {
-            cumnc[0]=0; for (i=1; i<dim; ++i) cumnc[i]=cumnc[i-1]+nc[i-1];
+            cumnc[0]=0; for (i=1; i<dim; ++i) { cumnc[i]=cumnc[i-1]+nc[i-1];
+}
             varname[i1]="N";
             for (i=0; i<nc[i1]; ++i)
                 {
                 muste_sprintf(s,"%d",i+1);
                 cname[cumnc[i1]+i]=ptext;
-                k=store_label(s); if (k<0) return(1);
+                k=store_label(s); if (k<0) { return(1);
+}
                 }
             strcpy(nimi,word[1]); strcat(nimi,"D");
             ctypes(ctype,dim,nc,cname);
@@ -836,15 +933,18 @@ static int tabdx(int ncvar)
             *s=EOS;
             if (ndec)
                 {
-                for (i=0; i<digits; ++i) strcat(s,"1"); strcat(s,".");
-                for (i=0; i<ndec; ++i) strcat(s,"1");
+                for (i=0; i<digits; ++i) { strcat(s,"1"); 
+}strcat(s,".");
+                for (i=0; i<ndec; ++i) { strcat(s,"1");
+}
                 }
             print_ftable(nimi,results_line,eout,dim,nc,cumnc,ctype,
                  f,ZERO,ZERO,varname,cname,ncvar,digits,0,0,s,type);
             return(1);
             }
 
-        in=i; if (in==i1) return(1);
+        in=i; if (in==i1) { return(1);
+}
         if (in>i1) { i=in; in=i1; i1=i; }
 
         ncell=1; nclass=0; for (i=0; i<dim; ++i)
@@ -862,16 +962,21 @@ static int tabdx(int ncvar)
         if (nc2==NULL)
             { not_enough_memory(); return(-1); }
 
-        for (i=0; i<dim; ++i) nc2[i]=nc[i];
+        for (i=0; i<dim; ++i) { nc2[i]=nc[i];
+}
         nc2[in]=nc[in]*nc[i1];
-        for (i=i1; i<dim-1; ++i) nc2[i]=nc[i+1];
-        for (i=0; i<dim; ++i) pj[i]=0;
+        for (i=i1; i<dim-1; ++i) { nc2[i]=nc[i+1];
+}
+        for (i=0; i<dim; ++i) { pj[i]=0;
+}
         while (1)
             {
             ind1=jindex(dim,nc,pj);
-            for (i=0; i<dim; ++i) qj[i]=pj[i];
+            for (i=0; i<dim; ++i) { qj[i]=pj[i];
+}
             qj[in]=pj[in]*nc[i1]+pj[i1];
-            for (i=i1; i<dim-1; ++i) qj[i]=pj[i+1];
+            for (i=i1; i<dim-1; ++i) { qj[i]=pj[i+1];
+}
             ind2=jindex(dim-1,nc2,qj);
             f2[ind2]=f[ind1];
             i=0;
@@ -879,39 +984,51 @@ static int tabdx(int ncvar)
                 {
                 if (pj[i]<nc[i]-1) { ++pj[i]; break; }
                 pj[i]=0;
-                ++i; if (i==dim) break;
+                ++i; if (i==dim) { break;
+}
                 }
-            if (i==dim) break;
+            if (i==dim) { break;
+}
             }
         varname[in]="N";
-        for (i=i1+1; i<dim; ++i) varname[i-1]=varname[i];
-        cumnc[0]=0; for (i=1; i<dim; ++i) cumnc[i]=cumnc[i-1]+nc[i-1];
-        for (i=cumnc[i1]; i<nclass; ++i) cname[i]=cname[i+nc[i1]];
-        cumnc[0]=0; for (i=1; i<=in; ++i) cumnc[i]=cumnc[i-1]+nc[i-1];
+        for (i=i1+1; i<dim; ++i) { varname[i-1]=varname[i];
+}
+        cumnc[0]=0; for (i=1; i<dim; ++i) { cumnc[i]=cumnc[i-1]+nc[i-1];
+}
+        for (i=cumnc[i1]; i<nclass; ++i) { cname[i]=cname[i+nc[i1]];
+}
+        cumnc[0]=0; for (i=1; i<=in; ++i) { cumnc[i]=cumnc[i-1]+nc[i-1];
+}
         if (nclass-1+nc2[in]-nc[in]>MAXT)
             {
             sur_print("\nNot enough space for N labels!");
             WAIT; return(-1);
             }
-        for (i=nclass-1; i>=cumnc[in]+nc[in]; --i)
+        for (i=nclass-1; i>=cumnc[in]+nc[in]; --i) {
             cname[i+nc2[in]-nc[in]]=cname[i];
+}
         for (i=0; i<nc2[in]; ++i)
             {
             muste_sprintf(s,"%d",i+1);
             cname[cumnc[in]+i]=ptext;
-            k=store_label(s); if (k<0) return(-1);
+            k=store_label(s); if (k<0) { return(-1);
+}
             }
-        cumnc[0]=0; for (i=1; i<dim-1; ++i) cumnc[i]=cumnc[i-1]+nc2[i-1];
+        cumnc[0]=0; for (i=1; i<dim-1; ++i) { cumnc[i]=cumnc[i-1]+nc2[i-1];
+}
         strcpy(nimi,word[1]); strcat(nimi,"D");
         ctypes(ctype,dim-1,nc2,cname);
         digits=digts(f2,dim-1,nc2);
         *s=EOS;
         if (ndec)
             {
-            for (i=0; i<digits; ++i) strcat(s,"1"); strcat(s,".");
-            for (i=0; i<ndec; ++i) strcat(s,"1");
+            for (i=0; i<digits; ++i) { strcat(s,"1"); 
+}strcat(s,".");
+            for (i=0; i<ndec; ++i) { strcat(s,"1");
+}
             }
-        if (i1<ncvar) --ncvar;
+        if (i1<ncvar) { --ncvar;
+}
         print_ftable(nimi,results_line,eout,dim-1,nc2,cumnc,ctype,
              f2,ZERO,ZERO,varname,cname,ncvar,digits,0,0,s,type);
         return(1);
@@ -943,25 +1060,32 @@ static int tabj()
         if (g>6)
             {
             results_line=edline2(word[6],1,1);
-            if (results_line==0) return(1);
+            if (results_line==0) { return(1);
+}
             }
         ptext=text;
         i=read_ftable(word[1],&f,&dim,&ncvar,nc,varname,cname,type,&ndec);
-        if (i<0) return(1);
+        if (i<0) { return(1);
+}
 
         k=strlen(word[2]);
-        for (i=0; i<dim; ++i)
-            if (strncmp(word[2],varname[i],k)==0) break;
+        for (i=0; i<dim; ++i) {
+            if (strncmp(word[2],varname[i],k)==0) { break;
+}
+}
         if (i==dim)
             {
             muste_sprintf(sbuf,"\nClassifier %s not found!",word[2]);
             sur_print(sbuf); WAIT; return(1);
             }
         i1=i;
-        cumnc[0]=0; for (i=1; i<dim; ++i) cumnc[i]=cumnc[i-1]+nc[i-1];
+        cumnc[0]=0; for (i=1; i<dim; ++i) { cumnc[i]=cumnc[i-1]+nc[i-1];
+}
         k=strlen(word[3]);
-        for (i=0; i<nc[i1]; ++i)
-            if (strncmp(word[3],cname[cumnc[i1]+i],k)==0) break;
+        for (i=0; i<nc[i1]; ++i) {
+            if (strncmp(word[3],cname[cumnc[i1]+i],k)==0) { break;
+}
+}
         if (i==nc[i1])
             {
             muste_sprintf(sbuf,"\nClass %s not found!",word[3]);
@@ -969,8 +1093,10 @@ static int tabj()
             }
         ic1=i;
         k=strlen(word[4]);
-        for (i=0; i<nc[i1]; ++i)
-            if (strncmp(word[4],cname[cumnc[i1]+i],k)==0) break;
+        for (i=0; i<nc[i1]; ++i) {
+            if (strncmp(word[4],cname[cumnc[i1]+i],k)==0) { break;
+}
+}
         if (i==nc[i1])
             {
             muste_sprintf(sbuf,"\nClass %s not found!",word[4]);
@@ -991,46 +1117,59 @@ static int tabj()
         if (nc2==NULL)
             { not_enough_memory(); return(1); }
 
-        for (i=0; i<dim; ++i) nc2[i]=nc[i]; nc2[i1]=nc[i1]-1;
-        for (ui=0; ui<ncell; ++ui) f2[ui]=STRUCTURAL_ZERO;
-        for (i=0; i<dim; ++i) pj[i]=0;
+        for (i=0; i<dim; ++i) { nc2[i]=nc[i]; 
+}nc2[i1]=nc[i1]-1;
+        for (ui=0; ui<ncell; ++ui) { f2[ui]=STRUCTURAL_ZERO;
+}
+        for (i=0; i<dim; ++i) { pj[i]=0;
+}
         while (1)
             {
             int pji1;
 
             ind1=jindex(dim,nc,pj);
             pji1=pj[i1];
-            if (pji1==ic2) pj[i1]=ic1;
-            if (pj[i1]>ic2) --pj[i1];
+            if (pji1==ic2) { pj[i1]=ic1;
+}
+            if (pj[i1]>ic2) { --pj[i1];
+}
             ind2=jindex(dim,nc2,pj);
-            if (f2[ind2]==MISSING_VALUE || f[ind1]==MISSING_VALUE)
+            if (f2[ind2]==MISSING_VALUE || f[ind1]==MISSING_VALUE) {
                 f2[ind2]=MISSING_VALUE;
-            else if (f2[ind2]==STRUCTURAL_ZERO)
+            } else if (f2[ind2]==STRUCTURAL_ZERO)
                 {
-                if (f[ind1]!=STRUCTURAL_ZERO) f2[ind2]=f[ind1];
+                if (f[ind1]!=STRUCTURAL_ZERO) { f2[ind2]=f[ind1];
+}
                 }
-            else if (f[ind1]!=STRUCTURAL_ZERO) f2[ind2]+=f[ind1];
+            else if (f[ind1]!=STRUCTURAL_ZERO) { f2[ind2]+=f[ind1];
+}
             pj[i1]=pji1;
             i=0;
             while (1)
                 {
                 if (pj[i]<nc[i]-1) { ++pj[i]; break; }
                 pj[i]=0;
-                ++i; if (i==dim) break;
+                ++i; if (i==dim) { break;
+}
                 }
-            if (i==dim) break;
+            if (i==dim) { break;
+}
             }
         cname[cumnc[i1]+ic1]=word[5];
-        for (i=cumnc[i1]+ic2; i<nclass-1; ++i) cname[i]=cname[i+1];
-        cumnc[0]=0; for (i=1; i<dim; ++i) cumnc[i]=cumnc[i-1]+nc2[i-1];
+        for (i=cumnc[i1]+ic2; i<nclass-1; ++i) { cname[i]=cname[i+1];
+}
+        cumnc[0]=0; for (i=1; i<dim; ++i) { cumnc[i]=cumnc[i-1]+nc2[i-1];
+}
         strcpy(nimi,word[1]); strcat(nimi,"J");
         ctypes(ctype,dim,nc2,cname);
         digits=digts(f2,dim,nc2);
         *s=EOS;
         if (ndec)
             {
-            for (i=0; i<digits; ++i) strcat(s,"1"); strcat(s,".");
-            for (i=0; i<ndec; ++i) strcat(s,"1");
+            for (i=0; i<digits; ++i) { strcat(s,"1"); 
+}strcat(s,".");
+            for (i=0; i<ndec; ++i) { strcat(s,"1");
+}
             }
         print_ftable(nimi,results_line,eout,dim,nc2,cumnc,ctype,
              f2,ZERO,ZERO,varname,cname,ncvar,digits,0,0,s,type);
@@ -1069,25 +1208,30 @@ static int tabplus()
         if (g>3)
             {
             results_line=edline2(word[3],1,1);
-            if (results_line==0) return(-1);
+            if (results_line==0) { return(-1);
+}
             }
         ptext=text;
         i=read_ftable(word[1],&f,&dim,&ncvar,nc,varname,cname,type,&ndec);
-        if (i<0) return(1);
-        for (i=0; i<dim; ++i) cumnc[i]=nc[i];  /* vertailua varten */
+        if (i<0) { return(1);
+}
+        for (i=0; i<dim; ++i) { cumnc[i]=nc[i];  /* vertailua varten */
+}
         dim1=dim; ndec1=ndec;
         if (!muste_isnumber(word[2]))
             {
             ptext=text;
             i=read_ftable(word[2],&f2,&dim,&ncvar,nc,varname,cname,type,&ndec);
-            if (i<0) return(-1);
+            if (i<0) { return(-1);
+}
             }
         else
             {
             konst=atof(word[2]);
             ndec=0; p=strchr(word[2],'.');
-            if (p!=NULL)
+            if (p!=NULL) {
                 ndec=strlen(word[2])-1-(p-word[2]);
+}
             constind=1;
             }
         if (dim!=dim1) { tabpluserror(); return(-1); }
@@ -1095,44 +1239,61 @@ static int tabplus()
             {
             if (nc[i]!=cumnc[i]) { tabpluserror(); return(-1); }
             }
-        ncell=1; for (i=0; i<dim; ++i) ncell*=nc[i];
+        ncell=1; for (i=0; i<dim; ++i) { ncell*=nc[i];
+}
         switch (oper)
             {
           case '+':
-            if (constind)
-                for (ui=0; ui<ncell; ++ui) f[ui]+=konst;
-            else
-                for (ui=0; ui<ncell; ++ui) f[ui]+=f2[ui];
-            if (ndec1>ndec) ndec=ndec1;
+            if (constind) {
+                for (ui=0; ui<ncell; ++ui) { f[ui]+=konst;
+}
+            } else {
+                for (ui=0; ui<ncell; ++ui) { f[ui]+=f2[ui];
+}
+}
+            if (ndec1>ndec) { ndec=ndec1;
+}
             break;
           case '-':
-            if (constind)
-                for (ui=0; ui<ncell; ++ui) f[ui]-=konst;
-            else
-                for (ui=0; ui<ncell; ++ui) f[ui]-=f2[ui];
-            if (ndec1>ndec) ndec=ndec1;
+            if (constind) {
+                for (ui=0; ui<ncell; ++ui) { f[ui]-=konst;
+}
+            } else {
+                for (ui=0; ui<ncell; ++ui) { f[ui]-=f2[ui];
+}
+}
+            if (ndec1>ndec) { ndec=ndec1;
+}
             break;
           case '*':
-            if (constind)
-                for (ui=0; ui<ncell; ++ui) f[ui]*=konst;
-            else
-                for (ui=0; ui<ncell; ++ui) f[ui]*=f2[ui];
+            if (constind) {
+                for (ui=0; ui<ncell; ++ui) { f[ui]*=konst;
+}
+            } else {
+                for (ui=0; ui<ncell; ++ui) { f[ui]*=f2[ui];
+}
+}
             ndec+=ndec1;
             break;
           case '/':
             if (constind)
-                { if (konst!=0.0) for (ui=0; ui<ncell; ++ui) f[ui]/=konst; }
-            else
+                { if (konst!=0.0) { for (ui=0; ui<ncell; ++ui) { f[ui]/=konst; 
+}
+}}
+            else {
                 for (ui=0; ui<ncell; ++ui)
                     {
-                    if (f2[ui]!=ZERO) f[ui]/=f2[ui];
-                    else f2[ui]=MISSING_VALUE;
+                    if (f2[ui]!=ZERO) { f[ui]/=f2[ui];
+                    } else { f2[ui]=MISSING_VALUE;
+}
                     }
+}
             ndec+=ndec1;
             break;
             }
 
-        cumnc[0]=0; for (i=1; i<dim; ++i) cumnc[i]=cumnc[i-1]+nc[i-1];
+        cumnc[0]=0; for (i=1; i<dim; ++i) { cumnc[i]=cumnc[i-1]+nc[i-1];
+}
         strcpy(nimi,word[1]); *s=oper; s[1]=EOS; strcat(nimi,s);
         strcat(nimi,word[2]);
         ctypes(ctype,dim,nc,cname);
@@ -1140,8 +1301,10 @@ static int tabplus()
         *s=EOS;
         if (ndec)
             {
-            for (i=0; i<digits; ++i) strcat(s,"1"); strcat(s,".");
-            for (i=0; i<ndec; ++i) strcat(s,"1");
+            for (i=0; i<digits; ++i) { strcat(s,"1"); 
+}strcat(s,".");
+            for (i=0; i<ndec; ++i) { strcat(s,"1");
+}
             }
         print_ftable(nimi,results_line,eout,dim,nc,cumnc,ctype,
              f,ZERO,ZERO,varname,cname,ncvar,digits,0,0,s,type);
@@ -1163,7 +1326,8 @@ static int tabfit()
         int i;
         int ncvar;
 
-        i=spec_init(r1+r-1); if (i<0) return(-1);
+        i=spec_init(r1+r-1); if (i<0) { return(-1);
+}
         results_line=0;
         if (g<3)
             {
@@ -1173,14 +1337,17 @@ static int tabfit()
         if (g>3)
             {
             results_line=edline2(word[3],1,1);
-            if (results_line==0) return(-1);
+            if (results_line==0) { return(-1);
+}
             }
 
-        i=spfind("RESULTS"); if (i>=0) results=atoi(spb[i]);
+        i=spfind("RESULTS"); if (i>=0) { results=atoi(spb[i]);
+}
 
         ptext=text;
         i=read_ftable(word[1],&f,&dim,&ncvar,nc,varname,cname,type,&ndec);
-        if (i<0) return(-1);
+        if (i<0) { return(-1);
+}
 
         i=wfind("MODEL",word[2],1);
         if (i<0)
@@ -1189,10 +1356,14 @@ static int tabfit()
             sur_print(sbuf); WAIT; return(-1);
             }
         edread(model,i+1);
-        i=strlen(model); while (model[i-1]==' ') model[--i]=EOS;
-        i=read_model(); if (i<0) return(-1);
-        i=generate_x(); if (i<0) return(-1);
-        i=fit(ncvar); if (i<0) return(-1);
+        i=strlen(model); while (model[i-1]==' ') { model[--i]=EOS;
+}
+        i=read_model(); if (i<0) { return(-1);
+}
+        i=generate_x(); if (i<0) { return(-1);
+}
+        i=fit(ncvar); if (i<0) { return(-1);
+}
         return(1);
         }
 
@@ -1217,27 +1388,32 @@ static int fit(int ncvar)
         if (sb==NULL) { not_enough_memory(); return(-1); }
         my=(double *)muste_malloc(nx*sizeof(double));
         if (my==NULL) { not_enough_memory(); return(-1); }
-        for (i=0; i<nx; ++i) v[i]=x[i+nx];
+        for (i=0; i<nx; ++i) { v[i]=x[i+nx];
+}
         if (*type=='F')
             {
             for (i=0; i<nx; ++i)
                 {
                 da=x[i+nx];
-                if (da==0.0) x[i+nx]=log(0.5);
-                else         x[i+nx]=log(da);
+                if (da==0.0) { x[i+nx]=log(0.5);
+                } else {         x[i+nx]=log(da);
+}
                 }
             i=glm_fit(x+2*nx,nx,mx,x+nx,x,v,clab+2*8,b,sb,my,&deviance,&df);
             }
-        else
+        else {
             i=lin_fit(x+2*nx,nx,mx,x+nx,x,v,clab+2*8,b,sb,my,&deviance,&df);
-        k=output_open(eout); if (k<0) return(-1);
+}
+        k=output_open(eout); if (k<0) { return(-1);
+}
         if (i==-2)
             {
             muste_sprintf(s,"Model %s is saturated (XTAB.M saved!)",word[2]);
             print_line(s);
             return(-1);
             }
-        if (i<0) return(-1);
+        if (i<0) { return(-1);
+}
         if (*type=='F')
             {
             da=1-muste_cdf_chi2(deviance,(double)df,1e-7);
@@ -1278,11 +1454,14 @@ static int fit(int ncvar)
         if (results>70)
             {
             digits=digts(my,dim,nc);
-            *s=EOS; for (i=0; i<digits; ++i) strcat(s,"1");
+            *s=EOS; for (i=0; i<digits; ++i) { strcat(s,"1");
+}
             if (accuracy>4) { strcat(s,".");
-            for (i=0; i<accuracy-4; ++i) strcat(s,"1"); }
+            for (i=0; i<accuracy-4; ++i) { strcat(s,"1"); 
+}}
             strcpy(nimi,word[1]); strcat(nimi,"FIT");
-            cumnc[0]=0; for (i=1; i<dim; ++i) cumnc[i]=cumnc[i-1]+nc[i-1];
+            cumnc[0]=0; for (i=1; i<dim; ++i) { cumnc[i]=cumnc[i-1]+nc[i-1];
+}
             print_ftable(nimi,results_line,eout,dim,nc,cumnc,ctype,
                  my,ZERO,ZERO,varname,cname,ncvar,digits,0,0,s,type);
             }
@@ -1292,7 +1471,8 @@ static int fit(int ncvar)
 static int print_line(char *x)
         {
         output_line(x,eout,results_line);
-        if (results_line) ++results_line;
+        if (results_line) { ++results_line;
+}
         return(1);
         }
 
@@ -1337,23 +1517,31 @@ static int glm_fit(double *X,int nx,int mx,double *Y,double *W,double *V,
     idel_fit=NULL;
     lab_fit=NULL;
 
-        *pdf=-mx; for (i=0; i<nx; ++i) *pdf+=(int)W[i];
-        if (*pdf<=0) return(-2);
-        i=glm_fit_space(mx,nx); if (i<0) return(-1);
-        for (i=0; i<8*mx; ++i) lab_fit[i]=lab[i];
-        for (i=0; i<nx; ++i) V[i]=sqrt(V[i]);
-        for (i=0; i<nx; ++i) y_fit[i]=exp(Y[i]);
+        *pdf=-mx; for (i=0; i<nx; ++i) { *pdf+=(int)W[i];
+}
+        if (*pdf<=0) { return(-2);
+}
+        i=glm_fit_space(mx,nx); if (i<0) { return(-1);
+}
+        for (i=0; i<8*mx; ++i) { lab_fit[i]=lab[i];
+}
+        for (i=0; i<nx; ++i) { V[i]=sqrt(V[i]);
+}
+        for (i=0; i<nx; ++i) { y_fit[i]=exp(Y[i]);
+}
         while (1)
             {
             for (i=0; i<nx; ++i)
                 {
                 da=V[i]*W[i];
                 c_fit[i]=da*Y[i];
-                for (j=0; j<mx; ++j) x2_fit[i+nx*j]=da*X[i+nx*j];
+                for (j=0; j<mx; ++j) { x2_fit[i+nx*j]=da*X[i+nx*j];
+}
                 }
             i=mat_gram_schmidt(u_fit,r_fit,x2_fit,nx,mx,1e-10);
                                         /* x2_fit muuttuu! */
-            if (i>0) break;
+            if (i>0) { break;
+}
 
             muste_sprintf(sbuf,"\nCol. %.8s linearly dependent on previous ones!",
                                         lab_fit+8*(-i)); sur_print(sbuf);
@@ -1366,18 +1554,21 @@ static int glm_fit(double *X,int nx,int mx,double *Y,double *W,double *V,
         for (j=0; j<mx; ++j)
             {
             da=0.0;
-            for (i=0; i<nx; ++i) da+=u_fit[i+nx*j]*c_fit[i];
+            for (i=0; i<nx; ++i) { da+=u_fit[i+nx*j]*c_fit[i];
+}
             a_fit[j]=da;
             }
         for (i=0; i<mx; ++i)
             {
             da=0.0;
-            for (j=0; j<mx; ++j) da+=rinv_fit[i+mx*j]*a_fit[j];
+            for (j=0; j<mx; ++j) { da+=rinv_fit[i+mx*j]*a_fit[j];
+}
             b[i]=da;
             }
 /* Rprintf("\nb0:"); mprint(b,mx,1); getch();    */
 
-        if (*pdf<=0) return(1);
+        if (*pdf<=0) { return(1);
+}
 
         iteration=0;
         while (1)
@@ -1385,19 +1576,24 @@ static int glm_fit(double *X,int nx,int mx,double *Y,double *W,double *V,
             for (i=0; i<nx; ++i)
                 {
                 da=0.0;
-                for (j=0; j<mx; ++j) da+=X[i+nx*j]*b[j];
+                for (j=0; j<mx; ++j) { da+=X[i+nx*j]*b[j];
+}
                 lmy_fit[i]=da;
                 }
-            for (i=0; i<nx; ++i) my[i]=exp(lmy_fit[i]);
-            for (i=0; i<nx; ++i)
+            for (i=0; i<nx; ++i) { my[i]=exp(lmy_fit[i]);
+}
+            for (i=0; i<nx; ++i) {
                 z_fit[i]=lmy_fit[i]+(y_fit[i]-my[i])/my[i];
-            for (i=0; i<nx; ++i) V[i]=sqrt(my[i]);
+}
+            for (i=0; i<nx; ++i) { V[i]=sqrt(my[i]);
+}
 
             for (i=0; i<nx; ++i)
                 {
                 da=V[i]*W[i];
                 c_fit[i]=da*z_fit[i];
-                for (j=0; j<mx; ++j) x2_fit[i+nx*j]=da*X[i+nx*j];
+                for (j=0; j<mx; ++j) { x2_fit[i+nx*j]=da*X[i+nx*j];
+}
                 }
             i=mat_gram_schmidt(u_fit,r_fit,x2_fit,nx,mx,1e-10);
             if (i<0)
@@ -1409,19 +1605,22 @@ static int glm_fit(double *X,int nx,int mx,double *Y,double *W,double *V,
             for (j=0; j<mx; ++j)
                 {
                 da=0.0;
-                for (i=0; i<nx; ++i) da+=u_fit[i+nx*j]*c_fit[i];
+                for (i=0; i<nx; ++i) { da+=u_fit[i+nx*j]*c_fit[i];
+}
                 a_fit[j]=da;
                 }
             for (i=0; i<mx; ++i)
                 {
                 da=0.0;
-                for (j=0; j<mx; ++j) da+=rinv_fit[i+mx*j]*a_fit[j];
+                for (j=0; j<mx; ++j) { da+=rinv_fit[i+mx*j]*a_fit[j];
+}
                 b[i]=da;
                 }
 
             da=0.0;
-            for (i=0; i<nx; ++i)
+            for (i=0; i<nx; ++i) {
                 da+=W[i]*(y_fit[i]*(Y[i]-lmy_fit[i])-(y_fit[i]-my[i]));
+}
             *pdev=2*da;
 
             ++iteration;
@@ -1438,7 +1637,8 @@ static int glm_fit(double *X,int nx,int mx,double *Y,double *W,double *V,
                 {
                 if (sur_kbhit())
                     {
-                    i=sur_getch(); while (sur_kbhit()) sur_getch();
+                    i=sur_getch(); while (sur_kbhit()) { sur_getch();
+}
                     if (i=='.') { std_errors(rinv_fit,mx,sb,lab_fit,r_fit,1.0);
                     restore(b,sb,ndel,mx); return(1); }
                     }
@@ -1473,23 +1673,31 @@ printf("\nY:"); mprint(Y,nx,1); getch();
 printf("\nW:"); mprint(W,nx,1); getch();
 printf("\nV:"); mprint(V,nx,1); getch();
 */
-        *pdf=-mx; for (i=0; i<nx; ++i) *pdf+=(int)W[i];
-        if (*pdf<=0) return(-2);
-        i=glm_fit_space(mx,nx); if (i<0) return(-1);
-        for (i=0; i<8*mx; ++i) lab_fit[i]=lab[i];
-        for (i=0; i<nx; ++i) V[i]=1.0; /* sqrt(V[i]); */
-        for (i=0; i<nx; ++i) y_fit[i]=Y[i];
+        *pdf=-mx; for (i=0; i<nx; ++i) { *pdf+=(int)W[i];
+}
+        if (*pdf<=0) { return(-2);
+}
+        i=glm_fit_space(mx,nx); if (i<0) { return(-1);
+}
+        for (i=0; i<8*mx; ++i) { lab_fit[i]=lab[i];
+}
+        for (i=0; i<nx; ++i) { V[i]=1.0; /* sqrt(V[i]); */
+}
+        for (i=0; i<nx; ++i) { y_fit[i]=Y[i];
+}
         while (1)
             {
             for (i=0; i<nx; ++i)
                 {
                 da=V[i]*W[i];
                 c_fit[i]=da*Y[i];
-                for (j=0; j<mx; ++j) x2_fit[i+nx*j]=da*X[i+nx*j];
+                for (j=0; j<mx; ++j) { x2_fit[i+nx*j]=da*X[i+nx*j];
+}
                 }
             i=mat_gram_schmidt(u_fit,r_fit,x2_fit,nx,mx,1e-10);
                                         /* x2_fit muuttuu! */
-            if (i>0) break;
+            if (i>0) { break;
+}
 
             muste_sprintf(sbuf,"\nCol. %.8s linearly dependent on previous ones!",
                                         lab_fit+8*(-i+1)); sur_print(sbuf);
@@ -1502,13 +1710,15 @@ printf("\nV:"); mprint(V,nx,1); getch();
         for (j=0; j<mx; ++j)
             {
             da=0.0;
-            for (i=0; i<nx; ++i) da+=u_fit[i+nx*j]*c_fit[i];
+            for (i=0; i<nx; ++i) { da+=u_fit[i+nx*j]*c_fit[i];
+}
             a_fit[j]=da;
             }
         for (i=0; i<mx; ++i)
             {
             da=0.0;
-            for (j=0; j<mx; ++j) da+=rinv_fit[i+mx*j]*a_fit[j];
+            for (j=0; j<mx; ++j) { da+=rinv_fit[i+mx*j]*a_fit[j];
+}
             b[i]=da;
             }
 /* Rprintf("\nb0:"); mprint(b,mx,1); getch();      */
@@ -1516,13 +1726,16 @@ printf("\nV:"); mprint(V,nx,1); getch();
         for (i=0; i<nx; ++i)
             {
             da=0.0;
-            for (j=0; j<mx; ++j) da+=X[i+nx*j]*b[j];
+            for (j=0; j<mx; ++j) { da+=X[i+nx*j]*b[j];
+}
             lmy_fit[i]=da;
             }
-        for (i=0; i<nx; ++i) my[i]=lmy_fit[i];
+        for (i=0; i<nx; ++i) { my[i]=lmy_fit[i];
+}
         da=0.0;
-        for (i=0; i<nx; ++i)
+        for (i=0; i<nx; ++i) {
             da+=W[i]*(y_fit[i]-my[i])*(y_fit[i]-my[i]);
+}
         *pdev=da;
         std_errors(rinv_fit,mx,sb,lab_fit,r_fit,*pdev/(double)*pdf);
         return(1);
@@ -1532,28 +1745,40 @@ static int glm_fit_space(int mx,int nx)
         {
         int i;
 
-        i=mspace(&x2_fit,nx,mx); if (i<0) return(-1);
-        i=mspace(&c_fit,nx,1); if (i<0) return(-1);
-        i=mspace(&u_fit,nx,mx); if (i<0) return(-1);
-        i=mspace(&r_fit,mx,mx); if (i<0) return(-1);
-        i=mspace(&rinv_fit,mx,mx); if (i<0) return(-1);
-        i=mspace(&a_fit,mx,1); if (i<0) return(-1);
-        i=mspace(&lmy_fit,nx,1); if (i<0) return(-1);
-        i=mspace(&z_fit,nx,1); if (i<0) return(-1);
-        i=mspace(&y_fit,nx,1); if (i<0) return(-1);
-        if (idel_fit!=NULL) idel_fit=(int *)muste_realloc(idel_fit,mx*sizeof(int));
-        else          idel_fit=(int *)muste_malloc(mx*sizeof(int));
+        i=mspace(&x2_fit,nx,mx); if (i<0) { return(-1);
+}
+        i=mspace(&c_fit,nx,1); if (i<0) { return(-1);
+}
+        i=mspace(&u_fit,nx,mx); if (i<0) { return(-1);
+}
+        i=mspace(&r_fit,mx,mx); if (i<0) { return(-1);
+}
+        i=mspace(&rinv_fit,mx,mx); if (i<0) { return(-1);
+}
+        i=mspace(&a_fit,mx,1); if (i<0) { return(-1);
+}
+        i=mspace(&lmy_fit,nx,1); if (i<0) { return(-1);
+}
+        i=mspace(&z_fit,nx,1); if (i<0) { return(-1);
+}
+        i=mspace(&y_fit,nx,1); if (i<0) { return(-1);
+}
+        if (idel_fit!=NULL) { idel_fit=(int *)muste_realloc(idel_fit,mx*sizeof(int));
+        } else {          idel_fit=(int *)muste_malloc(mx*sizeof(int));
+}
         if (idel_fit==NULL) { not_enough_memory(); return(-1); }
-        if (lab_fit!=NULL) lab_fit=(char *)muste_realloc(lab_fit,8*mx);
-        else          lab_fit=(char *)muste_malloc(8*mx);
+        if (lab_fit!=NULL) { lab_fit=(char *)muste_realloc(lab_fit,8*mx);
+        } else {          lab_fit=(char *)muste_malloc(8*mx);
+}
         if (lab_fit==NULL) { not_enough_memory(); return(-1); }
         return(1);
         }
 
 static int mspace(double **A,int m,int n)
         {
-        if (*A!=NULL) *A=(double *)muste_realloc(*A,m*n*sizeof(double));
-        else          *A=(double *)muste_malloc(m*n*sizeof(double));
+        if (*A!=NULL) { *A=(double *)muste_realloc(*A,m*n*sizeof(double));
+        } else {          *A=(double *)muste_malloc(m*n*sizeof(double));
+}
         if (*A==NULL) { not_enough_memory(); return(-1); }
         return(1);
         }
@@ -1569,14 +1794,16 @@ static int std_errors(double *R,int mx,double *sb,char *lab,double *RRT,double s
             for (j=0; j<=i; ++j)
                 {
                 da=0.0;
-                for (k=0; k<mx; ++k) da+=R[i+mx*k]*R[j+mx*k];
+                for (k=0; k<mx; ++k) { da+=R[i+mx*k]*R[j+mx*k];
+}
                 da*=ss; RRT[i+mx*j]=da; RRT[j+mx*i]=da;
                 }
             sb[i]=sqrt(RRT[i*(mx+1)]);
             }
         muste_sprintf(s,"Covariances_of_parameters_in_model_%s/%s",word[1],word[2]);
-        if (results>=0)
+        if (results>=0) {
             matrix_save("PCOV.M",RRT,mx,mx,lab,lab,8,8,-1,s,0,0);
+}
         return(1);
         }
 
@@ -1584,8 +1811,10 @@ static int reduce(double *X,char *lab,int nx,int mx,int i1)
         {
         int i;
 
-        for (i=nx*i1; i<nx*(mx-1); ++i) X[i]=X[i+nx];
-        for (i=8*i1; i<8*(mx-1); ++i) lab[i]=lab[i+8];
+        for (i=nx*i1; i<nx*(mx-1); ++i) { X[i]=X[i+nx];
+}
+        for (i=8*i1; i<8*(mx-1); ++i) { lab[i]=lab[i+8];
+}
         return(1);
         }
 
@@ -1593,7 +1822,8 @@ static int restore(double *b,double *sb,int ndel,int mx)
         {
         int i,j,i1;
 
-        if (ndel==0) return(1);
+        if (ndel==0) { return(1);
+}
         for (j=ndel-1; j>=0; --j)
             {
             i1=idel_fit[j];
@@ -1621,12 +1851,15 @@ static int read_model()
 
         strcpy(model2,model+1);
         p=strchr(model2,'=');
-        if (p==NULL) p=model2; else ++p;
+        if (p==NULL) { p=model2; } else { ++p;
+}
 
-        dim2=1; for (i=0; i<dim; ++i) dim2*=2;
+        dim2=1; for (i=0; i<dim; ++i) { dim2*=2;
+}
         term=(unsigned char *)muste_malloc(dim2);
         if (term==NULL) { not_enough_memory(); return(-1); }
-        for (ui=0; ui<dim2; ++ui) term[ui]=0;
+        for (ui=0; ui<dim2; ++ui) { term[ui]=0;
+}
         term[0]=1;  /* GM included */
 
         usign='+';
@@ -1643,18 +1876,22 @@ static int read_model()
                 }
 
             if (strcmp(p,"1")==0)
-                { if (sign=='-') term[0]=0; else term[0]=1; p=q+1; continue; }
+                { if (sign=='-') { term[0]=0; } else { term[0]=1; 
+}p=q+1; continue; }
             h=strchr(p,'*');
             if (h!=NULL)
                 {
-                while ((h=strchr(p,'*'))!=NULL) *h=' ';
+                while ((h=strchr(p,'*'))!=NULL) { *h=' ';
+}
                 n=split(p,pterm,MAXDIM);
                 for (i=0; i<n; ++i)
                     {
                     ik[i]=var(pterm[i]);
-                    if (ik[i]<0) return(-1);
+                    if (ik[i]<0) { return(-1);
+}
                     }
-                for (i=0; i<dim; ++i) iterm[i]=0;
+                for (i=0; i<dim; ++i) { iterm[i]=0;
+}
                 iterm[ik[0]]=1;
                 while (1)
                     {
@@ -1665,9 +1902,11 @@ static int read_model()
                         if (iterm[ik[i]]==0) { ++iterm[ik[i]]; break; }
                         iterm[ik[i]]=0;
                         ++i;
-                        if (i==n) break;
+                        if (i==n) { break;
+}
                         }
-                    if (i==n) break;
+                    if (i==n) { break;
+}
                     }
                 p=q+1;
                 continue;
@@ -1675,13 +1914,16 @@ static int read_model()
             h=strchr(p,'/');
             if (h!=NULL)
                 {
-                while ((h=strchr(p,'/'))!=NULL) *h=' ';
+                while ((h=strchr(p,'/'))!=NULL) { *h=' ';
+}
                 n=split(p,pterm,MAXDIM);
-                for (i=0; i<dim; ++i) iterm[i]=0;
+                for (i=0; i<dim; ++i) { iterm[i]=0;
+}
                 for (i=0; i<n; ++i)
                     {
                     k=var(pterm[i]);
-                    if (k<0) return(-1);
+                    if (k<0) { return(-1);
+}
                     iterm[k]=1;
                     update_model(iterm,sign);
                     }
@@ -1691,20 +1933,25 @@ static int read_model()
             h=strchr(p,'.');
             if (h!=NULL)
                 {
-                while ((h=strchr(p,'.'))!=NULL) *h=' ';
+                while ((h=strchr(p,'.'))!=NULL) { *h=' ';
+}
                 n=split(p,pterm,MAXDIM);
-                for (i=0; i<dim; ++i) iterm[i]=0;
+                for (i=0; i<dim; ++i) { iterm[i]=0;
+}
                 for (i=0; i<n; ++i)
                     {
                     k=var(pterm[i]);
-                    if (k<0) return(-1);
+                    if (k<0) { return(-1);
+}
                     iterm[k]=1;
                     }
                 update_model(iterm,sign);
                 p=q+1; continue;
                 }
-            k=var(p); if (k<0) return(-1);
-            for (i=0; i<dim; ++i) iterm[i]=0; iterm[k]=1;
+            k=var(p); if (k<0) { return(-1);
+}
+            for (i=0; i<dim; ++i) { iterm[i]=0; 
+}iterm[k]=1;
             update_model(iterm,sign);
             p=q+1;
             }
@@ -1720,9 +1967,12 @@ static int var(char *x)
         int i,len;
 
         len=strlen(x);
-        for (i=0; i<dim; ++i)
-            if (strncmp(x,varname[i],len)==0) break;
-        if (i<dim) return(i);
+        for (i=0; i<dim; ++i) {
+            if (strncmp(x,varname[i],len)==0) { break;
+}
+}
+        if (i<dim) { return(i);
+}
         muste_sprintf(sbuf,"\nUnknown variable %s in model!",x); sur_print(sbuf);
         WAIT;
         return(-1);
@@ -1734,9 +1984,11 @@ static int update_model(int *iterm,char sign)
         int i;
 
         ui=iterm[dim-1];
-        for (i=dim-2; i>=0; --i)
+        for (i=dim-2; i>=0; --i) {
             ui=2*ui+iterm[i];
-        if (sign=='+') term[ui]=1; else term[ui]=0;
+}
+        if (sign=='+') { term[ui]=1; } else { term[ui]=0;
+}
         return(1);
         }
 
@@ -1754,13 +2006,16 @@ static int generate_x()
         int ik[MAXDIM];
 
         mx=0;
-        for (i=0; i<dim; ++i) iterm[i]=0;
+        for (i=0; i<dim; ++i) { iterm[i]=0;
+}
         while (1)
             {
             if (in_model(iterm))
                 {
                 k=1;
-                for (i=0; i<dim; ++i) if (iterm[i]==1) k*=nc[i]-1;
+                for (i=0; i<dim; ++i) { if (iterm[i]==1) { k*=nc[i]-1;
+}
+}
                 mx+=k;
                 }
             i=0;
@@ -1769,11 +2024,14 @@ static int generate_x()
                 if (iterm[i]==0) { iterm[i]=1; break; }
                 iterm[i]=0;
                 ++i;
-                if (i==dim) break;
+                if (i==dim) { break;
+}
                 }
-            if (i==dim) break;
+            if (i==dim) { break;
+}
             }
-        nx=1; for (i=0; i<dim; ++i) nx*=nc[i];
+        nx=1; for (i=0; i<dim; ++i) { nx*=nc[i];
+}
 
 /* Rprintf("\nmx=%d nx=%d",mx,nx); getch();      */
         dx=(double)(mx+2)*nx;
@@ -1784,24 +2042,30 @@ static int generate_x()
         clab=(char *)muste_malloc(8*(mx+2)+1);
         if (clab==NULL) { not_enough_memory(); return(-1); }
 
-        for (i=0; i<(mx+2)*nx; ++i) x[i]=0.0;
+        for (i=0; i<(mx+2)*nx; ++i) { x[i]=0.0;
+}
         lin=0;
-        for (i=0; i<dim; ++i) level[i]=0;
+        for (i=0; i<dim; ++i) { level[i]=0;
+}
         while (1)
             {
             col=0;
-            for (i=0; i<dim; ++i) iterm[i]=0;
+            for (i=0; i<dim; ++i) { iterm[i]=0;
+}
             while (1)
                 {
                 if (in_model(iterm))
                     {
                     n=0; k=1;
-                    for (i=0; i<dim; ++i)
-                        if (iterm[i]==1) { ik[n++]=i; if (!level[i]) k=0; }
+                    for (i=0; i<dim; ++i) {
+                        if (iterm[i]==1) { ik[n++]=i; if (!level[i]) { k=0; 
+}}
+}
                     if (n==0) { x[lin+nx*(col+2)]=1.0; ++col; }
                     else
                         {
-                        k0=1; for (i=0; i<n; ++i) k0*=nc[ik[i]]-1;
+                        k0=1; for (i=0; i<n; ++i) { k0*=nc[ik[i]]-1;
+}
                         if (k)
                             {
                             k=level[ik[0]]-1;
@@ -1820,9 +2084,11 @@ static int generate_x()
                     if (iterm[i]==0) { iterm[i]=1; break; }
                     iterm[i]=0;
                     --i;
-                    if (i<0) break;
+                    if (i<0) { break;
+}
                     }
-                if (i<0) break;
+                if (i<0) { break;
+}
                 }
             i=dim-1;
             while (1)
@@ -1830,9 +2096,11 @@ static int generate_x()
                 if (level[i]<nc[i]-1) { ++level[i]; break; }
                 level[i]=0;
                 --i;
-                if (i<0) break;
+                if (i<0) { break;
+}
                 }
-            if (i<0) break;
+            if (i<0) { break;
+}
             ++lin;
             }
         for (i=0; i<nx; ++i)
@@ -1844,8 +2112,9 @@ static int generate_x()
         col_labels();
         row_labels();
         muste_sprintf(expr,"Data_matrix_%s/%s",word[1],word[2]);
-        if (results>=0)
+        if (results>=0) {
             matrix_save("XTAB.M",x,nx,mx+2,rlab,clab,8,8,-1,expr,0,0);
+}
 
         return(1);
         }
@@ -1856,8 +2125,9 @@ static int in_model(int *iterm)
         int i;
 
         ui=iterm[dim-1];
-        for (i=dim-2; i>=0; --i)
+        for (i=dim-2; i>=0; --i) {
             ui=2*ui+iterm[i];
+}
         return((int)term[ui]);
         }
 
@@ -1873,23 +2143,29 @@ static int col_labels()
         muste_sprintf(clab,"Weight  %8.8s",word[1]);
 /*      strcpy(clab,"Weight  Freq    ");       */
 //        col=0;
-        for (i=0; i<dim; ++i) iterm[i]=0;
+        for (i=0; i<dim; ++i) { iterm[i]=0;
+}
         while (1)
             {
             if (in_model(iterm))
                 {
                 n=0;
-                for (i=0; i<dim; ++i) if (iterm[i]) ik[n++]=i;
-                if (n==0)  strcat(clab,"1       ");
-                else
+                for (i=0; i<dim; ++i) { if (iterm[i]) { ik[n++]=i;
+}
+}
+                if (n==0) {  strcat(clab,"1       ");
+                } else
                     {
-                    for (i=0; i<n; ++i) lev[i]=1;
+                    for (i=0; i<n; ++i) { lev[i]=1;
+}
                     while (1)
                         {
                         h=0;
-                        for (k=n-1; k>=0; --k)
+                        for (k=n-1; k>=0; --k) {
                             h+=muste_sprintf(y+h,"%c%d",*varname[ik[k]],lev[k]+1);
-                        for (i=strlen(y); i<8; ++i) y[i]=' '; y[8]=EOS;
+}
+                        for (i=strlen(y); i<8; ++i) { y[i]=' '; 
+}y[8]=EOS;
                         strcat(clab,y);
                         i=n-1;
                         while (1)
@@ -1897,9 +2173,11 @@ static int col_labels()
                             if (lev[i]<nc[ik[i]]-1) { ++lev[i]; break; }
                             lev[i]=1;
                             --i;
-                            if (i<0) break;
+                            if (i<0) { break;
+}
                             }
-                        if (i<0) break;
+                        if (i<0) { break;
+}
                         }
                     }
                 }
@@ -1909,9 +2187,11 @@ static int col_labels()
                 if (iterm[i]==0) { iterm[i]=1; break; }
                 iterm[i]=0;
                 --i;
-                if (i<0) break;
+                if (i<0) { break;
+}
                 }
-            if (i<0) break;
+            if (i<0) { break;
+}
             }
         return(1);
         }
@@ -1923,13 +2203,16 @@ static int row_labels()
         char y[LLENGTH];
 
         *rlab=EOS;
-        for (i=0; i<dim; ++i) level[i]=0;
+        for (i=0; i<dim; ++i) { level[i]=0;
+}
         while (1)
             {
             h=0;
-            for (i=dim-1; i>=0; --i)
+            for (i=dim-1; i>=0; --i) {
                 h+=muste_sprintf(y+h,"%c%d",*varname[i],level[i]+1);
-            for (i=strlen(y); i<8; ++i) y[i]=' '; y[8]=EOS;
+}
+            for (i=strlen(y); i<8; ++i) { y[i]=' '; 
+}y[8]=EOS;
             strcat(rlab,y);
             i=dim-1;
             while (1)
@@ -1937,9 +2220,11 @@ static int row_labels()
                 if (level[i]<nc[i]-1) { ++level[i]; break; }
                 level[i]=0;
                 --i;
-                if (i<0) break;
+                if (i<0) { break;
+}
                 }
-            if (i<0) break;
+            if (i<0) { break;
+}
             }
         return(1);
         }
@@ -1993,10 +2278,12 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,
         double *pdf;
 
         pdf=(double *)f;  /* elements not frequncies, *form!=EOS */
-        if (strlen(form)>minwidth) minwidth=strlen(form);
+        if (strlen(form)>minwidth) { minwidth=strlen(form);
+}
         sum=NULL;
         nlines=1;
-        for (i=colvar; i<dim; ++i) nlines*=nc[i];
+        for (i=colvar; i<dim; ++i) { nlines*=nc[i];
+}
 
         starwidth=1;
         for (i=0; i<dim; ++i)
@@ -2005,33 +2292,41 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,
             for (k=0; k<nc[i]; ++k)
                 {
                 len=strlen(cname[cumnc[i]+k]);
-                if (len>h) h=len;
+                if (len>h) { h=len;
+}
                 }
             varwidth[i]=h;
             if (i<colvar)
                 {
                 len=strlen(varname[i]);
-                if (len>starwidth) starwidth=len;
+                if (len>starwidth) { starwidth=len;
+}
                 }
             else
                 {
                 len=strlen(varname[i]);
-                if (len>varwidth[i]) varwidth[i]=len;
+                if (len>varwidth[i]) { varwidth[i]=len;
+}
                 }
             }
 
-        freqcol=0; for (i=colvar; i<dim; ++i) freqcol+=varwidth[i]+1;
+        freqcol=0; for (i=colvar; i<dim; ++i) { freqcol+=varwidth[i]+1;
+}
         freqcol+=starwidth+1;
 
         output_open(eout);
         colwidth=minwidth;
 /*      if (colvar && varwidth[colvar-1]>colwidth) colwidth=varwidth[colvar-1];
 */
-        for (i=0; i<colvar; ++i)
-            if (colwidth<varwidth[i]) colwidth=varwidth[i];
+        for (i=0; i<colvar; ++i) {
+            if (colwidth<varwidth[i]) { colwidth=varwidth[i];
+}
+}
 
-        if (ipros && colwidth<5) colwidth=5;
-        if (isum && colwidth<3) colwidth=3;
+        if (ipros && colwidth<5) { colwidth=5;
+}
+        if (isum && colwidth<3) { colwidth=3;
+}
 
         strcpy(x,"TABLE "); strcat(x,name);
         if (line)
@@ -2043,11 +2338,14 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,
             value[4]=','; value[5]=EOS; strcat(value,type);
             if (isum)
                 {
-                if (isum==1 || isum==3) strcat(value,"C");
-                else strcat(value,"R");
-                if (isum==3) strcat(value,"R");
+                if (isum==1 || isum==3) { strcat(value,"C");
+                } else { strcat(value,"R");
+}
+                if (isum==3) { strcat(value,"R");
+}
                 }
-            if (ipros) strcat(value,"%");
+            if (ipros) { strcat(value,"%");
+}
 
             strcat(x,value);
             k=line+nlines+colvar+1;
@@ -2062,18 +2360,21 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,
                 muste_sprintf(value,"%d",(int)missing); strcat(x,value);
                 }
             }
-        output_line(x,eout,line); if (line) ++line;
+        output_line(x,eout,line); if (line) { ++line;
+}
 
         for (i=0; i<colvar; ++i)
             {
             cum=cumnc[i];
             tline_init(x);
             tline_write(varname[i],x,freqcol-starwidth-1);
-            h=1; for (k=i+1; k<colvar; ++k) h*=nc[k];
+            h=1; for (k=i+1; k<colvar; ++k) { h*=nc[k];
+}
             coldiff=(colwidth+1)*h;
             col=freqcol+colwidth;
-            m=1; for (k=0; k<i; ++k) m*=nc[k];
-            for (h=0; h<m; ++h)
+            m=1; for (k=0; k<i; ++k) { m*=nc[k];
+}
+            for (h=0; h<m; ++h) {
                 for (k=0; k<nc[i]; ++k)
                     {
                     len=strlen(cname[cum+k]);
@@ -2081,9 +2382,12 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,
                     tline_write(cname[cum+k],x,col-len);
                     col+=coldiff;
                     }
-            if (i==colvar-1 && (isum==2 || isum==3) )
+}
+            if (i==colvar-1 && (isum==2 || isum==3) ) {
                 tline_write("sum",x,col-3);
-            output_line(x,eout,line); if (line) ++line;
+}
+            output_line(x,eout,line); if (line) { ++line;
+}
             }
 
         tline_init(x);
@@ -2093,14 +2397,18 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,
             tline_write(varname[i],x,col);
             col+=varwidth[i]+1;
             }
-        for (i=0; i<starwidth; ++i) x[col+i]='*';
-        output_line(x,eout,line); if (line) ++line;
+        for (i=0; i<starwidth; ++i) { x[col+i]='*';
+}
+        output_line(x,eout,line); if (line) { ++line;
+}
 
         for (i=0; i<dim; ++i) { class[i]=0; change[i]=1; }
         z=0; lin=0;
-        m=1; for (i=0; i<colvar; ++i) m*=nc[i];
+        m=1; for (i=0; i<colvar; ++i) { m*=nc[i];
+}
 
-        ftotal=0; for (k=0; k<m*nlines; ++k) ftotal+=f[k];  /* varmistus */
+        ftotal=0; for (k=0; k<m*nlines; ++k) { ftotal+=f[k];  /* varmistus */
+}
         if (ipros)
             {
             if (ipros==1)
@@ -2108,14 +2416,16 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,
                 sum=(FREQ *)muste_malloc(m*sizeof(FREQ));
                 if (sum==NULL) { not_enough_memory(); return(-1); }
                 for (k=0; k<m; ++k)
-                  { sum[k]=0; for (i=0; i<nlines; ++i) sum[k]+=f[k*nlines+i]; }
+                  { sum[k]=0; for (i=0; i<nlines; ++i) { sum[k]+=f[k*nlines+i]; 
+}}
                 }
             if (ipros==2)
                 {
                 sum=(FREQ *)muste_malloc(nlines*sizeof(FREQ));
                 if (sum==NULL) { not_enough_memory(); return(-1); }
                 for (i=0; i<nlines; ++i)
-                   { sum[i]=0; for (k=0; k<m; ++k) sum[i]+=f[k*nlines+i]; }
+                   { sum[i]=0; for (k=0; k<m; ++k) { sum[i]+=f[k*nlines+i]; 
+}}
                 }
             }
 
@@ -2129,7 +2439,8 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,
                 if (change[i])
                     {
                     k=cumnc[i]+class[i];
-                    h=0; if(muste_isnumber(cname[k])) h=varwidth[i]-strlen(cname[k]);
+                    h=0; if(muste_isnumber(cname[k])) { h=varwidth[i]-strlen(cname[k]);
+}
                     tline_write(cname[k],x,col+h);
                     }
                 col+=varwidth[i]+1;
@@ -2143,22 +2454,26 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,
                     {
                     switch (ipros)
                         {
-                      case 1: if (sum[i]==0) pros=0.0;
-                              else pros=(double)f[z]/sum[i];
+                      case 1: if (sum[i]==0) { pros=0.0;
+                              } else { pros=(double)f[z]/sum[i];
+}
                               break;
-                      case 2: if (sum[lin]==0) pros=0.0;
-                              else pros=(double)f[z]/sum[lin];
+                      case 2: if (sum[lin]==0) { pros=0.0;
+                              } else { pros=(double)f[z]/sum[lin];
+}
                               break;
-                      case 3: if (ftotal==0) pros=0.0;
-                              else pros=(double)f[z]/ftotal;
+                      case 3: if (ftotal==0) { pros=0.0;
+                              } else { pros=(double)f[z]/ftotal;
+}
                         }
                     fconv(100.0*pros,"###.#",value);
                     }
                 else
                     {
-                    if (f[z]==MISSING_VALUE) strcpy(value,"-");
-                    else if (f[z]==STRUCTURAL_ZERO) strcpy(value,"*0");
-                    else fconv(pdf[z],form,value);
+                    if (f[z]==MISSING_VALUE) { strcpy(value,"-");
+                    } else if (f[z]==STRUCTURAL_ZERO) { strcpy(value,"*0");
+                    } else { fconv(pdf[z],form,value);
+}
                     }
                 tline_write(value,x,col-strlen(value));
                 z+=nlines;
@@ -2171,26 +2486,31 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,
                     switch (ipros)
                         {
                       case 1:
-                      case 3: if (ftotal==0) pros=0.0;
-                              else pros=(double)fsum/ftotal;
+                      case 3: if (ftotal==0) { pros=0.0;
+                              } else { pros=(double)fsum/ftotal;
+}
                               break;
                       case 2: pros=1.0;
                         }
                     fconv(100.0*pros,"###.#",value);
                     }
-                else
+                else {
                     muste_sprintf(value,"%f",fsum);
+}
 
                 tline_write(value,x,col-strlen(value));
                 }
-            output_line(x,eout,line); if (line) ++line;
+            output_line(x,eout,line); if (line) { ++line;
+}
 
-            for (i=0; i<dim; ++i) change[i]=0;
+            for (i=0; i<dim; ++i) { change[i]=0;
+}
             for (i=dim-1; i>=0; --i)
                 {
                 ++class[i];
                 change[i]=1;
-                if (class[i]!=nc[i]) break;
+                if (class[i]!=nc[i]) { break;
+}
                 class[i]=0;
                 }
             ++lin;
@@ -2204,21 +2524,24 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,
             for (i=0; i<m; ++i)
                 {
                 fsum=0;
-                for (k=0; k<nlines; ++k) fsum+=f[i*nlines+k];
+                for (k=0; k<nlines; ++k) { fsum+=f[i*nlines+k];
+}
                 if (ipros)
                     {
                     switch (ipros)
                         {
                       case 1: pros=1.0; break;
                       case 2:
-                      case 3: if (ftotal==0) pros=0.0;
-                              else pros=(double)fsum/ftotal;
+                      case 3: if (ftotal==0) { pros=0.0;
+                              } else { pros=(double)fsum/ftotal;
+}
                         }
                     fconv(100.0*pros,"###.#",value);
                     }
-                else
+                else {
                  /* itoa(fsum,value,10);  */
                     muste_sprintf(value,"%g",fsum);
+}
 
                 tline_write(value,x,col-strlen(value));
                 z+=nlines;
@@ -2226,26 +2549,33 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,
                 }
             if (isum==3)
                 {
-                if (ipros) strcpy(value,"100.0");
-                else       muste_sprintf(value,"%f",ftotal);
+                if (ipros) { strcpy(value,"100.0");
+                } else {       muste_sprintf(value,"%f",ftotal);
+}
                 tline_write(value,x,col-strlen(value));
                 }
-            output_line(x,eout,line); if (line) ++line;
+            output_line(x,eout,line); if (line) { ++line;
+}
             }
 
-        if (ipros==1 || ipros==2) muste_free(sum);
+        if (ipros==1 || ipros==2) { muste_free(sum);
+}
 
         tline_init(x);
-        output_line(x,eout,line); if (line) ++line;
+        output_line(x,eout,line); if (line) { ++line;
+}
         output_close(eout);
-        if (sum!=NULL) muste_free(sum);
-        if (line) return(line);
+        if (sum!=NULL) { muste_free(sum);
+}
+        if (line) { return(line);
+}
         return(1);
         }
 
 static char *spois(char *s)
         {
-        while (*s==' ') ++s;
+        while (*s==' ') { ++s;
+}
         return(s);
         }
 
@@ -2258,9 +2588,11 @@ static int tline_write(char *s,char *x,int col)
         {
         char *p;
 
-        if (col>strlen(x)) return(1);
+        if (col>strlen(x)) { return(1);
+}
         p=x+col;
-        while (*p && *s) *p++=*s++;
+        while (*p && *s) { *p++=*s++;
+}
         return(1);
         }
 

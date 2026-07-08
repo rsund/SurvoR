@@ -206,10 +206,11 @@ static double med_error(double survival,double pdf,double eff_size)
 
 static int failed(int censored,int ed_failed)				// Tulorajaestimaattorin sarakkeiden laskemiseen
 {					// k‰ytett‰v‰t apufunktiot
-	if (censored!=1) 
+	if (censored!=1) { 
 		return ed_failed;
-	else
+	} else {
 		return ed_failed+1;
+}
 }
 
 static double Psurvival(double ed_survival,int left,int ed_left,int sensuroituja)
@@ -245,16 +246,19 @@ static void qsort_mtaulukko(int left, int right, tnode *node){		// J‰rjest‰‰ tau
 															// ensisijaisesti annetun
 	int i, last;											// luokittelumuuttujan arvojen mukaan
 															
-	if (left>=right)
+	if (left>=right) {
 		return;
+}
 	swap_mtaulukko(left, (left+right)/2, node);
 	last=left;
-	for (i=left+1; i<=right; i++)
+	for (i=left+1; i<=right; i++) {
       if  ((c_class[i]< c_class[left]) 
           || ((c_class[i]==c_class[left]) && (c_duration[i]<c_duration[left]))
 		  ||  (c_class[i]==c_class[left] && c_duration[i]==c_duration[left] && 
-			   sensuroitu[i]==1))
+			   sensuroitu[i]==1)) {
 		  swap_mtaulukko(++last, i, node);
+}
+}
 	swap_mtaulukko(left, last, node);
 	qsort_mtaulukko(left, last-1, node);
 	qsort_mtaulukko(last+1, right, node);
@@ -265,15 +269,18 @@ static void qsort_aika(int left, int right, tnode *node){		// J‰rjest‰‰ taulukon
 														// ensisijaisesti ajan mukaan
 	int i, last;										
 	
-	if (left>=right)
+	if (left>=right) {
 		return;
+}
 	swap_mtaulukko(left, (left+right)/2, node);
 	last=left;
-	for (i=left+1; i<=right; i++)
+	for (i=left+1; i<=right; i++) {
       if  ((c_duration[i]<c_duration[left])
 		  || (c_duration[i]==c_duration[left] && 
-			   sensuroitu[i]==1))
+			   sensuroitu[i]==1)) {
 		  swap_mtaulukko(++last, i, node);
+}
+}
 	swap_mtaulukko(left, last, node);
 	qsort_aika(left, last-1, node);
 	qsort_aika(last+1, right, node);
@@ -316,7 +323,8 @@ return 0;
 static int print_line(char *line)						// Tulostuksessa k‰ytett‰v‰ apufunktio
 {	
 	output_line(line,eout,results_line);	
-	if (results_line) ++results_line;
+	if (results_line) { ++results_line;
+}
 	return 0;
 }
 
@@ -329,30 +337,39 @@ static double paras_arvo(double x,double y)						// Laskee parhaat parametrit ku
         char u,v;
 
         if (x>y) { z=x; x=y; y=z; }
-        if (x<=0.0 && y>=0.0) return(0.0);
-        if (x==y) return(x);
+        if (x<=0.0 && y>=0.0) { return(0.0);
+}
+        if (x==y) { return(x);
+}
         if (x<0) { merkki=-1; z=x; x=-y; y=-z; }
 		
         muste_sprintf(a,"%21.10f",x); a[21]='\0';
         muste_sprintf(b,"%21.10f",y); b[21]='\0';
-        i=0; while (a[i]==' ') a[i++]='0';
-        i=0; while (b[i]==' ') b[i++]='0';
+        i=0; while (a[i]==' ') { a[i++]='0';
+}
+        i=0; while (b[i]==' ') { b[i++]='0';
+}
 
-        i=0; k=0; while (a[i]==b[i] && i<22) { ++i; if (a[i]!='0') ++k; }
+        i=0; k=0; while (a[i]==b[i] && i<22) { ++i; if (a[i]!='0') { ++k; 
+}}
         h=0;
-        for (j=i+1; j<21; ++j) { if (b[j]!='.') b[j]='0';
-                                 if (a[j]!='.' && a[j]!='0') ++h;
+        for (j=i+1; j<21; ++j) { if (b[j]!='.') { b[j]='0';
+}
+                                 if (a[j]!='.' && a[j]!='0') { ++h;
+}
                                }
         u=a[i]; v=b[i];
-        if (h>0) ++u;
-        if (u==v) ;
-        else if (u=='0' && k==0) b[i]='1';
-        else if (u=='0') b[i]='0';
-        else if (u<'6' && v>'4') b[i]='5';
-        else if (u<'3' && v<='3') b[i]='2';
-        else if (u<'5' && v<'5') b[i]='4';
-        else if (u=='6' && v=='7') b[i]='6';
-        else b[i]='8';
+        if (h>0) { ++u;
+}
+        if (u==v) { ;
+        } else if (u=='0' && k==0) { b[i]='1';
+        } else if (u=='0') { b[i]='0';
+        } else if (u<'6' && v>'4') { b[i]='5';
+        } else if (u<'3' && v<='3') { b[i]='2';
+        } else if (u<'5' && v<'5') { b[i]='4';
+        } else if (u=='6' && v=='7') { b[i]='6';
+        } else { b[i]='8';
+}
 
         return(merkki*atof(b)); 
 }
@@ -364,14 +381,17 @@ static int Laske_aikavaleja(){					// Tarvitaan elinajantaulun tilanvarauksiin
 	long l;
 
 	j=varfind(&d,word[2]);
-	if (j==-1)
+	if (j==-1) {
 		return(-1);
+}
 			
 	for(l=d.l1; l<=d.l2; ++l){
-		if (unsuitable(&d,l)) continue;
+		if (unsuitable(&d,l)) { continue;
+}
 		data_load(&d,l,j,&aika);
-		if (aika>MaxMax)
+		if (aika>MaxMax) {
 			MaxMax=aika;
+}
 	}
 
 	if (puumalli!=1 && lifetable==1){
@@ -590,12 +610,14 @@ static int Lue_Data(){							// Lukee aineistosta aikamuuttujan, sensurointimuut
 	eikay=0;
 
     j=varfind(&d,word[2]);			// etsit‰‰n aikamuuttujan indeksi
-	if (j==-1)		
+	if (j==-1) {		
 		return(-1);
+}
 	
 	k=varfind(&d,word[3]);			// etsit‰‰n sensurointimuuttujan indeksi
-	if (k==-1)		
+	if (k==-1) {		
 		return(-1);
+}
 
 	if (puumalli==1){
 		i=mask(&d); 
@@ -627,11 +649,13 @@ static int Lue_Data(){							// Lukee aineistosta aikamuuttujan, sensurointimuut
 	else{ 		
 		if (puumalli==0){
 			h=varfind(&d,CLASS);			// etsit‰‰n mahdollisen luokittelumuuttujan indeksi
-			if (h==-1)
+			if (h==-1) {
 				return(-1);
+}
 		}
-		else
+		else {
 			h=-1;
+}
 	}
 	
 	for(l=d.l1; l<=d.l2; ++l){
@@ -648,13 +672,15 @@ static int Lue_Data(){							// Lukee aineistosta aikamuuttujan, sensurointimuut
 			return(-1);
 		}
 		data_load(&d,l,k,&m_taulukko[1][l-eikay]);			
-		if (puumalli==1)
-			for (m=0; m<predictors; m++)
+		if (puumalli==1) {
+			for (m=0; m<predictors; m++) {
 				data_load(&d,l,d.v[predind[m]],&m_taulukko[m+2][l-eikay]);
-		else if (h==-1)
+}
+		} else if (h==-1) {
 				m_taulukko[2][l-eikay]=0.0;
-			else
+			} else {
 				data_load(&d,l,h,&m_taulukko[2][l-eikay]);						
+}
 	}
 																															
 suitable=d.n-eikay;
@@ -713,8 +739,9 @@ static int Pilko(){							// Pilkkoo datan luokittelumuuttujan arvojen mukaan			
 			strata++;
 			n=koko;
 			}
-			else
+			else {
 				koko++;
+}
 	}
 return 0;
 }
@@ -744,17 +771,19 @@ static int Laske(){									//laskee elinajantaulun sarakkeet
 				censor++;
 			}
 		}
-		else if (c_duration[i]==0.0) 
+		else if (c_duration[i]==0.0) { 
 				c_failed[0]++;
-			else
+			} else {
 				c_failed[(int)(c_duration[i]/interval)]++;
+}
 	}	
   
 	for (i=0; i<f; i++){
-		if (i==0)
+		if (i==0) {
 		  c_lower[i]=0;
-		else
+		} else {
 		  c_lower[i]=c_lower[i-1]+interval;
+}
 	}
 
 	for (i=0; i<f; i++){
@@ -770,10 +799,11 @@ static int Laske(){									//laskee elinajantaulun sarakkeet
 	}
 
 	for (i=0; i<f; i++){
-		if (i==0)
+		if (i==0) {
 			c_n_enter[i]=koko-n;
-		else
+		} else {
 			c_n_enter[i]=n_enter(c_failed[i-1],c_censored[i-1],c_n_enter[i-1]);
+}
 	}
   
 	for (i=0; i<f; i++){   
@@ -793,10 +823,11 @@ static int Laske(){									//laskee elinajantaulun sarakkeet
 	}
 
 	for (i=0; i<f; i++){
-		if (i==0) 
+		if (i==0) { 
 			c_survival[i]=1.0;
-		else
+		} else {
 			c_survival[i]=survival(c_cps[i-1],c_survival[i-1]);
+}
 	}
 
 	for (i=0; i<f; i++){
@@ -804,29 +835,33 @@ static int Laske(){									//laskee elinajantaulun sarakkeet
 	}
 
 	for (i=0; i<f; i++){
-		if (i==0)
+		if (i==0) {
 			c_surv_error[i]=0.0;
-		else
+		} else {
 			c_surv_error[i]=surv_error(c_survival[i],c_cpf[i-1],c_eff_size[i-1]);
+}
 	}
 
 	for (i=0; i<f; i++){
 		c_surv_lcl[i]=surv_lcl(c_survival[i],c_surv_error[i]);
-		if (c_surv_lcl[i]<0.0)
+		if (c_surv_lcl[i]<0.0) {
 			c_surv_lcl[i]=0.0;
+}
 	}
 
 	for (i=0; i<f; i++){
 		c_surv_ucl[i]=surv_ucl(c_survival[i],c_surv_error[i]);
-		if (c_surv_ucl[i]>1.0)
+		if (c_surv_ucl[i]>1.0) {
 			c_surv_ucl[i]=1.0;
+}
 	}
 
 	for (i=0; i<f; i++){
-		if (i==f-1)
+		if (i==f-1) {
 			c_pdf[i]=-1.0; 
-		else
+		} else {
 			c_pdf[i]=pdf(c_survival[i],c_cpf[i]);
+}
 	}
 
 	for (i=0; i<f; i++){
@@ -842,10 +877,11 @@ static int Laske(){									//laskee elinajantaulun sarakkeet
 	}
 
 	for (i=0; i<f; i++){
-		if (i==f-1)
+		if (i==f-1) {
 			c_hazard[i]=-1.0; 
-		else
+		} else {
 			c_hazard[i]=hazard(c_cpf[i]);
+}
 	}
 
 	for (i=0; i<f; i++){
@@ -857,25 +893,26 @@ static int Laske(){									//laskee elinajantaulun sarakkeet
 	}	
 
 	for (i=0; i<f; i++){
-		if (i==f-1)
+		if (i==f-1) {
 			c_median[i]=-1.0;
-		else{
+		} else{
 			for (j=0; j<f; j++){
 				if ((c_survival[i]/2)>=c_survival[j]){
 					c_median[i]=median(c_lower[i],c_lower[j-1],c_survival[i],
 								c_survival[j-1],c_survival[j]);
 				break;
 				}
-				else
+				else {
 					c_median[i]=-1.0;
+}
 			}
 		}
 	}
 				
 	for (i=0; i<f; i++){
-		if (c_median[i]<=0.0)
+		if (c_median[i]<=0.0) {
 			c_med_error[i]=-1.0;
-		else{
+		} else{
 			for (j=0; j<f; j++){
 				if ((c_survival[i]/2)>=c_survival[j]){
 					c_med_error[i]=med_error(c_survival[i],c_pdf[j-1],
@@ -896,15 +933,17 @@ static int Tulosta(){									// Tulostaa kuvaruudulle elinajantaulun
 
 	output_open(eout);
 	i=Luo_uusi();
-	if (i<0) return -1;
+	if (i<0) { return -1;
+}
 	Talletus();
 	muste_sprintf(line,"Class=%.0f  N=%d  Events=%d  Censored=%d  MaxDur=%.1f",c_class[b],koko-n,koko-n-censor,censor,MaxAika);
 	print_line(line);
 	muste_sprintf(line, "\n");
 	print_line(line);
 	i=spfind("LIMIT");
-	if (i>=0)
+	if (i>=0) {
 		liikaa=atoi(spb[i]);
+}
 	if(aikavaleja<=liikaa){
 		muste_sprintf(line,"Lower Upper Fail Cens Enter  Size   CPF  Survival   PDF   Hazard Median ");
 		print_line(line);
@@ -998,8 +1037,10 @@ static int Luo_uusi(){								// Luo uuden Survo-tiedoston elinajantaululle
         vartila=muste_malloc(Pm*9);
         if (vartila==NULL) { not_enough_memory(); return(-1); }
 		
-        for (i=0; i<Pm; ++i) pvartype[i]=vartype+i*9;
-		for (i=0; i<Pm; ++i) varname[i]=vartila+i*9;
+        for (i=0; i<Pm; ++i) { pvartype[i]=vartype+i*9;
+}
+		for (i=0; i<Pm; ++i) { varname[i]=vartila+i*9;
+}
 		varname[0]="Lower";    varlen[0]=8;  pvartype[0]="8A";
 		varname[1]="Upper";    varlen[1]=8;  pvartype[1]="8A";
 		varname[2]="Events";   varlen[2]=8;  pvartype[2]="8A";
@@ -1021,7 +1062,8 @@ static int Luo_uusi(){								// Luo uuden Survo-tiedoston elinajantaululle
 		varname[18]="Median";  varlen[18]=8; pvartype[18]="8A";
 		varname[19]="Medse";   varlen[19]=8; pvartype[19]="8A";
 		Plen=0;
-        for (i=0; i<Pm; ++i) Plen+=varlen[i];
+        for (i=0; i<Pm; ++i) { Plen+=varlen[i];
+}
         Plen=Plen+10;
         Pm1=Pm+4;
         Pf=64;
@@ -1034,7 +1076,8 @@ static int Luo_uusi(){								// Luo uuden Survo-tiedoston elinajantaululle
 		muste_sprintf(nimi,"LTc%.0f",c_class[b]);
 		i=fi_create(nimi,Plen,Pm1,Pm,f,Pf,Pextra,Ptextn,Ptextlen,
                     Ptext,varname,varlen,pvartype);
-        if (i<0) return(-1);
+        if (i<0) { return(-1);
+}
         muste_free(vartype); muste_free(pvartype); muste_free(varlen); muste_free(varname); muste_free(vartila);
 return(1);
 }
@@ -1091,15 +1134,17 @@ static int Plaske(){								// Laskee tulorajaestimaattorin sarakkeet
 	c_censored[n]=0;
 
 	for (i=n+1; i<=koko; i++){
-		if (c_censored[i]!=1.0)
+		if (c_censored[i]!=1.0) {
 			censor++;
+}
 	}
 
 	for (i=n; i<=koko; i++){
-		if (i==n)
+		if (i==n) {
 			Pc_failed[i]=0;
-		else
+		} else {
 			Pc_failed[i]=failed(c_censored[i],Pc_failed[i-1]);		
+}
 	}
 
 	for (i=n; i<=koko; i++){
@@ -1115,9 +1160,9 @@ static int Plaske(){								// Laskee tulorajaestimaattorin sarakkeet
 			Pc_survival[i]=Pc_survival[i-1];
 			laskuri++;
 		}
-		else if (i!=koko && c_aika[i+1]==c_aika[i] && c_censored[i+1]==1)
+		else if (i!=koko && c_aika[i+1]==c_aika[i] && c_censored[i+1]==1) {
 				Pc_survival[i]=Pc_survival[i-1];
-			else{
+			} else{
 				Pc_survival[i]=Psurvival(Pc_survival[i-1],Pc_left[i],mem_left,laskuri);
 				mem_left=Pc_left[i];
 				laskuri=0;
@@ -1137,9 +1182,9 @@ static int Plaske(){								// Laskee tulorajaestimaattorin sarakkeet
 			Pc_st_error[i]=Pc_st_error[i-1];
 			counter++;
 		}
-		else if (c_aika[i+1]==c_aika[i] && c_censored[i+1]==1)
+		else if (c_aika[i+1]==c_aika[i] && c_censored[i+1]==1) {
 				Pc_st_error[i]=Pc_st_error[i-1];
-			else{
+			} else{
 				Pc_st_error[i]=st_error(Pc_survival[i],Pc_failed[i]-mem_failed,mem_left2-counter);
 				mem_left2=Pc_left[i];
 				mem_failed=Pc_failed[i];		
@@ -1149,14 +1194,16 @@ static int Plaske(){								// Laskee tulorajaestimaattorin sarakkeet
 
 	for (i=n; i<=koko; i++){
 		Pc_lower_cl[i]=lower_cl(Pc_survival[i],Pc_st_error[i]);
-		if (Pc_lower_cl[i]<0.0)
+		if (Pc_lower_cl[i]<0.0) {
 			Pc_lower_cl[i]=0.0;
+}
 	}
 
 	for (i=n; i<=koko; i++){
 		Pc_upper_cl[i]=upper_cl(Pc_survival[i],Pc_st_error[i]);
-		if (Pc_upper_cl[i]>1.0)
+		if (Pc_upper_cl[i]>1.0) {
 			Pc_upper_cl[i]=1.0;
+}
 	}
 
 	for (i=n+1; i<=koko; i++){
@@ -1174,7 +1221,8 @@ static int Ptulosta(){								// Tulostaa kuvaruudulle tulorajaestimaattorin
 	output_open(eout);
 	
 	i=Pluo_uusi();
-	if (i<0) return -1;
+	if (i<0) { return -1;
+}
 	Ptalletus();
 	muste_sprintf(line,"Class=%.0f  N=%d  Events=%d  Censored=%d  MaxDur=%.1f  Mean=%.2f",c_class[b],koko-n,koko-n-censor,censor,c_duration[koko],keski);
 	print_line(line);
@@ -1221,8 +1269,10 @@ static int Pluo_uusi(){						// Luo uuden Survo-tiedoston tulorajaestimaattorill
         vartila=muste_malloc(Pm*9);
         if (vartila==NULL) { not_enough_memory(); return(-1); }
 		
-        for (i=0; i<Pm; ++i) pvartype[i]=vartype+i*9;
-		for (i=0; i<Pm; ++i) varname[i]=vartila+i*9;
+        for (i=0; i<Pm; ++i) { pvartype[i]=vartype+i*9;
+}
+		for (i=0; i<Pm; ++i) { varname[i]=vartila+i*9;
+}
 		varname[0]="Dur";  varlen[0]=8; pvartype[0]="8A";
 		varname[1]="Cens"; varlen[1]=1; pvartype[1]="1A";
 		varname[2]="Surv"; varlen[2]=8; pvartype[2]="8A";
@@ -1233,7 +1283,8 @@ static int Pluo_uusi(){						// Luo uuden Survo-tiedoston tulorajaestimaattorill
 		varname[7]="Even"; varlen[7]=8; pvartype[7]="8A";
 		varname[8]="Left"; varlen[8]=8; pvartype[8]="8A";
   		Plen=0;
-        for (i=0; i<Pm; ++i) Plen+=varlen[i];
+        for (i=0; i<Pm; ++i) { Plen+=varlen[i];
+}
         Plen=Plen+10;
         Pm1=Pm+4;
         Pf=64;
@@ -1246,7 +1297,8 @@ static int Pluo_uusi(){						// Luo uuden Survo-tiedoston tulorajaestimaattorill
 		muste_sprintf(nimi,"PLc%.0f",c_class[b]);
 		i=fi_create(nimi,Plen,Pm1,Pm,koko-n+1,Pf,Pextra,Ptextn,Ptextlen,
                     Ptext,varname,varlen,pvartype);
-        if (i<0) return(-1);
+        if (i<0) { return(-1);
+}
         muste_free(vartype); muste_free(pvartype); muste_free(varlen); muste_free(varname); muste_free(vartila);
 
 return(1);
@@ -1301,22 +1353,25 @@ static int Muodosta(){							// Muodostaa testisuureiden laskemiseen tarvittavat
 	for (i=1; i<=suitable; i++){
 		if (sensuroitu[i]!=1){
 			for (j=0; j<strata; j++){
-				if (c_class[i]==x[j])
+				if (c_class[i]==x[j]) {
 					m_censored[p][j]++;
+}
 			}
 		}
 		else{
 			if (i==1){
 				for (j=0; j<strata; j++){
-					if (c_class[i]==x[j])
+					if (c_class[i]==x[j]) {
 						m_events[p][j]++;
+}
 				}
 				continue;
 			}
 			if (c_duration[i]==c_duration[i-1]){
 				for (j=0; j<strata; j++){
-					if (c_class[i]==x[j])
+					if (c_class[i]==x[j]) {
 						m_events[p][j]++;
+}
 				}
 			}
 			if (c_duration[i]>c_duration[i-1]){
@@ -1325,8 +1380,9 @@ static int Muodosta(){							// Muodostaa testisuureiden laskemiseen tarvittavat
 					m_size[p][j]=m_size[p-1][j]-m_events[p-1][j]-m_censored[p-1][j];
 				}
 				for (j=0; j<strata; j++){
-					if (c_class[i]==x[j])
+					if (c_class[i]==x[j]) {
 						m_events[p][j]++;
+}
 				}
 			}
 		}
@@ -1378,12 +1434,15 @@ static long double Testi(int tunnus){					// Laskee eloonj‰‰mifunktioiden eroja
 	}
 
 	for (i=0; i<=p; i++){
-		if (tunnus==1)
+		if (tunnus==1) {
 			paino[i]=1;
-		if (tunnus==2)
+}
+		if (tunnus==2) {
 			paino[i]=riskiryh[i];
-		if (tunnus==3)
+}
+		if (tunnus==3) {
 			paino[i]=sqrt(riskiryh[i]);
+}
 	}
 
 	for (j=0; j<strata; j++){
@@ -1396,11 +1455,13 @@ static long double Testi(int tunnus){					// Laskee eloonj‰‰mifunktioiden eroja
 
 	for (j=0; j<strata; j++){
 		for (l=0; l<strata; l++){
-			if (l==j)
+			if (l==j) {
 				kerroin=1.0;
+}
 			for (i=0; i<=p; i++){
-				if (riskiryh[i]<=1)
+				if (riskiryh[i]<=1) {
 					continue;
+}
 				sum=sum+paino[i]*paino[i]*tapahtumat[i]*sensuurit[i]
 					*(riskiryh[i]*m_size[i][l]*kerroin-m_size[i][j]*m_size[i][l])
 					/(riskiryh[i]*riskiryh[i]*(riskiryh[i]-1));
@@ -1414,8 +1475,9 @@ static long double Testi(int tunnus){					// Laskee eloonj‰‰mifunktioiden eroja
 	for (j=0; j<strata; j++){
 		for (l=0; l<strata; l++){
 			mV2[j+strata*l]=mV[j][l];
-			if (mV[j][l]>suurin)
+			if (mV[j][l]>suurin) {
 				suurin=mV[j][l];
+}
 		}
 	}
 	
@@ -1430,10 +1492,11 @@ static long double Testi(int tunnus){					// Laskee eloonj‰‰mifunktioiden eroja
 	}
 
 	for (i=0; i<strata; i++){
-		if (mD[i]<0.00000001)
+		if (mD[i]<0.00000001) {
 			mD[i]=0;
-		else
+		} else {
 			mD[i]=1/mD[i];
+}
 	}		
 
 	mat_transp((double *)mU2,(double *)mU,strata,strata);
@@ -1511,16 +1574,18 @@ static int add(tnode *node){				// Funktio, joka etsii solmun parhaan katkaisupi
   int i,j;
   tnode *newn;
 
-	if (node->datasize - node->censsize<=1)		
+	if (node->datasize - node->censsize<=1) {		
 	  return 0;				// Jos solmussa on vain yksi tapahtuma,	ei sit‰ voida en‰‰ jakaa
+}
   
 	if (node->datasize>=MinObs*2){
 		for (j=1; j<=node->datasize; ++j){
 			c_duration[j]=m_taulukko[0][node->data[j]];	// Alustaa uuden solmun havainnoille
-			if (m_taulukko[1][node->data[j]]!=1.0)		// laskuissa k‰ytett‰v‰t sarakkeet	
+			if (m_taulukko[1][node->data[j]]!=1.0) {		// laskuissa k‰ytett‰v‰t sarakkeet	
 				sensuroitu[j]=0;
-			else
+			} else {
 				sensuroitu[j]=1;
+}
 			c_indeksi[j]=node->data[j];
 		}
 
@@ -1536,8 +1601,9 @@ static int add(tnode *node){				// Funktio, joka etsii solmun parhaan katkaisupi
 			}												// jotta voidaan etsi‰ seuraava katkaisupiste
 		}
 	}
-	if (node->Score==-100000.0)				
+	if (node->Score==-100000.0) {				
 		return 0;
+}
 	
 	node->Prune=node->Score;
 					
@@ -1553,8 +1619,9 @@ static int add(tnode *node){				// Funktio, joka etsii solmun parhaan katkaisupi
 	node->lchild = newn;
 	newn->data=(long int *)muste_malloc((node->paraskoko+1)*sizeof(long int));
 	if((newn->data)==NULL){not_enough_memory();WAIT;}
-	for (i = 1; i <= node->paraskoko; i++)
+	for (i = 1; i <= node->paraskoko; i++) {
 	  newn->data[i]=c_indeksi[i];
+}
 	newn->datasize = node->paraskoko;
 	newn->censsize = node->parascens;
 	newn->paraskoko=0;
@@ -1577,8 +1644,9 @@ static int add(tnode *node){				// Funktio, joka etsii solmun parhaan katkaisupi
 	node->rchild = newn;
 	newn->data=(long int *)muste_malloc((node->datasize - node->paraskoko+1)*sizeof(long int));
 	if((newn->data)==NULL){not_enough_memory();WAIT;}
-	for (i = node->paraskoko + 1; i <= node->datasize; i++)
+	for (i = node->paraskoko + 1; i <= node->datasize; i++) {
 		newn->data[i-node->paraskoko]=c_indeksi[i];
+}
 	newn->datasize = node->datasize - node->paraskoko;
     newn->censsize = node->censsize - node->parascens;
 	newn->paraskoko=0;
@@ -1619,11 +1687,13 @@ static int pruning(tnode *node){
 	solmuja=0;
 	treesum=0.0;
   		
-	if (node->Code==-1)
+	if (node->Code==-1) {
 		return 0;
+}
 	for (i=1; i<treshold; i++){
-		if (node->Code==Codes[i])
+		if (node->Code==Codes[i]) {
 			return 0;
+}
 	}
  
 	node->Prune=node->Score;
@@ -1658,8 +1728,9 @@ static int Pilko2(int muut,tnode *node){	// Pilkkoo solmun havainnot annetun muu
 	koko=0,strata=2,cens=0;			// tallettaa suurinta testisuuretta vastaavat tiedot
 
 	for (b=1; b<node->datasize; b++){
-		if (sensuroitu[b]!=1)
+		if (sensuroitu[b]!=1) {
 			cens++;
+}
 		if (c_class[b+1]>splitpoint){		
 			koko++;
 			splitpoint=c_class[b+1];
@@ -1702,33 +1773,37 @@ static int Muodosta2(tnode *node){				// Muodostaa testisuureen laskemiseen
 
 	for (i=1; i<=node->datasize; i++){
 		if (sensuroitu[i]!=1){
-			if (c_class[i]<splitpoint)
+			if (c_class[i]<splitpoint) {
 				m_censored[p][0]++;
-			else
+			} else {
 				m_censored[p][1]++;
+}
 		}
 		else{
 			if (i==1){
-				if (c_class[i]<splitpoint)
+				if (c_class[i]<splitpoint) {
 					m_events[p][0]++;
-				else 
+				} else { 
 					m_events[p][1]++;
+}
 				continue;
 			}
 			if (c_duration[i]==c_duration[i-1]){
-				if (c_class[i]<splitpoint)
+				if (c_class[i]<splitpoint) {
 					m_events[p][0]++;
-				else 
+				} else { 
 					m_events[p][1]++;
+}
 			}
 			if (c_duration[i]>c_duration[i-1]){
 				p++;
 				m_size[p][0]=m_size[p-1][0]-m_events[p-1][0]-m_censored[p-1][0];
 				m_size[p][1]=m_size[p-1][1]-m_events[p-1][1]-m_censored[p-1][1];
-				if (c_class[i]<splitpoint)
+				if (c_class[i]<splitpoint) {
 					m_events[p][0]++;
-				else 
+				} else { 
 					m_events[p][1]++;
+}
 			}
 		}
 	}
@@ -1750,8 +1825,9 @@ static int intra(){							// Tulostaa solmujen Split Statistic -arvot kuvaruudul
 	print_line(line);
 	
 	help=0;
-	if (treshold>16)
+	if (treshold>16) {
 		help=treshold-16;
+}
 
 
 	for (i=treshold-2; i>=help; --i){		
@@ -1788,10 +1864,12 @@ static void prune(tnode *node){					// Karsii puun halutun kokoiseksi. K‰yt‰nnˆs
 	
 	terminaali=0;
 
-	if (node->Code==-1) terminaali=1;
+	if (node->Code==-1) { terminaali=1;
+}
 	for (i=1; i<=sub; i++){
-		if (node->Code==Codes[i])
+		if (node->Code==Codes[i]) {
 			terminaali=1;
+}
 	}
 
 	if (terminaali<1){
@@ -1817,10 +1895,11 @@ static void prune(tnode *node){					// Karsii puun halutun kokoiseksi. K‰yt‰nnˆs
 		terminal++;
 		for (j=1; j<=node->datasize; ++j){
 			c_duration[j]=m_taulukko[0][node->data[j]];
-			if (m_taulukko[1][node->data[j]]!=1.0)
+			if (m_taulukko[1][node->data[j]]!=1.0) {
 				sensuroitu[j]=0;
-			else
+			} else {
 				sensuroitu[j]=1;
+}
 			c_indeksi[j]=node->data[j];
 		}
 		qsort_aika(1,node->datasize,node);
@@ -1858,9 +1937,9 @@ static int Kurvit(tnode *node){				// Luo tulorajaestimaattorin kullekin puun p‰
 			Pc_survival[i]=Pc_survival[i-1];
 			laskuri++;
 		}
-		else if (i!=node->datasize && c_aika[i+1]==c_aika[i] && c_censored[i+1]==1)
+		else if (i!=node->datasize && c_aika[i+1]==c_aika[i] && c_censored[i+1]==1) {
 				Pc_survival[i]=Pc_survival[i-1];
-			else{
+			} else{
 				Pc_survival[i]=Psurvival(Pc_survival[i-1],Pc_left[i],mem_left,laskuri);
 				mem_left=Pc_left[i];
 				laskuri=0;
@@ -1868,17 +1947,21 @@ static int Kurvit(tnode *node){				// Luo tulorajaestimaattorin kullekin puun p‰
 	}
 	
 	for (i=1; i<=suitable; i++){
-		if (m_taulukko[0][i]>MaxAika)
+		if (m_taulukko[0][i]>MaxAika) {
 			MaxAika=m_taulukko[0][i];
+}
 	}
 	
 	for (i=1; i<=node->datasize; i++){
-		if (Pc_survival[i]<0.75 && ylaK==0.0)
+		if (Pc_survival[i]<0.75 && ylaK==0.0) {
 			ylaK=c_aika[i];
-		if (Pc_survival[i]<0.5 && medi==0.0)
+}
+		if (Pc_survival[i]<0.5 && medi==0.0) {
 			medi=c_aika[i];
-		if (Pc_survival[i]<0.25 && alaK==0.0)
+}
+		if (Pc_survival[i]<0.25 && alaK==0.0) {
 			alaK=c_aika[i];
+}
 		keski=keski+Pc_survival[i-1]*(c_aika[i]-c_aika[i-1]);
 	}
 	
@@ -1890,7 +1973,8 @@ static int Kurvit(tnode *node){				// Luo tulorajaestimaattorin kullekin puun p‰
 	output_open(eout);
 	
 	i=uusiT(node);
-	if (i<0) return -1;
+	if (i<0) { return -1;
+}
 	talletaT();
 	muste_sprintf(line, "\n");
 	print_line(line);
@@ -1917,7 +2001,8 @@ static int Tulos2(tnode *node){				// Tulostaa kuvaruudulle puun jaetun solmun t
 	double parvo=0.0,error=1e-15;
 	char yhtasuuri=' ';
 
-	if (merkkis=='>') yhtasuuri='=';
+	if (merkkis=='>') { yhtasuuri='=';
+}
 	
 	output_open(eout);
 
@@ -1959,7 +2044,8 @@ static int Tulos3(tnode *node){					// Tulostaa kuvaruudulle puun p‰‰tesolmun ti
 //	double parvo=0.0,error=1e-15;
 	char yhtasuuri=' ';
 
-	if (merkkis=='>') yhtasuuri='=';
+	if (merkkis=='>') { yhtasuuri='=';
+}
 
 	output_open(eout);
 
@@ -2008,12 +2094,15 @@ static int uusiT(tnode *node){						// Luo uuden Survo-tiedoston puun kullekin
         vartila=muste_malloc(Pm*9);
         if (vartila==NULL) { not_enough_memory(); return(-1); }
 		
-        for (i=0; i<Pm; ++i) pvartype[i]=vartype+i*9;
-		for (i=0; i<Pm; ++i) varname[i]=vartila+i*9;
+        for (i=0; i<Pm; ++i) { pvartype[i]=vartype+i*9;
+}
+		for (i=0; i<Pm; ++i) { varname[i]=vartila+i*9;
+}
 		varname[0]="Dur";  varlen[0]=8; pvartype[0]="8A";
 		varname[1]="Surv"; varlen[1]=8; pvartype[1]="8A";
   		Plen=0;
-        for (i=0; i<Pm; ++i) Plen+=varlen[i];
+        for (i=0; i<Pm; ++i) { Plen+=varlen[i];
+}
         Plen=Plen+10;
         Pm1=Pm+4;
         Pf=64;
@@ -2025,7 +2114,8 @@ static int uusiT(tnode *node){						// Luo uuden Survo-tiedoston puun kullekin
 		sur_delete(nimi);
 		i=fi_create(nimi,Plen,Pm1,Pm,node->datasize+1,Pf,Pextra,Ptextn,Ptextlen,
                     Ptext,varname,varlen,pvartype);
-        if (i<0) return(-1);
+        if (i<0) { return(-1);
+}
         muste_free(vartype); muste_free(pvartype); muste_free(varlen); muste_free(varname); muste_free(vartila);
         return(1);
         }
@@ -2167,32 +2257,39 @@ puu=NULL;
 	results_line=0;
 	if (g>4){
 		results_line=edline2(word[4],1,1);
-		if (results_line==0) return;
+		if (results_line==0) { return;
+}
 	}
-	i=data_open(word[1],&d); if (i<0) return;
-	i=sp_init (r1+r-1); if (i<0) return;
-	i=conditions(&d); if (i<0) return; 
+	i=data_open(word[1],&d); if (i<0) { return;
+}
+	i=sp_init (r1+r-1); if (i<0) { return;
+}
+	i=conditions(&d); if (i<0) { return; 
+}
 	
 	i=spfind("CLASS");					// etsit‰‰n m‰‰re CLASS ja sen mukaan selvitet‰‰n
 	if (i>=0){							// onko kyseess‰ puumalli vai luokittelumuuttuja
 		puumalli=0;		
 		strcpy(CLASS,spb[i]);
 		i=strlen(CLASS);
-		if (i<4) i=4;
+		if (i<4) { i=4;
+}
 		k=strncmp(CLASS,TREE,i);
-		if (k==0)
+		if (k==0) {
 			puumalli=1;
+}
 	}
 
 	i=spfind("METHOD");			// etsit‰‰n m‰‰re METHOD, joka kertoo onko kyseess‰
 	if (i>=0){					// tulorajaestimaattori vai elinajantaulu
 		strcpy(line,spb[i]);
 		i=strlen(line);
-		if (i<2) i=2;
+		if (i<2) { i=2;
+}
 		k=strncmp(line,LT,i);
-		if (k==0)
+		if (k==0) {
 			lifetable=1;
-		else{
+		} else{
 			output_open(eout);
 			muste_sprintf(line,"If you want to make a lifetable for the data, use specification");
 			print_line(line);
@@ -2203,9 +2300,11 @@ puu=NULL;
 		}
 	}
 
-	i=Laske_aikavaleja(); if (i<0) return;
+	i=Laske_aikavaleja(); if (i<0) { return;
+}
 	space_allocation();
-	i=Lue_Data(); if (i<0) return;				// Luetaan aineisto matriisiin m_taulukko
+	i=Lue_Data(); if (i<0) { return;				// Luetaan aineisto matriisiin m_taulukko
+}
 	
 	if (puumalli<1){		// jos kyseess‰ ei ole puumalli
 
@@ -2223,14 +2322,16 @@ puu=NULL;
 		for (j=1; j<=puu->datasize; ++j){			// Alustetaan laskuissa k‰ytetyt taulukot
 			c_duration[j]=m_taulukko[0][puu->data[j]];
 			c_class[j]=m_taulukko[2][puu->data[j]];
-			if (m_taulukko[1][puu->data[j]]!=1.0)
+			if (m_taulukko[1][puu->data[j]]!=1.0) {
 				sensuroitu[j]=0;
-			else
+			} else {
 				sensuroitu[j]=1;
+}
 			c_indeksi[j]=puu->data[j];
 		}
         qsort_mtaulukko(1, puu->datasize, puu);	// Ryhmitell‰‰n data ensisijaisesti luokan mukaan
-		k=Pilko(); if (k<0) return;								// Pilkotaan data kuhunkin luokkaan
+		k=Pilko(); if (k<0) { return;								// Pilkotaan data kuhunkin luokkaan
+}
 		if (strata>1){							
 			qsort_aika(1, puu->datasize, puu);	// J‰rjestet‰‰n data ajan mukaan
 			Muodosta();					// Muodostetaan testin tarvitsemat vektorit
@@ -2240,8 +2341,9 @@ puu=NULL;
 	else{							// Jos m‰‰re oli TREE, luodaan puumalli
 		
 		for (i=1; i<=suitable; i++){		// lasketaan aineiston sensuroidut havainnot 
-			if (m_taulukko[1][i]!=1.0)
+			if (m_taulukko[1][i]!=1.0) {
 				cens++;
+}
 		}
 		i=spfind("TEST");			//lukee mink‰ testisuureen mukaan puu rakennetaan	
 		if (i>=0){
@@ -2306,7 +2408,8 @@ puu=NULL;
 			Tres[treshold]=TYHJA;
 			pruning(puu);
 			TerNod[treshold-1]=solmu+1;	// jotta joku mihin voidaan verrata
-			if (solmuja==0) break;										
+			if (solmuja==0) { break;										
+}
 			Stat[treshold-1]=treesum - fixed*solmuja; // Koko puun arvo
 			solmu=0;
 		}
@@ -2330,14 +2433,16 @@ puu=NULL;
 			}
 			else{
 				for (sub=0; sub<treshold-1; sub++){
-					if (nodes>=TerNod[sub])
+					if (nodes>=TerNod[sub]) {
 						break;
+}
 				}
 				prune(puu);			// karsitaan puu halutun kokoiseksi
 			}
 		}
-		else
+		else {
 			intra();
+}
 	}
 	vapauta();
     data_close (&d);

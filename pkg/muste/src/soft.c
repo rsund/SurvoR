@@ -138,7 +138,8 @@ int read_from_soft_stack(char *nro,char *s)
         while (i<h)
             {
             if (*p==EOS) { *s=EOS; return(1); }
-            while (*p!='@') ++p;
+            while (*p!='@') { ++p;
+}
             ++i;
             ++p;
             }
@@ -157,7 +158,7 @@ int soft_stack_set(char *s,int k)
 
     strcpy(x,soft_info);
     p=x; i=0; q=soft_info; h=0;
-    if (k>1) while (*p)
+    if (k>1) { while (*p)
         {
         q[h++]=*p;
         if (*p=='@')
@@ -166,11 +167,15 @@ int soft_stack_set(char *s,int k)
             }
         ++p;
         }
+}
     q[h]=EOS;
-    for (;i<k-1; ++i) strcat(q,"@");
+    for (;i<k-1; ++i) { strcat(q,"@");
+}
     strcat(q,s); strcat(q,"@");
-    while (*p && *p!='@') ++p;
-    if (*p=='@') ++p;
+    while (*p && *p!='@') { ++p;
+}
+    if (*p=='@') { ++p;
+}
     strcat(q,p);
     return(1);
     }
@@ -182,11 +187,14 @@ int soft_line_get(char *line)
 // RS REM    int i;
 
     muste_fgets(x,LLENGTH-1,stemp);
-    if (feof(stemp)) return(-1); // 22.9.2001
+    if (feof(stemp)) { return(-1); // 22.9.2001
+}
     p=strchr(x,'|'); control_char=*(p+1);
     strcpy(line,p+2);
-    p=strchr(line,'\n'); if (p!=NULL) *p=EOS;
-    p=strchr(line,'\r'); if (p!=NULL) *p=EOS; // RS unix fix
+    p=strchr(line,'\n'); if (p!=NULL) { *p=EOS;
+}
+    p=strchr(line,'\r'); if (p!=NULL) { *p=EOS; // RS unix fix
+}
     return(1);
     }
 
@@ -204,8 +212,10 @@ int soft_find_line(char *s,char *x)
     while (1)
         {
         i=soft_line_get(x);
-        if (i<0) return(-1);
-        if (strncmp(s,x,len)==0) break;
+        if (i<0) { return(-1);
+}
+        if (strncmp(s,x,len)==0) { break;
+}
         }
     return(1);
     }
@@ -217,7 +227,8 @@ int soft_full_length(char *y)
     y[SOFTLEN-1]=EOS;
     if (strlen(y)<SOFTLEN-1)
         {
-        for (k=strlen(y); k<SOFTLEN; ++k) y[k]=' ';
+        for (k=strlen(y); k<SOFTLEN; ++k) { y[k]=' ';
+}
         y[k]=EOS;
         }
     return(1);
@@ -229,8 +240,10 @@ int ext(char *name)
     char *p;
 
     i=strlen(name);
-    if (i<4) p=name; else p=name+i-4;
-    if (strchr(p,'.')==NULL) return(0);
+    if (i<4) { p=name; } else { p=name+i-4;
+}
+    if (strchr(p,'.')==NULL) { return(0);
+}
     return(1);
     }
 
@@ -251,13 +264,15 @@ int soft_keys_set(char *s[])
 
 // if (soft_menu_n) {    Rprintf("\n%s %s|\n",s[0],s[1]); getck(); }
 
-    if (strcmp(s[0],"*")==0) s[0]=soft_edit_file;
-    else strcpy(soft_edit_file,s[0]);
+    if (strcmp(s[0],"*")==0) { s[0]=soft_edit_file;
+    } else { strcpy(soft_edit_file,s[0]);
+}
 
     strcpy(nimi,s[0]);
 
     if (!muste_is_path(nimi) && !netd(nimi)) { strcpy(nimi,survo_path); strcat(nimi,s[0]); }
-    if (!ext(nimi)) strcat(nimi,".EDT");
+    if (!ext(nimi)) { strcat(nimi,".EDT");
+}
 
     stemp=muste_fopen(nimi,"rt");
 
@@ -266,7 +281,8 @@ int soft_keys_set(char *s[])
     	{ 
     	strcpy(nimi,survo_path);
     	strcat(nimi,s[0]);
-    	if (!ext(nimi)) strcat(nimi,".EDT");
+    	if (!ext(nimi)) { strcat(nimi,".EDT");
+}
    	    stemp=muste_fopen(nimi,"rt");
     	}
     
@@ -301,13 +317,16 @@ int soft_keys_set(char *s[])
         {
         --r_soft;
         strcpy(soft_stack_file,t[r_soft]+1);
-        if (strchr(soft_stack_file,'.')==NULL) strcat(soft_stack_file,".STK");
+        if (strchr(soft_stack_file,'.')==NULL) { strcat(soft_stack_file,".STK");
+}
         }
-    else *soft_stack_file=EOS;
+    else { *soft_stack_file=EOS;
+}
 //Rprintf("\nsoft_stack_file=%s",soft_stack_file);
 
     header_line_ind=0;
-    if (*t[r_soft-1]=='!') header_line_ind=1;
+    if (*t[r_soft-1]=='!') { header_line_ind=1;
+}
 
     h=0;
     for (i=0; i<r_soft; i++)
@@ -328,17 +347,22 @@ int soft_keys_set(char *s[])
             soft_line_get(y2); strcpy(y,y2);
 // Rprintf("\ny=%s",y); getch();
 // Rprintf("\ny=%s",y);
-            q=strchr(y,'|'); if (q!=NULL) *(q-1)=EOS;
+            q=strchr(y,'|'); if (q!=NULL) { *(q-1)=EOS;
+}
             k=split(y,t2,3);
-            if (strncmp(t2[0],"END",3)==0) break;  // RS CHA strcmp -> strncmp ,3  (unix \r fix)
+            if (strncmp(t2[0],"END",3)==0) { break;  // RS CHA strcmp -> strncmp ,3  (unix \r fix)
+}
             ch=*t2[0];
             soft_key_act[h]='-';
-            if (k>1) soft_key_act[h]=*t2[1];
+            if (k>1) { soft_key_act[h]=*t2[1];
+}
 
             strcpy(soft_key_command[h],"-");
-            if (k>2) strcpy(soft_key_command[h],y2+(t2[2]-y));
+            if (k>2) { strcpy(soft_key_command[h],y2+(t2[2]-y));
+}
             p=strchr(soft_key_command[h],'|');
-            if (p!=NULL) *(p-1)=EOS;
+            if (p!=NULL) { *(p-1)=EOS;
+}
 // Rprintf("\ncommand: %s",soft_key_command[h]); getch();
             soft_line_get(soft_key_text[h]);
             soft_full_length(soft_key_text[h]);
@@ -351,7 +375,8 @@ int soft_keys_set(char *s[])
                 sur_print(sbuf); WAIT; return(-1);
                 }
             i1=i2=p-mask;
-            while (mask[i2]==ch) ++i2;
+            while (mask[i2]==ch) { ++i2;
+}
             soft_key_start[h]=i1+1;
             soft_key_end[h]=i2;
 // Rprintf("\nh=%d start=%d end=%d",h,soft_key_start[h],soft_key_end[h]);
@@ -361,7 +386,8 @@ int soft_keys_set(char *s[])
             soft_key_state_n[h]=1;
             soft_key_state[h]=0;
             h0=h; ++h;
-            if (q==NULL) continue;
+            if (q==NULL) { continue;
+}
             q2=strchr(y2,'|')+1;
             while (1)
                 {
@@ -380,12 +406,14 @@ int soft_keys_set(char *s[])
                 soft_key_state[h]=0;
                 ++soft_key_state_n[h0];
                 ++h;
-                if (q==NULL) break;
+                if (q==NULL) { break;
+}
                 }
             }
 
         }
-    if (header_line_ind) --r_soft;
+    if (header_line_ind) { --r_soft;
+}
     n_soft_keys=h;
     muste_fclose(stemp);
     return(1);
@@ -444,11 +472,13 @@ int soft_key_answers()
 // RS REM    int stack_ind;
     char xx[SOFTLEN];
 
-    if (*soft_stack_file==EOS) return(1);
+    if (*soft_stack_file==EOS) { return(1);
+}
     soft_stack_save_load(2,soft_stack_file);
     for (h=0; h<n_soft_keys; ++h)
         {
-        if (soft_key_act[h]!='P') continue;
+        if (soft_key_act[h]!='P') { continue;
+}
         read_from_soft_stack(soft_key_command[h]+1,xx);
         k=soft_key_end[h]-soft_key_start[h]+1;
         i=strlen(xx);
@@ -472,9 +502,11 @@ int soft_disp(int visibility)
 
     soft_vis=visibility; // 9.2.2001
 
-    if (!r_soft) return(1);
+    if (!r_soft) { return(1);
+}
 
-    if (display_off) visibility=0;
+    if (display_off) { visibility=0;
+}
     line0=r3+3;
     for (i=0; i<r_soft; ++i)
         {
@@ -490,18 +522,22 @@ int soft_disp(int visibility)
             {
             ch=*p; // if (!visibility || etu==1) ch='2';
             q=p;
-            while (*q && *q==*p) ++q;
+            while (*q && *q==*p) { ++q;
+}
             write_string(x+(p-xs),q-p,ch,line0+i,p-xs+1);
-            if (*q==EOS) break;
+            if (*q==EOS) { break;
+}
             p=q;
             }
-        if (c3>72)
+        if (c3>72) {
             write_string(space,c3-72,'\237',line0+i,81);
+}
         }
     soft_bottom_line_erase();
 
-    if (visibility)
+    if (visibility) {
         soft_key_answers();
+}
     return(1);
     }
 
@@ -514,42 +550,51 @@ int show_items_on_header_line(int cc)
      char *p;
 // RS REM     char x[81];
 
-     if (!header_line_ind) return(1);
+     if (!header_line_ind) { return(1);
+}
 
      c0=cc+8;
      for (h=0; h<n_soft_keys; ++h)
          {
          i=soft_key_line[h];
-         if (i!=r_soft) continue;
+         if (i!=r_soft) { continue;
+}
          j=soft_key_start[h];
          if (j<47)
              {
-             if (c0<j) continue;
-             if (c0>soft_key_end[h]) continue;
+             if (c0<j) { continue;
+}
+             if (c0>soft_key_end[h]) { continue;
+}
              }
          else
              {
-             if (c0-c3+72<j) continue;
+             if (c0-c3+72<j) { continue;
+}
              if (j<48)
                  {
-                 if (c0-c3+72>soft_key_end[h]) continue;
+                 if (c0-c3+72>soft_key_end[h]) { continue;
+}
                  }
              else
-                 { if (c0-c3+72>soft_key_end[h]) continue; }
+                 { if (c0-c3+72>soft_key_end[h]) { continue; 
+}}
              }
          shadow=soft_shad[i][j-1];
-         if (soft_key_text_shadow[h]!='*')
+         if (soft_key_text_shadow[h]!='*') {
              shadow=soft_key_text_shadow[h];
+}
 
         p=soft_key_text[h];
         if (soft_key_act[h]=='p')
             {            
             i=strlen(edisk);
             p=edisk;
-            if (i>80-11)
+            if (i>80-11) {
                muste_sprintf(sbuf,"Data path: ...%s",p+i-80+11+3);  // RS CHA p-i+80-11
-            else
+            } else {
                muste_sprintf(sbuf,"Data path: %s",edisk);
+}
             p=sbuf;
             shadow='1';
             }
@@ -573,8 +618,10 @@ int soft_prompt(char *vastaus,int pituus,int pos)
         int row0,col0;
 
         sur_cursor_position(&row0,&col0);
-        for (i=0; i<pituus; ++i) tila[i]=' '; tila[pituus]=EOS;
-        for (i=0; i<strlen(vastaus); ++i) tila[i]=vastaus[i];
+        for (i=0; i<pituus; ++i) { tila[i]=' '; 
+}tila[pituus]=EOS;
+        for (i=0; i<strlen(vastaus); ++i) { tila[i]=vastaus[i];
+}
         muste_sprintf(sbuf,"%.*s",pituus,tila); PR_EBLK; sur_print(sbuf);
         sur_locate(row0,col0+pos-1);
 //      for (i=0; i<pituus; ++i) PR_LEFT;
@@ -587,14 +634,16 @@ int soft_prompt(char *vastaus,int pituus,int pos)
             if (i==2 || i==3) // mouse_click
                 {
                 i=pituus;
-                while(tila[i-1]==' ') --i;
+                while(tila[i-1]==' ') { --i;
+}
                 tila[i]=EOS;
                 strcpy(vastaus,tila);
                 return(1);
                 }
 
 
-            if (i==0) continue;
+            if (i==0) { continue;
+}
 
             SAVE_CURSOR;
             only_key_events=1;
@@ -605,18 +654,22 @@ int soft_prompt(char *vastaus,int pituus,int pos)
                     {
                   case -2: break;
                   case CODE_BACKSP:
-                    if (pos==1) break;
+                    if (pos==1) { break;
+}
                     tila[pos-2]=' ';
                     PR_LEFT; PR_EBLK; sur_print(" "); PR_LEFT; --pos;
                     break;
                   case CODE_LEFT:
-                    if (pos==1) break;
+                    if (pos==1) { break;
+}
                     PR_LEFT; --pos; break;
                   case CODE_RIGHT:
-                    if (pos==pituus) break;
+                    if (pos==pituus) { break;
+}
                     PR_RIGHT; ++pos; break;
                   case CODE_DELETE:
-                    for (i=pos-1; i<pituus-1; ++i) tila[i]=tila[i+1];
+                    for (i=pos-1; i<pituus-1; ++i) { tila[i]=tila[i+1];
+}
                     tila[pituus-1]=' ';
                     sur_cursor_position(&row,&col);
                     muste_sprintf(sbuf,"%s",tila+pos-1); PR_EBLK; sur_print(sbuf);
@@ -625,17 +678,21 @@ int soft_prompt(char *vastaus,int pituus,int pos)
                   case CODE_RETURN:
                   case CODE_EXIT:
                   case CODE_TAB:
-                    if (!special) break;
+                    if (!special) { break;
+}
                     i=pituus;
-                    while(i>0 && tila[i-1]==' ') --i;
+                    while(i>0 && tila[i-1]==' ') { --i;
+}
                     tila[i]=EOS;
                     strcpy(vastaus,tila);
-                    if (m==CODE_TAB) return(2);
+                    if (m==CODE_TAB) { return(2);
+}
                     return(1);
                   case CODE_INSERT:
                     insert_mode=1-insert_mode;
-                    if (insert_mode) CURSOR_INS;
-                    else CURSOR_ON;
+                    if (insert_mode) { CURSOR_INS;
+                    } else { CURSOR_ON;
+}
                     break;
                   case CODE_HOME:
                     sur_locate(row0,col0);
@@ -643,7 +700,8 @@ int soft_prompt(char *vastaus,int pituus,int pos)
                     break;
                   case CODE_END:
                     i=pituus;
-                    while(i>0 && tila[i-1]==' ') --i;
+                    while(i>0 && tila[i-1]==' ') { --i;
+}
                     sur_locate(row0,col0+i);
                     pos=i+1;
                     break;
@@ -667,8 +725,10 @@ int soft_prompt(char *vastaus,int pituus,int pos)
                   default:
                     if (insert_mode)
                         {
-                        if (pos<pituus && tila[pituus-1]!=' ') break;
-                        for (i=pituus-2; i>=pos-1; --i) tila[i+1]=tila[i];
+                        if (pos<pituus && tila[pituus-1]!=' ') { break;
+}
+                        for (i=pituus-2; i>=pos-1; --i) { tila[i+1]=tila[i];
+}
                         tila[pos-1]=(char)m;
                         sur_cursor_position(&row,&col);
                         muste_sprintf(sbuf,"%s",tila+pos-1); PR_EBLK; sur_print(sbuf);
@@ -679,7 +739,8 @@ int soft_prompt(char *vastaus,int pituus,int pos)
                         PR_EBLK;
                         muste_sprintf(sbuf,"%c",m); sur_print(sbuf); tila[pos-1]=(char)m;
                         }
-                    if (pos<pituus) ++pos; else PR_LEFT;
+                    if (pos<pituus) { ++pos; } else { PR_LEFT;
+}
                     break;
                     }
             }
@@ -707,14 +768,16 @@ int soft_key_task(int h,int m_click,int m_dbl)
     strcpy(command,soft_key_command[hh]);
 
     ++soft_key_state[h];
-    if (soft_key_state[h]>=soft_key_state_n[h])
+    if (soft_key_state[h]>=soft_key_state_n[h]) {
         soft_key_state[h]=0;
+}
 
     switch(act)
         {
       case 't':
         edwrite(command,rivi,c1+c-1);
-        c+=strlen(command); if (c>c3) c=c3;
+        c+=strlen(command); if (c>c3) { c=c3;
+}
         disp();
         break;
       case 'T':
@@ -730,7 +793,8 @@ int soft_key_task(int h,int m_click,int m_dbl)
         disp();
         return(2);
       case 'A':
-        if (!m_dbl) break;
+        if (!m_dbl) { break;
+}
         c=1;
         edwrite(space,rivi,1);
         edwrite(command,rivi,c1+c-1);
@@ -746,7 +810,8 @@ int soft_key_task(int h,int m_click,int m_dbl)
         soft_act=1;      
         return(2);
       case 'H':
-        if (!m_dbl) break;
+        if (!m_dbl) { break;
+}
         strcpy(soft_actline,command);
         soft_act=1;
         return(2);
@@ -754,17 +819,21 @@ int soft_key_task(int h,int m_click,int m_dbl)
       case 'I':
         if (strcmp(command,"PREV")==0)
             {
-            if (soft_menu_n<2) break;
-            if (*soft_list_name[soft_menu_n-1]=='-') break;
+            if (soft_menu_n<2) { break;
+}
+            if (*soft_list_name[soft_menu_n-1]=='-') { break;
+}
             k=soft_menu_n-1;
             while (soft_menu_n>1)
                 {
                 --soft_menu_n;
                 i=soft_menu_n;
-                if (*soft_list_name[i-1]=='-') continue;
+                if (*soft_list_name[i-1]=='-') { continue;
+}
             if (strcmp(soft_list_name[i-1],soft_list_name[k])==0 &&
-                strcmp(soft_field_name[i-1],soft_field_name[k])==0)
+                strcmp(soft_field_name[i-1],soft_field_name[k])==0) {
                     continue;
+}
                 break;
                 }
 
@@ -779,7 +848,8 @@ int soft_key_task(int h,int m_click,int m_dbl)
         soft_code=atoi(command);
         return(3);
       case 'k':
-        if (strcmp(command,"ENTER")==0) *command='\15';
+        if (strcmp(command,"ENTER")==0) { *command='\15';
+}
         soft_char=*command;
         return(4);
       case 'p': // show datapath! p siis näin "varattu"!
@@ -801,12 +871,13 @@ int soft_key_task(int h,int m_click,int m_dbl)
                          strlen(soft_key_text[h]),
                          ' ',
                          r3+2+r_soft+1,1);
-            if (i==0 || r_mouse!=row1 || c_mouse>col1+7+k-1 || tab_move)
+            if (i==0 || r_mouse!=row1 || c_mouse>col1+7+k-1 || tab_move) {
                 pos=1;
-            else
+            } else
                 {
                 pos=c_mouse-col1-7+1;
-                if (pos>i+1) pos=i+1;
+                if (pos>i+1) { pos=i+1;
+}
                 }
 
             i=soft_prompt(xx,k,pos);
@@ -816,7 +887,8 @@ int soft_key_task(int h,int m_click,int m_dbl)
             cursor(r,c);
             soft_stack_set(xx,stack_ind); // 31.7.00 kokeilu!
             soft_stack_save_load(1,soft_stack_file);
-            if (i!=2) break;
+            if (i!=2) { break;
+}
             while (h<n_soft_keys)
                 {
                 ++h;
@@ -826,7 +898,8 @@ int soft_key_task(int h,int m_click,int m_dbl)
                     break;
                     }
                 }
-            if (h==n_soft_keys) break;
+            if (h==n_soft_keys) { break;
+}
             tab_move=1;
             }
         cursor(r,c);
@@ -844,40 +917,48 @@ int soft_key_activate(int rr,int cc,int m_click,int m_dbl)
     char shadow;
     char *p; 
 
-    if (!r_soft) return(1);
+    if (!r_soft) { return(1);
+}
     if (rr==0) { show_items_on_header_line(cc); return(1); }
-    if (rr<r3+2 || rr>r3+r_soft+1) return(1);
+    if (rr<r3+2 || rr>r3+r_soft+1) { return(1);
+}
 
     r0=rr-r3-2; c0=cc+8;
     for (h=0; h<n_soft_keys; ++h)
         {
         i=soft_key_line[h];
-        if (r0!=i) continue;
+        if (r0!=i) { continue;
+}
         j=soft_key_start[h];
-        if (c0<j) continue;
-        if (c0>soft_key_end[h]) continue;
+        if (c0<j) { continue;
+}
+        if (c0>soft_key_end[h]) { continue;
+}
 
         if (m_click || m_dbl) { return(soft_key_task(h,m_click,m_dbl)); }
 
         shadow=soft_shad[i][j-1];
-        if (soft_key_text_shadow[h]!='*')
+        if (soft_key_text_shadow[h]!='*') {
             shadow=soft_key_text_shadow[h];
+}
 
         hh=h+soft_key_state[h];
 
         p=soft_key_text[hh];
-        if (soft_vis) // 9.2.2001
+        if (soft_vis) { // 9.2.2001
         write_string(p,
                      strlen(p),
                      shadow,
                      r3+2+r_soft+1,1);
+}
 
  p_soft_key_text=soft_key_text[hh]; soft_current_key_text_shadow=shadow;
         soft_message=1;
         break;
         }
-    if (h==n_soft_keys && soft_message)
+    if (h==n_soft_keys && soft_message) {
         write_string(space,c3+8,' ',r3+2+r_soft+1,1);
+}
                 
     return(1);
     }
@@ -928,8 +1009,8 @@ int op_softkeys() // 15.3.2000
                 }
             }
 
-        else if (g<3) soft_keys_init();
-        else
+        else if (g<3) { soft_keys_init();
+        } else
             {
             if (*parm[2]!='-')
                 {
@@ -939,8 +1020,10 @@ int op_softkeys() // 15.3.2000
             soft_keys_set(&parm[1]);
             }
 
-        if (r_soft) rs=r_soft+1; else rs=0;
-        i=r3+2+rs; if (i<25) c3=72;
+        if (r_soft) { rs=r_soft+1; } else { rs=0;
+}
+        i=r3+2+rs; if (i<25) { c3=72;
+}
         i=sur_resize1(c3+8,i);
         set_console_title();
         disp_all();

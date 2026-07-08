@@ -471,7 +471,8 @@ return;
 void label(int m,char nimi[])
         {
         strcpy(nimi,key_label[m]);
-        if (nimi[0]==' ') nimi[0]=(char)m;
+        if (nimi[0]==' ') { nimi[0]=(char)m;
+}
         }
 
 
@@ -485,23 +486,28 @@ static int init_shadow_codes()
 
         shad_nr=1; strcpy(shad_name,"shadows");
         i=hae_apu("shadows#",x);
-        if (i) shad_nr=atoi(x);
-        if (shad_nr>1) muste_sprintf(shad_name,"shadows%d",shad_nr);
+        if (i) { shad_nr=atoi(x);
+}
+        if (shad_nr>1) { muste_sprintf(shad_name,"shadows%d",shad_nr);
+}
 
         i=hae_apu(shad_name,x);
-        if (i==0) i=hae_apu("shadows",x);
+        if (i==0) { i=hae_apu("shadows",x);
+}
 
         i=split(x,osa,10);
-        for (i=0; i<10; ++i) shadow_int[i]=atoi(osa[i]);
+        for (i=0; i<10; ++i) { shadow_int[i]=atoi(osa[i]);
+}
         for (shadow=0; shadow<256; ++shadow)
             {
-            if (shadow==32) shadow_code[shadow]=shadow_int[0];
-            else if (shadow>'0' && shadow<='9')
+            if (shadow==32) { shadow_code[shadow]=shadow_int[0];
+            } else if (shadow>'0' && shadow<='9') {
                     shadow_code[shadow]=shadow_int[shadow-'0'];
-            else if (shadow>=256-32 && shadow<256-16)
+            } else if (shadow>=256-32 && shadow<256-16) {
                     shadow_code[shadow]=shadow-256+32;
-            else if (shadow<32) shadow_code[shadow]=shadow;
-            else shadow_code[shadow]=shadow-16;
+            } else if (shadow<32) { shadow_code[shadow]=shadow;
+            } else { shadow_code[shadow]=shadow-16;
+}
            }
         return(1);
         }
@@ -517,7 +523,8 @@ static int editor_labels()
         init_shadow_codes();
         *info=EOS;
         p=space+strlen(space)-LENLABEL+1;
-        for (i=0; i<256; ++i) key_label[i]=p;
+        for (i=0; i<256; ++i) { key_label[i]=p;
+}
 
         strcpy(x,survo_path); strcat(x,"SYS/SURVO.LAB");
         lab=muste_fopen2(x,"rt");
@@ -585,7 +592,8 @@ int labels()
 //      init_shadow_codes();   vain editorissa
 //      *info=EOS;
         p=space+strlen(space)-LENLABEL+1;
-        for (i=0; i<256; ++i) key_label[i]=p;
+        for (i=0; i<256; ++i) { key_label[i]=p;
+}
 
         strcpy(x,survo_path); strcat(x,"SYS/SURVO.LAB");
         lab=muste_fopen2(x,"rt");
@@ -683,7 +691,8 @@ static int muste_subst_abrev(char *s,char *abrev,char *full,int muunto,int upr,c
         		}
         	}
         if (p>a) if (*(p-1)!=' ' && *(p-1)!='=') if (*(p-1)!='"' || *(p-2)!=' ') p=NULL; // RS 15.4.2013 =
-        if (p==NULL) break;        
+        if (p==NULL) { break;        
+}
         *p=EOS;
         strcpy(x,s);
         strmuuntocat(x,full,muunto);
@@ -691,7 +700,8 @@ static int muste_subst_abrev(char *s,char *abrev,char *full,int muunto,int upr,c
         strcat(x,p+slen);
         strcpy(s,x);
         }
-    if (p==NULL) return(0);
+    if (p==NULL) { return(0);
+}
     return(1);	
 	}
 
@@ -707,13 +717,16 @@ static int subst_survo_path_in_editor_core(char *s, int muunto) // RS 16.11.2012
 		{
 		muste_sprintf(subx,"subst%d",subi);
 		i=hae_apu(subx,x);
-		if (!i) break;
+		if (!i) { break;
+}
 		p=strchr(x,'|');
 		if (p!=NULL)
 			{
 			*p=EOS;
-			if (*(p-1)=='/') *(p-1)=EOS;
-			if (*(p-1)=='\\') *(p-1)=EOS;
+			if (*(p-1)=='/') { *(p-1)=EOS;
+}
+			if (*(p-1)=='\\') { *(p-1)=EOS;
+}
 			p++;
 			muste_subst_abrev(s,x,p,muunto,2,':');
 			}
@@ -721,13 +734,19 @@ static int subst_survo_path_in_editor_core(char *s, int muunto) // RS 16.11.2012
 		}
  	
  	i=0;  
-	if (!i) i=muste_subst_abrev(s,"<Temp>",etmpd,muunto,1,'<');
+	if (!i) { i=muste_subst_abrev(s,"<Temp>",etmpd,muunto,1,'<');
+}
 	if (!i) { strcpy(x,survo_path); strcat(x,"SYS/"); i=muste_subst_abrev(s,"<Sys>",x,muunto,1,'<'); }
-	if (!i) i=muste_subst_abrev(s,"<Survo>",survo_path,muunto,1,'<');
-	if (!i) i=muste_subst_abrev(s,"<R>",muste_Rpath,muunto,0,'<');
-	if (!i) i=muste_subst_abrev(s,"<Home>",muste_homedir,muunto,1,'<');
-	if (!i) i=muste_subst_abrev(s,"~",muste_homedir,muunto,0,'~');
-	if (!i) i=muste_subst_abrev(s,"<Start>",muste_startpath,muunto,1,'<');
+	if (!i) { i=muste_subst_abrev(s,"<Survo>",survo_path,muunto,1,'<');
+}
+	if (!i) { i=muste_subst_abrev(s,"<R>",muste_Rpath,muunto,0,'<');
+}
+	if (!i) { i=muste_subst_abrev(s,"<Home>",muste_homedir,muunto,1,'<');
+}
+	if (!i) { i=muste_subst_abrev(s,"~",muste_homedir,muunto,0,'~');
+}
+	if (!i) { i=muste_subst_abrev(s,"<Start>",muste_startpath,muunto,1,'<');
+}
 
 	
 /*	    
@@ -869,24 +888,31 @@ int unsubst_survo_path_in_editor(char *s) // RS 16.11.2012
     char *p;
 
 	i=0;
-	if (!i) i=muste_unsubst_abrev(s,"<Temp>",etmpd);
+	if (!i) { i=muste_unsubst_abrev(s,"<Temp>",etmpd);
+}
 	if (!i) { strcpy(x,survo_path); strcat(x,"SYS/"); i=muste_unsubst_abrev(s,"<Sys>",x); }
-	if (!i) i=muste_unsubst_abrev(s,"<Survo>",survo_path);
-	if (!i) i=muste_unsubst_abrev(s,"<R>",muste_Rpath);
-	if (!i) i=muste_unsubst_abrev(s,"~",muste_homedir);
+	if (!i) { i=muste_unsubst_abrev(s,"<Survo>",survo_path);
+}
+	if (!i) { i=muste_unsubst_abrev(s,"<R>",muste_Rpath);
+}
+	if (!i) { i=muste_unsubst_abrev(s,"~",muste_homedir);
+}
 
 	subi=1;
 	while (1)
 		{
 		muste_sprintf(subx,"subst%d",subi);	
 		i=hae_apu(subx,x);
-		if (!i) break;
+		if (!i) { break;
+}
 		p=strchr(x,'|');
 		if (p!=NULL)
 			{
 			*p=EOS;
-			if (*(p-1)=='/') *(p-1)=EOS;
-			if (*(p-1)=='\\') *(p-1)=EOS;
+			if (*(p-1)=='/') { *(p-1)=EOS;
+}
+			if (*(p-1)=='\\') { *(p-1)=EOS;
+}
 			p++;
 			muste_unsubst_abrev(s,x,p);
 			}
@@ -1004,7 +1030,8 @@ int tell_language()
         {
 // RS REM        extern char *crt_exit;
 
-        if (*crt_exit=='1') return(1);
+        if (*crt_exit=='1') { return(1);
+}
         return(2);
         }
 
@@ -1022,8 +1049,9 @@ static int medit_spec_save(char *s)
     char x[LLENGTH];
 
     i=spec_find(s,x,LLENGTH-1);
-    if (i<0) fprintf(temptut,"%s\n",s);
-    else fprintf(temptut,"%s=%s\n",s,x);
+    if (i<0) { fprintf(temptut,"%s\n",s);
+    } else { fprintf(temptut,"%s=%s\n",s,x);
+}
     return(1);
     }
 
@@ -1034,7 +1062,8 @@ static int medit_restore()
     extern long tutpos;
     extern FILE *tutor;
 
-    if (r_soft) rs=r_soft+1; else rs=0;
+    if (r_soft) { rs=r_soft+1; } else { rs=0;
+}
     sur_resize1(c3+8,r3+2+rs);
 
     set_console_title();
@@ -1158,7 +1187,8 @@ int op_file(char *op)
               return(0);
            }    
 
-        if (strncmp(s,"ACT",3)==0) s[3]=EOS;
+        if (strncmp(s,"ACT",3)==0) { s[3]=EOS;
+}
         if (strcmp(s,"UPDATE")==0 || strcmp(s,"STATUS")==0 ||
             strcmp(s,"INIT")==0 || strcmp(s,"REDUCE")==0 ||
             strcmp(s,"ACT")==0 || strcmp(s,"MASK")==0 ||
@@ -1192,13 +1222,14 @@ int op_file(char *op)
             par3=1;
             if (g<4)
                 {
-                if (g==3) par3=0;
-                else { medit_error(); return(0); }
+                if (g==3) { par3=0;
+                } else { medit_error(); return(0); }
                 }
         	if (par3==1)
                 {
                 p=parm[3]+strlen(parm[3])-1;
-                while (p>parm[3] && *p!=':') --p;
+                while (p>parm[3] && *p!=':') { --p;
+}
                 if (*p!=':') { medit_error(); return(0); }
                 *p=EOS;
                 muste_sprintf(info,"%s %s %s",parm[2],parm[3],p+1);
@@ -1241,7 +1272,8 @@ int op_file(char *op)
             for (j=1; j<=r2; ++j)
                 {
                 edread(x,j); i=split(x+1,ss,1);
-                if (i && strcmp(sbuf,ss[0])==0) break;
+                if (i && strcmp(sbuf,ss[0])==0) { break;
+}
                 }
             if (j>r2)
                 {
@@ -1336,7 +1368,8 @@ static void not_space()
 
 static int ed_malloc(unsigned int ed1, unsigned int ed2, unsigned int edshad)
         { 
-        if (etu) tut_sulje();
+        if (etu) { tut_sulje();
+}
 
 /*        
         if (zs!=NULL) muste_free2((char *)zs);
@@ -1351,10 +1384,12 @@ static int ed_malloc(unsigned int ed1, unsigned int ed2, unsigned int edshad)
 		zs=(int *)muste_realloc(zs,(ed2+1)*sizeof(int));
 		if (zs==NULL) { not_space(); return(-1); }
 
-        if (ed1>253 || ed1*(ed2+edshad)>65500) large_field=1;
-        else large_field=0;
+        if (ed1>253 || ed1*(ed2+edshad)>65500) { large_field=1;
+        } else { large_field=0;
+}
 // muste_sprintf(sbuf,"\nz=%lu|",(unsigned long)z); sur_print(sbuf);
-        if (etu) tut_avaa();
+        if (etu) { tut_avaa();
+}
         return(1);
         }
 
@@ -1365,14 +1400,16 @@ static int testaa_lisays(int k)
         char *z_lisays;
 
         z_lisays=muste_malloc(k);
-        if (z_lisays==NULL) return(-1);
+        if (z_lisays==NULL) { return(-1);
+}
         muste_free(z_lisays); return(1);
         }
 
 
 int empty(char x[],unsigned int lev)
         {
-        if (strncmp(x,space,lev)==0) return(1);
+        if (strncmp(x,space,lev)==0) { return(1);
+}
         return(0);
         }
 
@@ -1388,7 +1425,8 @@ int netd(char *p)
 	{
 // muste_fixme("FIXME: netd() not implemented\n");
 // RS FIXME NYI (For Muste netd is always true?)
-    if (p[0]=='\\' || p[0]=='/' || p[0]=='~') return TRUE;
+    if (p[0]=='\\' || p[0]=='/' || p[0]=='~') { return TRUE;
+}
 	return FALSE;
 	}
 
@@ -1503,8 +1541,10 @@ static int edload32(char *edfile)
         muste_fgets(x,LLENGTH-1,edfield); /* otsikko uudelleen */
         c2=ed1-1; r2=ed2;
         strcpy(eopen,edfile);
-        for (i=0; i<ed1*(ed2+edshad); ++i) z[i]=' ';
-        for (i=0; i<ed1*ed2; i+=ed1) z[i]='*';
+        for (i=0; i<ed1*(ed2+edshad); ++i) { z[i]=' ';
+}
+        for (i=0; i<ed1*ed2; i+=ed1) { z[i]='*';
+}
         shadinit();
         if (ei_onnistunut) { muste_fclose(edfield); return(-1); }
         rivi_luettu=0; j=0;
@@ -1512,9 +1552,11 @@ static int edload32(char *edfile)
             {
             muste_fgets(x,LLENGTH+10-1,edfield);
 /* Rprintf("x=%s\n",x); getch(); */
-            if (feof(edfield)) break;
+            if (feof(edfield)) { break;
+}
             p=strchr(x,'|');
-            if (p==NULL) continue;
+            if (p==NULL) { continue;
+}
 //          if (p==NULL) { edload32_err("Missing `|'",edfile);
 //                         muste_fclose(edfield); return(-1);
 //                       }
@@ -1522,12 +1564,14 @@ static int edload32(char *edfile)
             i=strlen(p); 
             if (p[i-1]=='\n') {
                p[i-1]=EOS;
-               if (p[i-2]=='\r') p[i-2]=EOS;  // RS unix-fix
+               if (p[i-2]=='\r') { p[i-2]=EOS;  // RS unix-fix
+}
             }
             if (rivi_luettu && *x=='S')
                 {
                 i=creatshad(j);
-                if (i<0) break;    /* ei mahdu */
+                if (i<0) { break;    /* ei mahdu */
+}
                 edwrite(p,zs[j],0);
                 rivi_luettu=0;
                 continue;
@@ -1555,7 +1599,8 @@ int check_start_field_language(char *edfile) // 1.2.2006
 // RS    extern char survo_path[];
 
     muste_sprintf(x,"%sSTART.EDT",survo_path);
-    if(muste_strcmpi(edfile,x)!=0) return(1);
+    if(muste_strcmpi(edfile,x)!=0) { return(1);
+}
 /* RS REM No need to use different languages    
     ch='S'; if (*language=='2') ch='E';
     muste_sprintf(edfile,"%s%cSTART.EDT",survo_path,ch);
@@ -1577,16 +1622,19 @@ static int edload(char *field,int shad)
 
         filename(edfile,field); file_name_ext(edfile,".EDT");
         i=strlen(edfile)-1;
-		if (edfile[i]=='.') edfile[i]=EOS;  // RS ADD Drop last .
+		if (edfile[i]=='.') { edfile[i]=EOS;  // RS ADD Drop last .
+}
 		
 // RS REM pois       if (sur_file_time_check(edfile)==-2) return(-1); // 6.4.2001
         check_start_field_language(edfile); // 1.2.2006
         edfield=muste_fopen2(edfile,"rb");
         if (edfield==NULL) { edit_file_not_found(edfile); return(-2); } // RS 20.11.2014 return -2 instead of -1
         time(&aika_save);
-        for (i=0; i<ELE; ++i) rivi[i]=(char)getc(edfield);
+        for (i=0; i<ELE; ++i) { rivi[i]=(char)getc(edfield);
+}
         rivi[ELE-1]=EOS;
-        if (strncmp(rivi,"SURVO 98",8)==0) return(edload32(edfile));
+        if (strncmp(rivi,"SURVO 98",8)==0) { return(edload32(edfile));
+}
 
         g=split(rivi,sana,5);
         if (strcmp(sana[0],"SURVO84ED")!=0)
@@ -1596,10 +1644,12 @@ static int edload(char *field,int shad)
             }
         ed1=atoi(sana[1]);
         ed2=atoi(sana[2]);
-        if (g>4 && *sana[4]=='S') edshad=atoi(sana[4]+1);
+        if (g>4 && *sana[4]=='S') { edshad=atoi(sana[4]+1);
+}
 
         muste_fclose(edfield);    /* suljetaan malloc-varausten tiivistämiseksi */
-        k=ed_malloc(ed1,ed2,edshad); if (k<0) return(-1);
+        k=ed_malloc(ed1,ed2,edshad); if (k<0) { return(-1);
+}
         edfield=muste_fopen2(edfile,"rb");
         if (edfield==NULL) { edit_file_not_found(edfile); return(-1); }
 
@@ -1607,23 +1657,27 @@ static int edload(char *field,int shad)
         strcpy(eopen,edfile);
 
         muste_fseek(edfield,(long)ed1,0);
-        for (i=0; i<ed1*ed2; ++i) z[i]=(char)getc(edfield);
+        for (i=0; i<ed1*ed2; ++i) { z[i]=(char)getc(edfield);
+}
         if (ed1<=c3) { CLS;  soft_disp(1); }
         if (feof(edfield)) { filerr(); muste_fclose(edfield); return(-1); }
         if (shad==0) { muste_fclose(edfield); return(1); }
         shadinit();
-        for (i=0; i<ed1; ++i) x[i]=(char)getc(edfield);
+        for (i=0; i<ed1; ++i) { x[i]=(char)getc(edfield);
+}
         if (strncmp(x,"Sha",3)!=0) { muste_fclose(edfield); return(1); }
         j=1;
         while (j>0)
             {
-            for (i=0; i<ed1; ++i) x[i]=(char)getc(edfield);
+            for (i=0; i<ed1; ++i) { x[i]=(char)getc(edfield);
+}
             x[ed1]=EOS;
             if (strncmp(x,"END",3)==0) { j=0; continue; }
             pint=(short *)x;
             j=*pint;
             k=creatshad(j);
-            if (k<0) break;    /* ei mahdu */
+            if (k<0) { break;    /* ei mahdu */
+}
 
             strcat(x+2,"  ");
             edwrite(x+2,zs[j],0);
@@ -1635,7 +1689,8 @@ static int edload(char *field,int shad)
 static int xsave(char x[],FILE *edfield)
         {
         int i;
-        for (i=0; i<ed1; ++i) putc((int)x[i],edfield);
+        for (i=0; i<ed1; ++i) { putc((int)x[i],edfield);
+}
         return(1);
         }
 
@@ -1675,16 +1730,21 @@ static int edsave32(char *edfile,int shad)
         fprintf(edfield,"SURVO 98 edit field:    %d       %d       %d (32 bit version)%s",
                          d1,d2,d3,rivin_loppu);
         form=3;
-        if (ed2>=1000) form=4;
-        if (ed2>=10000) form=5;
-        if (ed2>=100000) form=6;
+        if (ed2>=1000) { form=4;
+}
+        if (ed2>=10000) { form=5;
+}
+        if (ed2>=100000) { form=6;
+}
 
         for (j=1; j<=ed2; ++j)
             {
             edread(x,j); i=ed1-1;
-            while (i>0 && x[i]==' ') --i;
+            while (i>0 && x[i]==' ') { --i;
+}
             x[i+1]=EOS;
-            if (i==0 && *x=='*') tyhja=1; else tyhja=0;
+            if (i==0 && *x=='*') { tyhja=1; } else { tyhja=0;
+}
             zsj=zs[j];
             if (!tyhja || zsj)
                 {
@@ -1693,12 +1753,14 @@ static int edsave32(char *edfile,int shad)
             if (zsj)
                 {
                 edread(x,zsj); i=ed1-1;
-                while (i>0 && x[i]==' ') --i;
+                while (i>0 && x[i]==' ') { --i;
+}
                 x[i+1]=EOS;
                 fprintf(edfield,"%-*s|%s%s",form,"S",x,rivin_loppu);
                 }
             }
-        if (!autosavefield) strcpy(eopen,edfile);
+        if (!autosavefield) { strcpy(eopen,edfile);
+}
         if (ferror(edfield)) { filerr(); muste_fclose(edfield); return(-1); }
         muste_fclose(edfield);
         if (message)
@@ -1749,9 +1811,10 @@ int edsave(char *field,int shad,int check)
             return(0);
             }
 
-        if (!save_84ed) // 13.4.2002
+        if (!save_84ed) { // 13.4.2002
         if (autosave32 || redim_save || large_field || autosavefield || save_ed32)
             { edsave32(edfile,shad); return(1); }
+}
 
         save_84ed=0; // seuraavien piilotalletusten vuoksi (varmistus)!
         strcpy(header,"SURVO84ED ");
@@ -1761,16 +1824,19 @@ int edsave(char *field,int shad,int check)
         strcat(header,muste_itoa(ed1,number,10)); strcat(header," S");
         strcat(header,muste_itoa(edshad,number,10)); strcat(header," ");
 
-        for (i=0; i<ed1; ++i) putc(' ',edfield);
+        for (i=0; i<ed1; ++i) { putc(' ',edfield);
+}
         rewind(edfield);
-        for (i=0; i<strlen(header); ++i) putc((char)header[i],edfield);
+        for (i=0; i<strlen(header); ++i) { putc((char)header[i],edfield);
+}
 
         muste_fseek(edfield,(long)ed1,0);
 
         k=0;
         for (j=0; j<ed2; ++j)
             {
-            for (i=0; i<ed1; ++i, ++k) putc((char)z[k],edfield);
+            for (i=0; i<ed1; ++i, ++k) { putc((char)z[k],edfield);
+}
             if (ferror(edfield)) { filerr(); muste_fclose(edfield); return(-1); }
             }
         if (shad==0) { muste_fclose(edfield); return(1); }
@@ -1794,7 +1860,8 @@ int edsave(char *field,int shad,int check)
         strcpy(x,"END"); strncat(x,space,ed1-3);
         xsave(x,edfield);
         if (ferror(edfield)) { filerr(); muste_fclose(edfield); return(-1); }
-        if (check) strcpy(eopen,edfile);  /* if 17.2.89 */
+        if (check) { strcpy(eopen,edfile);  /* if 17.2.89 */
+}
         muste_fclose(edfield); return(1);
         }
 
@@ -1806,7 +1873,9 @@ static int numshad()   /* 23.1.93 */
         {
         int j,n;
 
-        n=0; for (j=1; j<=ed2; ++j) if (zs[j]) ++n;
+        n=0; for (j=1; j<=ed2; ++j) { if (zs[j]) { ++n;
+}
+}
         return(n);
         }
 
@@ -1829,7 +1898,8 @@ int komento /* 1=REDIM command 0=internal call(sh.c) */
                 muste_sprintf(sbuf,"\nMax.# of columns = %d",LLENGTH-4);
                 sur_print(sbuf); WAIT; return(-1);
                 }
-            uedshad=edshad; if (g>3) uedshad=atoi(parm[3]);
+            uedshad=edshad; if (g>3) { uedshad=atoi(parm[3]);
+}
             i=numshad();
             if (uedshad<i)
                 {
@@ -1870,22 +1940,26 @@ int komento /* 1=REDIM command 0=internal call(sh.c) */
                     if (!empty(x+ued1,ed1-ued1))
                         {
                         k=strlen(x)-1;
-                        while (x[k]==' ') x[k--]=EOS;
+                        while (x[k]==' ') { x[k--]=EOS;
+}
 //                      if (x[0]=='*') { Rprintf("\nOK"; getck(); }
 
 
                         i=-1; while (i<k)
                             {
                             ++i;
-                            if (i==0) { if (x[0]!='*') break; }
-                            if (i>0 && i<11) { if (x[i]!='.') break; }
-                            if (i>=11 && x[i]!='.' && x[i]!=' ') break;
+                            if (i==0) { if (x[0]!='*') { break; 
+}}
+                            if (i>0 && i<11) { if (x[i]!='.') { break; 
+}}
+                            if (i>=11 && x[i]!='.' && x[i]!=' ') { break;
+}
                             }
 // Rprintf("\nx[0]=%c x=%.50s",x[0],x);
 // Rprintf("i=%d k=%d",i,k); getck();
 
-                        if (i==k) x[ued1]=EOS;
-                        else
+                        if (i==k) { x[ued1]=EOS;
+                        } else
                           {
                           PR_EBLD;
                           muste_sprintf(sbuf,"\nLine %u too long!",j); sur_print(sbuf);
@@ -1955,8 +2029,10 @@ int empty_line(char *x,int len)
         int i;
         for (i=0; i<len; ++i)
             {
-            if (x[i]==EOS) return(1);
-            if (x[i]!=' ') return(0);
+            if (x[i]==EOS) { return(1);
+}
+            if (x[i]!=' ') { return(0);
+}
             }
         return(1);
         }
@@ -1966,7 +2042,8 @@ void shadow_test(unsigned int j)
 // RS REM        int i;
         char x[LLENGTH];
         edread(x,zs[j]);
-        if (!empty_line(x,ed1)) return;
+        if (!empty_line(x,ed1)) { return;
+}
         z[(zs[j]-1)*ed1]='\0';
         zs[j]=0;
         }
@@ -1976,9 +2053,11 @@ void testshad(unsigned int j)
 // RS REM        int i;
         char x[LLENGTH];
 
-        if (zs[j]==0) return;
+        if (zs[j]==0) { return;
+}
         edread(x,zs[j]);
-        if (!empty(x,ed1)) return;
+        if (!empty(x,ed1)) { return;
+}
         z[(zs[j]-1)*ed1]='\0';
         zs[j]=0;
         }
@@ -1988,8 +2067,10 @@ int creatshad(unsigned int j)
         {
         unsigned int i,k;
         char x[LLENGTH];
-		for (i=0; i<LLENGTH; i++) x[i]=0; // RS ADD 16.10.2012
-        if (j>ed2) return(-1);
+		for (i=0; i<LLENGTH; i++) { x[i]=0; // RS ADD 16.10.2012
+}
+        if (j>ed2) { return(-1);
+}
         i=ed1*ed2; k=0; while ( k<zshn && z[i]!='\0' ) { ++k; i+=ed1; }
         if (k==zshn)
             {
@@ -2024,12 +2105,15 @@ static int shadow_block()
 
         if (g<2) { op_incomplete(); return(-1); }
         ch=*parm[2];
-        if (!move_ind) return(1);
+        if (!move_ind) { return(1);
+}
         for (j=move_r1; j<=move_r2; ++j)
             {
-            if (!zs[j]) creatshad(j);
+            if (!zs[j]) { creatshad(j);
+}
             edread(x,zs[j]);
-            for (i=mc1; i<=mc2; ++i) x[i]=ch;
+            for (i=mc1; i<=mc2; ++i) { x[i]=ch;
+}
             edwrite(x,zs[j],0);
             }
         return(1);
@@ -2040,11 +2124,14 @@ static int shadow_erase()
         int j,j1,j2;
 
         if (g<4) { op_incomplete(); return(-1); }
-        j1=edline2(parm[2],1,1); if (j1==0) return(-1);
-        j2=edline2(parm[3],j1,1); if (j2==0) return(-1);
+        j1=edline2(parm[2],1,1); if (j1==0) { return(-1);
+}
+        j2=edline2(parm[3],j1,1); if (j2==0) { return(-1);
+}
         for (j=j1; j<=j2; ++j)
             {
-            if (zs[j]==0) continue;
+            if (zs[j]==0) { continue;
+}
             edwrite(space,zs[j],0);
             shadow_test(j);
             }
@@ -2060,17 +2147,24 @@ static int shadow_replace()
 
         if (g<6) { op_incomplete(); return(-1); }
 
-        if (muste_strnicmp(parm[2],"char(",5)==0) ch1=atoi(parm[2]+5);
-        else ch1=*parm[2];
-        if (muste_strnicmp(parm[3],"char(",5)==0) ch2=atoi(parm[3]+5);
-        else ch2=*parm[3];
-        j1=edline2(parm[4],1,1); if (j1==0) return(-1);
-        j2=edline2(parm[5],j1,1); if (j2==0) return(-1);
+        if (muste_strnicmp(parm[2],"char(",5)==0) { ch1=atoi(parm[2]+5);
+        } else { ch1=*parm[2];
+}
+        if (muste_strnicmp(parm[3],"char(",5)==0) { ch2=atoi(parm[3]+5);
+        } else { ch2=*parm[3];
+}
+        j1=edline2(parm[4],1,1); if (j1==0) { return(-1);
+}
+        j2=edline2(parm[5],j1,1); if (j2==0) { return(-1);
+}
         for (j=j1; j<=j2; ++j)
             {
-            if (zs[j]==0) continue;
+            if (zs[j]==0) { continue;
+}
             edread(x,zs[j]);
-            for (i=0; i<strlen(x); ++i) if (x[i]==ch1) x[i]=ch2;
+            for (i=0; i<strlen(x); ++i) { if (x[i]==ch1) { x[i]=ch2;
+}
+}
             edwrite(x,zs[j],0);
             shadow_test(j);
             }
@@ -2094,8 +2188,10 @@ static int shadow_setc()  // set -> setc
 
    if (g<8) { op_incomplete(); return(-1); }
 
-   j1=edline2(parm[2],1,1); if (!j1) return(1);
-   j2=edline2(parm[3],j1,1); if (!j2) return(1);
+   j1=edline2(parm[2],1,1); if (!j1) { return(1);
+}
+   j2=edline2(parm[3],j1,1); if (!j2) { return(1);
+}
 //  col=atoi(parm[4])+1;   - 13.12.2011
    col=atoi(parm[4]);
    col1=atoi(parm[6]);
@@ -2107,25 +2203,30 @@ static int shadow_setc()  // set -> setc
        muste_sprintf(nimi,"%sSYS/",survo_path); // RS \\ -> /
        strcat(nimi,parm[5]);
        }
-   if (strchr(nimi+strlen(nimi)-4,'.')==NULL)
+   if (strchr(nimi+strlen(nimi)-4,'.')==NULL) {
        strcat(nimi,".BIN");
+}
    bin=muste_fopen2(nimi,"rb");
    if (bin==NULL)
        {
        muste_sprintf(sbuf,"\nCannot open file %s!",nimi);
        sur_print(sbuf); WAIT; return(1);
        }
-   for (i=0; i<256; ++i) act[i]=(unsigned char)getc(bin);
+   for (i=0; i<256; ++i) { act[i]=(unsigned char)getc(bin);
+}
    muste_fclose(bin);
 
    for (j=j1; j<=j2; ++j)
        {
        edread(x,j);
        ch=x[col];
-       if (zs[j]==0 && ch!=' ')
+       if (zs[j]==0 && ch!=' ') {
            creatshad(j);
-       if (ch!=' ') ch=act[(int)ch];
-       for (i=0; i<col2-col1+1; ++i) sbuf[i]=ch; sbuf[i]=EOS;
+}
+       if (ch!=' ') { ch=act[(int)ch];
+}
+       for (i=0; i<col2-col1+1; ++i) { sbuf[i]=ch; 
+}sbuf[i]=EOS;
        edwrite(sbuf,zs[j],col1);
        testshad(j);
        }
@@ -2142,17 +2243,22 @@ static int shadow_set()
    int hard;
 
    if (g<5) { op_incomplete(); return(-1); }
-   j1=edline2(parm[2],1,1); if (!j1) return(1);
-   j2=edline2(parm[3],j1,1); if (!j2) return(1);
-   j=edline2(parm[4],1,1); if (!j) return(1);
+   j1=edline2(parm[2],1,1); if (!j1) { return(1);
+}
+   j2=edline2(parm[3],j1,1); if (!j2) { return(1);
+}
+   j=edline2(parm[4],1,1); if (!j) { return(1);
+}
    edread(xs,j);
 
    hard=0;
-   if (g>5 && atoi(parm[5])==1) hard=1;
+   if (g>5 && atoi(parm[5])==1) { hard=1;
+}
 
    if (!hard)
        {
-       len=strlen(xs)-1; while (xs[len]==' ') --len; ++len;
+       len=strlen(xs)-1; while (xs[len]==' ') { --len; 
+}++len;
        for (j=j1; j<=j2; ++j)
            {
            if (zs[j]==0)
@@ -2164,21 +2270,25 @@ static int shadow_set()
            else
                {
                edread(ys,zs[j]);
-               for (i=0; i<len; ++i)
-                   if (xs[i]!=' ') ys[i]=xs[i];
+               for (i=0; i<len; ++i) {
+                   if (xs[i]!=' ') { ys[i]=xs[i];
+}
+}
                edwrite(ys+1,zs[j],1);
                testshad(j);
                }
            }
        }
-   else
+   else {
        for (j=j1; j<=j2; ++j)
            {
-           if (zs[j]==0)
+           if (zs[j]==0) {
                creatshad(j);
+}
            edwrite(xs+1,zs[j],1);
            testshad(j);
            }
+}
 
    return(1);
    }
@@ -2233,13 +2343,19 @@ static int display_colors()
 
         strcpy(x,parm[1]);
         p=strchr(x,'-');
-        if (p!=NULL) *p=EOS;
+        if (p!=NULL) { *p=EOS;
+}
         color1=color2=atoi(x+1);
-        if (p!=NULL) color2=atoi(p+1);
-        if (color2<color1) color2=color1;
-        if (color1<0) color1=0;
-        if (color2>color1+r3-r-1) color2=color1+r3-r-1;
-        if (color2>255) color2=255;
+        if (p!=NULL) { color2=atoi(p+1);
+}
+        if (color2<color1) { color2=color1;
+}
+        if (color1<0) { color1=0;
+}
+        if (color2>color1+r3-r-1) { color2=color1+r3-r-1;
+}
+        if (color2>255) { color2=255;
+}
 
         line=r+2;
         for (color=color1; color<=color2; ++color)
@@ -2278,13 +2394,16 @@ static int op_color()
                 if (!muste_is_path(nimi))
                 { strcpy(nimi,edisk); strcat(nimi,parm[1]); }
                 codes=muste_fopen2(nimi,"rb");
-                if (codes==NULL) return(2);
+                if (codes==NULL) { return(2);
+}
                 if (g>2)
                     {
-                    i=atoi(parm[2]); if (i<1) i=1;
+                    i=atoi(parm[2]); if (i<1) { i=1;
+}
                     muste_fseek(codes,(long)(256*(i-1)),0); 
                     }
-                for (i=0; i<256; ++i) shadow_code[i]=(unsigned char)getc(codes);
+                for (i=0; i<256; ++i) { shadow_code[i]=(unsigned char)getc(codes);
+}
                 muste_fclose(codes);
                 return(2);
                 }
@@ -2292,7 +2411,8 @@ static int op_color()
         time(&ltime);
         pi=(unsigned int *)&ltime;
         muste_srand(*pi);
-        for (i=0; i<256; ++i) shadow_code[i]=(unsigned char)((int)(n*RND));
+        for (i=0; i<256; ++i) { shadow_code[i]=(unsigned char)((int)(n*RND));
+}
         return(2);
         }        
 
@@ -2304,14 +2424,22 @@ static int move_disp(unsigned int j)
         switch (move_ind)
             {
           case 3:
-            if (j<move_r1 || j>move_r2) return(1);
-            cc1=mc1-c1+1; if (!move_words && cc1>(int)c3) return(1);
-         if (cc1<0) cc1=0; // RS ADD
-         if (move_words && (j>move_r1 || cc1<1)) cc1=1;
-            cc2=mc2-c1+1; if (cc2<1) return(1);
-            if (cc2>(int)c3) cc2=c3;
-         if (move_words && j<move_r2) cc2=c3;
-            disp_mode='7'; if (move_words) disp_mode='4';
+            if (j<move_r1 || j>move_r2) { return(1);
+}
+            cc1=mc1-c1+1; if (!move_words && cc1>(int)c3) { return(1);
+}
+         if (cc1<0) { cc1=0; // RS ADD
+}
+         if (move_words && (j>move_r1 || cc1<1)) { cc1=1;
+}
+            cc2=mc2-c1+1; if (cc2<1) { return(1);
+}
+            if (cc2>(int)c3) { cc2=c3;
+}
+         if (move_words && j<move_r2) { cc2=c3;
+}
+            disp_mode='7'; if (move_words) { disp_mode='4';
+}
             write_string(z+(j-1)*ed1+c1+cc1-1,cc2-cc1+1,disp_mode,j-r1+2,cc1+8);
             }
         return(1);
@@ -2329,7 +2457,8 @@ static void check_alarm(char *aika)    /* 10.8.1992 */
                 {
                 display_off=0; BEEP; PR_EBLK;
                 sur_print("\n ALARM!!!     Press # "); PR_ENRM;
-                while (k!='#') k=getck();
+                while (k!='#') { k=getck();
+}
                 ++sur_alarm; disp();
                 }
             }
@@ -2339,7 +2468,8 @@ static char s_aika[27];
 char *s_time(time_t *paika)
         {
         strcpy(s_aika,ctime(paika));
-        if (s_aika[8]==' ') s_aika[8]='0';
+        if (s_aika[8]==' ') { s_aika[8]='0';
+}
         return(s_aika);
         }
 
@@ -2373,7 +2503,8 @@ int headline_editor()
 			return(1);
 			}
 
-		lev=c1+c-1; if (lev>c2) lev=c2; // RS ADD		
+		lev=c1+c-1; if (lev>c2) { lev=c2; // RS ADD		
+}
         pvmaika(aika);
         dispm2='0'+ntut; hshadow='8'; if (ntut==0) { dispm2=' '; hshadow='4'; }
         muste_sprintf(x,"%c%c%4u",pref,dispm2,lev);  // RS CHA c1+c-1 -> lev
@@ -2397,11 +2528,13 @@ int headline_editor()
 
         muste_sprintf(x,"%d",dispm);
 
-        if (large_field) dispm2='P'; else dispm2='4';
+        if (large_field) { dispm2='P'; } else { dispm2='4';
+}
 
         write_string(" ",1,dispm2,1,c3+8-1);
 
-        dispm2='0'+dispm; if (dispm==0) dispm2=' ';
+        dispm2='0'+dispm; if (dispm==0) { dispm2=' ';
+}
 
         write_string(x,1,dispm2,1,c3+8);
         PR_ENRM;
@@ -2451,7 +2584,8 @@ void displine(unsigned int j,unsigned int lev)
 
 
 /*      CURSOR_OFF;             */
-        if (rsh!=j) muste_sprintf(x,"%6u ",j); else muste_sprintf(x,"Shadow:");
+        if (rsh!=j) { muste_sprintf(x,"%6u ",j); } else { muste_sprintf(x,"Shadow:");
+}
         x[7]=z[(j-1)*ed1]; x[8]=EOS;
         if (x[7]=='?') { write_string(space,c3+8,' ',j-r1+2,1); return; }
         if (!line_labels_off) { write_string(x,8,2,j-r1+2,1); } // RS CHA 23.9.2012 shadow '2' -> 2
@@ -2477,7 +2611,8 @@ void displine(unsigned int j,unsigned int lev)
                       n_words=split(y+1,point_par,102);
 // 5    3 0.5 0.3 0.2
 // time n probabilities
-					  if (n_words<3) return; // RS ADD
+					  if (n_words<3) { return; // RS ADD
+}
 
                       interval=atoi(point_par[0]);
                       rivi=(int)(abc[0]-'a');
@@ -2490,8 +2625,9 @@ void displine(unsigned int j,unsigned int lev)
                         n=atoi(point_par[1]);
                         if (*point_par[2]=='S') // Systematic
                           {
-                          if (survopoint_counter[rivi]>n-1)
+                          if (survopoint_counter[rivi]>n-1) {
                                    survopoint_counter[rivi]=0;
+}
                           ++survopoint_counter[rivi];
                           jj=i+survopoint_counter[rivi];
                           px=z+(jj-1)*ed1+c1;
@@ -2512,9 +2648,11 @@ void displine(unsigned int j,unsigned int lev)
                           while (k<n) // 19.3.2012
                             {
 //                  if (k<0 || k>10) { Rprintf("\nk=%d",k); }
-							if (n_words<k+2+1) return; // RS ADD
+							if (n_words<k+2+1) { return; // RS ADD
+}
                             sum+=atof(point_par[k+2]);
-                            if (rval<sum) break;
+                            if (rval<sum) { break;
+}
                             ++k;
                             }
                           jj=i+1+k;
@@ -2539,7 +2677,8 @@ void displine(unsigned int j,unsigned int lev)
             if (*px=='.')
                 {
                 i=1;
-                while (px[i]=='.' && i<lev) ++i;
+                while (px[i]=='.' && i<lev) { ++i;
+}
                 if (i==lev) { write_string(stripe,lev,' ',j-r1+2,9); return; }
                 }
             if (*px=='#') // 19.4.2010
@@ -2552,7 +2691,8 @@ void displine(unsigned int j,unsigned int lev)
             if ( zs[jj]==0 ) // 15.3.2012
                 {
                 write_string(px,lev,' ',j-r1+2,9);
-                if (move_ind>1) move_disp(j);
+                if (move_ind>1) { move_disp(j);
+}
                 return;
                 }
 // RS CHA           pxs=z+(zs[j]-1)*ed1+c1;
@@ -2561,7 +2701,8 @@ void displine(unsigned int j,unsigned int lev)
             if (dispx!=' ')
                 {
                 write_string(px,lev,dispx,j-r1+2,9);
-                if (move_ind>1) move_disp(j);
+                if (move_ind>1) { move_disp(j);
+}
                 return;
                 }
             i=0;
@@ -2569,16 +2710,19 @@ void displine(unsigned int j,unsigned int lev)
                 {
                 dispx=pxs[i];
                 k=i;
-                while (k<lev && pxs[k]==dispx) ++k;
+                while (k<lev && pxs[k]==dispx) { ++k;
+}
 
-               if (shad_off)   /* 18.5.1995 */
+               if (shad_off) {   /* 18.5.1995 */
                     dispx=shad_active[(unsigned int)dispx];
+}
 
                 write_string(px+i,k-i,dispx,j-r1+2,9+i);
                 i=k;
                 }
 
-            if (move_ind>1) move_disp(j);
+            if (move_ind>1) { move_disp(j);
+}
             }
 /*      CURSOR_ON;      */
 
@@ -2587,7 +2731,8 @@ void displine(unsigned int j,unsigned int lev)
 void displine2(unsigned int j)
         {
         unsigned int lev;
-        lev=c3; if (c2-c1+1<c3) lev=c2-c1+1;
+        lev=c3; if (c2-c1+1<c3) { lev=c2-c1+1;
+}
         LOCATE(j-r1+2,1);
         ERASE;
         displine(j,lev);
@@ -2614,7 +2759,8 @@ void disp_prompt_line(int sh) // RS char sh)
         write_string(space,c3+8,0,r3+2,1); // RS CHA 23.9.2012 shadow ' ' -> 0
         if (prompt_line!=NULL)
             {
-            if (sh>='0' && sh<='9') sh-=48; // RS ADD 23.9.2012
+            if (sh>='0' && sh<='9') { sh-=48; // RS ADD 23.9.2012
+}
             write_string(prompt_line,strlen(prompt_line),sh,r3+2,1);
             }
         }
@@ -2625,17 +2771,22 @@ int dispoint()
         unsigned int i,lev;
         int k;
         char *px;
-        if (muste_help_running) return(1);
-        if (survopoint_on) ++survopoint_disp_n; // 15.3.2012
+        if (muste_help_running) { return(1);
+}
+        if (survopoint_on) { ++survopoint_disp_n; // 15.3.2012
+}
         headline_editor();
              
-        lev=c3; if (c2-c1+1<c3) lev=c2-c1+1;
-        k=r3; if (r2<r3) k=r2;
+        lev=c3; if (c2-c1+1<c3) { lev=c2-c1+1;
+}
+        k=r3; if (r2<r3) { k=r2;
+}
         
         for (i=0; i<k; ++i) 
         	{
             px=z+(r1+i-1)*ed1+c1;
-            if (*(px-1)==survopoint) displine(r1+i,lev);
+            if (*(px-1)==survopoint) { displine(r1+i,lev);
+}
         	}
         	
         cursor(r,c);
@@ -2665,7 +2816,8 @@ static int muste_search_rbufline(int curline,int check)
               {
               j=p-rivi;
               if (!(rivi[j-1]==(char)PREFIX && rivi[j-2]!=(char)PREFIX && 
-                  p[1]!=(char)'.' && p[1]!=(char)')' && p[1]!=(char)',')) p=rivi;                    
+                  p[1]!=(char)'.' && p[1]!=(char)')' && p[1]!=(char)',')) { p=rivi;                    
+}
               }
 /*                           
             p=strchr(rivi,(char)PREFIX); // RS ADD check changed PREFIX
@@ -2676,11 +2828,13 @@ static int muste_search_rbufline(int curline,int check)
              // RS double PREFIX needed for activation, but no triple or other special case
               else { p=rivi; }
 */              
-            else p=rivi;  
+            else { p=rivi;  
+}
             }
 
         j=split(p+1,para,3);
-        if (j<2) continue;
+        if (j<2) { continue;
+}
  
         muste_strupr(para[0]); 
         k1=0; k2=0;
@@ -2689,21 +2843,24 @@ static int muste_search_rbufline(int curline,int check)
 			r1bak=r1; rbak=r; r1=i; r=1;
 			k1=edline2(para[1],1,0);
 			r1=r1bak; r=rbak;
-			if (k1<=0) continue;
-			if (j<3) k2=emptyline(k1);
-			else
+			if (k1<=0) { continue;
+}
+			if (j<3) { k2=emptyline(k1);
+			} else
 				{
 				r1bak=r1; rbak=r; r1=i; r=1;
 				k2=edline2(para[2],1,0);
 				r1=r1bak; r=rbak;				
-				if (k2<=0) continue;
+				if (k2<=0) { continue;
+}
 				}
 // Rprintf("\n%d: %s %d,%d",i,para[0],k1,k2);	
             muste_rbuf1=k1;
             muste_rbuf2=k2;			
             if (check>0)
                 { 
-                if (check>=k1 && check<=k2) return(1);
+                if (check>=k1 && check<=k2) { return(1);
+}
                 continue;
                 }
 			return(i);				
@@ -2723,8 +2880,10 @@ static int disp_rbuf() // RS 25.3.2013
     while (1)
         {
         i=muste_search_rbufline(i+1,0);
-        if (i<0) break;
-        if (muste_rbuf1>(r1+r3) || muste_rbuf2<r1) continue;
+        if (i<0) { break;
+}
+        if (muste_rbuf1>(r1+r3) || muste_rbuf2<r1) { continue;
+}
 
         if (r1>muste_rbuf1) { firstvisible=r1-muste_rbuf1+1; screenmin=1; }
         else { firstvisible=1; screenmin=muste_rbuf1-r1+1; }
@@ -2754,32 +2913,40 @@ int disp()
         extern int muste_help_running;
         unsigned int i,lev;
         int k;
-        if (muste_help_running) return(1);
-        if (survopoint_on) ++survopoint_disp_n; // 15.3.2012
+        if (muste_help_running) { return(1);
+}
+        if (survopoint_on) { ++survopoint_disp_n; // 15.3.2012
+}
 		CURSOR_OFF;
         headline_editor();
         
 // RS REM?        ohi_on=' '; // 10.10.01        
-        lev=c3; if (c2-c1+1<c3) lev=c2-c1+1;
-        k=r3; if (r2<r3) k=r2;
+        lev=c3; if (c2-c1+1<c3) { lev=c2-c1+1;
+}
+        k=r3; if (r2<r3) { k=r2;
+}
         for (i=0; i<k; ++i) { displine(r1+i,lev); }
 
         if (r2<r3) // RS 22.1.2014
             {
-            for (; i<r3; ++i) write_string(space,c3+8,'7',i+2,1);
+            for (; i<r3; ++i) { write_string(space,c3+8,'7',i+2,1);
+}
             }        
         
         disp_prompt_line(prompt_shadow);
-        if (display_off) soft_disp(0);
+        if (display_off) { soft_disp(0);
+}
 
-        if (muste_rbuf_show) disp_rbuf(); // RS 25.3.2013
+        if (muste_rbuf_show) { disp_rbuf(); // RS 25.3.2013
+}
         
 // RS REM?         aikatarkistus(); // 10.10.01
 // Rprintf("\nohi_on=%d|",(int)ohi_on); sur_sleep(1000);
 // RS REM?        if (aika_loppuu!=NULL && ohi_on!=EOS) aika_loppunut();       
         
        cursor(r,c);
-       if (insert_mode) CURSOR_INS; else CURSOR_ON;
+       if (insert_mode) { CURSOR_INS; } else { CURSOR_ON;
+}
         return(1);
         }
 
@@ -2790,7 +2957,8 @@ void dispch(int m)
 
         if (dispm>0) {
                        disp_mode(dispm+'0');
-                       if (m==(int)' ') m=(int)z[(r1+r-2)*ed1+c1+c-1];
+                       if (m==(int)' ') { m=(int)z[(r1+r-2)*ed1+c1+c-1];
+}
                      }
         muste_sprintf(merkki,"%c",(unsigned char)m); // RS ADD 10.10.2012            
         write_string(merkki,1,(unsigned char)sdisp,r+1,c+8); // RS CHA 10.10.2012 &m -> merkki 
@@ -2800,13 +2968,15 @@ void dispch(int m)
             {
             if (zs[r1+r-1]==0)
                 {
-                i=creatshad(r1+r-1); if (i==0) return;
+                i=creatshad(r1+r-1); if (i==0) { return;
+}
                 }
             z[(zs[r1+r-1]-1)*ed1+c1+c-1]=(char)(dispm+'0');
             }
         else /* dispm=0 */
             {
-            if (zs[r1+r-1]==0) return;
+            if (zs[r1+r-1]==0) { return;
+}
             z[(zs[r1+r-1]-1)*ed1+c1+c-1]=' ';
             testshad(r1+r-1);
             }
@@ -2821,7 +2991,8 @@ int disp_shadow()
 
         if (rsh==0)
             {
-            if (j==r2 || r==r3) return(1);
+            if (j==r2 || r==r3) { return(1);
+}
             edread(sh_vara,j+1); rsh=j+1; zsrsh=zs[j+1]; zs[j+1]=0;
             dispm=0;
             if (zs[j]==0)
@@ -2840,13 +3011,16 @@ int disp_shadow()
             }
 
         edread(x,rsh);
-        if (zs[rsh-1]==0) creatshad(rsh-1);   /* 13.3.86 */
+        if (zs[rsh-1]==0) { creatshad(rsh-1);   /* 13.3.86 */
+}
         edwrite(x,zs[rsh-1],0);
         edwrite(sh_vara,rsh,0); zs[rsh]=zsrsh;
         testshad(rsh-1);
         j=rsh; rsh=0;
-        if (j-1>=r1 && j-1<r1+r3) displine2(j-1);
-        if (j>=r1 && j<r1+r3) displine2(j);
+        if (j-1>=r1 && j-1<r1+r3) { displine2(j-1);
+}
+        if (j>=r1 && j<r1+r3) { displine2(j);
+}
         return(1);
         }
 
@@ -2856,7 +3030,8 @@ int disp_all()
         int i,j;
         disp();
         j=soft_vis;
-        if (etu==1) i=0; else i=1;
+        if (etu==1) { i=0; } else { i=1;
+}
         soft_disp(i);
 
         soft_vis=j;
@@ -2892,10 +3067,13 @@ void prompt_editor(char *kysymys,char *vastaus,int pituus)
         int m, pos;
         extern int muste_emacs;
 
-        for (i=0; i<pituus; ++i) tila[i]=' ';
-        for (i=0; i<strlen(vastaus); ++i) tila[i]=vastaus[i];
+        for (i=0; i<pituus; ++i) { tila[i]=' ';
+}
+        for (i=0; i<strlen(vastaus); ++i) { tila[i]=vastaus[i];
+}
         muste_sprintf(sbuf,"%s%.*s*",kysymys,pituus,tila); sur_print(sbuf);
-        for (i=0; i<pituus+1; ++i) PR_LEFT;
+        for (i=0; i<pituus+1; ++i) { PR_LEFT;
+}
 
         pos=1;
         while (1)
@@ -2907,19 +3085,23 @@ void prompt_editor(char *kysymys,char *vastaus,int pituus)
                 switch (m)
                     {
                   case CODE_LEFT:
-                    if (pos==1) break;
+                    if (pos==1) { break;
+}
                     PR_LEFT; --pos; break;
                   case CODE_RIGHT:
-                    if (pos==pituus) break;
+                    if (pos==pituus) { break;
+}
                     PR_RIGHT; ++pos; break;
                   case CODE_RETURN:
                     i=pituus;
-                    while(tila[i-1]==' ') --i;
+                    while(tila[i-1]==' ') { --i;
+}
                     tila[i]=EOS;
                     strcpy(vastaus,tila);
                     return;
                   case CODE_HOME:
-                    for (;pos>1;--pos) PR_LEFT;
+                    for (;pos>1;--pos) { PR_LEFT;
+}
                     break;
                   case CODE_ERASE:
                     for (i=pos-1; i<pituus; ++i)
@@ -2927,28 +3109,35 @@ void prompt_editor(char *kysymys,char *vastaus,int pituus)
                         tila[i]=' ';
                         sur_print(" ");
                         }
-                    for (i=pos-1; i<pituus; ++i) PR_LEFT;
+                    for (i=pos-1; i<pituus; ++i) { PR_LEFT;
+}
                     break;
                   case CODE_INSERT:
                     if (tila[pituus-1]!=' ') { BEEP; break; }
-                    for (i=pituus-1; i>=pos; --i) tila[i]=tila[i-1];
+                    for (i=pituus-1; i>=pos; --i) { tila[i]=tila[i-1];
+}
                     tila[pos-1]=' ';
                     for (i=pos; i<=pituus; ++i) { muste_sprintf(sbuf,"%c",tila[i-1]); sur_print(sbuf); }
-                    for (i=pos; i<=pituus; ++i) PR_LEFT;
+                    for (i=pos; i<=pituus; ++i) { PR_LEFT;
+}
                     break;
                   case CODE_BACKSP: // RS 22.11.2012
                     if (pos>1) { PR_LEFT; --pos; }
                   case CODE_DELETE:
-                    for (i=pos; i<pituus; ++i) tila[i-1]=tila[i];
+                    for (i=pos; i<pituus; ++i) { tila[i-1]=tila[i];
+}
                     tila[pituus-1]=' ';
                     for (i=pos; i<=pituus; ++i) { muste_sprintf(sbuf,"%c",tila[i-1]); sur_print(sbuf); }
-                    for (i=pos; i<=pituus; ++i) PR_LEFT;
+                    for (i=pos; i<=pituus; ++i) { PR_LEFT;
+}
                     break;
 
                   default:
-                  	if (m<32 || m>255) break; // RS 22.11.2012
+                  	if (m<32 || m>255) { break; // RS 22.11.2012
+}
                     muste_sprintf(sbuf,"%c",m); sur_print(sbuf); tila[pos-1]=(char)m;
-                    if (pos<pituus) ++pos; else PR_LEFT;
+                    if (pos<pituus) { ++pos; } else { PR_LEFT;
+}
                     break;
                     }
             }
@@ -2962,8 +3151,10 @@ int insertl()
         char x[LLENGTH]; // RS REM , x1[LLENGTH];
 
         j=r1+r;
-        if (j-1==r2) return(1);  /* 30.3.91 */
-        if (rsh) disp_shadow();  /* 8.5.90 */
+        if (j-1==r2) { return(1);  /* 30.3.91 */
+}
+        if (rsh) { disp_shadow();  /* 8.5.90 */
+}
         edread(x,r2);
         if (!empty(x+1,c2))
             {
@@ -2974,14 +3165,17 @@ int insertl()
         strcpy(x,"*"); strncat(x,space,c2);
         edwrite(x,j,0);
         j=ed2-1;
-        for (; j>r1+r-1; --j) zs[j+1]=zs[j];
+        for (; j>r1+r-1; --j) { zs[j+1]=zs[j];
+}
         zs[r1+r]=0;
         if (move_ind)
             {
             if (move_r1>=r1+r-1)
                 {
-                if (move_r1<r2) ++move_r1;
-                if (move_r2<r2) ++move_r2;
+                if (move_r1<r2) { ++move_r1;
+}
+                if (move_r2<r2) { ++move_r2;
+}
                 }
             }
 
@@ -2989,11 +3183,13 @@ int insertl()
                         {
                         SCROLL_DOWN(r+1,r3,1);
                         displine2(r1+r);
-                        for (j=r1+r+1; j<r1+r3; ++j)
+                        for (j=r1+r+1; j<r1+r3; ++j) {
                             displine(j,0);
+}
                         }
 
-                    if (r<r3) ++r;
+                    if (r<r3) { ++r;
+}
 
 /*      if (r<r3) { disp(); ++r; }  */
         return(1);
@@ -3021,22 +3217,26 @@ void deletel()
             }
 
         l=ed2-1;
-        for (j=r1+r-1; j<=l; ++j) zs[j]=zs[j+1];
+        for (j=r1+r-1; j<=l; ++j) { zs[j]=zs[j+1];
+}
         zs[l+1]=0;
         if (move_ind)
             {
             if (move_r1>r1+r-1)
                 {
-                if (move_r1>1) --move_r1;
-                if (move_r2>1) --move_r2;
+                if (move_r1>1) { --move_r1;
+}
+                if (move_r2>1) { --move_r2;
+}
                 }
             }
 
                     if (r<r3 && !display_off)
                         {
                         SCROLL_UP(r,r3,1);
-                        for (j=r1+r-1; j<r1+r3; ++j)
+                        for (j=r1+r-1; j<r1+r3; ++j) {
                             displine(j,0);
+}
                         }
                     displine2(r1+r3-1);
 
@@ -3057,21 +3257,27 @@ void line_merge()
         int ins_line=0;
 
         j=r1+r-1;
-        if (j==r2) return;
-        shad=0; if ( zs[j]!=0 || zs[j+1]!=0 ) shad=1;
+        if (j==r2) { return;
+}
+        shad=0; if ( zs[j]!=0 || zs[j+1]!=0 ) { shad=1;
+}
         edread(x,j);
         edread(x1,j+1);
         if (shad)
             {
-            if (zs[j]==0) creatshad(j);
-            if (zs[j+1]==0) creatshad(j+1);
+            if (zs[j]==0) { creatshad(j);
+}
+            if (zs[j+1]==0) { creatshad(j+1);
+}
             edread(sx,zs[j]); edread(sx1,zs[j+1]);
             }
         if (empty(x+c1+c-1,c2-c1-c+2))
             {
             len=c2+1;
-            while (x1[len-1]==' ') x1[--len]=EOS;
-            if (len>c2-c1-c+2) { if (shad) shadt(j,j+1); return; }
+            while (x1[len-1]==' ') { x1[--len]=EOS;
+}
+            if (len>c2-c1-c+2) { if (shad) { shadt(j,j+1); 
+}return; }
             x[c1+c-1]=EOS; strcat(x,x1+1);
             edwrite(x,j,0);
             edwrite(space,j+1,1);
@@ -3083,14 +3289,16 @@ void line_merge()
                 edwrite(space,zs[j+1],1);
                 shadt(j,j+1);
                 }
-            displine2(j); if (r<r3) displine2(j+1);
+            displine2(j); if (r<r3) { displine2(j+1);
+}
             return;
             }
         if (!empty(x1+1,c2-1))
             {
             insertl();     // 2.4.2004
             *x1='*';
-            if (r<r3) --r;
+            if (r<r3) { --r;
+}
             creatshad(j+1);
             ins_line=1;
             }
@@ -3104,8 +3312,10 @@ void line_merge()
             edwrite(sx1,zs[j+1],0);
             shadt(j,j+1);
             }
-        if (ins_line) testshad(j+1);
-        displine2(j); if (r<r3) displine2(j+1);
+        if (ins_line) { testshad(j+1);
+}
+        displine2(j); if (r<r3) { displine2(j+1);
+}
         }
 
 int insert()
@@ -3118,12 +3328,15 @@ int insert()
         edread(x,j);
         if (ins_lines_on)
             {
-            c_insert=c3; if (c2<c3) c_insert=c2;
+            c_insert=c3; if (c2<c3) { c_insert=c2;
+}
             if (!empty(x+c_insert,c2-c_insert) || x[c_insert]!=' ')
                 {
                 if (r<r3) { i=insertl(); --r; }
-                else i=insertl();
-                if (i<0) return(-1);
+                else { i=insertl();
+}
+                if (i<0) { return(-1);
+}
                 line_merge();
                 edread(x,j);
                 }
@@ -3182,12 +3395,14 @@ int step_down(int k)
 
         for (i=0; i<k; ++i)
             {
-            if (r+i==r2) return(1); // 22.12.2000
+            if (r+i==r2) { return(1); // 22.12.2000
+}
             if (r<r3) { ++r; continue; }
             if (r1<r2-r3+1)
                 {
                 ++r1;
-                if (display_off) continue;
+                if (display_off) { continue;
+}
                 SCROLL_UP(1,r3,1);
                 displine2(r1+r3-1);
                 }
@@ -3217,7 +3432,8 @@ void move_up2(int k)
             if (r1>1)
                 {
                 --r1;
-                if (display_off) continue;
+                if (display_off) { continue;
+}
                 SCROLL_DOWN(1,r3,1);
                 displine2(r1);
                 }
@@ -3228,7 +3444,8 @@ void move_up2(int k)
 
 int kontr_()    /* 26.3.1992 */
         {
-        if (*(z+ed1*(r1+r-2))=='_') return(1);
+        if (*(z+ed1*(r1+r-2))=='_') { return(1);
+}
         return(0);
         }
 
@@ -3279,7 +3496,8 @@ int lopetuskysely()
 	        }
 
 		muste_lopetus=FALSE; // RS 
-        if (!exit_warning) return(1);
+        if (!exit_warning) { return(1);
+}
         PR_EBLK; cursor(r3+1,1);
         sur_print("Exit from Survo (and R) (Y/N/R)?");
         i=nextch_editor(); if (i=='Y' || i=='y')
@@ -3311,36 +3529,47 @@ static int line_copy_do(int i, int j)
 
         if (i==j && zs[i]==0)
             {
-            edread(x,j); i=ed1; while (i>1 && x[i-1]==' ') x[--i]=EOS;
-            if (i==1) return(1);
-            strcpy(sx,x); while (strlen(sx)<ed1) strcat(sx,x+1);
+            edread(x,j); i=ed1; while (i>1 && x[i-1]==' ') { x[--i]=EOS;
+}
+            if (i==1) { return(1);
+}
+            strcpy(sx,x); while (strlen(sx)<ed1) { strcat(sx,x+1);
+}
             edwrite(sx,j,0); return(1);
             }
 
-        shad=0; if ( zs[i]!=0 || zs[j]!=0 ) shad=1;
+        shad=0; if ( zs[i]!=0 || zs[j]!=0 ) { shad=1;
+}
         edread(x,j);
         edread(x1,i);
         len2=0;
         if (shad)
             {
-            if (zs[j]==0) creatshad(j);
-            if (zs[i]==0) creatshad(i);
+            if (zs[j]==0) { creatshad(j);
+}
+            if (zs[i]==0) { creatshad(i);
+}
             edread(sx,zs[j]); edread(sx1,zs[i]);
             len2=c2+1;
-            while (len2>1 && sx1[len2-1]==' ') --len2;
+            while (len2>1 && sx1[len2-1]==' ') { --len2;
+}
             }
         len=c2+1;
-        while (len>1 && x1[len-1]==' ') --len;
-        if (len2>len) len=len2; x1[len]=sx1[len]=EOS;
+        while (len>1 && x1[len-1]==' ') { --len;
+}
+        if (len2>len) { len=len2; 
+}x1[len]=sx1[len]=EOS;
 
-        if (len>c2-c1-c+3) x1[c2-c1-c+3]=EOS;
+        if (len>c2-c1-c+3) { x1[c2-c1-c+3]=EOS;
+}
         x[c1+c-1]=EOS; strcat(x,x1+1);
         edwrite(x,j,0);
         if (shad)
             {
             sx1[len]=EOS;
             sx[c1+c-1]=EOS; strcat(sx,sx1+1);
-            if (zs[j]>0) edwrite(sx,zs[j],0);
+            if (zs[j]>0) { edwrite(sx,zs[j],0);
+}
             testshad(i); testshad(j);
             }
    return(1);
@@ -3357,7 +3586,8 @@ int line_copy()
 // RS REM        extern int ref_r1,ref_r;
 		char *xl;
 
-        if (move_ind) pyyhi_alarivi();
+        if (move_ind) { pyyhi_alarivi();
+}
 
         soft_disp(0);
         cursor(r,c);
@@ -3371,8 +3601,10 @@ int line_copy()
         if (xl!=NULL)
 			{
 			*xl=EOS; xl++;
-			ekar=edline2(x,1,1); if (ekar==0) return(1);
-			vikar=edline2(xl,ekar,1); if (vikar==0) return(1);
+			ekar=edline2(x,1,1); if (ekar==0) { return(1);
+}
+			vikar=edline2(xl,ekar,1); if (vikar==0) { return(1);
+}
 			
 			for (i=ekar; i<=vikar; i++, j++)
 				{
@@ -3397,17 +3629,19 @@ int line_copy()
         	}
 */        	
         
-        if (*x==EOS) i=j;
-        else if (*x=='*') // 19.8.2007
+        if (*x==EOS) { i=j;
+        } else if (*x=='*') // 19.8.2007
             {
             k=ref_r1+ref_r-1;
-            if (k<1) i=1;
-            else i=k;
+            if (k<1) { i=1;
+            } else { i=k;
+}
             }
-        else if (*x=='-') i=ref1_line; // 26.11.2009    
-        else
+        else if (*x=='-') { i=ref1_line; // 26.11.2009    
+        } else
             {
-            i=edline2(x,1,1); if (i==0) return(1);
+            i=edline2(x,1,1); if (i==0) { return(1);
+}
             }
 
 
@@ -3467,15 +3701,18 @@ void seek_line_end()
 
         edread(x,r1+r-1);
         i=c2;
-        while (i>0 && x[i]==' ') --i;
-        if (i<c2) ++i;
+        while (i>0 && x[i]==' ') { --i;
+}
+        if (i<c2) { ++i;
+}
         c1=1; c=i;
         col_display();
         }
 
 int dtest(int vr1,int r1)
         {
-        if (vr1==r1) return(2);
+        if (vr1==r1) { return(2);
+}
         return(1);
         }
 
@@ -3506,24 +3743,31 @@ int op_goto2(int g,char *parm[])
                 if (strstr(sbuf,"*..........")!=NULL) { j1=i; break; }
                 ++i;
                 }
-            if (j1==0) return(-1);
+            if (j1==0) { return(-1);
+}
             }
         else
             {
-            j1=edline2(parm[1],1,1); if (j1==0) return(-1);
+            j1=edline2(parm[1],1,1); if (j1==0) { return(-1);
+}
             }
             
-        if (g>2) { j2=edline2(parm[2],j1,1); if (j2<j1) return(-1); }
+        if (g>2) { j2=edline2(parm[2],j1,1); if (j2<j1) { return(-1); 
+}}
         if (j1>r2-r3+1) { r1=r2-r3+1; r=j1-r1+1; j1=r2-r3+1; }
         else            { r1=j1; r=1; }
-        if (g==2) return(dtest(vr1,r1));
-        if (j2-j1>r3-1) j1=j2-r3+1;
+        if (g==2) { return(dtest(vr1,r1));
+}
+        if (j2-j1>r3-1) { j1=j2-r3+1;
+}
         r1=j1; r=j2-r1+1;
         
-        if (g==3) return(dtest(vr1,r1));
+        if (g==3) { return(dtest(vr1,r1));
+}
         if (g==4)
             {
-            col=atoi(parm[3]); if (col<0 || col>c3) return(1);
+            col=atoi(parm[3]); if (col<0 || col>c3) { return(1);
+}
             c=col; return(dtest(vr1,r1));
             }
 
@@ -3531,11 +3775,12 @@ int op_goto2(int g,char *parm[])
         c1=atoi(parm[3]); col=atoi(parm[4])-c1+1;   
         if (c1<1 || c1>c2-c3+1 || col<1 || col>c3) 
         	{
-        	if (c2-c3+1<0) c1=1; // RS ADD 15.11.2012
-        	else { c1=vc1; return(1); }
+        	if (c2-c3+1<0) { c1=1; // RS ADD 15.11.2012
+        	} else { c1=vc1; return(1); }
         	}
         c=col;      
-        i=dtest(vr1,r1); if (i==1 || c1!=vc1) return(1);
+        i=dtest(vr1,r1); if (i==1 || c1!=vc1) { return(1);
+}
         return(2);
         }
 
@@ -3581,16 +3826,21 @@ int op_set()
             sur_print("\nUsage: SET L1,L2,L");
             WAIT; return(-1);
             }
-        j1=edline2(parm[1],1,1); if (j1==0) return(-1);
-        j2=edline2(parm[2],j1,1); if (j2==0) return(-1);
-        j3=edline2(parm[3],1,1); if (j3==0) return(-1);
+        j1=edline2(parm[1],1,1); if (j1==0) { return(-1);
+}
+        j2=edline2(parm[2],j1,1); if (j2==0) { return(-1);
+}
+        j3=edline2(parm[3],1,1); if (j3==0) { return(-1);
+}
         edread(maskline,j3);
         for (i=1; i<ed1; ++i)
             {
             c=maskline[i];
-            if (c==' ') continue;
-            for (j=(j1-1)*ed1+i; j<=(j2-1)*ed1+i; j+=ed1)
+            if (c==' ') { continue;
+}
+            for (j=(j1-1)*ed1+i; j<=(j2-1)*ed1+i; j+=ed1) {
                 z[j]=c;
+}
             }
         return(1);
         }
@@ -3600,9 +3850,11 @@ int op_save()
 // RS        extern int save_84ed; // 13.4.2002
 
         if (g<2) { op_incomplete(); return(-1); }
-        if (rsh) disp_shadow();
+        if (rsh) { disp_shadow();
+}
         edread(sbuf,1);
-        if (strstr(sbuf,"(84ED)")!=NULL) save_84ed=1; else save_84ed=0;
+        if (strstr(sbuf,"(84ED)")!=NULL) { save_84ed=1; } else { save_84ed=0;
+}
         edsave(parm[1],1,1);
         set_console_title(); // RS 1.5.2014
         return(1);
@@ -3616,20 +3868,27 @@ int op_load()
 
         if (g<2) { op_incomplete(); return(-1); }
         load_keypressed=0; // RS 22.11.2014
-        i=edload(parm[1],1); if (i<=0) return(-1);
+        i=edload(parm[1],1); if (i<=0) { return(-1);
+}
         set_console_title(); // RS 1.5.2014
-        r=r1=c=c1=1; if (g==2) return(1);
+        r=r1=c=c1=1; if (g==2) { return(1);
+}
         while (1)
             {
-            i=edline2(parm[2],1,1); if (i<=0) return(-1);
+            i=edline2(parm[2],1,1); if (i<=0) { return(-1);
+}
             r1=i;
             if (r1>r2-r3+1) { r1=r2-r3+1; r=i-r1+1; }
-            if (g==3) return(1);
-            i=edline2(parm[3],1,r1); if (i<=0) return(-1);
+            if (g==3) { return(1);
+}
+            i=edline2(parm[3],1,r1); if (i<=0) { return(-1);
+}
             r=i-r1+1; if (r<=0 || r>r3) { r=1; parm[2]=parm[3]; continue; }
                                         /* 13.4.1996 */
-            if (g==4) return(1);
-            c=atoi(parm[4]); if (c>c3) c=1;  /* 25.11.90 */
+            if (g==4) { return(1);
+}
+            c=atoi(parm[4]); if (c>c3) { c=1;  /* 25.11.90 */
+}
             return(1);
             }
         }
@@ -3642,9 +3901,11 @@ static char *muste_get_savename() // RS 1.5.2014
 	int plukum;	
     edread(sbuf,1);
     plukum=splitq(sbuf+1,para,MAXPARM);
-    if (plukum<2) return(muste_nullname);
+    if (plukum<2) { return(muste_nullname);
+}
     muste_strupr(para[0]);    
-    if (strcmp(para[0],"SAVE")!=0) return(muste_nullname);
+    if (strcmp(para[0],"SAVE")!=0) { return(muste_nullname);
+}
     return(para[1]);    
     }
 
@@ -3664,14 +3925,16 @@ int get_console_name(char *x)
     if (strcmp(buffer,"(NO NAME)")==0) // RS 1.5.2014
         {
         i=muste_sprintf(x,"%s",system_name);
-        if (*sur_session!='A' && *sur_session!=EOS)
+        if (*sur_session!='A' && *sur_session!=EOS) {
             i=muste_sprintf(x,"%s: %s",sur_session,system_name);
+}
         }
     else
         {
         i=muste_sprintf(x,"[%s] - %s",buffer,system_name);
-        if (*sur_session!='A' && *sur_session!=EOS)
+        if (*sur_session!='A' && *sur_session!=EOS) {
             i=muste_sprintf(x,"%s [%s]: %s",sur_session,buffer,system_name);
+}
         }
     
     strcpy(dfilename,survo_path);
@@ -3732,15 +3995,22 @@ int op_resize()
         rr=atoi(parm[1]);
         cc=atoi(parm[2]);
         }
-    if (rr<1) rr=23;
-    if (cc<72) cc=72;
-    if (rr>r2) rr=r2; // RS ADD 7.6.2012
+    if (rr<1) { rr=23;
+}
+    if (cc<72) { cc=72;
+}
+    if (rr>r2) { rr=r2; // RS ADD 7.6.2012
+}
 
-    if (r_soft) rs=r_soft+1; else rs=0;
-    if (rr+rs+2<25 && cc<72) cc=72; // RS cc>72 sallittu;  pienillä r3, c3 oltava 72
+    if (r_soft) { rs=r_soft+1; } else { rs=0;
+}
+    if (rr+rs+2<25 && cc<72) { cc=72; // RS cc>72 sallittu;  pienillä r3, c3 oltava 72
+}
     muste_resize(cc+8,rr+2+rs); // RS CHA   i=sur_resize1(cc+8,rr+2+rs);
-    r3=rr; if (r>r3) r=r3;
-    c3=cc; if (c>c3) c=c3;
+    r3=rr; if (r>r3) { r=r3;
+}
+    c3=cc; if (c>c3) { c=c3;
+}
 
     if (r2-r1<r3) { r+=r3-(r2-r1)-1; r1=r2-r3+1; }  // 22.1.2007
 
@@ -3762,13 +4032,17 @@ int goto_control_char(int k) /* 5.4.1999 */
         char rivi2[10];
 
         j0=r1+r-1;
-        if (k) { ch=z[(r1+r-2)*ed1]; ++j0; } else ch=*tut_info;
+        if (k) { ch=z[(r1+r-2)*ed1]; ++j0; } else { ch=*tut_info;
+}
         for (j=j0; j<=r2; ++j)
             {
-            if (ch==z[ed1*(j-1)]) break;
+            if (ch==z[ed1*(j-1)]) { break;
+}
             }
-        if (j>r2) return(1);
-        g=3; j0=j-5; if (j0<1) j0=1;
+        if (j>r2) { return(1);
+}
+        g=3; j0=j-5; if (j0<1) { j0=1;
+}
         muste_sprintf(rivi1,"%d",j0); parm[1]=rivi1;
         muste_sprintf(rivi2,"%d",j); parm[2]=rivi2;
         op_goto2(g,parm);
@@ -3784,11 +4058,15 @@ void next_tab()
         char x[LLENGTH];
         char *p;
 
-        for (i=0, j=1; j<=ed2; i+=ed1, ++j)
-                if (z[i]=='T') break;
+        for (i=0, j=1; j<=ed2; i+=ed1, ++j) {
+                if (z[i]=='T') { break;
+}
+}
         if (j>ed2)  /* ei T riviä */
             {
-            c+=10; c=10*(c/10)+1; if (c>c3) c=c3; if (c>c2) c=c2;
+            c+=10; c=10*(c/10)+1; if (c>c3) { c=c3; 
+}if (c>c2) { c=c2;
+}
             numtab=1;
             return;
             }
@@ -3798,10 +4076,13 @@ void next_tab()
         if (p==NULL)
             {
             BEEP;
-            if (c1==1 && r<r3) j=0; else j=1;
+            if (c1==1 && r<r3) { j=0; } else { j=1;
+}
             c=c1=1; ++r; if (r>r3) { --r; ++r1; }
-            if (r1>r2-r3+1) --r1;
-            if (j) disp();
+            if (r1>r2-r3+1) { --r1;
+}
+            if (j) { disp();
+}
             return;
             }
         numtab=1;
@@ -3844,14 +4125,16 @@ void find_margins(int j1,int j2)
 
         c_vasen=c2; c_oikea=0;
         r_alku=j1; r_loppu=j2;
-        for (i=0; i<ed1; ++i)  npos[i]=0;
+        for (i=0; i<ed1; ++i) {  npos[i]=0;
+}
 
         j=j1;
         edread(x,j);
         if (empty_line(x+1,c2))
             { c_vasen=mc; c_oikea=c3; r_alku=r_loppu=j; return; }
         i=1;
-        while (i<c2 && x[i]==' ') ++i;
+        while (i<c2 && x[i]==' ') { ++i;
+}
         reuna=i;
         while (j>1)
             {
@@ -3859,7 +4142,8 @@ void find_margins(int j1,int j2)
             edread(x,j);
             if (empty_line(x+1,c2) || *x=='-' ) { r_alku=j+1; break; }
             i=1;
-            while (i<c2 && x[i]==' ') ++i;
+            while (i<c2 && x[i]==' ') { ++i;
+}
             if (i>reuna) { r_alku=j; break; }
             if (i<reuna) { r_alku=j+1; break; }
             --r_alku;
@@ -3867,7 +4151,8 @@ void find_margins(int j1,int j2)
         j=j2;
         edread(x,j);
         i=1;
-        while (i<c2 && x[i]==' ') ++i;
+        while (i<c2 && x[i]==' ') { ++i;
+}
         reuna=i;
         while (j<ed2)
             {
@@ -3875,24 +4160,31 @@ void find_margins(int j1,int j2)
             edread(x,j);
             if (empty_line(x+1,c2) || *x=='-' ) { r_loppu=j-1; break; }
             i=1;
-            while (i<c2 && x[i]==' ') ++i;
+            while (i<c2 && x[i]==' ') { ++i;
+}
             if (i>reuna) { r_loppu=j-1; break; }
-            if (i<reuna) reuna=i;
+            if (i<reuna) { reuna=i;
+}
             ++r_loppu;
             }
         for (j=r_alku; j<=r_loppu; ++j)
             {
             edread(x,j);
-            if (empty_line(x+1,c2)) continue;
+            if (empty_line(x+1,c2)) { continue;
+}
             i=1;
-            while (i<c2 && x[i]==' ') ++i;
+            while (i<c2 && x[i]==' ') { ++i;
+}
             ++npos[i];
             i=c2;
-            while (i>1 && x[i]==' ') --i;
-            if (i>c_oikea) c_oikea=i;
+            while (i>1 && x[i]==' ') { --i;
+}
+            if (i>c_oikea) { c_oikea=i;
+}
             c_vasen=1; j=0;
-            for (i=1; i<ed1; ++i)
+            for (i=1; i<ed1; ++i) {
                 if (npos[i]>j) { c_vasen=i; j=npos[i]; }
+}
             }
         }
 
@@ -3900,7 +4192,8 @@ void del_char(char *s,int pos)
         {
         int i,len;
         len=strlen(s);
-        for (i=pos; i<len-1; ++i) s[i]=s[i+1];
+        for (i=pos; i<len-1; ++i) { s[i]=s[i+1];
+}
         s[len-1]=' ';
         }
 
@@ -3908,7 +4201,8 @@ void ins_char(char *s,int pos)
         {
         int i,len;
         len=strlen(s);
-        for (i=len-1; i>pos; --i) s[i]=s[i-1];
+        for (i=len-1; i>pos; --i) { s[i]=s[i-1];
+}
         s[pos]=' ';
         }
 
@@ -3925,7 +4219,8 @@ int rivi       /* norm. r1+r-1 */
         strcpy(x,"*"); strncat(x,space,c2);
         edwrite(x,rivi+1,0);
         j=ed2-1;
-        for (; j>rivi; --j) zs[j+1]=zs[j];
+        for (; j>rivi; --j) { zs[j+1]=zs[j];
+}
         zs[rivi+1]=0;
         }
 
@@ -3968,7 +4263,8 @@ void b_deletel(int rivi)
             }
 
         l=ed2-1;
-        for (j=rivi; j<=l; ++j) zs[j]=zs[j+1];
+        for (j=rivi; j<=l; ++j) { zs[j]=zs[j+1];
+}
         zs[l+1]=0;
         }
 
@@ -4003,21 +4299,27 @@ void b_line_merge(int j,int col)    /* norm. col=c1+c-1 */
         char x[LLENGTH], x1[LLENGTH];
         char sx[LLENGTH], sx1[LLENGTH];
 
-        if (j==r2) return;
-        shad=0; if ( zs[j]!=0 || zs[j+1]!=0 ) shad=1;
+        if (j==r2) { return;
+}
+        shad=0; if ( zs[j]!=0 || zs[j+1]!=0 ) { shad=1;
+}
         edread(x,j);
         edread(x1,j+1);
         if (shad)
             {
-            if (zs[j]==0) creatshad(j);
-            if (zs[j+1]==0) creatshad(j+1);
+            if (zs[j]==0) { creatshad(j);
+}
+            if (zs[j+1]==0) { creatshad(j+1);
+}
             edread(sx,zs[j]); edread(sx1,zs[j+1]);
             }
         if (empty_line(x+col,c2-col+1))
             {
             len=c2+1;
-            while (x1[len-1]==' ') x1[--len]=EOS;
-            if (len>c2-col+1) { if (shad) b_shadt(j,j+1); return; }
+            while (x1[len-1]==' ') { x1[--len]=EOS;
+}
+            if (len>c2-col+1) { if (shad) { b_shadt(j,j+1); 
+}return; }
             x[col]=EOS; strcat(x,x1+1);
             edwrite(x,j,0);
             edwrite(space,j+1,1);
@@ -4031,7 +4333,8 @@ void b_line_merge(int j,int col)    /* norm. col=c1+c-1 */
                 }
             return;
             }
-        if (!empty_line(x1+1,c2)) return;
+        if (!empty_line(x1+1,c2)) { return;
+}
         x1[1]=EOS; strncat(x1,x+col,c2-col+1);
         edwrite(space,j,col);
         edwrite(x1,j+1,0);
@@ -4063,7 +4366,8 @@ int insert_words()
             for (i=0; i<c_vasen-1; ++i)
                 {
                 k=b_insert(mr+1,1);
-                if (k<0) break;
+                if (k<0) { break;
+}
                 }
             edread(x,mr+1);
             i=0;
@@ -4077,7 +4381,8 @@ int insert_words()
 
         rivi=mr;
         survoxxx=muste_fopen2(survowrd,"rt");
-        if (survoxxx==NULL) return(-1);
+        if (survoxxx==NULL) { return(-1);
+}
         muste_fgets(x,LLENGTH-1,survoxxx);   /* n_save mc1 mc2 mr1 mr2 c_vasen1 */
         if (move_from_store)
             {
@@ -4096,22 +4401,29 @@ int insert_words()
             muste_fgets(x,LLENGTH-1,survoxxx);
             if (!empty_line(x,c2+1))
                 {
-                k=creatshad(rivi); if (k<0) return(-1);
+                k=creatshad(rivi); if (k<0) { return(-1);
+}
                 edwrite(x,zs[rivi],0);
                 }
             k=marg_ero;
-            if (k>0)
-                for (h=0; h<k; ++h) b_delete(rivi,1);
-            else if (k<0)
-                for (h=0; h<-k; ++h) b_insert(rivi,1);
+            if (k>0) {
+                for (h=0; h<k; ++h) { b_delete(rivi,1);
+}
+            } else if (k<0) {
+                for (h=0; h<-k; ++h) { b_insert(rivi,1);
+}
+}
             }
         muste_fclose(survoxxx);
 
         k=marg_ero;
-        if (k>0)
-            for (h=0; h<k; ++h) b_insert(mr+1,1);
-        else if (k<0)
-            for (h=0; h<-k; ++h) b_delete(mr+1,1);
+        if (k>0) {
+            for (h=0; h<k; ++h) { b_insert(mr+1,1);
+}
+        } else if (k<0) {
+            for (h=0; h<-k; ++h) { b_delete(mr+1,1);
+}
+}
 
         npois=0;
         for (i=1; i<mc1; ++i)
@@ -4132,8 +4444,9 @@ int insert_words()
            {
            line_erase(mr+n_save,mc2+1-marg_ero);
            }
-        else
+        else {
            line_erase(mr+n_save,mc2+1-npois);
+}
 
 
         return(lisrivit);
@@ -4145,20 +4458,25 @@ void autotrim(int rivi1,int rivi2)  // RS pois?
         char x[LLENGTH],*sana[3];
         char y[LLENGTH];
 
-        if (*trim_command!='T') return;
-        if (rivi1>rivi2) return;
+        if (*trim_command!='T') { return;
+}
+        if (rivi1>rivi2) { return;
+}
         if (rivi1==rivi2)
             {
             edread(x,rivi1);
-            if (empty_line(x+1,c2)) return;
+            if (empty_line(x+1,c2)) { return;
+}
             }
         vr=r; vr1=r1;
         r=1; r1=rivi1;
         strcpy(x,trim_command);
         i=split(x,sana,3);
         k=muste_sprintf(y,"%s %d %d",sana[0],rivi1+1,rivi2+1);
-        if (i>1) k+=muste_sprintf(y+k," %s",sana[1]);
-        if (i>2) k+=muste_sprintf(y+k," %s",sana[2]);
+        if (i>1) { k+=muste_sprintf(y+k," %s",sana[1]);
+}
+        if (i>2) { k+=muste_sprintf(y+k," %s",sana[2]);
+}
         b_insertl(rivi1-1);
         edwrite(y,rivi1,1);
         activate();
@@ -4178,17 +4496,21 @@ void store_move()
 
         move_from_store=1;
         find_margins(mr,mr);
-        k=insert_words(); if (k<0) return;
+        k=insert_words(); if (k<0) { return;
+}
         r_loppu+=k;
 
         edread(x,mr);
         if (empty_line(x+1,c2))  /*  siirrettäessä kappaleen alkuun */
             {
             b_deletel(mr);
-            if (r_alku>mr) --r_alku;
-            if (r_loppu>mr) --r_loppu;
+            if (r_alku>mr) { --r_alku;
+}
+            if (r_loppu>mr) { --r_loppu;
+}
             }
-        if (hae_apu("autotrim",trim_command)) autotrim(r_alku,r_loppu);  // RS pois?
+        if (hae_apu("autotrim",trim_command)) { autotrim(r_alku,r_loppu);  // RS pois?
+}
         }
 
 int delete_words()
@@ -4202,8 +4524,9 @@ int delete_words()
         poistetut_merkit=0; /* viim.rivin edestä */
         if (mr1==mr2)
             {
-            for (i=0; i<mc2-mc1+1; ++i)
+            for (i=0; i<mc2-mc1+1; ++i) {
                 b_delete(mr1,mc1);
+}
             edread(x,mr1);
             if (empty_line(x+1,c2))
                 {
@@ -4211,7 +4534,8 @@ int delete_words()
                 ++poistetut_rivit;
                 return(poistetut_rivit);
                 }
-            if (empty_line(x+mc1,c2-mc1+1)) return(poistetut_rivit);
+            if (empty_line(x+mc1,c2-mc1+1)) { return(poistetut_rivit);
+}
             while (x[mc1]==' ')
                 {
                 b_delete(mr1,mc1);
@@ -4223,8 +4547,9 @@ int delete_words()
         line_erase(mr1,mc1);
         eka_pois=mr1+1;
         edread(x,mr1);
-        if (empty_line(x+1,c2))
+        if (empty_line(x+1,c2)) {
             eka_pois=mr1;
+}
         for (rivi=mr2-1; rivi>=eka_pois; --rivi)
             {
             b_deletel(rivi);
@@ -4273,9 +4598,11 @@ int script_save(int mr1,int mr2,int mc1,int mc2)
     int j;
     char x[LLENGTH];
 
-    if (hae_apu("script_file",sname)==0) return(1);
+    if (hae_apu("script_file",sname)==0) { return(1);
+}
     survoxxx=muste_fopen2(sname,"wt");
-    if (survoxxx==NULL) return(1);
+    if (survoxxx==NULL) { return(1);
+}
     if (mr1>mr2) { j=mr1; mr1=mr2; mr2=j; }
     if (mc1>mc2) { j=mc1; mc1=mc2; mc2=j; }
     for (j=mr1; j<=mr2; ++j)
@@ -4295,7 +4622,8 @@ int save_words(char *tiedosto)
         char x[LLENGTH];
 
         survoxxx=muste_fopen2(tiedosto,"wt");
-        if (survoxxx==NULL) return(-1);
+        if (survoxxx==NULL) { return(-1);
+}
 
         n_save=mr2-mr1+1;
         fprintf(survoxxx,"%d %d %d %d %d %d\n",n_save,mc1,mc2,mr1,mr2,c_vasen);
@@ -4305,8 +4633,9 @@ int save_words(char *tiedosto)
             fprintf(survoxxx,"%s\n",x);
             if (zs[j]==0)
                 { muste_fieldcopy(x,space,ed1); x[ed1]=EOS; }
-            else
+            else {
                 edread(x,zs[j]);
+}
             fprintf(survoxxx,"%s\n",x);
             }
         muste_fclose(survoxxx);
@@ -4328,8 +4657,9 @@ void move_in_line()
         edread(x,mr);
         if (zs[mr]==0)
             { muste_fieldcopy(xs,space,ed1); xs[ed1]=EOS; }
-        else
+        else {
             edread(xs,zs[mr]);
+}
 
         strcpy(x2,x); strcpy(xs2,xs);
         if (mc1>mc2) { i=mc1; mc1=mc2; mc2=i; }
@@ -4337,7 +4667,8 @@ void move_in_line()
         for (i=0; i<mc2-mc1+1; ++i) { del_char(x2,mc1); del_char(xs2,mc1); ++npois; }
         if (x[mc1-1]==' ' && xs[mc1-1]==' ' && x[mc2+1]==' ' && xs[mc2+1]==' ')
             { del_char(x2,mc1); del_char(xs2,mc1); ++npois; }
-        if (mc>mc1) mc-=npois;
+        if (mc>mc1) { mc-=npois;
+}
 
         k=mc1;
         for (i=mc; i<mc+mc2-mc1+1; ++i)
@@ -4348,7 +4679,8 @@ void move_in_line()
             }
         if (x[mc1-1]==' ') { ins_char(x2,mc); ins_char(xs2,mc); }
         edwrite(x2,mr,0);
-        if (zs[mr]>0) edwrite(xs2,zs[mr],0);
+        if (zs[mr]>0) { edwrite(xs2,zs[mr],0);
+}
         }
 
 int lmove(int j1,int j2)
@@ -4357,14 +4689,18 @@ int lmove(int j1,int j2)
 // RS        char xs[LLENGTH];
         int lev;
 
-        lev=mc2-mc1+1; if (lev>c2-mc+1) lev=c2-mc+1;
+        lev=mc2-mc1+1; if (lev>c2-mc+1) { lev=c2-mc+1;
+}
         memmove(z+(j2-1)*ed1+mc,z+(j1-1)*ed1+mc1,lev);  /* -21.2.90 memcpy */
-        if (!zs[j1] && !zs[j2]) return(1);
+        if (!zs[j1] && !zs[j2]) { return(1);
+}
 /*      if (!zs[j1]) { i=shadow_create(j1); if (i<0) return(-1); }
         if (!zs[j2]) { i=shadow_create(j2); if (i<0) return(-1); }
 */
-        if (!zs[j1]) { i=creatshad(j1); if (i<0) return(-1); }
-        if (!zs[j2]) { i=creatshad(j2); if (i<0) return(-1); }
+        if (!zs[j1]) { i=creatshad(j1); if (i<0) { return(-1); 
+}}
+        if (!zs[j2]) { i=creatshad(j2); if (i<0) { return(-1); 
+}}
 
         memmove(z+(zs[j2]-1)*ed1+mc,z+(zs[j1]-1)*ed1+mc1,lev);
         testshad(j1);
@@ -4391,18 +4727,22 @@ int insert_lines(int jj,int k)
         for (j=r2; j>r2-k; --j)
             {
             edread(x,j);
-            if (!empty_line(x+1,c2)) break;
+            if (!empty_line(x+1,c2)) { break;
+}
             }
         if (j>r2-k) { ei_tilaa(); return(-1); }
 
         memmove(z+(jj+k-1)*ed1,z+(jj-1)*ed1,(r2-k-jj+1)*ed1);
 
         strcpy(x,"*"); strncat(x,space,c2);
-        for (j=jj; j<jj+k; ++j)
+        for (j=jj; j<jj+k; ++j) {
             edwrite(x,j,0);
+}
 
-        for (j=r2-k; j>=jj; --j) zs[j+k]=zs[j];
-        for (j=jj; j<jj+k; ++j) zs[j]=0;
+        for (j=r2-k; j>=jj; --j) { zs[j+k]=zs[j];
+}
+        for (j=jj; j<jj+k; ++j) { zs[j]=0;
+}
         return(1);
         }
 
@@ -4415,7 +4755,8 @@ int block_from_store()
         char xs[LLENGTH];
 // Rprintf("\nsurvoblo=%s|",survoblo); getck();
         survoxxx=muste_fopen2(survoblo,"rt");
-        if (survoxxx==NULL) return(1);
+        if (survoxxx==NULL) { return(1);
+}
         muste_fgets(x,LLENGTH-1,survoxxx);   /* n_save mc1 mc2 mr1 mr2 c_vasen1 */
         split(x,osa,3);
         n_save=atoi(osa[0]); mc1=atoi(osa[1]); mc2=atoi(osa[2]);
@@ -4430,10 +4771,12 @@ int block_from_store()
         j2=mr;
         for (j1=0; j1<n_save; ++j1)
             {
-            if (j2>ed2) break;
+            if (j2>ed2) { break;
+}
             muste_fgets(x,LLENGTH-1,survoxxx);  // x[ed1]=EOS; 30.1.2000
             muste_fgets(xs,LLENGTH-1,survoxxx); // xs[ed1]=EOS;
-            lev=mc2-mc1+1; if (lev>c2-mc+1) lev=c2-mc+1;
+            lev=mc2-mc1+1; if (lev>c2-mc+1) { lev=c2-mc+1;
+}
             memcpy(z+(j2-1)*ed1+mc,x+mc1,lev);
             if (!zs[j2]) { i=creatshad(j2); if (i<0) { muste_fclose(survoxxx); return(1); } }
             memcpy(z+(zs[j2]-1)*ed1+mc,xs+mc1,lev);
@@ -4459,54 +4802,69 @@ int word_move()
             { move_in_line(); return(1); }
         find_margins(mr1,mr2);
         r_alku1=r_alku; r_loppu1=r_loppu; c_vasen1=c_vasen; c_oikea1=c_oikea;
-        i=save_words(survowrd); if (i<0) return(-1);
+        i=save_words(survowrd); if (i<0) { return(-1);
+}
         if (mr>mr1)
             {
-            if (mr<mr2) return(1);
-            if (mr==mr2 && mc<=mc2) return(1);
+            if (mr<mr2) { return(1);
+}
+            if (mr==mr2 && mc<=mc2) { return(1);
+}
             }
         else if (mr==mr1)
             {
-            if (mc>=mc1) return(1);
+            if (mc>=mc1) { return(1);
+}
             }
         poistetut_merkit=0;
         if (!insert_mode)
             {
             k=delete_words();
-            if (mr==mr2) mc-=poistetut_merkit;
-            if (mr>mr1) mr-=k;
+            if (mr==mr2) { mc-=poistetut_merkit;
+}
+            if (mr>mr1) { mr-=k;
+}
             r_loppu1-=k;
-            if (mr1<mr2) mr2=mr1+1;
+            if (mr1<mr2) { mr2=mr1+1;
+}
             }
 
         find_margins(mr,mr);
-        k=insert_words(); if (k<0) return(-1);
+        k=insert_words(); if (k<0) { return(-1);
+}
         r_loppu+=k;
         if (r_alku<r_alku1) { r_alku1+=k; r_loppu1+=k; }
-        if (r_alku==r_alku1) r_loppu1+=k;
+        if (r_alku==r_alku1) { r_loppu1+=k;
+}
 
         edread(x,mr);
         if (empty_line(x+1,c2))  /*  siirrettäessä kappaleen alkuun */
             {
             b_deletel(mr);
-            if (r_alku>mr) --r_alku;
-            if (r_loppu>mr) --r_loppu;
-            if (r_alku1>mr) --r_alku1;
-            if (r_loppu1>mr) --r_loppu1;
+            if (r_alku>mr) { --r_alku;
+}
+            if (r_loppu>mr) { --r_loppu;
+}
+            if (r_alku1>mr) { --r_alku1;
+}
+            if (r_loppu1>mr) { --r_loppu1;
+}
             }
 
         if (hae_apu("autotrim",trim_command))  // RS pois?
             {
-            if (r_alku1==r_alku)
+            if (r_alku1==r_alku) {
                 autotrim(r_alku,r_loppu);
-            else if (r_alku1<r_alku)
+            } else if (r_alku1<r_alku)
                 {
                 autotrim(r_alku,r_loppu);
-                if (!insert_mode) autotrim(r_alku1,r_loppu1);
+                if (!insert_mode) { autotrim(r_alku1,r_loppu1);
+}
                 }
             else
                 {
-                if (!insert_mode) autotrim(r_alku1,r_loppu1);
+                if (!insert_mode) { autotrim(r_alku1,r_loppu1);
+}
                 autotrim(r_alku,r_loppu);
                 }
             }
@@ -4521,14 +4879,19 @@ int word_erase()
 
         find_margins(mr1,mr2);
         r_alku1=r_alku; r_loppu1=r_loppu; c_vasen1=c_vasen; c_oikea1=c_oikea;
-        i=save_words(survowrd); if (i<0) return(-1);
+        i=save_words(survowrd); if (i<0) { return(-1);
+}
         poistetut_merkit=0;
         k=delete_words();
-        if (mr==mr2) mc-=poistetut_merkit;
-        if (mr>mr1) mr-=k;
+        if (mr==mr2) { mc-=poistetut_merkit;
+}
+        if (mr>mr1) { mr-=k;
+}
         r_loppu-=k;
-        if (mr1<mr2) mr2=mr1+1;
-        if (hae_apu("autotrim",trim_command)) autotrim(r_alku,r_loppu);  // RS pois?
+        if (mr1<mr2) { mr2=mr1+1;
+}
+        if (hae_apu("autotrim",trim_command)) { autotrim(r_alku,r_loppu);  // RS pois?
+}
         return(1);
         }
 
@@ -4545,28 +4908,35 @@ int sur_move()
         h=1;
         if (insert_mode)
             {
-            if (mr>=mr1 && mr<mr2) return(-1);
+            if (mr>=mr1 && mr<mr2) { return(-1);
+}
             k=mr2-mr1+1;
             if (mr<=mr1 && (mr!=mr1 || k!=1)) { mr1+=k; mr2+=k; h=2; }
                         /** 20.8.1995 *****/
             ++mr;
             i=insert_lines(mr,k);
-            if (i<0) return(-1);
+            if (i<0) { return(-1);
+}
             }
-        if (mr<=mr1)
+        if (mr<=mr1) {
             for (j=mr1; j<=mr2; ++j)
                 {
-                if (mr+j-mr1<1 || mr+j-mr1>r2) continue;
+                if (mr+j-mr1<1 || mr+j-mr1>r2) { continue;
+}
                 i=lmove(j,mr+j-mr1);
-                if (i<0) return(-1);
+                if (i<0) { return(-1);
+}
                 }
-        else
+        } else {
             for (j=mr2; j>=mr1; --j)
                 {
-                if (mr+j-mr1<1 || mr+j-mr1>r2) continue;
+                if (mr+j-mr1<1 || mr+j-mr1>r2) { continue;
+}
                 i=lmove(j,mr+j-mr1);
-                if (i<0) return(-1);
+                if (i<0) { return(-1);
+}
                 }
+}
         return(h);
         }
 
@@ -4584,7 +4954,8 @@ int block_erase()
         for (j=mr1; j<=mr2; ++j)
             {
             memcpy(z+(j-1)*ed1+mc1,space,lev);
-            if (!zs[j]) continue;
+            if (!zs[j]) { continue;
+}
             memcpy(z+(zs[j]-1)*ed1+mc1,space,lev);
             testshad(j);
             }
@@ -4604,11 +4975,12 @@ int op_block(int rr,int cc)
         strcpy(survoblo,etmpd); strcat(survoblo,"SURVO.BLO");
         strcpy(survowrd,etmpd); strcat(survowrd,"SURVO.WRD");
 
-        if (mr<0) block_erase();
-        else
+        if (mr<0) { block_erase();
+        } else
             {
             i=sur_move();
-            if (i==2) return(1);
+            if (i==2) { return(1);
+}
             }
         disp(); soft_disp(1);
         return(1);
@@ -4618,7 +4990,8 @@ int disp_block_start()
     {
     char ch;
 
-    ch=z[(r1+r-2)*ed1+c1+c-1]; if (ch==' ') ch='*';
+    ch=z[(r1+r-2)*ed1+c1+c-1]; if (ch==' ') { ch='*';
+}
     cursor(r,c); PR_EBLK; muste_sprintf(sbuf,"%c",ch); sur_print(sbuf);
     PR_ENRM;
     return(1);
@@ -4746,7 +5119,8 @@ static int test_empty_space(int r0,int c0)
     for (j=r0; j<r0+kork; ++j)
         {
         edread(x,j);
-        if (strncmp(x+c0,space,lev)!=0) return(-1);
+        if (strncmp(x+c0,space,lev)!=0) { return(-1);
+}
         }
     return(1);
     }
@@ -4760,8 +5134,10 @@ int m_copy_word1() // poimii talteen hiiren oikeanpuoleisella napilla
 
    rr=m_move_r1; cc=m_mc1;
    edread(x,rr);
-   p=x+cc-1; while (p>x && *p!=' ') --p; ++p;
-   q=x+cc+1; while (q<x+c2-1 && *q!=' ') ++q; --q;
+   p=x+cc-1; while (p>x && *p!=' ') { --p; 
+}++p;
+   q=x+cc+1; while (q<x+c2-1 && *q!=' ') { ++q; 
+}--q;
    *w=EOS;  strncat(w,p,q-p+1);
 
    len1=strlen(w); if (*w==' ' && len1==1) { *w=EOS; len1=0; }
@@ -4787,7 +5163,8 @@ int m_copy_word2() // kirjoittaa em. sanan tai sanaparin 13.11.2012
    char sana[21];
 //   extern int c_mouse,r_mouse;
 
-   if (!one_click_copy) return(1);
+   if (!one_click_copy) { return(1);
+}
 //   sur_get_mouse_position(&c0,&r0);
    c0=c_mouse-7; r0=r_mouse; // RS 13.11.2012
    r0=r1+r0-1; c0=c1+c0-1;
@@ -4800,9 +5177,12 @@ int m_copy_word2() // kirjoittaa em. sanan tai sanaparin 13.11.2012
    len2=0;
    if (x[c0]!=' ')
        {
-       p=x+c0-1; while (p>x && *p!=' ') --p; ++p;
-       q=x+c0+1; while (q<x+c2-1 && *q!=' ') ++q; --q;
-       if (*ww==EOS && c0>1) --p;
+       p=x+c0-1; while (p>x && *p!=' ') { --p; 
+}++p;
+       q=x+c0+1; while (q<x+c2-1 && *q!=' ') { ++q; 
+}--q;
+       if (*ww==EOS && c0>1) { --p;
+}
        *v=EOS;  strncat(v,p,q-p+1);
        len2=strlen(v);
        if (varjo2)
@@ -4815,9 +5195,11 @@ int m_copy_word2() // kirjoittaa em. sanan tai sanaparin 13.11.2012
        len2=-1;
        p=x+c0+1;
        q=p-2;
-       if (c0==1 || x[c0-1]==' ') --p;
+       if (c0==1 || x[c0-1]==' ') { --p;
+}
        }
-   d=len1-len2; if (d<0) d=-d;
+   d=len1-len2; if (d<0) { d=-d;
+}
    strcpy(v,q+1);
    *p=EOS;
    muste_sprintf(x + strlen(x), "%.*s", len1, ww); // strncat(x,ww,len1);
@@ -4837,11 +5219,13 @@ int m_copy_word2() // kirjoittaa em. sanan tai sanaparin 13.11.2012
    prompt_line=prompt_space;
    LOCATE(r3+2,1); PR_EBLK;
    if (len1<19) { muste_snprintf(sana, sizeof(sana), "'%.*s'", len1, ww); } // strcpy(sana,"'"); strncat(sana,ww,len1); strcat(sana,"'"); }
-   else strcpy(sana,"the same word");
+   else { strcpy(sana,"the same word");
+}
 
    muste_sprintf(prompt_line,
      "Copy %s again by the leftmost mouse button. Cancel by DEL!",sana);
-   len1=strlen(prompt_line); if (len1<79) strncat(prompt_line,space,79-len1);
+   len1=strlen(prompt_line); if (len1<79) { strncat(prompt_line,space,79-len1);
+}
    sur_print(prompt_line);
        PR_ENRM;
 
@@ -4860,7 +5244,8 @@ int mouse_define_block()
     extern int m_double_click;
     extern int muste_selection;
 
-    if (m_double_click) return(1);
+    if (m_double_click) { return(1);
+}
     
 	if (muste_selection) { move_clear(); muste_selection=FALSE; } // RS
 
@@ -4871,9 +5256,11 @@ int mouse_define_block()
         if (!insert_type || !insert_mode)
            {
            i=test_empty_space(r1+r-1,c1+c-1);
-           if (i<0) return(1);
+           if (i<0) { return(1);
+}
            }
-        if (i==2) return(1);
+        if (i==2) { return(1);
+}
         move_words=0; // 22.6.2004
         op_block(r1+r-1,c1+c-1);
         m_move_text();
@@ -4894,7 +5281,8 @@ int mouse_define_block()
         PR_ENRM; cursor(r,c);
 ******************************/
         m_move_r1=r1+r-1; m_mc1=c1+c-1; ++m_move_ind; // 8.10.2012
-		if (one_click_copy) m_copy_word1(); // 8.10.2012
+		if (one_click_copy) { m_copy_word1(); // 8.10.2012
+}
 		break;
 
 
@@ -4951,8 +5339,9 @@ void muste_erase()
                             }
                         era(j);
                         }
-                    else
+                    else {
                         era(j);
+}
         }
 
 
@@ -4964,8 +5353,9 @@ void code_code()
             {
             cursor(r3+1,1); PR_EBLD;
             *luku=EOS; prompt_editor("Enter key code: ",luku,5);
-            if (*luku==EOS) special_code=(int)(*(z+ed1*(r1+r-2)+c1+c-1));
-            else special_code=atoi(luku);
+            if (*luku==EOS) { special_code=(int)(*(z+ed1*(r1+r-2)+c1+c-1));
+            } else { special_code=atoi(luku);
+}
 
             disp_prompt_line('1'); PR_ENRM; cursor(r,c);
 
@@ -4976,32 +5366,40 @@ void code_code()
 
 int s_scroll_right()
     {
-    if (c1>c2-c3) return(1);
-    ++c1; if (c>1) --c;
+    if (c1>c2-c3) { return(1);
+}
+    ++c1; if (c>1) { --c;
+}
     disp();
     return(1);
     }
 
 int s_scroll_left()
     {
-    if (c1==1) return(1);
-    --c1; if (c<c3) ++c;
+    if (c1==1) { return(1);
+}
+    --c1; if (c<c3) { ++c;
+}
     disp();
     return(1);
     }
 
 int s_scroll_up()
     {
-    if (r1==1) return(1);
-    --r1; if (r<r3) ++r;
+    if (r1==1) { return(1);
+}
+    --r1; if (r<r3) { ++r;
+}
     disp();
     return(1);
     }
 
 int s_scroll_down()
     {
-    if (r1>r2-r3) return(1);
-    ++r1; if (r>1) --r;
+    if (r1>r2-r3) { return(1);
+}
+    ++r1; if (r>1) { --r;
+}
     disp();
     return(1);
     }
@@ -5030,8 +5428,10 @@ int file_time_end(char *oper)
     double file_time2;
     char *p;
 
-    if (*oper==' ') return(1); // tyhjä rivi!
-    while ((p=strchr(oper,' '))!=NULL) *p='_';
+    if (*oper==' ') { return(1); // tyhjä rivi!
+}
+    while ((p=strchr(oper,' '))!=NULL) { *p='_';
+}
 
     muste_ftime(&file_countb);
     file_time2=file_countb.time+0.001*(double)file_countb.millitm;
@@ -5062,7 +5462,8 @@ int op_time()
             if (muste_strcmpi(parm[2],"START")==0)
                 {
                 timecount1=timecount2; timestart=0.0;
-                if (g>3) timestart=atof(parm[3]);
+                if (g>3) { timestart=atof(parm[3]);
+}
                 }
             else
                 {
@@ -5096,7 +5497,8 @@ int katko         /* 1=keskeytys napilla 0=ei keskeytysmahdollisuutta */
         while ( 1000*(tb.time-alku)+tb.millitm<loppums )
             {
             sur_sleep(10);
-            if (katko && sur_kbhit()) return(1);
+            if (katko && sur_kbhit()) { return(1);
+}
             muste_ftime(&tb);
             if (tb.time>sek) { (*display)(); sek=tb.time; }
             }
@@ -5122,7 +5524,8 @@ int (*display)(void)  /* näyttötoimitus sekuntien välillä */
             {
             sur_sleep(10);
             i=sur_m2kbhit();
-            if (i) return(i);
+            if (i) { return(i);
+}
             muste_ftime(&tb);
             if (tb.time>sek) { (*display)(); sek=tb.time; }
             }
@@ -5147,17 +5550,20 @@ int save_wait(int m)
         static int pre_ind=0;
 
         if (pre_ind) { pre_ind=0; return(1); }    /* 1.6.1995 */
-        if (m==CODE_PRE) pre_ind=1; else pre_ind=0;
+        if (m==CODE_PRE) { pre_ind=1; } else { pre_ind=0;
+}
         lue_hetki(&aika);
         a0=aika-wait_hetki; wait_hetki=aika;
 
 // RS KORJAA Ei ehkä porttautuvaa koodia!
         a1=a0>>7; a2=a1>>2; /* "jako 100:lla" 1/128+1/512=0.0097.. */
 
-        a0=a1+a2; if (a0==0L) return(1);
+        a0=a1+a2; if (a0==0L) { return(1);
+}
         muste_sprintf(sbuf,"TW%ld@",a0);
         tutsave(1);
-        for (i=0; i<strlen(sbuf); ++i) tutsave((int)sbuf[i]);
+        for (i=0; i<strlen(sbuf); ++i) { tutsave((int)sbuf[i]);
+}
         return(1);
         }
 
@@ -5184,10 +5590,12 @@ int op_jump_end(int i)
             {
             edread(x,j);
             k=split(x+1,px,1);
-            if (k==0 || strcmp(px[0],"-")!=0) break;
+            if (k==0 || strcmp(px[0],"-")!=0) { break;
+}
             --j;
             }
-        if (j<10) j=1;
+        if (j<10) { j=1;
+}
         muste_sprintf(x,"%d",j); px[1]=x;
         px[2]=x+30; muste_sprintf(px[2],"%d",i);
         op_goto2(3,px);
@@ -5207,12 +5615,17 @@ int op_jump(int ind) // 1=normaali - komento
         if (strchr(x,'\376')==NULL)
             {
             p=strstr(x," / ");
-            if (p==NULL) p=x+ed1;
-            --p; while (*p==' ') --p;
-            *(p+1)=EOS; q=strchr(x+1,'-'); if (q==NULL) return(1);
-            ++q; while (*q==' ') ++q;
+            if (p==NULL) { p=x+ed1;
+}
+            --p; while (*p==' ') { --p;
+}
+            *(p+1)=EOS; q=strchr(x+1,'-'); if (q==NULL) { return(1);
+}
+            ++q; while (*q==' ') { ++q;
+}
             }
-        else q=parm[1];
+        else { q=parm[1];
+}
         p=strstr(z,q);
         if (p==NULL) { z[k]=ch; return(-1); }
         i=(p-z)/ed1+1;
@@ -5232,7 +5645,8 @@ int op_qpath()
         {
         char x[LLENGTH];
 
-        if (g<2) return(-1);
+        if (g<2) { return(-1);
+}
         edread(x,r1+r-1); split(x+1,parm,2);
         edread(x,r1+r-1); strcpy(qpath,x+(int)(parm[1]-x));
         return(2);
@@ -5258,13 +5672,20 @@ int op_count()
             WAIT; return(-1);
             }
 
-        j1=edline2(parm[1],1,1); if (j1==0) return(-1);
-        j2=edline2(parm[2],j1,1); if (j2==0) return(-1);
-        if (j2<j1) return(-1);
-        k=edline2(parm[3],1,1); if (k==0) return(-1);
-        if (g>4) alkuarvo=atof(parm[4]);
-        if (g>5) askel=atof(parm[5]);
-        if (g>6) jakso=atoi(parm[6]);
+        j1=edline2(parm[1],1,1); if (j1==0) { return(-1);
+}
+        j2=edline2(parm[2],j1,1); if (j2==0) { return(-1);
+}
+        if (j2<j1) { return(-1);
+}
+        k=edline2(parm[3],1,1); if (k==0) { return(-1);
+}
+        if (g>4) { alkuarvo=atof(parm[4]);
+}
+        if (g>5) { askel=atof(parm[5]);
+}
+        if (g>6) { jakso=atoi(parm[6]);
+}
 
         edread(maskline,k);
         i=split(maskline+1,mask,1);
@@ -5277,7 +5698,7 @@ int op_count()
         pos=mask[0]-maskline;
         arvo=alkuarvo;
         k=0;
-        if (jakso>0) neg=0; else { neg=1; jakso=-jakso; }
+        if (jakso>0) { neg=0; } else { neg=1; jakso=-jakso; }
         for (j=j1; j<=j2; ++j)
             {
             fconv(arvo,mask[0],sana);
@@ -5289,15 +5710,18 @@ int op_count()
                 if (k==jakso)
                     {
                     k=0;
-                    if (neg) arvo+=askel;
-                    else     arvo=alkuarvo;
+                    if (neg) { arvo+=askel;
+                    } else {     arvo=alkuarvo;
+}
                     }
                 else
                     {
-                    if (!neg) arvo+=askel;
+                    if (!neg) { arvo+=askel;
+}
                     }
                 }
-            else arvo+=askel;
+            else { arvo+=askel;
+}
             }
         return(1);
         }
@@ -5319,11 +5743,13 @@ int muuta_survo_apu(char *fil,char *key,char *val)
     tied2=muste_fopen2(x2,"wt");
 // Rprintf("\nfil=%s x2=%s|",fil,x2); WAIT;
     tied=muste_fopen2(fil,"rt");
-    if (tied==NULL) return(1);
+    if (tied==NULL) { return(1);
+}
     while (1)
         {
         muste_fgets(x,LLENGTH-1,tied);
-        if (feof(tied)) break;
+        if (feof(tied)) { break;
+}
         p=strchr(x,'=');
         if (p==NULL || strncmp(x,key,strlen(key))!=0)
             {
@@ -5361,7 +5787,8 @@ int kielenvalinta() // 7.9.2003
 // RS REM    char s;
     char kieli[2];
 
-    if (*language!='0') return(1);
+    if (*language!='0') { return(1);
+}
 
     sur_sleep(500L);
     disp();
@@ -5376,12 +5803,14 @@ int kielenvalinta() // 7.9.2003
         sur_print("English=E Suomi=S ?  "); LOCATE(5,34);
         *kieli=(char)getck();
         muste_sprintf(sbuf,"%c",*kieli); sur_print(sbuf);
-        if(strchr("EeSs",*kieli)!=NULL) break;
+        if(strchr("EeSs",*kieli)!=NULL) { break;
+}
         sur_sleep(300L);
         }
 
-    if (*kieli=='E' || *kieli=='e') *kieli='2';
-    else *kieli='1';
+    if (*kieli=='E' || *kieli=='e') { *kieli='2';
+    } else { *kieli='1';
+}
     kieli[1]=EOS;
     *language=*kieli;
 
@@ -5400,18 +5829,23 @@ int survo_apu()
        FILE *tied; // RS puuttui?!?
 
         tied=muste_fopen2(parm[2],"r+t");
-        if (tied==NULL) return(1);
+        if (tied==NULL) { return(1);
+}
         while (1)
             {
             muste_fgets(x,LLENGTH-1,tied);
-            if (feof(tied)) break;
+            if (feof(tied)) { break;
+}
             p=strchr(x,'=');
-            if (p==NULL) continue;
+            if (p==NULL) { continue;
+}
             *p=EOS;
-            if (strcmp(x,parm[3])!=0) continue;
+            if (strcmp(x,parm[3])!=0) { continue;
+}
             ++p;
             i=strlen(p);
-            if (*(p+i-1)=='\n') *(p+i-1)=EOS;
+            if (*(p+i-1)=='\n') { *(p+i-1)=EOS;
+}
             j=r1+r-1;
             edwrite(space,j,1);
             muste_sprintf(sbuf,"CLEAR SYSTEM %s %s=%s",parm[2],parm[3],p);
@@ -5439,10 +5873,12 @@ int op_clear()
 
         if (strcmp(parm[1],"*")==0)
             {
-            p=strchr(survo_id,' '); if (p==NULL) p=survo_id+5;
+            p=strchr(survo_id,' '); if (p==NULL) { p=survo_id+5;
+}
             len=p-survo_id;
             muste_fieldcopy(x,survo_id,len); x[len]=EOS;
-            if (strlen(tut_info)+strlen(x)>LLENGTH-2) return(1);
+            if (strlen(tut_info)+strlen(x)>LLENGTH-2) { return(1);
+}
             strcat(tut_info,x); strcat(tut_info,"@");
             return(1);
             }
@@ -5465,25 +5901,34 @@ int op_clear()
             sur_print("\n   CLEAR L1,L2,K  / K is mask line of form    XXXX   XXX");
             WAIT; return(1);
             }
-        j1=edline2(parm[1],1,1); if (j1==0) return(1);
-        j2=edline2(parm[2],j1,1); if (j2==0) return(1);
+        j1=edline2(parm[1],1,1); if (j1==0) { return(1);
+}
+        j2=edline2(parm[2],j1,1); if (j2==0) { return(1);
+}
         muste_fieldcopy(clear,space,ed1); clear[ed1]=EOS;
-        if (g==3)
-            for (i=c1+c-1; i<ed1; ++i) clear[i]='X';
-        else
+        if (g==3) {
+            for (i=c1+c-1; i<ed1; ++i) { clear[i]='X';
+}
+        } else
             {
-            k=edline2(parm[3],1,1); if (k==0) return(1);
+            k=edline2(parm[3],1,1); if (k==0) { return(1);
+}
             edread(clear,k);
             }
 
         for (j=j1; j<=j2; ++j)
             {
             edread(x,j);
-            for (i=1; i<ed1; ++i) if (clear[i]!=' ') x[i]=' ';
+            for (i=1; i<ed1; ++i) { if (clear[i]!=' ') { x[i]=' ';
+}
+}
             edwrite(x,j,0);
-            if (!zs[j]) continue;
+            if (!zs[j]) { continue;
+}
             edread(x,zs[j]);
-            for (i=1; i<ed1; ++i) if (clear[i]!=' ') x[i]=' ';
+            for (i=1; i<ed1; ++i) { if (clear[i]!=' ') { x[i]=' ';
+}
+}
             edwrite(x,zs[j],0);
             testshad(j);
             }
@@ -5508,7 +5953,8 @@ int op_check(int laji)
         if (laji==1) // 16.7.2005
             {
             p=strchr(x,'\\'); // 16.5.2005
-            if (p==NULL) p=strchr(x,'/'); // RS ADD FIXME path
+            if (p==NULL) { p=strchr(x,'/'); // RS ADD FIXME path
+}
             if (p==NULL)
                 {
                 strcpy(y,edisk); strcat(y,x); strcpy(x,y);
@@ -5524,7 +5970,8 @@ int op_check(int laji)
                 {
                 strcpy(x,"NOT FOUND!");
                 }
-            else strcpy(x,"OK");
+            else { strcpy(x,"OK");
+}
             }
         else
             {
@@ -5532,15 +5979,16 @@ int op_check(int laji)
             if (!muste_is_path(x) && !netd(x)) { strcpy(x,survo_path); strcat(x,parm[1]); }
                                    // 16.2.2006
             tied=muste_fopen2(x,"rb");
-            if (tied==NULL) strcpy(x,"NOT FOUND!");
-            else { muste_fclose(tied); strcpy(x,"OK"); }
+            if (tied==NULL) { strcpy(x,"NOT FOUND!");
+            } else { muste_fclose(tied); strcpy(x,"OK"); }
             }
         }
         else { strcpy(x,"EMPTY"); }  // RS ADD 21.5.2012
             
         j=r1+r-1;
         edread(y,j);
-        i=strlen(y); while (y[i-1]==' ') --i;
+        i=strlen(y); while (y[i-1]==' ') { --i;
+}
         edwrite(x,j,i+1);
         return(1);
         }
@@ -5559,8 +6007,9 @@ int op_nextfile() // NEXTFILE XYZ,PS
         if (p==NULL) { strcpy(sbuf,edisk); strcat(sbuf,parm[1]); }
         muste_sprintf(name,"%s%d.%s",sbuf,i,parm[2]);
         tied=muste_fopen2(name,"rb");
-        if (tied==NULL) break;
-        else muste_fclose(tied);
+        if (tied==NULL) { break;
+        } else { muste_fclose(tied);
+}
         ++i;
         }
     j=r1+r-1;
@@ -5574,7 +6023,8 @@ int op_nextfile() // NEXTFILE XYZ,PS
 
 int ins_empty(char *s)
         {
-        while (*s) { if (*s!=' ') return(0); ++s; }
+        while (*s) { if (*s!=' ') { return(0); 
+}++s; }
         return(1);
         }
 
@@ -5707,18 +6157,27 @@ void insdel()
             {
             insdel_l1=insdel_l2=r1+r;
             edread(x,insdel_l2);
-            while (!ins_empty(x+1) && insdel_l2<r2) edread(x,++insdel_l2);
-            if (insdel_l2<r2) --insdel_l2;
-            if (g==2) { insdel_k=atoi(parm[1]); if (insdel_k==0) return; } else insdel_k=1;
+            while (!ins_empty(x+1) && insdel_l2<r2) { edread(x,++insdel_l2);
+}
+            if (insdel_l2<r2) { --insdel_l2;
+}
+            if (g==2) { insdel_k=atoi(parm[1]); if (insdel_k==0) { return; 
+}} else { insdel_k=1;
+}
             }                          // 21.4.2003
         else
             {
-            insdel_l1=edline2(parm[1],1,1); if (insdel_l1==0) return;
-            insdel_l2=edline2(parm[2],insdel_l1,1); if (insdel_l2==0) return;
-            if (g>=4) insdel_k=atoi(parm[3]); else insdel_k=1;
+            insdel_l1=edline2(parm[1],1,1); if (insdel_l1==0) { return;
+}
+            insdel_l2=edline2(parm[2],insdel_l1,1); if (insdel_l2==0) { return;
+}
+            if (g>=4) { insdel_k=atoi(parm[3]); } else { insdel_k=1;
+}
             }
-        if (insdel_k<=0) insdel_k=1;
-        if (insdel_k>c2) insdel_k=1;
+        if (insdel_k<=0) { insdel_k=1;
+}
+        if (insdel_k>c2) { insdel_k=1;
+}
         if (strchr("Ii",*parm[0])!=NULL) { op_insert(); return; }
         if (strchr("Dd",*parm[0])!=NULL) { op_delete(); return; }
         }
@@ -5789,11 +6248,13 @@ static int op_win()
     if (muste_strcmpi(parm[1],"CHECK")==0) // 23.11.2002
         {
         i=sur_find_window(parm[2]);
-        if (i<0) strcpy(wname,"NOT FOUND!");
-        else strcpy(wname,"OK");
+        if (i<0) { strcpy(wname,"NOT FOUND!");
+        } else { strcpy(wname,"OK");
+}
         j=r1+r-1;
         edread(sbuf,j);
-        i=strlen(sbuf); while (sbuf[i-1]==' ') --i;
+        i=strlen(sbuf); while (sbuf[i-1]==' ') { --i;
+}
         edwrite(wname,j,i+1);
         }
     if (muste_strcmpi(parm[1],"SCREEN")==0)
@@ -5825,7 +6286,8 @@ static int op_win()
             }
 
 // parametrit esim. Lucinda_Console,54,20,400
-         else muste_fixme("FIXME: Set fonts with parameters not implemented!\n"); // RS FIXME
+         else { muste_fixme("FIXME: Set fonts with parameters not implemented!\n"); // RS FIXME
+}
 // RS REM        else set_window_regkeys(parm[2],atoi(parm[3]),atoi(parm[4]),atoi(parm[5]));
         return(1);
         }
@@ -5878,7 +6340,8 @@ muste_fixme("FIXME: WIN FONT GET OS not implemented; returning main window font!
                 sur_get_font2(wname,par,0);
 */
                 }
-            else sur_get_font(wname,par);
+            else { sur_get_font(wname,par);
+}
             edwrite(space,r1+r,1);
             muste_sprintf(sbuf,"Current font: %d %d",
                      par[0],par[1]);
@@ -5910,7 +6373,8 @@ static int op_tempdisk()
     {
     int j;
 
-    if (g<2) return(-1);
+    if (g<2) { return(-1);
+}
     j=r1+r-1;
     if (muste_strcmpi(parm[1],"GET")==0)
         {
@@ -5922,11 +6386,12 @@ static int op_tempdisk()
         }
     if (muste_strcmpi(parm[1],"SET")==0) 
         { // RS CHA 25.11.2012
-        if (g<3) return(-1);
+        if (g<3) { return(-1);
+}
         strcpy(sbuf,parm[2]); 
         muste_expand_path(sbuf);
-        if (muste_is_write_access(sbuf)) strcpy(etmpd,sbuf); // muste_is_directory(sbuf) && 
-        else
+        if (muste_is_write_access(sbuf)) { strcpy(etmpd,sbuf); // muste_is_directory(sbuf) && 
+        } else
         	{
         	sur_print("\nERROR! \"");
         	sur_print(sbuf);
@@ -5934,7 +6399,8 @@ static int op_tempdisk()
         	WAIT;
         	return(-1);
         	}
-        if (etmpd[strlen(etmpd)-1]!='/') strcat(etmpd,"/");	
+        if (etmpd[strlen(etmpd)-1]!='/') { strcat(etmpd,"/");	
+}
         }
     return(1);
     }
@@ -5955,7 +6421,8 @@ static int op_paste(int mode)
     muste_save_stack_count(13);
 
     clip=muste_get_clipboard(); // RS This should return max LLENGTH without line break
-    if (clip==NULL) return(-1); // RS 4.12.2013
+    if (clip==NULL) { return(-1); // RS 4.12.2013
+}
 
 /* RS NYI - Ei varmaankaan tarvita
     w_codes_load(2);
@@ -5965,7 +6432,8 @@ static int op_paste(int mode)
 */
 
 
-    j=r1+r-1; if (mode>=2) --j; // 24.4.2006 RS CHA 6.10.2012 >=
+    j=r1+r-1; if (mode>=2) { --j; // 24.4.2006 RS CHA 6.10.2012 >=
+}
     col=c1+c-1;
     if (insert_mode==1 && mode<3) // RS CHA 6.10.2012 mode<3
         {       
@@ -5974,9 +6442,11 @@ static int op_paste(int mode)
             {
             q=strchr(p,'\n');
         	q2=strchr(p,'\r');
-        	if (q!=NULL && q2!=NULL) if (q2<q-1) { q=q2; *q='\n'; } // RS 3.12.2012 
+        	if (q!=NULL && q2!=NULL) { if (q2<q-1) { q=q2; *q='\n'; } // RS 3.12.2012 
+}
         	if (q==NULL && q2!=NULL) { q=q2; *q='\n'; } // RS 3.12.2012 
-            if (q==NULL) break;
+            if (q==NULL) { break;
+}
             ++k; p=q+1;
             }
         i=insert_lines(j+1,k);
@@ -5990,18 +6460,22 @@ static int op_paste(int mode)
         len=strlen(p);
         q=strchr(p,'\n');  
         q2=strchr(p,'\r');
-		if (q!=NULL && q2!=NULL) if (q2<q-1) { q=q2; *q='\n'; } // RS 3.12.2012 
+		if (q!=NULL && q2!=NULL) { if (q2<q-1) { q=q2; *q='\n'; } // RS 3.12.2012 
+}
 		if (q==NULL && q2!=NULL) { q=q2; *q='\n'; } // RS 3.12.2012         
         if (q!=NULL) 
         	{ 
-        	if (q>p) if (*(q-1)=='\r') { *q=EOS; q--; *q='\n'; } // RS 3.12.2012
+        	if (q>p) { if (*(q-1)=='\r') { *q=EOS; q--; *q='\n'; } // RS 3.12.2012
+}
         	len=q-p; // RS CHA *q=EOS; p[strlen(p)-1]=EOS; 
         	}  
-        ++j; if (j>r2) break;  
-        if (mode==3) edread(x,j); // RS ADD 6.10.2012
+        ++j; if (j>r2) { break;  
+}
+        if (mode==3) { edread(x,j); // RS ADD 6.10.2012
+}
         muste_fieldcopy(pasteline,p,len); pasteline[len]=EOS; // RS CHA
 		aputab[0]=EOS;
-        for (i=0; i<len; i++) // RS 3.12.2012 
+        for (i=0; i<len; i++) { // RS 3.12.2012 
         	if ((unsigned char)pasteline[i]<32)
         		{
         		switch(pasteline[i])
@@ -6018,20 +6492,26 @@ static int op_paste(int mode)
         				c1=col+alkupit; c=1;
         				col1=c1+c-1;
         				
-						for (ii=0, jj=1; jj<=ed2; ii+=ed1, ++jj)
-								if (z[ii]=='T') break;
+						for (ii=0, jj=1; jj<=ed2; ii+=ed1, ++jj) {
+								if (z[ii]=='T') { break;
+}
+}
 						if (jj>ed2)  /* ei T riviä */
 							{
 							c=(col+alkupit)%c3; c1=1; col1=c1+c-1;
-							c+=10; c=10*(c/10)+1; if (c>c3) c=c3; if (c>c2) c=c2;
+							c+=10; c=10*(c/10)+1; if (c>c3) { c=c3; 
+}if (c>c2) { c=c2;
+}
 							numtab=1;
 							}
-						else next_tab();        				
+						else { next_tab();        				
+}
 
         				col2=c1+c-1;
         				ero=col2-col1;
         				c=l; c1=k; r=m; r1=n;
-        				if (ero>0) strncat(aputab,space,ero);
+        				if (ero>0) { strncat(aputab,space,ero);
+}
         				break;
         			default: 
         				strcat(aputab," ");
@@ -6039,12 +6519,14 @@ static int op_paste(int mode)
         			}
         		}
         	else { kirjain[0]=pasteline[i]; strcat(aputab,kirjain); }    
+}
         if (mode==3) 
         	{        	
           strcat(aputab,x+col); // len2=strlen(x+col);	strncat(aputab,x+col,len2); // RS ADD 6.10.2012
         	}
         edwrite(aputab,j,col);
-        if (q==NULL) break;
+        if (q==NULL) { break;
+}
         p=q+1;
         }
 
@@ -6071,16 +6553,19 @@ static int copytofile(unsigned int j1,unsigned int j2,int alku)
                 
                 len=(ed1+3)*(j2-j1+1)+1;
                 clip=(char*)muste_malloc(len*2);
-                if (clip==NULL) return(-1);
+                if (clip==NULL) { return(-1);
+}
         
                 *clip=EOS;
                 for (j=j1; j<=j2; ++j)
                     {
                     edread(sbuf,j);
                     sbuf[ed1+1]=EOS;
-                    p=sbuf+ed1; while (p>sbuf && *p==' ') *p--=EOS;
+                    p=sbuf+ed1; while (p>sbuf && *p==' ') { *p--=EOS;
+}
                     strcat(clip,sbuf+1);
-                    if (j<j2) strcat(clip,"\n"); // RS CHA FIXME char cr_lf[]={ '\15', '\12', '\0' };
+                    if (j<j2) { strcat(clip,"\n"); // RS CHA FIXME char cr_lf[]={ '\15', '\12', '\0' };
+}
                     }
 
                 muste_copy_to_clipboard(clip);  
@@ -6096,11 +6581,14 @@ static int copytofile(unsigned int j1,unsigned int j2,int alku)
                 return(1);
                 }
             *out=EOS;
-            if (!muste_is_path(x)) strcpy(out,edisk); // RS 17.5.2013 path
+            if (!muste_is_path(x)) { strcpy(out,edisk); // RS 17.5.2013 path
+}
             strcat(out,x);                
             }
-            else strcpy(out,eout);
-        i=output_open(out); if (i<0) return(-1); // RS 17.5.2013 error_check
+            else { strcpy(out,eout);
+}
+        i=output_open(out); if (i<0) { return(-1); // RS 17.5.2013 error_check
+}
         for (j=j1; j<=j2; ++j) { edread(x,j); output_line(x+alku,out,0); }
         output_close(out);
         return(1);
@@ -6116,16 +6604,19 @@ static int copy_block_to_cliboard_or_file(int mc1,int mc2,int move_r1,int move_r
     
     len=(mc2-mc1+3)*(move_r2-move_r1+1)+1;
     clip=(char*)muste_malloc(len*2);
-    if (clip==NULL) return(-1); // RS ADD 4.10.2012
+    if (clip==NULL) { return(-1); // RS ADD 4.10.2012
+}
         
     *clip=EOS;
     for (j=move_r1; j<=move_r2; ++j)
         {
         edread(sbuf,j);
         sbuf[mc2+1]=EOS;
-        p=sbuf+mc2; while (p>sbuf && *p==' ') *p--=EOS;
+        p=sbuf+mc2; while (p>sbuf && *p==' ') { *p--=EOS;
+}
         strcat(clip,sbuf+mc1);
-        if (j<move_r2) strcat(clip,"\n"); // RS CHA FIXME char cr_lf[]={ '\15', '\12', '\0' };
+        if (j<move_r2) { strcat(clip,"\n"); // RS CHA FIXME char cr_lf[]={ '\15', '\12', '\0' };
+}
         }
 
     if (strncmp(mihin,"CLIPB",5)==0)
@@ -6172,27 +6663,37 @@ static int copy_to_clipboard()
     strcpy(survoblo,etmpd); strcat(survoblo,"SURVO.BLO");
 
 // RS ADD
-    if (move_r1<1) move_r1=1;
-    if (move_r1>r2) move_r1=r2;
-    if (move_r2<1) move_r2=1;
-    if (move_r2>r2) move_r2=r2;
-    if (mc1<0) mc1=0;
-    if (mc1>c2) mc1=r2;
-    if (mc2<0) mc2=0;
-    if (mc2>c2) mc2=r2;
+    if (move_r1<1) { move_r1=1;
+}
+    if (move_r1>r2) { move_r1=r2;
+}
+    if (move_r2<1) { move_r2=1;
+}
+    if (move_r2>r2) { move_r2=r2;
+}
+    if (mc1<0) { mc1=0;
+}
+    if (mc1>c2) { mc1=r2;
+}
+    if (mc2<0) { mc2=0;
+}
+    if (mc2>c2) { mc2=r2;
+}
     
     mr1=move_r1; mr2=move_r2; c_vasen=1; // koe 8.1.2002
     save_words(survoblo); // 8.1.2002
 
     i=copy_block_to_cliboard_or_file(mc1,mc2,move_r1,move_r2,"CLIPBOARD");
-    if (i<0) return(-1); // RS 4.12.2013
+    if (i<0) { return(-1); // RS 4.12.2013
+}
     
     if (muste_note_print)
     	{
 		sur_print("The text block is now copied to the clipboard!");
 		sur_wait(1000L,nop,1);
 		}
-    if (!muste_selection) move_clear(); // RS CHA
+    if (!muste_selection) { move_clear(); // RS CHA
+}
     disp();
     PR_ENRM;
     
@@ -6216,13 +6717,17 @@ static int op_copy()
             sur_print("\nUsage: COPY L1,L2,L");
             WAIT; return(-1);
             }
-        if (*parm[1]=='*') alku=0; else alku=1;
+        if (*parm[1]=='*') { alku=0; } else { alku=1;
+}
         k=1-alku;
-        j1=edline2(parm[1+k],1,1);  if (j1==0) return(-1);
-        j2=edline2(parm[2+k],j1,1); if (j2==0) return(-1);
+        j1=edline2(parm[1+k],1,1);  if (j1==0) { return(-1);
+}
+        j2=edline2(parm[2+k],j1,1); if (j2==0) { return(-1);
+}
         if (g==3+k) { copytofile(j1,j2,alku); return(1); }
         if (muste_strcmpi(parm[3+k],"TO")==0) { copytofile(j1,j2,alku); return(1); }
-        j3=edline2(parm[3+k],1,1);  if (j3==0) return(-1);
+        j3=edline2(parm[3+k],1,1);  if (j3==0) { return(-1);
+}
         if (j3>j1)
             {
             for (j=j2; j>=j1 ; --j)
@@ -6236,7 +6741,8 @@ static int op_copy()
                     if (zs[j]>0)
                         {
                         edread(x,zs[j]);
-                        h=creatshad(j0); if (h<0) return(-1);
+                        h=creatshad(j0); if (h<0) { return(-1);
+}
                         edwrite(x,zs[j0],0);
                         }
                     }
@@ -6255,7 +6761,8 @@ static int op_copy()
                     if (zs[j]>0)
                         {
                         edread(x,zs[j]);
-                        h=creatshad(j0); if (h<0) return(-1);
+                        h=creatshad(j0); if (h<0) { return(-1);
+}
                         edwrite(x,zs[j0],0);
                         }
                     }
@@ -6303,15 +6810,21 @@ static int op_copyblock() // RS
             }
 
         resout=1;
-        j1=edline2(parm[1],1,1); if (j1==0) return(-1);
-        s1=atoi(parm[2]); if (s1<0 || s1>c2) return(-1);
-        j2=edline2(parm[3],1,1); if (j2==0) return(-1);
-        s2=atoi(parm[4]); if (s2<0 || s2>c2) return(-1);
+        j1=edline2(parm[1],1,1); if (j1==0) { return(-1);
+}
+        s1=atoi(parm[2]); if (s1<0 || s1>c2) { return(-1);
+}
+        j2=edline2(parm[3],1,1); if (j2==0) { return(-1);
+}
+        s2=atoi(parm[4]); if (s2<0 || s2>c2) { return(-1);
+}
         if (strcmp(parm[5],"TO")!=0) // RS 17.11.2013
             {
             resout=0; 
-            j=edline2(parm[5],1,1); if (j==0) return(-1);
-            s=atoi(parm[6]); if (s<0 || s>c2) return(-1);
+            j=edline2(parm[5],1,1); if (j==0) { return(-1);
+}
+            s=atoi(parm[6]); if (s<0 || s>c2) { return(-1);
+}
             }
 
 		if (j1<j2)  { mr1=j1; mr2=j2; }
@@ -6328,7 +6841,8 @@ static int op_copyblock() // RS
         if (resout)
             {
             j=copy_block_to_cliboard_or_file(s1,s2,j1,j2,parm[6]);
-            if (j<0) return(-1);
+            if (j<0) { return(-1);
+}
             }
         else
             {
@@ -6336,7 +6850,8 @@ static int op_copyblock() // RS
             j1=insert_mode;
             insert_mode=0;
             j2=spec_find("INSERT",sbuf,LLENGTH-1);
-            if (j2>=0) { insert_mode=atoi(sbuf); if (insert_mode==1 && mr>1) mr--; }
+            if (j2>=0) { insert_mode=atoi(sbuf); if (insert_mode==1 && mr>1) { mr--; 
+}}
             block_from_store();
             insert_mode=j1;
             }
@@ -6347,7 +6862,8 @@ static int op_status()
     {
     int j;
 
-    if (g<2) return(-1);
+    if (g<2) { return(-1);
+}
     j=r1+r-1;
     if (muste_strcmpi(parm[1],"CAPSLOCK")==0)
         {
@@ -6412,7 +6928,8 @@ static int notspace(char *p)
     i=0;
     while (*p!=EOS)
         {
-        if (*p!=' ') i++;
+        if (*p!=' ') { i++;
+}
         p++;
         }
     return(i);
@@ -6440,7 +6957,8 @@ int ractivate(int select) // RS NEW
         *info_2=EOS;
         soft_act2=0;
 
-        scroll_line=r+2; if (scroll_line>r3) scroll_line=r3;
+        scroll_line=r+2; if (scroll_line>r3) { scroll_line=r3;
+}
 
         edread(actline,r1+r-1);
 
@@ -6458,11 +6976,13 @@ int ractivate(int select) // RS NEW
 */
 		strcpy(xx,x);
         jj=r1+r-1; *x=EOS; pxx=xx+1;
-		i=0; while (pxx[i]==' ' && i<strlen(pxx)) i++; pxx=pxx+i;        
+		i=0; while (pxx[i]==' ' && i<strlen(pxx)) { i++; 
+}pxx=pxx+i;        
 		cumpit=strlen(xx);
         while (1)
             {
-            if (*(pxx)=='R' && *(pxx+1)=='>') pxx=pxx+2;
+            if (*(pxx)=='R' && *(pxx+1)=='>') { pxx=pxx+2;
+}
             mp=strchr(pxx,'#'); // RS ADD
 //            p=strstr(pxx," & ");
             p=strrchr(pxx,'&');
@@ -6473,7 +6993,8 @@ int ractivate(int select) // RS NEW
               if (mp>p)
                 {
                 mp=strstr(mp," & ");
-                if (mp!=NULL) p=mp;
+                if (mp!=NULL) { p=mp;
+}
                 }
               }
 //            *p=EOS;  			  
@@ -6487,7 +7008,8 @@ int ractivate(int select) // RS NEW
             *p='\n';
             strcat(x,pxx);
             ++jj; edread(xx,jj); pxx=xx+1;
-		    i=0; while (pxx[i]==' ' && i<strlen(pxx)) i++; pxx=pxx+i;
+		    i=0; while (pxx[i]==' ' && i<strlen(pxx)) { i++; 
+}pxx=pxx+i;
 		    cumpit+=strlen(pxx);
 		    if (cumpit>LLENGTH)
 		    	{
@@ -6499,11 +7021,13 @@ int ractivate(int select) // RS NEW
 
         p=actline; 
         i=strlen(actline)-1;       
-        while (p[i]==' ' && i>0) i--;
+        while (p[i]==' ' && i>0) { i--;
+}
         p[++i]=EOS;
 
 		i=0;
-        while (p[i]==' ' && i<strlen(p)) i++;
+        while (p[i]==' ' && i<strlen(p)) { i++;
+}
                 
         strcpy(copy,p+i);
         
@@ -6555,12 +7079,12 @@ static int op_output()
             {
             strcpy(x,parm[1]);
             subst_survo_path_in_editor(x);
-            if (*x=='-') *eout=EOS;
-            else if (*x=='.' || strchr(x,'\\')!=NULL || strchr(x,'/')!=NULL 
+            if (*x=='-') { *eout=EOS;
+            } else if (*x=='.' || strchr(x,'\\')!=NULL || strchr(x,'/')!=NULL 
             || strchr(x,'<')!=NULL || strchr(x,'~')!=NULL ||
-                     strchr(x,':')!=NULL) // RS ADD FIXME path
+                     strchr(x,':')!=NULL) { // RS ADD FIXME path
                 strcpy(eout,x);
-            else { strcpy(eout,edisk); strcat(eout,x); }
+            } else { strcpy(eout,edisk); strcat(eout,x); }
             return(1);
             }
         j=r1+r-1; edwrite(space,j,1);
@@ -6579,12 +7103,12 @@ static int op_rout()
             {
             strcpy(x,parm[1]);
             subst_survo_path_in_editor(x);
-            if (*x=='-') *muste_rout=EOS;
-            else if (*x=='.' || strchr(x,'\\')!=NULL || strchr(x,'/')!=NULL 
+            if (*x=='-') { *muste_rout=EOS;
+            } else if (*x=='.' || strchr(x,'\\')!=NULL || strchr(x,'/')!=NULL 
             || strchr(x,'<')!=NULL || strchr(x,'~')!=NULL ||
-                     strchr(x,':')!=NULL) // RS ADD FIXME path
+                     strchr(x,':')!=NULL) { // RS ADD FIXME path
                 strcpy(muste_rout,x);
-            else { strcpy(muste_rout,edisk); strcat(muste_rout,x); }
+            } else { strcpy(muste_rout,edisk); strcat(muste_rout,x); }
             return(1);
             }
         j=r1+r-1; edwrite(space,j,1);
@@ -6601,7 +7125,8 @@ static int op_setup()
         int i;
         char x[LLENGTH];
 
-        if (g<2) parm[1]=orig_setup;
+        if (g<2) { parm[1]=orig_setup;
+}
 // RS REM        p_survo_id=NULL;
         muste_strncpy(current_setup,parm[1],LNAME);
         
@@ -6631,9 +7156,11 @@ static int op_lowline() // 25.6.2006
     int j;
 
     if (g==1) { prompt_line=NULL; return(1); }
-    j=edline2(parm[1],1,1); if (j==0) return(1);
+    j=edline2(parm[1],1,1); if (j==0) { return(1);
+}
     edread(sbuf,j);
-    for (j=0; j<8; ++j) prompt_space[j]=' '; prompt_space[j]=EOS;
+    for (j=0; j<8; ++j) { prompt_space[j]=' '; 
+}prompt_space[j]=EOS;
     strncat(prompt_space,sbuf+1,c3);
     prompt_line=prompt_space;
     return(1);
@@ -6680,13 +7207,16 @@ static int op_textcols()
         return(1);
         }
 
-    jj1=edline2(parm[1],1,1); if (!jj1) return(1);
-    jj2=edline2(parm[2],jj1,1); if (!jj2) return(1);
+    jj1=edline2(parm[1],1,1); if (!jj1) { return(1);
+}
+    jj2=edline2(parm[2],jj1,1); if (!jj2) { return(1);
+}
     lev=atoi(parm[3]);
     nlin=atoi(parm[4]);
     ncol=atoi(parm[5]);
     *text=EOS;
-    if (g>6) strcpy(text,parm[6]);
+    if (g>6) { strcpy(text,parm[6]);
+}
 
     move_words=insert_mode=0;
 
@@ -6699,12 +7229,15 @@ static int op_textcols()
         if (k) { mr=-1; block_erase(); }
         k=1;
         kk1+=nlin;
-        if (kk1>jj2) break;
+        if (kk1>jj2) { break;
+}
         ++col;
-        if (col<ncol) continue;
+        if (col<ncol) { continue;
+}
         col=0;
         jj+=nlin+1;
-        if (*text) edwrite(text,jj-1,0);
+        if (*text) { edwrite(text,jj-1,0);
+}
         }
 
     return(1);
@@ -6729,7 +7262,8 @@ int sur_get_message(char *str,int num)
 
 static int vmerkki(char ch)
         {
-        if (strchr(vmerkit,ch)!=NULL) return(1);
+        if (strchr(vmerkit,ch)!=NULL) { return(1);
+}
         return(0);
         }
 
@@ -6739,11 +7273,15 @@ static int nykyinen_sana(char *x,int pos,char *hakusana)
 
         p=x+pos;
         if (vmerkki(*p))
-            { while (p>x && vmerkki(*p))  --p; if (p==x) return(-1); }
+            { while (p>x && vmerkki(*p)) {  --p; 
+}if (p==x) { return(-1); 
+}}
         q=p;
-        while (!vmerkki(*q)) ++q; *q=EOS;
+        while (!vmerkki(*q)) { ++q; 
+}*q=EOS;
         q=p;
-        while (q>x && !vmerkki(*q)) --q;
+        while (q>x && !vmerkki(*q)) { --q;
+}
         strcpy(hakusana,q+1);
         return(1);
         }
@@ -6773,11 +7311,13 @@ muste_help_running=TRUE;
             if (help_window_open)
                 {
                 strcpy(v_info,info);
-                p=strchr(info,'>'); if (p!=NULL) *p=EOS;
+                p=strchr(info,'>'); if (p!=NULL) { *p=EOS;
+}
                 if (*info==EOS)
                     {
                     strcpy(info,parm[0]);
-                    p=strchr(info,'?'); if (p!=NULL) *p=EOS;
+                    p=strchr(info,'?'); if (p!=NULL) { *p=EOS;
+}
                     }
                 if (strcmp(info,"???")==0)
                     {
@@ -6790,9 +7330,10 @@ muste_help_running=TRUE;
                 sur_sleep(300);
                 i=sur_get_message(sbuf,1);
 
-                if (!i) return(1);
-                else
+                if (!i) { return(1);
+                } else {
                     strcpy(info,v_info);
+}
                 }
             help_window_open=1;
             no_wait=1;
@@ -6826,13 +7367,16 @@ static int help(char *helpword)
 // RS REM        extern int m_move_ind,m_move_ind2;
 
         m_move_ind=m_move_ind2=0; move_clear();
-        if (*help_sana==EOS || *helpword=='?') strcpy(info,helpword);
-        else if (*help_sana=='>') strcpy(info,"DOS");
-        else strcpy(info,help_sana);
+        if (*help_sana==EOS || *helpword=='?') { strcpy(info,helpword);
+        } else if (*help_sana=='>') { strcpy(info,"DOS");
+        } else { strcpy(info,help_sana);
+}
         strcat(info,">"); 
-        if (qpath[0]!='"') strcat(info,"\""); // RS ADD quotes if missing
+        if (qpath[0]!='"') { strcat(info,"\""); // RS ADD quotes if missing
+}
         strcat(info,qpath);
-        if (qpath[0]!='"') strcat(info,"\""); // RS ADD
+        if (qpath[0]!='"') { strcat(info,"\""); // RS ADD
+}
 
 help_window=0; help_window_open=0; // RS TEMP
 
@@ -6859,12 +7403,14 @@ static int op_files()
     while (1)
         {
         q=strchr(p,'\n');
-        if (q==NULL) break;
+        if (q==NULL) { break;
+}
         *q=EOS;
         edwrite(space,j,1);
         edwrite(p,j++,1);
         p=q+1;
-        if (j>r2) break;
+        if (j>r2) { break;
+}
         }
     return(1);
     }
@@ -6903,12 +7449,16 @@ static int op_dos()
 // RS CHA        p=strchr(x+1,'_'); if (p==NULL) p=x; strcpy(xx,p); strcpy(x,xx);
 // Rprintf("\nx: %s",x);
  		p=strchr(x+1,STAMP); 
-        if (p==NULL) p=x;  
+        if (p==NULL) { p=x;  
+}
         q2=strstr(p,"##");
         if (q2!=NULL) 
           {
-          i=TRUE; if (q2>p) if(*(q2-1)!=' ') i=FALSE; // RS 20.2.2013
-          if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')' && q2[2]!=',' && i) p=q2+1; // RS ADD           
+          i=TRUE; if (q2>p) { if(*(q2-1)!=' ') { i=FALSE; // RS 20.2.2013
+}
+}
+          if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')' && q2[2]!=',' && i) { p=q2+1; // RS ADD           
+}
           }
         strcpy(xx,p); strcpy(x,xx);
 
@@ -6939,10 +7489,12 @@ static int op_dos()
 		if (i>1) { strcpy(parm1,parm[1]); parm[1]=parm1; } // RS ADD
 		if (i>2) { strcpy(parm2,parm[2]); parm[2]=parm2; } // RS ADD	
 
-        if (strcmp(parm[0],">START")==0) set_win=2; // RS 5.12.2012
+        if (strcmp(parm[0],">START")==0) { set_win=2; // RS 5.12.2012
+}
         if (strcmp(parm[0],">SET_WIN")==0 ||
-            strcmp(parm[0],">SET_EWIN")==0)
+            strcmp(parm[0],">SET_EWIN")==0) {
             set_win=1;
+}
 
 // 23.4.2004
 /* RS NYI
@@ -6957,14 +7509,15 @@ static int op_dos()
 
         if (i>1 && set_win==0 && (strcmp(parm[0],">COPY")==0 || strcmp(parm[0],">copy")==0)) // RS ADD set_win REM etu &&
             {
-            if (i==2) parm[2]=nullpath;
+            if (i==2) { parm[2]=nullpath;
+}
             i=strlen(parm[2])-1;
             if ( strchr(parm[1],'*')==NULL && strchr(parm[1],'+')==NULL
 // RS REM    && !sur_is_directory(parm[2])  && *(parm[2]+i)!=':' && *(parm[2]+i)!='\\' && *(parm[2]+i)!='/'
 				)
                 {
-                if (etu) i=sur_copy_file(parm[1],parm[2]);
-                else
+                if (etu) { i=sur_copy_file(parm[1],parm[2]);
+                } else
                 	{
                 	muste_expand_path(parm[1]);
 					muste_expand_path(parm[2]);
@@ -6986,7 +7539,8 @@ static int op_dos()
                 	muste_copytofile(sbuf,muste_command);
     				i=muste_evalsource(muste_command);
                 	}
-                if (i==0) os_error(">COPY");
+                if (i==0) { os_error(">COPY");
+}
                 return(1);
                 }
             }
@@ -6996,8 +7550,8 @@ static int op_dos()
         	) // RS REM etu &&
             {
             muste_expand_path(parm[1]);            
-            if (etu) i=sur_delete(parm[1]);
-            else
+            if (etu) { i=sur_delete(parm[1]);
+            } else
             		{
 //                	if (strchr(parm[1],' ')!=NULL && strchr(parm[1],'/')!=NULL)
 //                	  muste_sprintf(sbuf,"unlink(\"'%s'\") # %s",parm[1],parm[0]);
@@ -7012,8 +7566,8 @@ static int op_dos()
         if (i>1 && set_win==0 && (strcmp(parm[0],">MD")==0 || strcmp(parm[0],">md")==0)) // RS 30.1.2013 set_win
             {
             muste_expand_path(parm[1]);            
-            if (etu) i=sur_make_dir(parm[1]);
-            else
+            if (etu) { i=sur_make_dir(parm[1]);
+            } else
             		{
 //                	if (strchr(parm[1],' ')!=NULL && strchr(parm[1],'/')!=NULL)
 //                	  muste_sprintf(sbuf,"dir.create(\"'%s'\") # %s",parm[1],parm[0]);
@@ -7025,13 +7579,15 @@ static int op_dos()
             return(1);
             }     
 
-        if (*parm[0]=='>') i=parm[0]-x;
-        else { if (g<2) return(-1); i=parm[1]-x-1; }
+        if (*parm[0]=='>') { i=parm[0]-x;
+        } else { if (g<2) { return(-1); 
+}i=parm[1]-x-1; }
         
         strcpy(x,xx);
 //        subst_survo_path_in_editor(x);
         muste_expand_path2(x); // RS CHA 15.11.2012        
-        if (etu>0) tut_sulje();
+        if (etu>0) { tut_sulje();
+}
         p=x+strlen(x)-1; while (*p==' ') { *p=EOS; --p; }
         strcpy(sbuf,x+i+1);
         
@@ -7061,9 +7617,10 @@ static int op_dos()
         soft_disp(0);
 
 // Rprintf("\nx: %s\nsbuf: %s\nxx:%s",x,sbuf,xx);
-		if (set_win==2) i=muste_system(sbuf+6,2); // RS 5.12.2012
-        else if (set_win==1) i=muste_system(sbuf,0);
-        else i=muste_system(sbuf,1);
+		if (set_win==2) { i=muste_system(sbuf+6,2); // RS 5.12.2012
+        } else if (set_win==1) { i=muste_system(sbuf,0);
+        } else { i=muste_system(sbuf,1);
+}
 
 /* RS CHA
         strcpy(xx,"0");
@@ -7102,7 +7659,8 @@ static int op_dos()
         set_console_title();
 
         *op_sana=EOS;
-        if (etu>0) tut_avaa();
+        if (etu>0) { tut_avaa();
+}
         soft_disp(1);
         return(1);
         }
@@ -7120,8 +7678,8 @@ int make_fence_stop_list(char *list) // 30.4.2010
     for (i=0; i<n_fence_stop; ++i)
         {
         p=strchr(s[i],'_');
-        if (p==NULL) *fence_stop_list[i][1]=EOS;
-        else { *p=EOS; strcpy(fence_stop_list[i][1],p+1); }
+        if (p==NULL) { *fence_stop_list[i][1]=EOS;
+        } else { *p=EOS; strcpy(fence_stop_list[i][1],p+1); }
         strcpy(fence_stop_list[i][0],s[i]);
         }
     return(1);
@@ -7133,12 +7691,15 @@ int modify_command_and_set_fence_line() // 26.4.2010
     int i,j;
 // RS REM    extern char stripe2[];
 
-    if (c1!=1 || c!=1) return(1);
+    if (c1!=1 || c!=1) { return(1);
+}
     j=r1+r-1;
     edread(x,j);
-    if (x[1]==' ' || x[1]=='#') return(1);
+    if (x[1]==' ' || x[1]=='#') { return(1);
+}
     i=insert();
-    if (i<0) return(1);
+    if (i<0) { return(1);
+}
     i=insertl();
     if (i<0)
         {
@@ -7147,8 +7708,10 @@ int modify_command_and_set_fence_line() // 26.4.2010
         }
     z[(j-1)*ed1+1]='#';
     i=j*ed1;
-    for (j=1; j<ed1; ++j) z[i+j]='#';
-    if (r<r3) --r;
+    for (j=1; j<ed1; ++j) { z[i+j]='#';
+}
+    if (r<r3) { --r;
+}
     disp();
     return(1);
     }
@@ -7185,7 +7748,8 @@ int fence_activate()
     while (j<r2)
         {
         edread(x,j);
-        if (strncmp(x,"*##########",11)==0) break;
+        if (strncmp(x,"*##########",11)==0) { break;
+}
         if (fence_warning && strncmp(x,"*#",2)==0)
             {
             PR_EINV;
@@ -7204,8 +7768,8 @@ int fence_activate()
 // varatalletus:
     mr1=r1+r;
     mr2=j-1;
-    if (mr1==mr2+1) varatalletus=0;
-    else
+    if (mr1==mr2+1) { varatalletus=0;
+    } else
         {
         varatalletus=1;
         mc1=0; mc2=c2; c_vasen=0;
@@ -7294,17 +7858,23 @@ static int open_appl()
     *sbuf2=' '; // 28.3.2003
     sar=c1+c-1;
     p=sbuf2+sar;
-    if (*p==' ' && sar<2) return(-1);  
-    if (*p==' ' && *(p-1)==' ') return(-1); // RS ADD
-    if (*p==' ') p--; // RS ADD
+    if (*p==' ' && sar<2) { return(-1);  
+}
+    if (*p==' ' && *(p-1)==' ') { return(-1); // RS ADD
+}
+    if (*p==' ') { p--; // RS ADD
+}
     q=p;
 
 //  while (strchr(" ([{,",*q)==NULL) --q;
 //  while (strchr(" )]},",*p)==NULL && *p!=EOS) ++p;
 
-    while (*q!=' ') --q; ++q; // 3.8.2005
-    p=q; while (*p!=' ' && *p!=EOS) ++p; --p;
-    if (strchr(".,;:",*p)!=NULL) --p;
+    while (*q!=' ') { --q; 
+}++q; // 3.8.2005
+    p=q; while (*p!=' ' && *p!=EOS) { ++p; 
+}--p;
+    if (strchr(".,;:",*p)!=NULL) { --p;
+}
     if (*q=='(' && *p==')') { ++q; --p; }
     if (*q=='[' && *p==']') { ++q; --p; }
     if (*q=='{' && *p=='}') { ++q; --p; }
@@ -7326,11 +7896,13 @@ static int open_appl()
             {
             x[len]=EOS; strcat(x,paate[i]);
             open_sys=muste_fopen2(x,"rb"); //
-            if (open_sys==NULL) continue;
+            if (open_sys==NULL) { continue;
+}
             muste_fclose(open_sys);
             ok=1; break;
             }
-        if (!ok) return(0);
+        if (!ok) { return(0);
+}
         command=oper[i];
         q=x;
         }
@@ -7338,15 +7910,21 @@ static int open_appl()
         {
         strcpy(nimi,survo_path); strcat(nimi,"SYS/OPEN.SYS");       
         open_sys=muste_fopen2(nimi,"rt");
-        if (open_sys==NULL) return(-1);
+        if (open_sys==NULL) { return(-1);
+}
         while (1)
             {
             p=muste_fgets(x,100,open_sys); if (p==NULL) { muste_fclose(open_sys); return(-1); }
             i=strlen(x)-1;
-            if (x[i]=='\n') x[i]=EOS;
-            if (x[i]=='\r') x[i]=EOS; if (i>0) if (x[i-1]=='\r') x[i-1]=EOS; // RS ADD
+            if (x[i]=='\n') { x[i]=EOS;
+}
+            if (x[i]=='\r') { x[i]=EOS; 
+}if (i>0) { if (x[i-1]=='\r') { x[i-1]=EOS; // RS ADD
+}
+}
             command=x+2;
-            while (*command!=' ') ++command;
+            while (*command!=' ') { ++command;
+}
             *command=EOS;
 
             if (x[2]=='*')
@@ -7380,15 +7958,18 @@ static int open_appl()
     if (ok)
         {
         ++command;
-        while (*command==' ') ++command;
+        while (*command==' ') { ++command;
+}
 
         edread(open_copy,r1+r-1);
         edwrite(space,r1+r-1,1);
-        if (strncmp(q,"www.",4)==0) 
-        	if(strchr(q,'&')!=NULL) muste_sprintf(sbuf,"*%s 'http://%s'",command,q);
-        	else muste_sprintf(sbuf,"*%s http://%s",command,q);
-        else if(strchr(q,'&')!=NULL) muste_sprintf(sbuf,"*%s '%s'",command,q);
-        else muste_sprintf(sbuf,"*%s %s",command,q);
+        if (strncmp(q,"www.",4)==0) { 
+        	if(strchr(q,'&')!=NULL) { muste_sprintf(sbuf,"*%s 'http://%s'",command,q);
+        	} else { muste_sprintf(sbuf,"*%s http://%s",command,q);
+}
+        } else if(strchr(q,'&')!=NULL) { muste_sprintf(sbuf,"*%s '%s'",command,q);
+        } else { muste_sprintf(sbuf,"*%s %s",command,q);
+}
         edwrite(sbuf,r1+r-1,0);
 // Rprintf("\nactirivi: %s",sbuf);        
         write_string(space,c3-1,' ',r+1,8);
@@ -7406,11 +7987,13 @@ int emptyline(int curline)
 	int i,j;
 	char space[LLENGTH];
 	
-    for (i=0; i<ed1; ++i) space[i]=' ';
+    for (i=0; i<ed1; ++i) { space[i]=' ';
+}
     i=curline; j=lastline2();   		
 	while (i<=j)
     	{
-        if (strncmp(space,z+(i-1)*ed1+1,(unsigned int)(ed1-1))==0) break;
+        if (strncmp(space,z+(i-1)*ed1+1,(unsigned int)(ed1-1))==0) { break;
+}
         ++i;
     	}
     return(i);	
@@ -7436,7 +8019,8 @@ static int muste_search_rline(int curline)
               {
               j=p-rivi;
               if (!(rivi[j-1]==(char)PREFIX && rivi[j-2]!=(char)PREFIX && 
-                  p[1]!=(char)'.' && p[1]!=(char)')' && p[1]!=(char)',')) p=rivi;
+                  p[1]!=(char)'.' && p[1]!=(char)')' && p[1]!=(char)',')) { p=rivi;
+}
               }
 /*                           
             p=strchr(rivi,(char)PREFIX); // RS ADD check changed PREFIX
@@ -7447,11 +8031,13 @@ static int muste_search_rline(int curline)
              // RS double PREFIX needed for activation, but no triple or other special case
               else { p=rivi; }
 */              
-            else p=rivi;  
+            else { p=rivi;  
+}
             }
 
         j=split(p+1,para,3);
-        if (j<2) continue;
+        if (j<2) { continue;
+}
  
         muste_strupr(para[0]); 
         k1=0; k2=0;
@@ -7460,17 +8046,20 @@ static int muste_search_rline(int curline)
 			r1bak=r1; rbak=r; r1=i; r=1;
 			k1=edline2(para[1],1,0);
 			r1=r1bak; r=rbak;
-			if (k1<=0) continue;
-			if (j<3) k2=emptyline(k1);
-			else
+			if (k1<=0) { continue;
+}
+			if (j<3) { k2=emptyline(k1);
+			} else
 				{
 				r1bak=r1; rbak=r; r1=i; r=1;
 				k2=edline2(para[2],1,0);
 				r1=r1bak; r=rbak;				
-				if (k2<=0) continue;
+				if (k2<=0) { continue;
+}
 				}
 // Rprintf("\n%d: %s %d,%d",i,para[0],k1,k2);				
-			if (curline>=k1 && curline<=k2) return(1);				
+			if (curline>=k1 && curline<=k2) { return(1);				
+}
 			}			
     	}
     return(0);	
@@ -7538,7 +8127,8 @@ int activate()
         soft_act2=0;
 // 9.2  soft_vis=1;
 // 9.2  if (display_off) soft_vis=0;
-        scroll_line=r+2; if (scroll_line>r3) scroll_line=r3;
+        scroll_line=r+2; if (scroll_line>r3) { scroll_line=r3;
+}
         if (soft_act)
             {
 //            *actline='?'; strcpy(actline+1,soft_actline);
@@ -7584,7 +8174,8 @@ int activate()
           // 30.4.2010
                 strcpy(copy,p);
 // Rprintf("\nstops=%d|",n_fence_stop); getck();
-                g=split(p+1,parm,MAX_FENCE_STOP); if (g==1) parm[1]="";
+                g=split(p+1,parm,MAX_FENCE_STOP); if (g==1) { parm[1]="";
+}
 
 /**************************
       muste_sprintf(sbuf,"\nparm[0]=%s| parm[1]=%s|",parm[0],parm[1]);
@@ -7624,26 +8215,33 @@ getck();
                 return(1);
                 }
             }
-            else if (p==NULL) p=actline; // RS ADD 12.11.2012
+            else if (p==NULL) { p=actline; // RS ADD 12.11.2012
+}
 
         strcpy(copy,p);
         g=splitq(p+1,parm,MAXPARM); // RS CHA splitq
 
         if (g==0) { erun=0; return(0); }
 // 9.12.99 if (g==1 && *parm[0]=='/' && parm[0][1]==EOS) return(0);
-        for (i=0; i<g; ++i) if (parm[i][0]=='/' && parm[i][1]==EOS) break;
+        for (i=0; i<g; ++i) { if (parm[i][0]=='/' && parm[i][1]==EOS) { break;
+}
+}
         g=i;
-        if (g) copy[parm[g-1]-p+strlen(parm[g-1])]=EOS; /* 9.12.1999 */
+        if (g) { copy[parm[g-1]-p+strlen(parm[g-1])]=EOS; /* 9.12.1999 */
+}
         cursor(r,1);
         PR_EINV;
         if (*actline!='?') { muste_sprintf(sbuf,"%.*s",c3,copy+1); sur_print(sbuf); } 
 
         muste_strncpy(op_tila,parm[0],OPLEN); op_tila[OPLEN-1]=EOS;
         op=op_tila;
-        child_call0=0; if (*actline=='\'') child_call0=1;
-        if (*op=='-' && op[1]!=EOS) ++op;  /* 8.12.1998 */
+        child_call0=0; if (*actline=='\'') { child_call0=1;
+}
+        if (*op=='-' && op[1]!=EOS) { ++op;  /* 8.12.1998 */
+}
 
-        if (muste_strcmpi(op,"S")==0) strcpy(op_tila,"SHOW"); // 26.4.2006
+        if (muste_strcmpi(op,"S")==0) { strcpy(op_tila,"SHOW"); // 26.4.2006
+}
 
         strcpy (OO,op);
         muste_strupr(OO);
@@ -7655,10 +8253,11 @@ getck();
 
 // if (strlen(OO)>16)
 //   { Rprintf("OO=%s\n",OO); getck(); }
-		if ((erun!=0 || etu!=0) && *actline=='/' && *(actline+1)=='/' && *(actline+2)=='/') return(1); // RS Null-activate for comment lines in Sucros
+		if ((erun!=0 || etu!=0) && *actline=='/' && *(actline+1)=='/' && *(actline+2)=='/') { return(1); // RS Null-activate for comment lines in Sucros
+}
 
-		if (strcmp(OO,"NOP")==0) return(1); // RS No operation activation
-else 	if (strcmp(OO,"ACT")==0)  // RS 6.10.2014
+		if (strcmp(OO,"NOP")==0) { return(1); // RS No operation activation
+} else 	if (strcmp(OO,"ACT")==0)  // RS 6.10.2014
 			{
 			op_act();
 			return(1);	
@@ -7688,7 +8287,8 @@ else 	if (strcmp(OO,"RES")==0)  // RS 24.1.2013
   				sur_dump(); // RS 9.10.2012 required for undo functionality     
                	i=op_arit(); 
    				muste_restore_stack_count();   // RS        
-               	if (i!=2) return(1);
+               	if (i!=2) { return(1);
+}
                	}
 
 muste_save_stack_count(1);  // RS 9.3.2014 
@@ -7699,7 +8299,8 @@ muste_save_stack_count(1);  // RS 9.3.2014
 		    if (i>0) 
                 {
                 k=ractivate(0);
-                if (k<=1) disp();
+                if (k<=1) { disp();
+}
 muste_restore_stack_count();   // RS 9.3.2014              
                 return(1);
                 }
@@ -7712,7 +8313,8 @@ else    if (strcmp(OO,"FONT")==0 || strcmp(OO,"WINDOW")==0)
             { sur_dump(); op_font(); muste_restore_stack_count(); return(1); }
 else    if (strcmp(OO,"TKFONT")==0)   { muste_choosefont(); muste_restore_stack_count();  return(1); }
 else    if (strcmp(OO,"SAVE")==0)    { op_save();
-                                       if (etu==0) sur_wait(100L,nop,1);
+                                       if (etu==0) { sur_wait(100L,nop,1);
+}
                                        muste_restore_stack_count(); return(1);
                                      }
 
@@ -7798,9 +8400,11 @@ else    if (strcmp(OO,"F")==0)       { i=help("F"); muste_restore_stack_count();
 else    if (strchr(OO,'?')!=NULL && muste_strnicmp(OO,"http://",7)!=0)
             {
             strcpy(info,">"); 
-            if (qpath[0]!='"') strcat(info,"\""); // RS ADD
+            if (qpath[0]!='"') { strcat(info,"\""); // RS ADD
+}
             strcat(info,qpath);
-            if (qpath[0]!='"') strcat(info,"\""); // RS ADD            
+            if (qpath[0]!='"') { strcat(info,"\""); // RS ADD            
+}
             help2(); muste_restore_stack_count(); return(1);
             }
 
@@ -7835,7 +8439,8 @@ else    if ((*OO=='C' || *OO=='L') && strchr(OO,'?')==NULL &&
 else    if (muste_strnicmp(OO,"R>",2)==0)
              {
 			 k=ractivate(0);
-             if (k<=1) disp();
+             if (k<=1) { disp();
+}
 /*             
              mp=strchr(copy+1,'>');
              if (mp==NULL) mp=copy+1;
@@ -7855,10 +8460,10 @@ else    if (*OO=='/' || strcmp(OO,"TUTOR")==0)
             return(1);
             }
 
-else    if (strcmp(OO,"MATRUN")==0) op[3]=EOS; //  -> MAT
+else    if (strcmp(OO,"MATRUN")==0) { op[3]=EOS; //  -> MAT
 
 //       "lapsenlapsen" välttämiseksi 29.2.2000 
-else    if (g>2 && strcmp(OO,"MAT")==0 && muste_strcmpi(parm[1],"SAVE")==0
+} else    if (g>2 && strcmp(OO,"MAT")==0 && muste_strcmpi(parm[1],"SAVE")==0
             && muste_strcmpi(parm[2],"DATA")==0)
             { strcpy(op,"MATSDA"); strcpy(pref,"&"); }
 
@@ -7958,7 +8563,8 @@ muste_set_R_int(".muste$exitok",1); // RS 27.2.2013
             return(-1);
             }    
 */        
-        if (i) return(1);
+        if (i) { return(1);
+}
 
 /* RS NYI 
 
@@ -8042,7 +8648,8 @@ else    if (strcmp(OO,"LIST")==0)
 		if (*actline=='R' || *actline=='r' || *actline=='>') // RS
              {
 			 k=ractivate(0);
-             if (k<=1) disp();
+             if (k<=1) { disp();
+}
              return(1);
 			 }
 			 
@@ -8051,14 +8658,16 @@ else    if (strcmp(OO,"LIST")==0)
 		if (i>0) 
 			{
 			k=ractivate(0);
-            if (k<=1) disp();
+            if (k<=1) { disp();
+}
 			return(1);
 			}		 
 
 //		muste_dump();
 		i=open_appl(); // RS ADD (from childp)
 //		muste_restore_dump();
-		if (i>0) return(1);
+		if (i>0) { return(1);
+}
 
         
         muste_sprintf(sbuf,"\nUnknown or unimplemented command %s ",OO);
@@ -8081,8 +8690,10 @@ char *wordp(int k)  /* 29.5.1992 */
         i=0;
         while (i<k)
             {
-            if (*p==EOS) break;
-            if (*p=='@') ++i;
+            if (*p==EOS) { break;
+}
+            if (*p=='@') { ++i;
+}
             ++p;
             }
         return(p);
@@ -8114,7 +8725,8 @@ int print_word(int k)
             if (vc<c3) { muste_sprintf(sbuf,"%c",*p); sur_print(sbuf); }
             ++vc; ++p;
             }
-        if (vc<=c3) c=vc;
+        if (vc<=c3) { c=vc;
+}
         return(1);
         }
 
@@ -8166,7 +8778,8 @@ int end_empty_lines()
     while (j>0)
         {
         edread(x,j);
-        if (!empty(x+1,c2)) break;
+        if (!empty(x+1,c2)) { break;
+}
         --j; ++k;
         }
     return(k);
@@ -8185,8 +8798,10 @@ int ref_point2(char ch)
         m=nextch_editor()-'0'-1;
         if (ch=='R')
             { ref2_r1[m]=r1; ref2_r[m]=r; ref2_c1[m]=c1; ref2_c[m]=c; return(1); }
-        if (ch=='D') ref2_r1[m]=0;
-        if (ref2_r1[m]==0) return(1);
+        if (ch=='D') { ref2_r1[m]=0;
+}
+        if (ref2_r1[m]==0) { return(1);
+}
         r1=ref2_r1[m]; r=ref2_r[m]; c1=ref2_c1[m]; c=ref2_c[m];
         disp();
         return(1);
@@ -8210,7 +8825,8 @@ int enter_sana(char *x)
         i=0;
         while (i<32)  /* ennen i<8  8.5.90 */
             {
-            m2=nextch_editor(); if (m2==CODE_RETURN) break;
+            m2=nextch_editor(); if (m2==CODE_RETURN) { break;
+}
             x[i++]=(char)m2;
             }
         x[i]=EOS;
@@ -8224,10 +8840,12 @@ int enter_wsana(char *x)   /* 29.5.1992 */
 //RS        extern char *wordp();
 
         enter_sana(x);
-        if (*x!='W') return(1);
+        if (*x!='W') { return(1);
+}
         p=wordp(atoi(x+1)-1);
         q=x;
-        while (*p!=EOS && *p!='@') *q++=*p++;
+        while (*p!=EOS && *p!='@') { *q++=*p++;
+}
         *q=EOS;
         return(1);
         }
@@ -8254,7 +8872,8 @@ int sur_user_name()
         int i;
 
         strcpy(s,info+11);
-        p=strchr(s,'>'); if (p!=NULL) *p=EOS; /* oli p */
+        p=strchr(s,'>'); if (p!=NULL) { *p=EOS; /* oli p */
+}
         i=strlen(s)-1; while (s[i]==' ') { s[i]=EOS; --i; }
         strcpy(info,s);
         return(1);
@@ -8283,15 +8902,19 @@ void prefix()
                     {                    
                     if (s_hit(STOP)) { erun=0; disp(); break; }
 
-                    if (time_file_on) file_time_start(); // 12.11.2003
+                    if (time_file_on) { file_time_start(); // 12.11.2003
+}
                     i=activate();
-                    if (time_file_on) file_time_end(parm[0]);
+                    if (time_file_on) { file_time_end(parm[0]);
+}
 
                     *info=EOS;
                     PR_ENRM;
-                    if (i<0) erun=0;
+                    if (i<0) { erun=0;
+}
                     if (erun==0) { disp(); break; }
-                    if (i==2) displine2(r1+r-1);
+                    if (i==2) { displine2(r1+r-1);
+}
 
                     if (!goto_load_ind)
                         {
@@ -8303,15 +8926,19 @@ void prefix()
                             else SCROLL_UP(1,r3,1);
                             }
                         }
-                    if (i<=1) disp();
+                    if (i<=1) { disp();
+}
                     erun_start=0; // RS 25.11.2012
                     }
                 break;
 
               case CODE_PRE:
-                if (c<c3) { c=c3; if (c>c2) c=c2; break; }
-                if (c1==c2-c3+1) break;
-                c1+=c3; if (c1>c2-c3+1) c1=c2-c3+1;
+                if (c<c3) { c=c3; if (c>c2) { c=c2; 
+}break; }
+                if (c1==c2-c3+1) { break;
+}
+                c1+=c3; if (c1>c2-c3+1) { c1=c2-c3+1;
+}
                 disp(); break;
 
               case CODE_CODE:
@@ -8321,13 +8948,16 @@ void prefix()
                 left_edge=c; break;
 
               case CODE_TAB:
-                i=sur_getch(); if (i=='\\') strcpy(id_jatko,"  "); break;  // RS getch -> sur_getch
+                i=sur_getch(); if (i=='\\') { strcpy(id_jatko,"  "); 
+}break;  // RS getch -> sur_getch
               case CODE_DOWN:
                 if (r<r3) { r=r3; break; }
                 i=lastline2();
-                if (i<r3) { r1=1; r=i+1; if (i<1) r=1; disp(); break; }
+                if (i<r3) { r1=1; r=i+1; if (i<1) { r=1; 
+}disp(); break; }
                 r1=i-6; r=8; if (r1>r2-r3+1) { r1=r2-r3+1; r=i-r1+2; }
-                if (r>r3) r=r3;
+                if (r>r3) { r=r3;
+}
                 disp();
                 break;
               case CODE_INSERT:
@@ -8365,8 +8995,9 @@ void prefix()
               case CODE_DISK: // RS FIXME This should work differently in Muste!
                 strcpy(x,survo_path);
                 i=strlen(x); // RS REM -2; x[i]=EOS;
-                for (m2=0; m2<i; ++m2)
+                for (m2=0; m2<i; ++m2) {
                     key_common((int)(unsigned char)x[m2]);
+}
                 break;
 
   /*      default: Rprintf("\nPRE: %d %d\n",special,m); getch(); */
@@ -8444,7 +9075,8 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
                    /*  17.2.99 */ else if (*x=='F')
                                       {
                                       strcpy(x,"0");
-                                      if (large_field) strcpy(x,"1");
+                                      if (large_field) { strcpy(x,"1");
+}
                                       tutcat(x);
                                       break;
                                       }
@@ -8547,8 +9179,9 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
 
               case 'v':           ver_disp=1; break;
               case 'x':           *x=*(z+ed1*(r1+r-2)+c1+c-1);
-                 /* 17.11.1996 */ if (paint_on)
+                 /* 17.11.1996 */ if (paint_on) {
                                   sur_paint(z+ed1*(r1+r-2),c1+c-1,c1+c-1,'7');
+}
                                   *(x+1)=EOS;
                                   tutcat(x); 
                                   break;
@@ -8558,9 +9191,12 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
               case 'w':           edread(x,r1+r-1);
                                   p=q=x+c1+c-1;
                                   if (*p==' ') { tutcat(" "); break; }
-                                  while (q>x && *q!=' ') --q;
-                                  while (*p && *p!=' ') ++p; *p=EOS;
-                                  if (paint_on) sur_paint(x,q-x+1,p-x-1,'7'); // 17.11.1996
+                                  while (q>x && *q!=' ') { --q;
+}
+                                  while (*p && *p!=' ') { ++p; 
+}*p=EOS;
+                                  if (paint_on) { sur_paint(x,q-x+1,p-x-1,'7'); // 17.11.1996
+}
                                   tutcat(q+1);
 
                                   break;
@@ -8576,7 +9212,8 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
                                       sucro_macro(x,0); break;
 
               case '!': case ';': enter_sana(x);
-                                  if (m=='!') m2=0; else m2=1;
+                                  if (m=='!') { m2=0; } else { m2=1;
+}
                                   sucro_macro(x,m2); break;
 
 
@@ -8603,7 +9240,8 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
                                   tutcat(x); break;
               case 'X':           edread(x,r1+r-1);
                                   i=strlen(x)-1;
-                                  while (i>c1+c-2 && x[i]==' ') x[i--]=EOS;
+                                  while (i>c1+c-2 && x[i]==' ') { x[i--]=EOS;
+}
                                   tutcat(x+c1+c-1);
                                   break;
               case 'B':           c1=c=1; disp(); break;
@@ -8661,14 +9299,17 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
 
 
 // 17.7.1998
-              case '>':           if (hae_apu("pre>",x))
+              case '>':           if (hae_apu("pre>",x)) {
                                       sucro_macro(x,0);
+}
                                   break;
-              case '<':           if (hae_apu("pre<",x))
+              case '<':           if (hae_apu("pre<",x)) {
                                       sucro_macro(x,0);
+}
                                   break;
 // 22.7.1998 
-              case 'U':           if (insert_mode) x[0]='1'; else x[0]='0';
+              case 'U':           if (insert_mode) { x[0]='1'; } else { x[0]='0';
+}
                                   x[1]=EOS; tutcat(x); break;
               case ',':           if (sucro_pause) // muutettu 21.8.2004
                                       {
@@ -8711,8 +9352,9 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
 
                             m=strlen(p); m2=0;
                             if (p[m-1]=='!') { m2=1; --m; }
-                            for (i=0; i<m; ++i)
+                            for (i=0; i<m; ++i) {
                                 key_common((int)(unsigned char)p[i]);
+}
                             if (m2) { activate(); disp(); }
 
                             }
@@ -8743,8 +9385,10 @@ static int load_codes2(char *codefile,unsigned char *code,int col)
             muste_sprintf(sbuf,"\nCode conversion file %s not found!",x);
             sur_print(sbuf); WAIT; return(-1);
             }
-        if (col>1) muste_fseek(codes,(long)(col-1)*256L,SEEK_SET);
-        for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
+        if (col>1) { muste_fseek(codes,(long)(col-1)*256L,SEEK_SET);
+}
+        for (i=0; i<256; ++i) { code[i]=(unsigned char)getc(codes);
+}
         muste_fclose2(codes);
         return(1);
         }
@@ -8770,13 +9414,15 @@ static int www_remove_spec_chars(char *s)
     while (1)
         {
         if (*p!=EOS && strchr(merkit,*p)!=NULL) { ++p; } // RS 5.9.2013 ADD *p!=EOS
-        else break;
+        else { break;
+}
         }
     q=t+strlen(t)-1;
     while (1)
         {
-        if (strchr(merkit,*q)!=NULL) *q--=EOS;
-        else break;
+        if (strchr(merkit,*q)!=NULL) { *q--=EOS;
+        } else { break;
+}
         }
     strcpy(s,p);    
     return(1);
@@ -8793,27 +9439,33 @@ static int get_www(char *site,char *s,char sep,char *quotes)  // 10.4.2008
 
 //Rprintf("\nmove_r1=%d mr1=%d mc1=%d mr2=%d mc2=%d|",move_r1,mr1,mc1,mr2,mc2);
 // getck();
-    for (i=0; i<LLENGTH; i++) clip[i]=EOS; // RS 5.9.2013
+    for (i=0; i<LLENGTH; i++) { clip[i]=EOS; // RS 5.9.2013
+}
     if (mc1 && mc2)
         {
         edread(sbuf,move_r1);
         *clip=EOS;
         strncat(clip,sbuf+mc1,mc2-mc1+1);
         p=clip;
-        while ((p=strchr(p,' '))!=NULL) *p++=sep;
+        while ((p=strchr(p,' '))!=NULL) { *p++=sep;
+}
         mr1=mc1=mr2=mc2=m_move_ind=m_move_ind2=0;
         }
     else
         {
         edread(sbuf,r1+r-1);
         i=c1+c-1;
-        if (sbuf[i]==' ') sbuf[i]='_';
-        while (i>0 && sbuf[i]!=' ') --i;
+        if (sbuf[i]==' ') { sbuf[i]='_';
+}
+        while (i>0 && sbuf[i]!=' ') { --i;
+}
         ++i; j=0;
-        while (j<c2-10 && sbuf[i]!=' ') clip[j++]=sbuf[i++]; // SM ADD j<c2-10 && 22.7.2012
+        while (j<c2-10 && sbuf[i]!=' ') { clip[j++]=sbuf[i++]; // SM ADD j<c2-10 && 22.7.2012
+}
         clip[j]=EOS;
         p=clip;
-        while ((p=strchr(p,'_'))!=NULL) *p++=sep;
+        while ((p=strchr(p,'_'))!=NULL) { *p++=sep;
+}
         }
 
     if (*s!=' ')
@@ -8832,9 +9484,10 @@ static int get_www(char *site,char *s,char sep,char *quotes)  // 10.4.2008
 
     w_codes_load(1,code);
     len=strlen(clip);
-    for (i=0; i<len; ++i)
+    for (i=0; i<len; ++i) {
 // RS CHA        (unsigned char)clip[i]=code[(unsigned char)clip[i]];
         clip[i]=code[(unsigned char)clip[i]];
+}
 
 
     *open_copy=EOS;
@@ -8877,10 +9530,13 @@ static int open_any_file()
 
     edread(sbuf,r1+r-1);
     i=c1+c-1;
-    if (sbuf[i]==' ') sbuf[i]='_';
-    while (i>0 && sbuf[i]!=' ') --i;
+    if (sbuf[i]==' ') { sbuf[i]='_';
+}
+    while (i>0 && sbuf[i]!=' ') { --i;
+}
     ++i; j=0;
-    while (sbuf[i]!=' ') clip[j++]=sbuf[i++];
+    while (sbuf[i]!=' ') { clip[j++]=sbuf[i++];
+}
     clip[j]=EOS;
 //    p=clip;
 
@@ -8910,15 +9566,20 @@ static int show_line_labels()
         pos+=step;
         ch=z[pos];
 // Rprintf("%c",ch); getck();
-        if (ch=='*') continue;
-        for (i=0; i<n; ++i)
-            if (x[i]==ch) break;
-        if (i<n) continue;
+        if (ch=='*') { continue;
+}
+        for (i=0; i<n; ++i) {
+            if (x[i]==ch) { break;
+}
+}
+        if (i<n) { continue;
+}
         x[n++]=ch;
         }
     x[n]=EOS;
 // Rprintf("\nx=%s|",x); getck();
-    if (insertl()<0) return(1);
+    if (insertl()<0) { return(1);
+}
     for (j=0; j<n; ++j)
         {
         ch=(char)255;
@@ -8945,17 +9606,21 @@ static int display_name_of_variable()
 
     edread(x,r1+r-1);
     p=x+c1+c-1;
-    if (*p==' ') return(1);
-    q=p; while ((int)(q-x)>0 && *q!=' ') --q;
+    if (*p==' ') { return(1);
+}
+    q=p; while ((int)(q-x)>0 && *q!=' ') { --q;
+}
     ++q;
-    while (*p!=' ') ++p; *p=EOS;
+    while (*p!=' ') { ++p; 
+}*p=EOS;
     muste_sprintf(info,"GET_VAR_NAME %s",q);
     op="CREATE";
 //    childp("FI\\");
 	muste_dump();
 	muste_file_create(arguc,arguv);	
 	muste_restore_dump();
-    if (*info==EOS) return(1);
+    if (*info==EOS) { return(1);
+}
 
     p=prompt_line;
     prompt_line=info;
@@ -8973,7 +9638,8 @@ static int display_name_of_variable()
 // survopoint functions 15.3.2012
 static int start_survopoint_disp()
     {
-    if (survopoint==EOS) return(1);
+    if (survopoint==EOS) { return(1);
+}
     survopoint_on=1;
     survopoint_disp_n=0;
     muste_set_R_int(".muste$eventlooptime",survopoint_disp);
@@ -8983,7 +9649,8 @@ static int start_survopoint_disp()
 
 static int stop_survopoint_disp()
     {
-    if (survopoint==EOS) return(1);
+    if (survopoint==EOS) { return(1);
+}
     survopoint_on=0;
     muste_set_R_int(".muste$eventlooptime",1000);    
     disp();
@@ -8994,10 +9661,12 @@ int muste_save_firstline() // RS ADD 26.9.2012
 	{
     edread(actline,1);
     g=splitq(actline+1,parm,MAXPARM);
-    if (g<2) return(-1);
+    if (g<2) { return(-1);
+}
     strcpy(OO,parm[0]);
     muste_strupr(OO);    
-    if (strcmp(OO,"SAVE")!=0) return(-1);
+    if (strcmp(OO,"SAVE")!=0) { return(-1);
+}
     edsave(parm[1],1,0);
     
     pyyhi_alarivi();
@@ -9018,7 +9687,8 @@ void muste_save_firstline_name(char *name) // RS ADD 26.9.2012
 	int oc,oc1,or,or1;
 
 	loppu=strstr(name,".EDT");
-	if (loppu!=NULL) *loppu=EOS;	
+	if (loppu!=NULL) { *loppu=EOS;	
+}
     edread(actline,1);
     g=splitq(actline+1,parm,MAXPARM);
     muste_sprintf(sbuf,"*SAVE %s",name);
@@ -9032,7 +9702,8 @@ void muste_save_firstline_name(char *name) // RS ADD 26.9.2012
 //    			else apupit=0;
 			edread(actline,1);    			
 			loppu=strstr(actline," / ");
-			if (loppu==NULL) loppu=empty;
+			if (loppu==NULL) { loppu=empty;
+}
 			muste_sprintf(sbuf,"*SAVE %s%s",name,loppu);
 			}
 		else
@@ -9206,7 +9877,8 @@ int muste_cutselection(int type)
 	
 	muste_note_print=FALSE;
 	i=copy_to_clipboard();
-	if (i<0) return(1); // RS ADD 6.11.2012
+	if (i<0) { return(1); // RS ADD 6.11.2012
+}
 	muste_note_print=TRUE;
 	switch (type)
 		{	
@@ -9253,8 +9925,10 @@ static int get_longest_line()
        edread(x,j);
        ch=x[1];
        len=c2; while (x[len]==' ' && len>1) { x[len]=EOS; --len; }
-       if (ch=='.' && strncmp(x+1,piste,len)==0) continue;
-       if (ch=='#' && strncmp(x+1,risu,len)==0) continue;
+       if (ch=='.' && strncmp(x+1,piste,len)==0) { continue;
+}
+       if (ch=='#' && strncmp(x+1,risu,len)==0) { continue;
+}
        if (len>max_len) { max_len=len; j_max=j; }
        }
    return(j_max);
@@ -9275,7 +9949,8 @@ int prefix2()
 	if (special==1) // RS ADD
         {
         if (muste_emacs) { m='E'; special=0; }
-        else m=nextch_editor();
+        else { m=nextch_editor();
+}
         }
     else
     	{
@@ -9304,7 +9979,8 @@ int prefix2()
            j=get_longest_line();
            edread(x,j);
            len=c2; while (x[len]==' ' && len>1) { x[len]=EOS; --len; }
-           if (len<2) break;
+           if (len<2) { break;
+}
            sc1=len-c3+1; c1=sc1; c=c3; // c1 unsigned!
            if (sc1<1) { c1=1; c=len; }
            disp();
@@ -9319,9 +9995,11 @@ int prefix2()
            break;
          case CODE_DOWN:
            i=lastline2();
-           if (i<r3) { r1=1; r=i+1; if (i<1) r=1; disp(); break; }
+           if (i<r3) { r1=1; r=i+1; if (i<1) { r=1; 
+}disp(); break; }
            r1=i-6; r=8; if (r1>r2-r3+1) { r1=r2-r3+1; r=i-r1+2; }
-           if (r>r3) r=r3;
+           if (r>r3) { r=r3;
+}
            disp();
            break;            
             }
@@ -9339,20 +10017,22 @@ int prefix2()
 
        sbuf2=sbuf_buf2; // RS 5.9.2013
        muste_sprintf(x,"web%c",(char)m);
-       i=hae_apu(x,sbuf2); if (i==0) return(1);
+       i=hae_apu(x,sbuf2); if (i==0) { return(1);
+}
        strcpy(term," "); separator='+'; *quotes=EOS;
        p=strstr(sbuf2,"||");
        if (p!=NULL)
            {
            *p=EOS; p+=2;
            q=strstr(p,"||");
-           if (q==NULL) strcpy(term,p);
-           else
+           if (q==NULL) { strcpy(term,p);
+           } else
                {
                *q=EOS; strcpy(term,p); p=q+2;
                q=strstr(p,"||");
                separator=*p;
-               if (q!=NULL) strcpy(quotes,p+3);
+               if (q!=NULL) { strcpy(quotes,p+3);
+}
                }
            }
 
@@ -9414,7 +10094,8 @@ int prefix2()
       			case 'C':   // copy selection
       			break;
       			case 'D':   // delete-char-and-row
-                    if (kontr_()) return(1);
+                    if (kontr_()) { return(1);
+}
         			edread(x,j);
         			if (j<r2 && empty(x+c1+c-1,c2-c1-c+2))
         				{
@@ -9445,7 +10126,8 @@ int prefix2()
 						}                     
                    return(1);
 				case '<':   // shift+backspace RS ADD 26.9.2012
-                    if (kontr_()) return(1);
+                    if (kontr_()) { return(1);
+}
                     if (muste_selection) // RS ADD 6.10.2012
                     	{
 						muste_clearselection();
@@ -9489,7 +10171,8 @@ int prefix2()
       			case 'E':   // end-of-line
       			break;
       			case 'K':   // kill-line
-                    if (kontr_()) return(1);
+                    if (kontr_()) { return(1);
+}
         			edread(x,j);
         			if (j<r2 && empty(x+c1+c-1,c2-c1-c+2))
         				{
@@ -9500,25 +10183,29 @@ int prefix2()
         					r++; deletel(); r--;
         					}
         				}
-        			else era(j);
+        			else { era(j);
+}
         			return(1);
       			case 'O':   // open-line
         			edread(x,j);
         			if (j<r2 && !empty(x+c1+c-1,c2-c1-c+2))
         				{
-        				if (kontr_()) return(1);
+        				if (kontr_()) { return(1);
+}
         				edread(x,j+1);
         				if (empty(x+1,c2))
         					{
         					i=insertl();
-            			    if (r<r3 && i>0) --r;
+            			    if (r<r3 && i>0) { --r;
+}
         					}        				        				
         				line_merge();
         				}
         			else
         				{                   				
         				i=insertl();
-            			if (r<r3 && i>0) --r;
+            			if (r<r3 && i>0) { --r;
+}
         				}
         			return(1);      			 			
       			case 'R':   // execute R
@@ -9538,8 +10225,9 @@ int prefix2()
       			disp();
       			return(1); 
       			case 'X':   // cut
-      			if (insert_mode==0) muste_cutselection(1);
-      			else muste_cutselection(2);
+      			if (insert_mode==0) { muste_cutselection(1);
+      			} else { muste_cutselection(2);
+}
       			return(1); 
       			case 'x':   // shift-cut
       			muste_cutselection(3);
@@ -9549,19 +10237,22 @@ int prefix2()
         			edread(x,j);
         			if (j<r2 && !empty(x+c1+c-1,c2-c1-c+2))
         				{
-        				if (kontr_()) return(1);
+        				if (kontr_()) { return(1);
+}
         				edread(x,j+1);
         				if (empty(x+1,c2))
         					{
         					i=insertl();
-            			    if (r<r3 && i>0) --r;
+            			    if (r<r3 && i>0) { --r;
+}
         					}        				        				
         				line_merge();
         				}
         			else
         				{                   				
         				i=insertl();
-            			if (r<r3 && i>0) --r;
+            			if (r<r3 && i>0) { --r;
+}
         				}
         			key_special(CODE_RETURN);	
         			return(1);  							
@@ -9598,13 +10289,15 @@ int key_special(int m)
                   case CODE_EXIT:
                     if (display_off) { restore_display(1); break; }                    
                     i=lopetuskysely();
-                    if (i) return(-1); // RS CHA exit(0);                        
+                    if (i) { return(-1); // RS CHA exit(0);                        
+}
                     disp(); break;
                   case CODE_RIGHT:
                     move_right2(1);
                     break;
                   case CODE_BACKSP:
-                    if (kontr_()) break;
+                    if (kontr_()) { break;
+}
                     if (muste_selection) { sur_dump(); muste_erase(); muste_selection=FALSE; break; } // RS ADD 26.7.2012
                     if (c>1) { --c; z[ed1*(r1+r-2)+c+c1-1]=' ';
                                displine2(r1+r-1); break; }
@@ -9648,32 +10341,39 @@ int key_special(int m)
                     if (r1>1) {r1=1; disp(); break; }
                     break;                  
                   case CODE_INSERT:
-                    if (kontr_()) break;
+                    if (kontr_()) { break;
+}
                 if (insert_type) { insert_mode=1-insert_mode; disp(); break; }
                     insert(); disp(); break;
                   case CODE_DELETE:
-                    if (kontr_()) break;
+                    if (kontr_()) { break;
+}
                     delete(); break;
                   case CODE_INSERTL:
                     sur_dump();
                     insertl(); break;
                   case CODE_DELETEL:
-                    if (kontr_()) break;
+                    if (kontr_()) { break;
+}
                     sur_dump();
                     deletel(); break;
                   case CODE_ERASE:
-                    if (kontr_()) break;
+                    if (kontr_()) { break;
+}
                     sur_dump();
                     muste_erase();
                     break;
                   case CODE_NEXT:
-                    if (r2<=r3) break; // 22.12.2000
+                    if (r2<=r3) { break; // 22.12.2000
+}
                     r1+=r3;
-                    if (r1>r2-r3+1) r1=r2-r3+1;
+                    if (r1>r2-r3+1) { r1=r2-r3+1;
+}
                     disp();
                     break;
                   case CODE_PREV:
-                    if (r1<r3+2) r1=1; else r1-=r3;
+                    if (r1<r3+2) { r1=1; } else { r1-=r3;
+}
                     disp();
                     break;
                   case CODE_EXEC:
@@ -9682,23 +10382,30 @@ int key_special(int m)
 
                     m_move_ind=0; // 21.3.2004
 
-                    if (time_file_on) file_time_start();
+                    if (time_file_on) { file_time_start();
+}
                     k=activate();              
-                    if (time_file_on) file_time_end(parm[0]);
+                    if (time_file_on) { file_time_end(parm[0]);
+}
                     *op_sana=EOS; // 10.3.1997 
-                    if (etu==1) lue_hetki(&wait_hetki);  // 26.5.1995 
+                    if (etu==1) { lue_hetki(&wait_hetki);  // 26.5.1995 
+}
                     space_break=0;
                     PR_ENRM;
-                    if (k<=1) disp();
+                    if (k<=1) { disp();
+}
                     if (k==3) { WAIT; }  // {} pakolliset!
-                    if (k<=3) displine2(r1+r-1);
+                    if (k<=3) { displine2(r1+r-1);
+}
                     if (k==4 && display_off==0) { end_graphics(); disp(); }
                     break;
 
                   case CODE_REXEC:    // RS ADD Execute R function
 					k=ractivate(1);
-                    if (k<=1) disp();
-                    if (k<=3) displine2(r1+r-1);
+                    if (k<=1) { disp();
+}
+                    if (k<=3) { displine2(r1+r-1);
+}
                     break;
                                         
                     
@@ -9708,7 +10415,8 @@ int key_special(int m)
 // RS turha???  sur_sleep(2);
                     dispm=0; PR_ENRM;
                     if (type_without_limit) { c1=1; disp(); } /* 2.4.1997 */
-                    if (r==r2) break; // 22.12.2000
+                    if (r==r2) { break; // 22.12.2000
+}
                     if (r<r3)
                         {
                         ++r; c=left_edge;
@@ -9717,7 +10425,8 @@ int key_special(int m)
                     if (r1<r2-r3+1)
                         {
                         ++r1; c=left_edge;
-                        if (display_off) break;
+                        if (display_off) { break;
+}
                         SCROLL_UP(1,r3,1);
                         displine2(r1+r3-1);
                         break;
@@ -9725,7 +10434,8 @@ int key_special(int m)
                     c=1; break;
                   case CODE_DISP:
                     ++dispm;
-                    if (dispm>7) dispm=0;
+                    if (dispm>7) { dispm=0;
+}
 // RS REM                    CURSOR_OFF; 
                     headline_editor();
 // RS REM                    cursor_on();
@@ -9740,7 +10450,8 @@ int key_special(int m)
                     soft_vis=0;
                     p_soft_key_text=NULL;
                     soft_disp(0); // 22.10.2001
-                    if (rsh) disp_shadow();  // 27.12.2004
+                    if (rsh) { disp_shadow();  // 27.12.2004
+}
                     // RS REM strcpy(ops,"T"); op=ops;
                     // RS CHA childp("&"); ->                    
                     muste_dump();
@@ -9797,11 +10508,13 @@ muste_set_R_int(".muste$exitpressed",0); // RS 27.2.2013
                   case CODE_REF_SET: // 30.4.2002
                     ref_c1=c1; ref_c=c; ref_r1=r1; ref_r=r; break;
                   case CODE_MERGE:
-                    if (kontr_()) break;
+                    if (kontr_()) { break;
+}
                     sur_dump();
                     line_merge(); break;
                   case CODE_COPY:
-                    if (kontr_()) break;
+                    if (kontr_()) { break;
+}
                     sur_dump();
                     muste_no_selection=TRUE;
                     line_copy(); 
@@ -9825,12 +10538,14 @@ muste_set_R_int(".muste$exitpressed",0); // RS 27.2.2013
                     disp();
                   break; 
                   case CODE_MOVE:
-                    if (kontr_()) break;
+                    if (kontr_()) { break;
+}
                     sur_dump();
                     move_block(0);
                     break;
                   case CODE_WORDS:
-                    if (kontr_()) break;
+                    if (kontr_()) { break;
+}
                     move_block(1); 
                     break;
                   case CODE_END:
@@ -9847,7 +10562,8 @@ muste_set_R_int(".muste$exitpressed",0); // RS 27.2.2013
 						soft_vis=1;
 						soft_disp(soft_vis);
 						}
-					else restore_softkeys(); // 1.5.2002
+					else { restore_softkeys(); // 1.5.2002
+}
                     break;
 
                   case 151: copy_to_clipboard(); break; // 24.4.2006
@@ -9888,7 +10604,8 @@ static int key_common(int m)
                 {
                 edread(x,r1+r-1);
                 i=c1+c-2;
-                while (i>0 && x[i]!=' ') --i;
+                while (i>0 && x[i]!=' ') { --i;
+}
                 if (i==0 || x[i-1]!=' ') { BEEP; numtab=0; return(1); }
                 cursor(r,i-c1+1);
                 for (; i<c1+c-2; ++i) { x[i]=x[i+1];
@@ -9897,7 +10614,8 @@ static int key_common(int m)
                 edwrite(x,r1+r-1,0);
                 return(1);
                 }
-            else numtab=0;
+            else { numtab=0;
+}
             }
 
         switch (m)
@@ -9914,12 +10632,14 @@ static int key_common(int m)
                                break;
                              }
                    pz=z+ed1*(r1+r-2);
-                   if (*pz=='!' || *pz=='_') break;
+                   if (*pz=='!' || *pz=='_') { break;
+}
                    if (c<=c3 && c<=c2)
                        {
                        if (insert_type && insert_mode)
                            {
-                           if (insert()<0) break;
+                           if (insert()<0) { break;
+}
                            cursor(r,c);
                            }
                        dispch(m);
@@ -9928,7 +10648,8 @@ static int key_common(int m)
                            if (c1+c<=c2) { ++c1; disp(); }
                            else BEEP;
                            }
-                       else ++c; // RS ALT only with if(c1+c-1<c2) not working as otherwise no automatic next line
+                       else { ++c; // RS ALT only with if(c1+c-1<c2) not working as otherwise no automatic next line
+}
                        break;
                        }
                    if (c>c3 || c>c2)   /* c>c2 lisätty 30.8.87 */
@@ -9943,7 +10664,8 @@ static int key_common(int m)
                         if (ins_lines_on && insert_type && insert_mode)
                             {
                             if (r==r3) { step_down(1); --r; }
-                            h=insertl(); if (h<0) break;
+                            h=insertl(); if (h<0) { break;
+}
                             --r; muste_fieldcopy(x1,space,c2); *x1='*';
                             }
                         else { BEEP; c=c3; break; }
@@ -9951,15 +10673,18 @@ static int key_common(int m)
                     edread(x,r1+r-1); i=c1+c-2;
                     while (i>10)
                         {
-                        if (x[i]==' ') break;
+                        if (x[i]==' ') { break;
+}
                         --i;
                         }
                     if (i<=10) { BEEP; break; }
 
                     jj=r1+r-1;
-                    if (zs[jj]==0) creatshad(jj);
+                    if (zs[jj]==0) { creatshad(jj);
+}
                     edread(xs,zs[jj]);
-                    if (zs[jj+1]==0) creatshad(jj+1);
+                    if (zs[jj+1]==0) { creatshad(jj+1);
+}
                     edread(x1s,zs[jj+1]);
 
                     for (j=i+1; j<=c1+c-2; ++j)
@@ -9973,8 +10698,8 @@ static int key_common(int m)
                     edwrite(xs,zs[jj],0); edwrite(x1s,zs[jj+1],0);
                     testshad(jj); testshad(jj+1);
 
-                    if (r<r3) ++r;
-                    else
+                    if (r<r3) { ++r;
+                    } else
                         {
                         ++r1;
                         SCROLL_UP(1,r3,1);
@@ -9996,10 +10721,12 @@ static int chrconv_sapu(char *y) // RS 14.3.2013
         char cc[2];
 
         q=strstr(y,"char(");
-        if (q==NULL) return(1); // Not any char(
+        if (q==NULL) { return(1); // Not any char(
+}
         
         s=(char *)malloc(strlen(y)+2);
-        if (s==NULL) return(-1);
+        if (s==NULL) { return(-1);
+}
         strcpy(s,y);  // Copy string y to s and clear y
         *y=EOS;
 
@@ -10057,22 +10784,26 @@ static int init_sapu(char *apufile, int offset) // RS 1.11.2012 offset
 //            if (merkki=='\n') merkki=fgetc(apu0);
 
 
-            if (merkki==EOF) break;
+            if (merkki==EOF) { break;
+}
             if (merkki=='/')
                 {
                 merkki=fgetc(apu0);
 //                if (merkki=='\r') merkki='\n'; // RS unix fix  windows fix
                 if (merkki==' ' && (*(p-1)==' ' || *(p-1)=='\n')) // RS 20.2.2013 2nd cond
                     {
-                    while (*(p-1)==' ') --p;
+                    while (*(p-1)==' ') { --p;
+}
                     while (1)
                         {
                         merkki=fgetc(apu0);
-                        if (merkki=='\n' || merkki==EOF) break; // RS windows fix
+                        if (merkki=='\n' || merkki==EOF) { break; // RS windows fix
+}
 //                        if (merkki=='\n' || merkki==EOF || merkki=='\r') break; // RS unix fix
                                                           
                         }
-                    if (merkki==EOF) break;
+                    if (merkki==EOF) { break;
+}
                     }
                 else { *p='/'; ++p; }
                 }
@@ -10102,7 +10833,8 @@ unsigned lin /* ens.tyhjennettävä rivi */
         for (j=lin; j<=ed2; ++j)
                 {
                 z[l++]='*';
-                for (i=0; i<ed1-1; ++i) z[l++]=' ';
+                for (i=0; i<ed1-1; ++i) { z[l++]=' ';
+}
                 }
         }
 
@@ -10112,15 +10844,17 @@ static void op_scratch()
 
         edscratch(j);
         l=ed2;
-        for (; j<=l; ++j)
+        for (; j<=l; ++j) {
             if (zs[j]>0) { z[(zs[j]-1)*ed1]='\0'; zs[j]=0; }
+}
         strcpy(help_sana,"HELP");
         }
 
 static int field_init()
         {
         int i;
-        i=ed_malloc(ed1,ed2,edshad); if (i<0) return(-1);
+        i=ed_malloc(ed1,ed2,edshad); if (i<0) { return(-1);
+}
         edscratch(1);
         c=c1=r=r1=1;
         shadinit();
@@ -10140,7 +10874,8 @@ void init_param1()
         move_ind=0;
         dispm=0;
         ref_c1=0;
-        if (rsh) disp_shadow();
+        if (rsh) { disp_shadow();
+}
         left_edge=1;
         ins_lines_on=0;
         tut_index=0;
@@ -10157,13 +10892,17 @@ int op_init()
         int ued2,ued1,uedshad;
 
         if (g<3) { op_incomplete(); return(-1); }
-        ued2=atoi(parm[1]); if (ued2<r3) return(-1);
-        ued1=atoi(parm[2])+1; if (ued1>LLENGTH-3) return(-1);
-        if (g>3) uedshad=atoi(parm[3]); else uedshad=edshad;
+        ued2=atoi(parm[1]); if (ued2<r3) { return(-1);
+}
+        ued1=atoi(parm[2])+1; if (ued1>LLENGTH-3) { return(-1);
+}
+        if (g>3) { uedshad=atoi(parm[3]); } else { uedshad=edshad;
+}
 /*      if ((long)ued1*(long)(ued2+uedshad)>65535L) return(1);   */
         r2=ed2=ued2; ed1=ued1; edshad=uedshad; c2=ed1-1;
         init_param1();
-        i=field_init(); if (i<0) return(-1); // RS CHA exit(1) -> return(-1)
+        i=field_init(); if (i<0) { return(-1); // RS CHA exit(1) -> return(-1)
+}
 
         return(1);
         }
@@ -10191,12 +10930,14 @@ static int save_sessions(char *nimi)
     char x[LLENGTH];
 
     sessions=muste_fopen2(nimi,"wt");
-    if (sessions==NULL) return(-1); // RS ADD
+    if (sessions==NULL) { return(-1); // RS ADD
+}
 
     for (i=0; i<N_SESS; ++i)
         {
         edread(x,i+1);
-        k=20; while (x[k]==' ') x[k--]=EOS;
+        k=20; while (x[k]==' ') { x[k--]=EOS;
+}
         fprintf(sessions,"%s\n",x+1);
         }
     muste_fclose(sessions);
@@ -10210,7 +10951,8 @@ static int load_sessions(char *nimi)
     char x[LLENGTH];
 
     sessions=muste_fopen2(nimi,"rt");
-    if (sessions==NULL) return(-1); // RS CHA exit(0); // 19.3.2004
+    if (sessions==NULL) { return(-1); // RS CHA exit(0); // 19.3.2004
+}
     for (i=0; i<N_SESS; ++i)
         {
         muste_fgets(x,20,sessions);
@@ -10230,8 +10972,9 @@ static int remove_current_session()
     char x[LLENGTH];
 // RS REM    char *s[2];
 
-    for (i=0; i<N_SESS; ++i)
+    for (i=0; i<N_SESS; ++i) {
         edwrite(space,i+1,1);
+}
 
     strcpy(sbuf,etmpd);
     if (tmp_by_session) // 19.3.2004
@@ -10283,10 +11026,12 @@ static int set_sur_session()
     if (i==0)
         {
         sessions=muste_fopen2(nimi,"wt");       
-        if (sessions==NULL) return(-1); // RS ADD       
+        if (sessions==NULL) { return(-1); // RS ADD       
+}
         for (i=0; i<N_SESS; ++i)
             {
-            if (i==0) nro=1; else nro=0;
+            if (i==0) { nro=1; } else { nro=0;
+}
             fprintf(sessions,"%c %d\n",(char)('A'+i),nro);
             }
         muste_fclose(sessions);
@@ -10305,16 +11050,19 @@ static int set_sur_session()
         nro=atoi(s[1]);
         if (vapaa==-1)
             {
-            if (nro==0) vapaa=i;
+            if (nro==0) { vapaa=i;
+}
             }
         if (nro)
             {
             if (nro<ens) { ens=nro; i_ens=i; }
-            if (nro>viim) viim=nro;
+            if (nro>viim) { viim=nro;
+}
             }
         }
 
-    if (vapaa==-1) vapaa=i_ens;
+    if (vapaa==-1) { vapaa=i_ens;
+}
     muste_sprintf(sbuf,"%c %d",(char)('A'+vapaa),viim+1);
     edwrite(sbuf,vapaa+1,1);
 
@@ -10322,8 +11070,9 @@ static int set_sur_session()
 
     sur_session[0]=(char)('A'+vapaa);
 
-    for (i=0; i<N_SESS; ++i)  // tyhjentaa alkurivit!
+    for (i=0; i<N_SESS; ++i) {  // tyhjentaa alkurivit!
         edwrite(space,i+1,1);
+}
     by_session();
 
     muste_sprintf(x,"curses=%c,%d,%s",sur_session[0],muste_dumpcount,etmpd);
@@ -10343,8 +11092,9 @@ static void muste_set_sysname() // RS ADD 22.9.2011
   muste_get_R_string(sysname,".muste$sysname",LLENGTH); muste_strlwr(sysname);
   muste_sprintf(sbuf,"SYSTEM sysname=%s",sysname);
   survoapu1(1,sbuf);
-  if (strcmp(sysname,"darwin")==0) muste_mac=1;
-  else muste_mac=0;
+  if (strcmp(sysname,"darwin")==0) { muste_mac=1;
+  } else { muste_mac=0;
+}
   
   muste_get_R_string(sysname,".muste$Rhome",LLENGTH);
   muste_sprintf(sbuf,"SYSTEM R_path=%s",sysname);
@@ -10355,8 +11105,9 @@ static void muste_set_sysname() // RS ADD 22.9.2011
       {
       muste_get_R_string(sysname,".muste$Rbin",LLENGTH);
       p=strchr(sysname,' ');
-      if (p==NULL) muste_sprintf(sbuf,"SYSTEM R_command=%s",sysname);
-      else muste_sprintf(sbuf,"SYSTEM R_command=\"%s\"",sysname);
+      if (p==NULL) { muste_sprintf(sbuf,"SYSTEM R_command=%s",sysname);
+      } else { muste_sprintf(sbuf,"SYSTEM R_command=\"%s\"",sysname);
+}
       survoapu1(1,sbuf);   
       }  
   }
@@ -10412,13 +11163,19 @@ if (i)
 	}
 
 		prind=0;
-    	i=hae_apu("prind",sana); if (i) prind=atoi(sana); // RS ADD 13.11.2012
+    	i=hae_apu("prind",sana); if (i) { prind=atoi(sana); // RS ADD 13.11.2012
+}
 
-        i=hae_apu("ed1",sana); if (i) ed1=atoi(sana);
-        i=hae_apu("ed2",sana); if (i) ed2=atoi(sana);
-        i=hae_apu("ed3",sana); if (i) edshad=atoi(sana);
-        i=hae_apu("er3",sana); if (i) r3=atoi(sana);
-        i=hae_apu("ec3",sana); if (i) c3=atoi(sana);
+        i=hae_apu("ed1",sana); if (i) { ed1=atoi(sana);
+}
+        i=hae_apu("ed2",sana); if (i) { ed2=atoi(sana);
+}
+        i=hae_apu("ed3",sana); if (i) { edshad=atoi(sana);
+}
+        i=hae_apu("er3",sana); if (i) { r3=atoi(sana);
+}
+        i=hae_apu("ec3",sana); if (i) { c3=atoi(sana);
+}
         r2=ed2; c2=ed1-1;
 
 /* RS ADD initialize edit field space */
@@ -10428,13 +11185,16 @@ if (i)
         if (zs==NULL) { not_space(); return(-1); }
         
 
-        i=field_init(); if (i<0) return(-1);
+        i=field_init(); if (i<0) { return(-1);
+}
         
 
 // RS REM turha nykyään?    strcpy(last_disk,"Y:");
         *esysd=EOS;  // RS CHA nyt levytynnus vain jos survo_path:in toinen merkki on : 
-        if (survo_path[1]==':') esysd[0]=*survo_path; esysd[1]=':'; esysd[2]=EOS;  // 9.10.91
-        if (netd(survo_path)) *esysd=EOS; // 16.2.2006
+        if (survo_path[1]==':') { esysd[0]=*survo_path; 
+}esysd[1]=':'; esysd[2]=EOS;  // 9.10.91
+        if (netd(survo_path)) { *esysd=EOS; // 16.2.2006
+}
 
 
 
@@ -10447,39 +11207,52 @@ if (i)
 //        strcpy(etmpd,sbuf); strcat(etmpd,"TMP/"); // 26.10.1996   RS CHA \\ -> /
 		i=muste_get_R_int(".muste$writeaccess");
 		if (i) { strcpy(etmpd,survo_path); strcat(etmpd,"TMP/"); }
-		else muste_get_R_string(etmpd,".muste$Rtempdir",LLENGTH);	
+		else { muste_get_R_string(etmpd,".muste$Rtempdir",LLENGTH);	
+}
         hae_apu("tempdisk",etmpd); subst_survo_path_in_editor(etmpd);
     	ch=etmpd[strlen(etmpd)-1];
-    	if (ch!='/' && ch!='\\') strcat(etmpd,"/");	        
+    	if (ch!='/' && ch!='\\') { strcat(etmpd,"/");	        
+}
         strcpy(eout,etmpd); strcat(eout,"RESULTS");  // RS CHA \\ -> /        
         
         muste_get_R_string(muste_Rpath,".muste$Rhome",LLENGTH); // RS ADD 27.9.2012
         ch=muste_Rpath[strlen(muste_Rpath)-1];
-    	if (ch!='/' && ch!='\\') strcat(muste_Rpath,"/");
+    	if (ch!='/' && ch!='\\') { strcat(muste_Rpath,"/");
+}
 
         muste_get_R_string(muste_homedir,".muste$homedir",LLENGTH); // RS ADD 20.10.2012
         ch=muste_homedir[strlen(muste_homedir)-1];
-    	if (ch!='/' && ch!='\\') strcat(muste_homedir,"/");        
+    	if (ch!='/' && ch!='\\') { strcat(muste_homedir,"/");        
+}
         
         hae_apu("eout",eout); subst_survo_path_in_editor(eout);
         hae_apu("rout",muste_rout); subst_survo_path_in_editor(muste_rout);
         hae_apu("last_disk",last_disk);
         hae_apu("qpath",qpath); subst_survo_path_in_editor(qpath); speclist=SPECLIST;
-        i=hae_apu("speclist",sana); if (i) speclist=atoi(sana);
+        i=hae_apu("speclist",sana); if (i) { speclist=atoi(sana);
+}
 
         specmax=SPECMAX;
-        i=hae_apu("specmax",sana); if (i) specmax=atoi(sana);
+        i=hae_apu("specmax",sana); if (i) { specmax=atoi(sana);
+}
         scale_check=0; /* no scale type checks */
-        i=hae_apu("scale_check",sana); if (i) scale_check=atoi(sana);
+        i=hae_apu("scale_check",sana); if (i) { scale_check=atoi(sana);
+}
         accuracy=7; /* # of significant digits in free format results etc. */
-        i=hae_apu("accuracy",sana); if (i) accuracy=atoi(sana);
-        if (accuracy<4) accuracy=4;
-        if (accuracy>16) accuracy=16;
+        i=hae_apu("accuracy",sana); if (i) { accuracy=atoi(sana);
+}
+        if (accuracy<4) { accuracy=4;
+}
+        if (accuracy>16) { accuracy=16;
+}
        
         results=70; /* printout level */
-        i=hae_apu("results",sana); if (i) results=atoi(sana);
-        if (results<0) results=0;     // RS accuracy -> results
-        if (results>100) results=100; // RS accuracy -> results
+        i=hae_apu("results",sana); if (i) { results=atoi(sana);
+}
+        if (results<0) { results=0;     // RS accuracy -> results
+}
+        if (results>100) { results=100; // RS accuracy -> results
+}
 
         v_results=results; // RS ADD
         v_accuracy=accuracy; // RS ADD
@@ -10487,12 +11260,15 @@ if (i)
         g=2; parm[1]=edisk; op_cd();
 
         insert_type=1; /* 1=automatic insert, when INSERT pressed */
-        i=hae_apu("insert_type",sana); if (i) insert_type=atoi(sana);
+        i=hae_apu("insert_type",sana); if (i) { insert_type=atoi(sana);
+}
         ins_lines_on=0; /* 1=new_lines_automatically_in_insert */
-        i=hae_apu("insert_lines",sana); if (i) ins_lines_on=atoi(sana);
+        i=hae_apu("insert_lines",sana); if (i) { ins_lines_on=atoi(sana);
+}
 
 		one_click_copy=1;
-		i=hae_apu("one_click_copy",sana); if (i) one_click_copy=atoi(sana); // 13.11.2012
+		i=hae_apu("one_click_copy",sana); if (i) { one_click_copy=atoi(sana); // 13.11.2012
+}
 
 /* RS Ei käytössä
         disp_wait=1;
@@ -10501,45 +11277,60 @@ if (i)
 */
         
         child_wait=0;
-        i=hae_apu("child_wait",sana); if (i) child_wait=atoi(sana);
+        i=hae_apu("child_wait",sana); if (i) { child_wait=atoi(sana);
+}
         autosave=0;
-        i=hae_apu("autosave",sana); if (i) autosave=atoi(sana);
+        i=hae_apu("autosave",sana); if (i) { autosave=atoi(sana);
+}
 
         time(&aika_save);
         i=hae_apu("cursor",sana);  // 10.3.1995
         if (i)
             {
             split(sana,osa,2);
-            for (i=0; i<2; ++i) cur_par[i]=atoi(osa[i]);
+            for (i=0; i<2; ++i) { cur_par[i]=atoi(osa[i]);
+}
             }
         *eopen=EOS;
-        if (tunnus) *etufile='-';
+        if (tunnus) { *etufile='-';
+}
         *tut_info=EOS;
         shad_off=0;
-        for (i=0; i<256; ++i) shad_active[i]=(unsigned char)i;
+        for (i=0; i<256; ++i) { shad_active[i]=(unsigned char)i;
+}
         space_break2=1; i=hae_apu("space_break",sana);
-        if (i) space_break2=atoi(sana);
+        if (i) { space_break2=atoi(sana);
+}
         *sucropath=EOS; i=hae_apu("sucropath",sucropath);
         if (i) // 1.12.2007
            {
            i=strlen(sucropath)-1;
-           if (sucropath[i]!='\\') strcat(sucropath,"\\"); // 26.7.2005
+           if (sucropath[i]!='\\') { strcat(sucropath,"\\"); // 26.7.2005
+}
            }
         *break_sucro=EOS; i=hae_apu("break_sucro",break_sucro);
-        i=hae_apu("pre_ctnue",sana); if (i) pre_ctnue=atoi(sana);
-        i=hae_apu("loudness",sana); if (i) loudness=atoi(sana);
-        i=hae_apu("s84_warning",sana); if (i) s84_warning=atoi(sana);
+        i=hae_apu("pre_ctnue",sana); if (i) { pre_ctnue=atoi(sana);
+}
+        i=hae_apu("loudness",sana); if (i) { loudness=atoi(sana);
+}
+        i=hae_apu("s84_warning",sana); if (i) { s84_warning=atoi(sana);
+}
 //      spawn_max=0; i=hae_apu("spawn_max",sana);
 //      if (i) spawn_max=atoi(sana);
         child_call=0; i=hae_apu("child_call",sana);
-        if (i) child_call=atoi(sana);
-        i=hae_apu("output_level",sana); if (i) output_level=atoi(sana);
+        if (i) { child_call=atoi(sana);
+}
+        i=hae_apu("output_level",sana); if (i) { output_level=atoi(sana);
+}
 
         mat_parser=0;
-        i=hae_apu("mat_parser",sana); if (i) mat_parser=atoi(sana);
-        i=hae_apu("help_window",sana); if (i) help_window=atoi(sana);
+        i=hae_apu("mat_parser",sana); if (i) { mat_parser=atoi(sana);
+}
+        i=hae_apu("help_window",sana); if (i) { help_window=atoi(sana);
+}
         i=hae_apu("gplot_layout",gplot_layout);
-        if (!i) *gplot_layout=EOS;
+        if (!i) { *gplot_layout=EOS;
+}
         if (i)
         	{
         	apu=muste_fopen2(gplot_layout,"rt");
@@ -10547,8 +11338,9 @@ if (i)
         		{
         		muste_sprintf(sbuf,"<Survo>/SYS/%s",gplot_layout);
         		apu=muste_fopen2(sbuf,"rt");
-        		if (apu==NULL) *gplot_layout=EOS;
-        		else strcpy(gplot_layout,sbuf);
+        		if (apu==NULL) { *gplot_layout=EOS;
+        		} else { strcpy(gplot_layout,sbuf);
+}
         		}
         	muste_fclose(apu);	
         	}        
@@ -10556,47 +11348,65 @@ if (i)
         hae_apu("videomode",videomode);
 
         key_sleep=0;
-        i=hae_apu("key_sleep",sana); if (i) key_sleep=atoi(sana);
+        i=hae_apu("key_sleep",sana); if (i) { key_sleep=atoi(sana);
+}
 
-        i=hae_apu("display_keys",sana); if (i) display_keys=atoi(sana);
-        i=hae_apu("exit_warning",sana); if (i) exit_warning=atoi(sana);
-        i=hae_apu("save_warning",sana); if (i) save_warning=atoi(sana);
+        i=hae_apu("display_keys",sana); if (i) { display_keys=atoi(sana);
+}
+        i=hae_apu("exit_warning",sana); if (i) { exit_warning=atoi(sana);
+}
+        i=hae_apu("save_warning",sana); if (i) { save_warning=atoi(sana);
+}
         tut_wait_c=10;
-        i=hae_apu("sucro_speed",sana); if (i) tut_wait_c=atoi(sana);
+        i=hae_apu("sucro_speed",sana); if (i) { tut_wait_c=atoi(sana);
+}
 
-        i=hae_apu("search_caps",sana); if (i) search_caps=atoi(sana);
+        i=hae_apu("search_caps",sana); if (i) { search_caps=atoi(sana);
+}
                                                // 20.4.2002
         tmp_by_session=0;
-        i=hae_apu("session_tmp",sana); if (i) tmp_by_session=atoi(sana);
+        i=hae_apu("session_tmp",sana); if (i) { tmp_by_session=atoi(sana);
+}
         del_tmp=1;
-        i=hae_apu("del_tmp",sana); if (i) del_tmp=atoi(sana);
+        i=hae_apu("del_tmp",sana); if (i) { del_tmp=atoi(sana);
+}
         spec_check=0; // 1.6.2004
-        i=hae_apu("spec_check",sana); if (i) spec_check=atoi(sana);
+        i=hae_apu("spec_check",sana); if (i) { spec_check=atoi(sana);
+}
         show_lines=0; // 13.4.2006
-        i=hae_apu("show_lines",sana); if (i) show_lines=atoi(sana);
+        i=hae_apu("show_lines",sana); if (i) { show_lines=atoi(sana);
+}
 
         minus_paths=0; // 30.9.2010
-        i=hae_apu("minus_paths",sana); if (i) minus_paths=atoi(sana);
+        i=hae_apu("minus_paths",sana); if (i) { minus_paths=atoi(sana);
+}
 
         survopoint='~'; // RS CHA EOS; // 15.3.2012
-        i=hae_apu("Survopoint",sana); if (i) survopoint=*sana;
+        i=hae_apu("Survopoint",sana); if (i) { survopoint=*sana;
+}
         survopoint_on=0;
-        i=hae_apu("Survopoint_on",sana); if (i) survopoint_on=atoi(sana);
+        i=hae_apu("Survopoint_on",sana); if (i) { survopoint_on=atoi(sana);
+}
         survopoint_disp=30; // RS CHA 0 -> 30
-        i=hae_apu("Survopoint_disp",sana); if (i) survopoint_disp=atoi(sana);
+        i=hae_apu("Survopoint_disp",sana); if (i) { survopoint_disp=atoi(sana);
+}
 
         kb_mouse_start='-'; // 10.11.2010
         i=hae_apu("kb_mouse_start",sana);
-        if (i && *sana!=EOS) kb_mouse_start=*sana;
+        if (i && *sana!=EOS) { kb_mouse_start=*sana;
+}
 
         fence_save=1; // 21.5.2010
-        i=hae_apu("fence_save",sana); if (i) fence_save=atoi(sana);
+        i=hae_apu("fence_save",sana); if (i) { fence_save=atoi(sana);
+}
 
         fence_warning=1;  // 21.4.2010
-        i=hae_apu("fence_warning",sana); if (i) fence_warning=atoi(sana);
+        i=hae_apu("fence_warning",sana); if (i) { fence_warning=atoi(sana);
+}
 
         n_fence_stop=0; // RS ADD
-        i=hae_apu("fence_stop",sbuf); if (i) make_fence_stop_list(sbuf);
+        i=hae_apu("fence_stop",sbuf); if (i) { make_fence_stop_list(sbuf);
+}
 
         strcpy(google,"http://www.google.com/search?q=");
         hae_apu("google",google); // 10.4.2008
@@ -10636,9 +11446,10 @@ if (i)
         p=strchr(info_s,'~');
         if (p!=NULL)
             {
-            if (*(p+1)=='E') *language='2';
-            else if (*(p+1)=='D') *language='1';
-            else *language='0';
+            if (*(p+1)=='E') { *language='2';
+            } else if (*(p+1)=='D') { *language='1';
+            } else { *language='0';
+}
             }
 
         hae_apu("language",language);
@@ -10648,18 +11459,23 @@ if (i)
 		if (i)
 			{
 			muste_strncpy(inittheme,sana,64);
-			if (strcmp(sana,"CLASSIC")==0) muste_alkutheme=0;
+			if (strcmp(sana,"CLASSIC")==0) { muste_alkutheme=0;
+}
 			}
 
 		i=hae_apu("Rscript",sana); // RS 14.11.2012
-		if (i) if (sur_file_exists(sana)) i=muste_evalsource(sana);
+		if (i) { if (sur_file_exists(sana)) { i=muste_evalsource(sana);
+}
+}
 
         check_stack=1000000L;
-        i=hae_apu("check_stack",sana); if (i) check_stack=atol(sana);
+        i=hae_apu("check_stack",sana); if (i) { check_stack=atol(sana);
+}
         muste_sprintf(sbuf,"%s*.TMP",etmpd);
         sur_delete(sbuf);
 
-        if (!tmp_by_session)  { i=sys_save_restore(1); if (i<0) return(-1); } // 26.2.2001
+        if (!tmp_by_session)  { i=sys_save_restore(1); if (i<0) { return(-1); 
+}} // 26.2.2001
 
         return(1);
         }
@@ -10735,7 +11551,8 @@ ref_c1=0;
 soft_vis=1;
 etuu=0; /* 1=lapset eivät TUT-moodissa 0=lapset TUT-moodissa */
 act_sounds_on=0; // 0=ei käytössä, 1=off, 2=on   14.10.2005
-for (i=0; i<MAX_SOUNDS; i++) act_sound[i]=empty_string;
+for (i=0; i<MAX_SOUNDS; i++) { act_sound[i]=empty_string;
+}
 move_from_store=0;
 wait_tut_type=0; // 1=cancelled by user's actions 2=activates always
 own_spec_line1=0;  // 20.12.2010
@@ -11115,7 +11932,8 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
         alkututor=argc-1;
 */
 
-        k=muste_editor_init(orig_setup,1); if (k<0) return(-1);
+        k=muste_editor_init(orig_setup,1); if (k<0) { return(-1);
+}
         edrun=1;
 
 /* RS REM Nykyisellään turhia?
@@ -11158,7 +11976,8 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
         muste_restored_session=0; // RS 5.5.2014 
         
         i=hae_apu("force_restore",x); 
-        if (i) muste_restored_session=atoi(x);     
+        if (i) { muste_restored_session=atoi(x);     
+}
           
         if (muste_restored_session)
             {
@@ -11222,7 +12041,8 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
 			word[1]=inittheme;
 			op_theme();
 			}
-		else muste_eventloop_enable();	        
+		else { muste_eventloop_enable();	        
+}
 
         i=0;
         if (muste_restored_session) // RS 13.2.2014
@@ -11261,22 +12081,24 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
 	    alkututor=0; // RS CHA alkusukro=MUSTE.STA aloitushakemistossa
 	    
 	    muste_get_R_string(x1,".muste$startsucro",256); // RS 30.1.2013
-	    if (strcmp(x1,"<empty>")!=0) alkututor=2; // RS 30.1.2013
-	    else 
+	    if (strcmp(x1,"<empty>")!=0) { alkututor=2; // RS 30.1.2013
+	    } else 
 	    	{
 			muste_sprintf(sbuf,"%sMUSTE.STA",muste_startpath);
-			if (sur_find_file(sbuf)) alkututor=1; // RS ADD
-			else
+			if (sur_find_file(sbuf)) { alkututor=1; // RS ADD
+			} else
 			    {
-			    if (hae_apu("start_sucro",x1)) alkututor=2;
+			    if (hae_apu("start_sucro",x1)) { alkututor=2;
+}
 			    }
 			}
 
         
         if (!alkututor)
             {
-            if (*survo_path) strcpy(x,survo_path);
-            else strcpy(x,esysd);
+            if (*survo_path) { strcpy(x,survo_path);
+            } else { strcpy(x,esysd);
+}
             strcat(x,"START.EDT");                    
             edload(x,1); disp_all();
             sur_dump(); // RS 13.2.2014
@@ -11288,8 +12110,8 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
             {
             char *p;
 
-            if (alkututor==2) muste_snprintf(start_etufile,LNAME,"%s %s","alkutut",x1); // RS 25.11.2012 parm[1]=x1;  //  XXXX 14.7.92 
-            else
+            if (alkututor==2) { muste_snprintf(start_etufile,LNAME,"%s %s","alkutut",x1); // RS 25.11.2012 parm[1]=x1;  //  XXXX 14.7.92 
+            } else
                 {
                 FILE *apu;   // RS ADD
                 muste_sprintf(sbuf,"%s/MUSTE.STA",muste_startpath);
@@ -11305,7 +12127,8 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
             while (1)
                 {
                 p=strchr(p,'|');
-                if (p==NULL) break;
+                if (p==NULL) { break;
+}
                 *p=' '; p++;
                 }
 
@@ -11342,14 +12165,18 @@ int wfind(char word1[], char word2[], int lin)
                 {
                 edread(x,j);
                 g=split(x+1,sana,2);
-                if (g==0) continue;
+                if (g==0) { continue;
+}
                 if (strcmp(word1,sana[0])==0)
                         {
-                        if (word2==NULL) break;
-                        if (g==2 && strcmp(word2,sana[1])==0) break;
+                        if (word2==NULL) { break;
+}
+                        if (g==2 && strcmp(word2,sana[1])==0) { break;
+}
                         }
                 }
-        if (j>ed2) return (-1);
+        if (j>ed2) { return (-1);
+}
         return (j);
         }
 
@@ -11358,16 +12185,18 @@ char *muste_itoa(int n, char s[], int base)
 {
     int c, i, j, sign;
 
-    if ((sign = n) < 0)  /* record sign */
+    if ((sign = n) < 0) {  /* record sign */
         n = -n;          /* make n positive */
+}
     i = 0;
     do         /* generate digits in reverse order */
     {
         s[i++] = n % base + '0';   /* get next digit */
     }
     while ((n /= base) > 0);     /* delete it */
-    if (sign < 0)
+    if (sign < 0) {
         s[i++] = '-';
+}
     s[i] = '\0';
 
     for (i = 0, j = strlen(s)-1; i<j; i++, j--)
@@ -11398,9 +12227,9 @@ int fconv(double luku,char muoto[],char sana[])
 
     if (*muoto==EOS)
     {
-        if (fabs(luku)>=1 || fabs(luku)<1e-14)
+        if (fabs(luku)>=1 || fabs(luku)<1e-14) {
             muste_sprintf(sana,"%.14g",luku);
-        else
+        } else
         {
             if (luku==0)
             {
@@ -11411,8 +12240,10 @@ int fconv(double luku,char muoto[],char sana[])
             len=strlen(sana)-1;
             if (strchr(sana,'.')!=NULL)  /* 9.11.89 */
             {
-                while (sana[len]=='0') sana[len--]=EOS;
-                if (sana[len]=='.') sana[len]=EOS;
+                while (sana[len]=='0') { sana[len--]=EOS;
+}
+                if (sana[len]=='.') { sana[len]=EOS;
+}
             }
         }
         return(1);
@@ -11425,16 +12256,19 @@ int fconv(double luku,char muoto[],char sana[])
     }
 
     p=strchr(muoto,'.');
-    if (p==NULL) dec=0;
-    else dec=len-1-(p-muoto);
+    if (p==NULL) { dec=0;
+    } else { dec=len-1-(p-muoto);
+}
     muste_sprintf(sana,"%*.*f",len,dec,luku);
-    if (strlen(sana)>len) return(-1);
+    if (strlen(sana)>len) { return(-1);
+}
     return(1);
 }
 
 int fconv0(double luku,char muoto[],char sana[])
         {
-        if (fabs(luku)<1e-15) luku=0.0;
+        if (fabs(luku)<1e-15) { luku=0.0;
+}
         return(fconv(luku,muoto,sana));
         }
 
@@ -11456,7 +12290,8 @@ int fnconv(double luku,int pituus,char *sana)
     if (luku!=0.0)
     {
         its=luku;
-        if (luku<0.0) its=-luku;
+        if (luku<0.0) { its=-luku;
+}
         logl=(int)log10(its);
         if (logl>0)
         {
@@ -11469,14 +12304,16 @@ int fnconv(double luku,int pituus,char *sana)
             return(1);
         }
     }
-    for (i=0; i<kok; ++i) muoto[i]='#';
+    for (i=0; i<kok; ++i) { muoto[i]='#';
+}
     if (kok<pituus)
     {
-        if (kok+1==pituus) muoto[i++]='#';
-        else
+        if (kok+1==pituus) { muoto[i++]='#';
+        } else
         {
             muoto[i++]='.';
-            for (; i<pituus; ++i) muoto[i]='#';
+            for (; i<pituus; ++i) { muoto[i]='#';
+}
         }
     }
     muoto[i]=EOS;
@@ -11501,11 +12338,13 @@ int lastline2()
     int i,j;
     char space[LLENGTH];
 
-    for (i=0; i<ed1; ++i) space[i]=' ';
+    for (i=0; i<ed1; ++i) { space[i]=' ';
+}
     j=ed2;
     while (j>0)
     {
-        if (strncmp(space,z+(j-1)*ed1+1,(unsigned int)(ed1-1))!=0) break;
+        if (strncmp(space,z+(j-1)*ed1+1,(unsigned int)(ed1-1))!=0) { break;
+}
         --j;
     }
     return(j);
@@ -11514,9 +12353,12 @@ int lastline2()
 int posnro(char s[])
 {
     short h;
-    if (*s=='0') return(0);
-    for (h=0; *(s+h); ++h)
-        if ((*(s+h)<'0') || (*(s+h)>'9')) return(0);
+    if (*s=='0') { return(0);
+}
+    for (h=0; *(s+h); ++h) {
+        if ((*(s+h)<'0') || (*(s+h)>'9')) { return(0);
+}
+}
     return(1);
 }
 
@@ -11534,11 +12376,13 @@ int edline2(char sana[],unsigned int lin,int virheilm)
     if (posnro(sana))
     {
         j=atoi(sana);
-        if (j>=lin && j<=ed2) return(j);
+        if (j>=lin && j<=ed2) { return(j);
+}
         linerr2(sana);
         return(0);
     }
-    for (j=0; j<3; ++j) SANA[j]=toupper(sana[j]);
+    for (j=0; j<3; ++j) { SANA[j]=toupper(sana[j]);
+}
     if (strncmp(SANA,"END",3)==0)
     {
         k=3;
@@ -11561,21 +12405,28 @@ int edline2(char sana[],unsigned int lin,int virheilm)
     	else
     		{
         	lin1=lin-atoi(sana+1);
-        	if (lin1<1) lin1=1;
+        	if (lin1<1) { lin1=1;
+}
         	}
-        for (j=lin1; j<=ed2; ++j)
-            if ( *(z+(j-1)*ed1)==*p ) break; // RS 9.1.2013 sana -> p (also all p below)
+        for (j=lin1; j<=ed2; ++j) {
+            if ( *(z+(j-1)*ed1)==*p ) { break; // RS 9.1.2013 sana -> p (also all p below)
+}
+}
         if (j>ed2)
         {
-            if (virheilm) linerr2(p); 
+            if (virheilm) { linerr2(p); 
+}
             return(0);
         }
         k=1;
     }
-    if (strlen(p)<k+2) return(j); 
+    if (strlen(p)<k+2) { return(j); 
+}
     j+=atoi(p+k); 
-    if (j>=lin && j<=ed2) return(j);
-    if (virheilm) linerr2(p); 
+    if (j>=lin && j<=ed2) { return(j);
+}
+    if (virheilm) { linerr2(p); 
+}
     return(0);
 }
 
@@ -11659,7 +12510,8 @@ int survoapu1(int h,char *s)
         int maxtila,varattu;
         int len1,len2;
 
-        if (!h) edread(x,r1+r-1); else strcpy(x,s);
+        if (!h) { edread(x,r1+r-1); } else { strcpy(x,s);
+}
         i=split(x+1,sana,2);
         if (i<2)
             {
@@ -11671,14 +12523,17 @@ int survoapu1(int h,char *s)
         if (strcmp(p,"SAVE")==0) { sys_save_restore(1); return(1); }
         if (strcmp(p,"RESTORE")==0) { sys_save_restore(2); return(1); }
 
-        if (muste_strnicmp(p,"ALARM=",6)==0) sur_alarm=0;
+        if (muste_strnicmp(p,"ALARM=",6)==0) { sur_alarm=0;
+}
 
-        if (!h) edread(x,r1+r-1); else strcpy(x,s);
+        if (!h) { edread(x,r1+r-1); } else { strcpy(x,s);
+}
 
         q=sapu;
         while ( ((unsigned char)*q!=(unsigned char)254 ||     // RS CHECK '_' -> 254???
                  (unsigned char)*(q+1)!=(unsigned char)254) &&
-                 (int)(q-sapu)<16000 ) ++q;
+                 (int)(q-sapu)<16000 ) { ++q;
+}
 
 // RS REM        if ((int)(q-sapu)>=16000) { Rprintf("???"); getck(); }
         maxtila=q-sapu;
@@ -11686,7 +12541,8 @@ int survoapu1(int h,char *s)
         q=strchr(p,'=');
         if (q==NULL)
             {
-            q=strchr(sana[1],' '); if (q!=NULL) *q=EOS;
+            q=strchr(sana[1],' '); if (q!=NULL) { *q=EOS;
+}
             i=hae_apu(sana[1],y);
             if (i)
                 {
@@ -11707,8 +12563,10 @@ int survoapu1(int h,char *s)
         strcpy(par,q+1);
         *(q+1)=EOS;
         q=strstr(par," / ");
-        if (q!=NULL) *q=EOS;
-        len2=strlen(par); while (par[len2-1]==' ') par[--len2]=EOS;
+        if (q!=NULL) { *q=EOS;
+}
+        len2=strlen(par); while (par[len2-1]==' ') { par[--len2]=EOS;
+}
 
         if (*p=='M' && strlen(p)==3)     /* Mc= */
             {
@@ -11722,11 +12580,13 @@ int survoapu1(int h,char *s)
         if (q!=NULL)
             {
             q+=strlen(p);
-            q2=q; while (*q2 && *q2!='\n') ++q2;
+            q2=q; while (*q2 && *q2!='\n') { ++q2;
+}
             len1=q2-q;
             if (len2<=len1)
                 {
-                for (i=0; i<len2; ++i) q[i]=par[i];
+                for (i=0; i<len2; ++i) { q[i]=par[i];
+}
                 if (len2<len1)
                     {
                     while (q[i+len1-len2]) { q[i]=q[i+len1-len2]; ++i; }
@@ -11741,7 +12601,8 @@ int survoapu1(int h,char *s)
                     }
                 i=varattu; i0=q-sapu;
                 while (i>i0) { sapu[i-1+len2-len1]=sapu[i-1]; --i; }
-                for (i=0; i<len2; ++i) q[i]=par[i];
+                for (i=0; i<len2; ++i) { q[i]=par[i];
+}
                 }
             }
         else
@@ -11754,24 +12615,38 @@ int survoapu1(int h,char *s)
             strcat(sapu,sbuf);
             }
 
-        if (strcmp(p,"speclist=")==0) speclist=atoi(par);
-        if (strcmp(p,"specmax=")==0) specmax=atoi(par);
-        if (strcmp(p,"scale_check=")==0) scale_check=atoi(par);
-        if (strcmp(p,"accuracy=")==0) accuracy=atoi(par);
-        if (strcmp(p,"results=")==0) results=atoi(par);
-        if (strcmp(p,"output_level=")==0) output_level=atoi(par);
-        if (strcmp(p,"mat_parser=")==0) mat_parser=atoi(par);
-        if (strcmp(p,"help_window=")==0) help_window=atoi(par);
-        if (strcmp(p,"videomode=")==0) strcpy(videomode,par);
-        if (strcmp(p,"search_caps=")==0) search_caps=atoi(par);
-        if (strcmp(p,"spec_check=")==0) spec_check=atoi(par);
-        if (strcmp(p,"show_lines=")==0) show_lines=atoi(par);
+        if (strcmp(p,"speclist=")==0) { speclist=atoi(par);
+}
+        if (strcmp(p,"specmax=")==0) { specmax=atoi(par);
+}
+        if (strcmp(p,"scale_check=")==0) { scale_check=atoi(par);
+}
+        if (strcmp(p,"accuracy=")==0) { accuracy=atoi(par);
+}
+        if (strcmp(p,"results=")==0) { results=atoi(par);
+}
+        if (strcmp(p,"output_level=")==0) { output_level=atoi(par);
+}
+        if (strcmp(p,"mat_parser=")==0) { mat_parser=atoi(par);
+}
+        if (strcmp(p,"help_window=")==0) { help_window=atoi(par);
+}
+        if (strcmp(p,"videomode=")==0) { strcpy(videomode,par);
+}
+        if (strcmp(p,"search_caps=")==0) { search_caps=atoi(par);
+}
+        if (strcmp(p,"spec_check=")==0) { spec_check=atoi(par);
+}
+        if (strcmp(p,"show_lines=")==0) { show_lines=atoi(par);
+}
 
         if (strcmp(p,"cursor=")==0)
             {
             i=split(par,sana,2);
-            if (i>0) cur_par[0]=atoi(sana[0]);
-            if (i>1) cur_par[1]=atoi(sana[1]);
+            if (i>0) { cur_par[0]=atoi(sana[0]);
+}
+            if (i>1) { cur_par[1]=atoi(sana[1]);
+}
             }
 
         return(1);
@@ -11805,14 +12680,21 @@ int sys_save_restore(int k) // 1=SAVE 2=RESTORE
         fprintf(temp_apu,"%d\n",search_caps);
         fprintf(temp_apu,"%d\n",help_window);
         strcpy(sbuf,gplot_layout);
-        if (*sbuf==EOS) strcpy(sbuf,"-");
-        for (i=0; i<strlen(sbuf); i++) if (sbuf[i]==' ') sbuf[i]='*'; // RS ADD
+        if (*sbuf==EOS) { strcpy(sbuf,"-");
+}
+        for (i=0; i<strlen(sbuf); i++) { if (sbuf[i]==' ') { sbuf[i]='*'; // RS ADD
+}
+}
         fprintf(temp_apu,"%s\n",sbuf);
-        strcpy(sbuf,eout); if (*sbuf==EOS) strcpy(sbuf,"-");
-        for (i=0; i<strlen(sbuf); i++) if (sbuf[i]==' ') sbuf[i]='*';  // RS ADD      
+        strcpy(sbuf,eout); if (*sbuf==EOS) { strcpy(sbuf,"-");
+}
+        for (i=0; i<strlen(sbuf); i++) { if (sbuf[i]==' ') { sbuf[i]='*';  // RS ADD      
+}
+}
         fprintf(temp_apu,"%s\n",sbuf);
         fprintf(temp_apu,"%d %d\n",r3,c3);
-        i=hae_apu("color98",sbuf); if (i) i=atoi(sbuf); else i=0;
+        i=hae_apu("color98",sbuf); if (i) { i=atoi(sbuf); } else { i=0;
+}
         fprintf(temp_apu,"%d\n",i);
         }
      else
@@ -11825,7 +12707,8 @@ int sys_save_restore(int k) // 1=SAVE 2=RESTORE
         	WAIT;
         	return(-1);
         	} 
-        if (temp_apu==NULL) return(1);
+        if (temp_apu==NULL) { return(1);
+}
         muste_fscanf(temp_apu,"%s\n",videomode);
         muste_sprintf(sbuf,"SYSTEM videomode=%s",videomode);
         survoapu1(1,sbuf);
@@ -11833,11 +12716,17 @@ int sys_save_restore(int k) // 1=SAVE 2=RESTORE
         muste_fscanf(temp_apu,"%d\n",&search_caps);
         muste_fscanf(temp_apu,"%d\n",&help_window);
         muste_fscanf(temp_apu,"%s\n",gplot_layout);
-        if (*gplot_layout=='-') *gplot_layout=EOS;
-        for (i=0; i<strlen(gplot_layout); i++) if (gplot_layout[i]=='*') gplot_layout[i]=' '; // RS ADD
+        if (*gplot_layout=='-') { *gplot_layout=EOS;
+}
+        for (i=0; i<strlen(gplot_layout); i++) { if (gplot_layout[i]=='*') { gplot_layout[i]=' '; // RS ADD
+}
+}
         muste_fscanf(temp_apu,"%s\n",sbuf);
-        if (strcmp(sbuf,"-")==0) *sbuf=EOS;
-        for (i=0; i<strlen(sbuf); i++) if (sbuf[i]=='*') sbuf[i]=' ';  // RS ADD       
+        if (strcmp(sbuf,"-")==0) { *sbuf=EOS;
+}
+        for (i=0; i<strlen(sbuf); i++) { if (sbuf[i]=='*') { sbuf[i]=' ';  // RS ADD       
+}
+}
         strcpy(eout,sbuf);
         muste_fscanf(temp_apu,"%d %d\n",&rr3,&cc3);
         if (rr3!=r3 || cc3!=c3)
@@ -11877,8 +12766,10 @@ int edwrite(char *x,unsigned int lin,unsigned int col)
         WAIT;
         return(-1); // RS 21.8.2013 CHA 1 -> -1
     }
-    if (len>ed1-col) len=ed1-col;
-    for (i=0, h=(lin-1)*ed1+col; i<len; ++i, ++h) z[h]=x[i];
+    if (len>ed1-col) { len=ed1-col;
+}
+    for (i=0, h=(lin-1)*ed1+col; i<len; ++i, ++h) { z[h]=x[i];
+}
     return(1);
 }
 
@@ -11896,7 +12787,8 @@ int split(char *rivi,char **sana,int max)
     g=0; edell=0;
     len=strlen(rivi);
 
-	for (p=0; p<max; p++) sana[p]=muste_nullstring; // RS ADD
+	for (p=0; p<max; p++) { sana[p]=muste_nullstring; // RS ADD
+}
 
     for (p=0; p<len; ++p)
     {
@@ -11907,7 +12799,8 @@ int split(char *rivi,char **sana,int max)
             {
                 rivi[p]=EOS;
                 ++g;
-                if (g>=max) return(max);
+                if (g>=max) { return(max);
+}
                 edell=0;
             }
         }
@@ -11920,7 +12813,8 @@ int split(char *rivi,char **sana,int max)
             }
         }
     }
-    if (edell==1) ++g;
+    if (edell==1) { ++g;
+}
 
     
     return(g);
@@ -11937,14 +12831,18 @@ int splitq(char *rivi,char **sana,int max)
     int edell=0; /* väli edellä */
     int len=strlen(rivi);
  
- 	for (p=0; p<max; p++) sana[p]=muste_nullstring; // RS ADD
+ 	for (p=0; p<max; p++) { sana[p]=muste_nullstring; // RS ADD
+}
  
     int lainaus=0; // RS ADD Deal with spaces
     for (p=0; p<len; ++p)
     	{
-    	if (rivi[p]=='"') lainaus=1-lainaus;
-    	if (lainaus && rivi[p]==' ') rivi[p]='\032';
-    	if (lainaus && rivi[p]==',') rivi[p]='\031'; // RS ADD 7.10.2012
+    	if (rivi[p]=='"') { lainaus=1-lainaus;
+}
+    	if (lainaus && rivi[p]==' ') { rivi[p]='\032';
+}
+    	if (lainaus && rivi[p]==',') { rivi[p]='\031'; // RS ADD 7.10.2012
+}
     	}
 
     for (p=0; p<len; ++p)
@@ -11957,7 +12855,8 @@ int splitq(char *rivi,char **sana,int max)
             {
                 rivi[p]=EOS;
                 ++g;
-                if (g>=max) return(max);
+                if (g>=max) { return(max);
+}
                 edell=0;
             }
         }
@@ -11970,12 +12869,15 @@ int splitq(char *rivi,char **sana,int max)
             }
         }
     }
-    if (edell==1) ++g;
+    if (edell==1) { ++g;
+}
     
     for (p=0; p<len; ++p)
     	{
-    	if (rivi[p]=='\032') rivi[p]=' ';
-    	if (rivi[p]=='\031') rivi[p]=','; // RS ADD 7.10.2012
+    	if (rivi[p]=='\032') { rivi[p]=' ';
+}
+    	if (rivi[p]=='\031') { rivi[p]=','; // RS ADD 7.10.2012
+}
     	}    
     
     return(g);
@@ -11992,13 +12894,16 @@ int splitqq(char *rivi,char **sana,int max)
     int edell=0; /* väli edellä */
     int len=strlen(rivi);
 
-	for (p=0; p<max; p++) sana[p]=muste_nullstring; // RS ADD
+	for (p=0; p<max; p++) { sana[p]=muste_nullstring; // RS ADD
+}
     
     int lainaus=0; // RS ADD Deal with spaces
     for (p=0; p<len; ++p)
     	{
-    	if (rivi[p]=='"') lainaus=1-lainaus;
-    	if (lainaus && rivi[p]==' ') rivi[p]='\032';
+    	if (rivi[p]=='"') { lainaus=1-lainaus;
+}
+    	if (lainaus && rivi[p]==' ') { rivi[p]='\032';
+}
     	}
 
     for (p=0; p<len; ++p)
@@ -12011,7 +12916,8 @@ int splitqq(char *rivi,char **sana,int max)
             {
                 rivi[p]=EOS;
                 ++g;
-                if (g>=max) return(max);
+                if (g>=max) { return(max);
+}
                 edell=0;
             }
         }
@@ -12024,11 +12930,13 @@ int splitqq(char *rivi,char **sana,int max)
             }
         }
     }
-    if (edell==1) ++g;
+    if (edell==1) { ++g;
+}
     
     for (p=0; p<len; ++p)
     	{
-    	if (rivi[p]=='\032') rivi[p]=' ';
+    	if (rivi[p]=='\032') { rivi[p]=' ';
+}
     	}    
     
     return(g);
@@ -12047,7 +12955,8 @@ int splitp(char *rivi,char **sana,int max)
     int len=strlen(rivi);
     int sulut;
 
-	for (p=0; p<max; p++) sana[p]=muste_nullstring; // RS ADD
+	for (p=0; p<max; p++) { sana[p]=muste_nullstring; // RS ADD
+}
 
     sulut=0;
     for (p=0; p<len; ++p)
@@ -12062,14 +12971,16 @@ int splitp(char *rivi,char **sana,int max)
             --sulut;
             continue;
         }
-        if (sulut) continue;
+        if (sulut) { continue;
+}
         if ( (rivi[p]==' ') || (rivi[p]==',') )
         {
             if (edell==1)
             {
                 rivi[p]=EOS;
                 ++g;
-                if (g>=max) return(max);
+                if (g>=max) { return(max);
+}
                 edell=0;
             }
         }
@@ -12082,7 +12993,8 @@ int splitp(char *rivi,char **sana,int max)
             }
         }
     }
-    if (edell==1) ++g;
+    if (edell==1) { ++g;
+}
     return(g);
 }
 
@@ -12097,7 +13009,8 @@ int splitsp(char *rivi,char **sana,int max)
     int edell=0; /* väli edellä */
     int len=strlen(rivi);
 
-	for (p=0; p<max; p++) sana[p]=muste_nullstring; // RS ADD
+	for (p=0; p<max; p++) { sana[p]=muste_nullstring; // RS ADD
+}
 
     for (p=0; p<len; ++p)
             {
@@ -12107,7 +13020,8 @@ int splitsp(char *rivi,char **sana,int max)
                             {
                             rivi[p]=EOS;
                             ++g;
-                            if (g>=max) return(max);
+                            if (g>=max) { return(max);
+}
                             edell=0;
                             }
                     }
@@ -12120,7 +13034,8 @@ int splitsp(char *rivi,char **sana,int max)
                             }
                     }
             }
-    if (edell==1) ++g;
+    if (edell==1) { ++g;
+}
     return(g);
     }
 
@@ -12144,7 +13059,8 @@ char* muste_strrev(char* str)
 int muste_strcmpi(const char *s1, const char *s2)
 {
     for (; *s1 && *s2 && (toupper((unsigned char)*s1) ==
-                          toupper((unsigned char)*s2)); ++s1, ++s2);
+                          toupper((unsigned char)*s2)); ++s1, ++s2) {;
+}
 
     return *s1 - *s2;
 }
@@ -12155,7 +13071,8 @@ int muste_strnicmp(const char *s1, const char *s2, int count)
     char c1, c2;
     int v;
 
-    if (count == 0) return 0;
+    if (count == 0) { return 0;
+}
 
     do {
         c1 = *s1++;
@@ -12229,7 +13146,8 @@ int yys(char *x)
     while (1)
     {
         *p=(char)getc(apu);
-        if (*p=='\n') break;
+        if (*p=='\n') { break;
+}
         ++p;
     }
     *p=EOS;
@@ -12272,7 +13190,8 @@ int yyd(int *pi)
 
 static void childp_dump()
         {
-        if (etu>0) tut_sulje();
+        if (etu>0) { tut_sulje();
+}
 
         if (no_wait) { vetu=etu; etu=0; }
 
@@ -12309,11 +13228,15 @@ static void childp_restore()
         set_console_title();
         soft_disp(1); // 15.2.2001
 //        sur_mouse_cursor_arrow();
-        if (etuu) etu=ketu;
-        if (etu>0) tut_avaa();
-        if (etu==1) lue_hetki(&wait_hetki);  /* 27.5.1995 */
+        if (etuu) { etu=ketu;
+}
+        if (etu>0) { tut_avaa();
+}
+        if (etu==1) { lue_hetki(&wait_hetki);  /* 27.5.1995 */
+}
 
-        if (medit) medit_restore(); // 30.4.2003
+        if (medit) { medit_restore(); // 30.4.2003
+}
         if (child_wait)
             {
             sur_wait((long)(100L*child_wait),nop,1);
@@ -12388,7 +13311,8 @@ muste_sprintf(sbuf,"MUSTE%.2d.DMP",muste_dumpcount%muste_dumpcountmax); // RS CH
     xxd(accuracy);
     xxd(results);
     /* ibm poistetaan? */
-    for (i=0; i<10; ++i) xxd(shadow_int[i]);
+    for (i=0; i<10; ++i) { xxd(shadow_int[i]);
+}
     for (i=0; i<256; ++i)
     {
         h=shadow_code[i];
@@ -12453,7 +13377,8 @@ int restore_dump()
 	strcat(x,sbuf);
 
     apu=muste_fopen2(x,"rt");
-    if (apu==NULL) return(0);
+    if (apu==NULL) { return(0);
+}
     yyd(&ed1);
     yyd(&ed2);
     yyd(&r);
@@ -12486,7 +13411,8 @@ int restore_dump()
     yyd(&accuracy);
     yyd(&results);
     /* ibm poistetaan? */
-    for (i=0; i<10; ++i) yyd(&shadow_int[i]);
+    for (i=0; i<10; ++i) { yyd(&shadow_int[i]);
+}
     for (i=0; i<256; ++i)
     {
         yyd(&h);
@@ -12530,7 +13456,8 @@ int restore_dump()
     while (1)
     {
         *p=(char)getc(apu);
-        if (feof(apu)) break;
+        if (feof(apu)) { break;
+}
         ++p;
     }
     *p=EOS;
@@ -12621,24 +13548,30 @@ int s_init(char *siirtop)
 // RS FIXME    strcpy(etmpd,siirtop); /* RS FIXME tilapäinen ratkaisu temp-tiedosto */
     s_edt(sur_session);  // RS CHA siirtop -> sur_session
 
-    for (i=0; i<LLENGTH; ++i) space[i]=' ';
+    for (i=0; i<LLENGTH; ++i) { space[i]=' ';
+}
     space[LLENGTH-1]=EOS;
     edread(comline,(unsigned int)(r1+r-1));
     p=strchr(comline,STAMP); // RS CHA PREFIX -> STAMP
-    if (p==NULL) p=comline;      
+    if (p==NULL) { p=comline;      
+}
     q2=strstr(p,"##"); 
     if (q2!=NULL) 
         {
-        if (strncmp(comline+1,"MAT LOAD ",9)==0 || strncmp(comline+1,"LOADM ",6)==0) p=comline; // RS 1.8.2013 skip MAT LOAD ## format if given without commas
-        else
+        if (strncmp(comline+1,"MAT LOAD ",9)==0 || strncmp(comline+1,"LOADM ",6)==0) { p=comline; // RS 1.8.2013 skip MAT LOAD ## format if given without commas
+        } else
             {
-            i=TRUE; if (q2>p) if(*(q2-1)!=' ') i=FALSE; // RS 20.2.2013
-            if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')' && q2[2]!=',' && i) p=q2+1; // RS ADD         
+            i=TRUE; if (q2>p) { if(*(q2-1)!=' ') { i=FALSE; // RS 20.2.2013
+}
+}
+            if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')' && q2[2]!=',' && i) { p=q2+1; // RS ADD         
+}
             }
         }    
     g=splitq(p+1,word,MAXPARM);
     i=0;
-    while (i<g && strcmp(word[i],"/")!=0) ++i;
+    while (i<g && strcmp(word[i],"/")!=0) { ++i;
+}
     g=i;
 
 /*
@@ -12668,21 +13601,26 @@ int s_init_orgsplit()
     
     edread(comline,(unsigned int)(r1+r-1));
     p=strchr(comline,STAMP); // RS CHA PREFIX -> STAMP
-    if (p==NULL) p=comline;  
+    if (p==NULL) { p=comline;  
+}
     q2=strstr(p,"##"); if (q2!=NULL) 
       {
-        if (strncmp(comline+1,"MAT LOAD ",9)==0 || strncmp(comline+1,"LOADM ",6)==0) p=comline; // RS 1.8.2013 skip MAT LOAD ## format if given without commas
-        else
+        if (strncmp(comline+1,"MAT LOAD ",9)==0 || strncmp(comline+1,"LOADM ",6)==0) { p=comline; // RS 1.8.2013 skip MAT LOAD ## format if given without commas
+        } else
             {
-            i=TRUE; if (q2>p) if(*(q2-1)!=' ') i=FALSE; // RS 20.2.2013
-            if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')' && q2[2]!=',' && i) p=q2+1; // RS ADD       
+            i=TRUE; if (q2>p) { if(*(q2-1)!=' ') { i=FALSE; // RS 20.2.2013
+}
+}
+            if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')' && q2[2]!=',' && i) { p=q2+1; // RS ADD       
+}
             }
       }
     
     g=split(p+1,word,MAXPARM);
     i=0;
 
-    while (i<g && strcmp(word[i],"/")!=0) ++i;
+    while (i<g && strcmp(word[i],"/")!=0) { ++i;
+}
     g=i;
     return(1);
     }
@@ -12694,21 +13632,26 @@ int s_init_extrasplit()
     
     edread(comline_org,(unsigned int)(r1+r-1));
     p=strchr(comline_org,STAMP); // RS CHA PREFIX -> STAMP
-    if (p==NULL) p=comline_org;  
+    if (p==NULL) { p=comline_org;  
+}
     q2=strstr(p,"##"); if (q2!=NULL) 
       {
-        if (strncmp(comline_org+1,"MAT LOAD ",9)==0 || strncmp(comline_org+1,"LOADM ",6)==0) p=comline_org; // RS 1.8.2013 skip MAT LOAD ## format if given without commas
-        else
+        if (strncmp(comline_org+1,"MAT LOAD ",9)==0 || strncmp(comline_org+1,"LOADM ",6)==0) { p=comline_org; // RS 1.8.2013 skip MAT LOAD ## format if given without commas
+        } else
         {   
-          i=TRUE; if (q2>p) if(*(q2-1)!=' ') i=FALSE; // RS 20.2.2013
-          if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')' && q2[2]!=',' && i) p=q2+1; // RS ADD       
+          i=TRUE; if (q2>p) { if(*(q2-1)!=' ') { i=FALSE; // RS 20.2.2013
+}
+}
+          if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')' && q2[2]!=',' && i) { p=q2+1; // RS ADD       
+}
         }
       }
     
     g_org=splitqq(p+1,word_org,MAXPARM);
     i=0;
 
-    while (i<g_org && strcmp(word_org[i],"/")!=0) ++i;
+    while (i<g_org && strcmp(word_org[i],"/")!=0) { ++i;
+}
     g_org=i;
     return(1);
     }    
@@ -12728,10 +13671,12 @@ int sp_check()
         specmax=10000;
         speclist=1000000;
         
-                    if (hae_apu("specmax",x)) specmax=atoi(x);
-                    else specmax=10000;
-                    if (hae_apu("speclist",x)) speclist=atoi(x);
-                    else speclist=1000000;
+                    if (hae_apu("specmax",x)) { specmax=atoi(x);
+                    } else { specmax=10000;
+}
+                    if (hae_apu("speclist",x)) { speclist=atoi(x);
+                    } else { speclist=1000000;
+}
         
         /*   Rprintf("specmax=%d speclist=%d\n",specmax,speclist); getch();  */
         return(1);
@@ -12747,7 +13692,8 @@ int sp_check()
         if (global_area) // RS ADD
         	{
         	i=muste_instr(x,raja);
-        	if (i>=0) global_area=FALSE;
+        	if (i>=0) { global_area=FALSE;
+}
         	}
         
         *x=EOS;
@@ -12755,8 +13701,10 @@ int sp_check()
         while (1)
         {
             p=strchr(p,'=');
-            if (p==NULL) break;                                 /* Next line if no more  "="-marks            */
-            if (*(p+1)==EOS) break;                             /* Next line if at the end of line            */
+            if (p==NULL) { break;                                 /* Next line if no more  "="-marks            */
+}
+            if (*(p+1)==EOS) { break;                             /* Next line if at the end of line            */
+}
             if (*(p+1)=='=')
             {
                 p+=1;                                           /* Allow "==" and longer repeats of "="       */
@@ -12765,8 +13713,10 @@ int sp_check()
             /* Rprintf("C: j=%d pos=%d\n",j,p-x); getch(); */
 			
 			i=1; // RS ADD all i:s below added in order to count global and specs areas
-			if (global_area) ++i; // RS ADD
-			if (j>=own_spec_line1 && j<=own_spec_line2) ++i; // RS ADD
+			if (global_area) { ++i; // RS ADD
+}
+			if (j>=own_spec_line1 && j<=own_spec_line2) { ++i; // RS ADD
+}
 
             //++n;                                              /* Increase the number of found specifications */
 			n+=i;
@@ -12793,11 +13743,14 @@ int sp_check()
             {
                 tila+=(c2*i);                                      /* Allow some extra space (bug fix?)           */
                 ++j;
-                if (j>r2) break;                               /* Go to next line and check if last           */
+                if (j>r2) { break;                               /* Go to next line and check if last           */
+}
                 edread(x,(unsigned int) j);
                 q=x+1;
-                while (*q && *q==' ') ++q;                     /* Skip spaces in the beginning of line        */
-                if (*q==EOS) break;                            /* Next line if at the end of line             */
+                while (*q && *q==' ') { ++q;                     /* Skip spaces in the beginning of line        */
+}
+                if (*q==EOS) { break;                            /* Next line if at the end of line             */
+}
                 while (*q && *q!=' ')
                 {
                     //++tila;                                    /* Scan right until space or EOS               */
@@ -12805,7 +13758,8 @@ int sp_check()
                     ++q;
                 }
             }
-            if (varjo) tila+=((tila-tila0)*i);                       /* Double space needed if shadows in use       */
+            if (varjo) { tila+=((tila-tila0)*i);                       /* Double space needed if shadows in use       */
+}
             ++p;
         }
     }
@@ -12822,14 +13776,21 @@ int spfind(char *s) /* 4.3.1995  6.7.2000 */
 
         for (i=0; i<spn; ++i)
             {
-            if (spa[i]==NULL) continue;
-            if (strcmp(s,spa[i])==0) break;
+            if (spa[i]==NULL) { continue;
+}
+            if (strcmp(s,spa[i])==0) { break;
+}
             }
-        if (i<spn && spb[i]==NULL) return(i);
-        if (i<spn && *spb[i]!='*') return(i);
-        if (i==spn) return(-1);
-        for (j=0; j<spn; ++j)
-                if (strcmp(spb[i],spa[j])==0) return(j);
+        if (i<spn && spb[i]==NULL) { return(i);
+}
+        if (i<spn && *spb[i]!='*') { return(i);
+}
+        if (i==spn) { return(-1);
+}
+        for (j=0; j<spn; ++j) {
+                if (strcmp(spb[i],spa[j])==0) { return(j);
+}
+}
         return(i);
         }
 
@@ -12845,7 +13806,8 @@ int spxxxx()
     int i;
 
     i=spfind("SPXXXX");
-    if (i<0) return(1);
+    if (i<0) { return(1);
+}
     muste_sprintf(sbuf,"\nSpec allocated: specmax=%d speclist=%d",specmax,speclist);
     sur_print(sbuf);
     muste_sprintf(sbuf,"\n        In use:         %d          %d",spn,(int)(spl-splist));
@@ -12864,16 +13826,20 @@ int jatkorivit(int j)
     {
         edread(x,(unsigned int)j);
         p=x+1;
-        while (*p==' ') ++p;
+        while (*p==' ') { ++p;
+}
         q=p;
-        while (*q!=' ') ++q;
+        while (*q!=' ') { ++q;
+}
         *q=EOS;
         *(spl-2)=EOS;
         --spl;
-        if (spl-splist+strlen(p)+2>speclist) return(-1);
+        if (spl-splist+strlen(p)+2>speclist) { return(-1);
+}
         strcat(spl-1,p);
         spl+=strlen(p);
-        if (*(spl-2)!='&') break;
+        if (*(spl-2)!='&') { break;
+}
         ++j;
     }
     return(1);
@@ -12882,7 +13848,8 @@ int jatkorivit(int j)
 
 int muste_instr(char s[],char c[])
 {
-    if (strstr(s,c)==NULL) return(-1);
+    if (strstr(s,c)==NULL) { return(-1);
+}
     return(1);
 }
 
@@ -12897,8 +13864,10 @@ int spread3(char *x,int j)
     while (pos<ed1)
     {
         p=strchr(x+pos,'=');                                    /* Search for "="                               */
-        if (p==NULL) break;                                     /* Ready if no more found                       */
-        if (*(p+1)==EOS) break;                                 /* Ready if at the end of line                  */
+        if (p==NULL) { break;                                     /* Ready if no more found                       */
+}
+        if (*(p+1)==EOS) { break;                                 /* Ready if at the end of line                  */
+}
         if (*(p+1)=='=')
         {
             pos+=2;                                             /* Jump over "="                                */
@@ -12910,7 +13879,8 @@ int spread3(char *x,int j)
             pos=p-x+1;                                          /* Skip the place of activation                */
             continue;
         }
-        if (spn>=specmax) return(-spn);                         /* Return if too many specifications           */
+        if (spn>=specmax) { return(-spn);                         /* Return if too many specifications           */
+}
 
         /* Specific for editorial arithmetics */
         spp[spn]=*(p-1);                                        /* Save char preceding "=" such as ":",".","|" */
@@ -12918,16 +13888,20 @@ int spread3(char *x,int j)
 
         pos=p-x;
         i=pos-1;
-        while (i>0 && x[i]!=' ') --i;                           /* Scan left                                   */
-        if (spl-splist+pos-i+1>speclist) return(-spn);
+        while (i>0 && x[i]!=' ') { --i;                           /* Scan left                                   */
+}
+        if (spl-splist+pos-i+1>speclist) { return(-spn);
+}
         muste_fieldcopy(spl,x+i+1,(unsigned int)(pos-i-1));             /* Copy specification to spl                   */
         spa[spn]=spl;
         spl+=pos-i;
         *(spl-1)=EOS;                                           /* Update pointers, spa=left side              */
 
         i=pos+1;
-        while (i<ed1 && x[i]!=' ') ++i;                         /* Scan right                                  */
-        if (spl-splist+i-pos+1>speclist) return(-spn);
+        while (i<ed1 && x[i]!=' ') { ++i;                         /* Scan right                                  */
+}
+        if (spl-splist+i-pos+1>speclist) { return(-spn);
+}
         muste_fieldcopy(spl,x+pos+1,(unsigned int)(i-pos-1));           /* Copy specification to spl                   */
         spb[spn++]=spl;
         spl+=i-pos;
@@ -12936,13 +13910,15 @@ int spread3(char *x,int j)
         if (*(spl-2)=='&')
         {
             k=jatkorivit(j+1);                                  /* Expression continues on the next line       */
-            if (k<0) return(-spn);
+            if (k<0) { return(-spn);
+}
         }
         spshad[spn-1]=NULL;
         if (zs[j]!=0)                                           /* Shadows                                     */
         {
             edread(xs,(unsigned int)zs[j]);
-            if (spl-splist+i-pos+1>speclist) return(-spn);
+            if (spl-splist+i-pos+1>speclist) { return(-spn);
+}
             muste_fieldcopy(spl,xs+pos+1,(unsigned int)(i-pos-1));
             spshad[spn-1]=spl;
             spl+=i-pos;
@@ -12965,7 +13941,8 @@ int spread2(int lin,int *raja1)
     {  
         edread(x,(unsigned int)j);
         i=muste_instr(x,raja);
-        if (i>=0) break;
+        if (i>=0) { break;
+}
     }
     *raja1=j;
     for (j=*raja1+1; j<=ed2; ++j)      /* Read the specifications */
@@ -12974,13 +13951,17 @@ int spread2(int lin,int *raja1)
         if (global==1)                 /* Zero global if found */
         {
             i=muste_instr(x,"*GLOBAL*");
-            if (i>0) global=0;
+            if (i>0) { global=0;
+}
         }
         i=muste_instr(x,raja);
-        if (i>=0) break;
-        if (j==r1+r-1) continue;       /* Skip the activated line */
+        if (i>=0) { break;
+}
+        if (j==r1+r-1) { continue;       /* Skip the activated line */
+}
         spn=spread3(x,j);
-        if (spn<0) return(spn);
+        if (spn<0) { return(spn);
+}
     }
 
     /*  Rprintf("\n"); for (i=0; i<spn; ++i) Rprintf("\n%s=%s %c %u varjo=%s",
@@ -12996,10 +13977,13 @@ int spfind_part(char *s) // 17.9.2010
     len=strlen(s);
     for (i=0; i<spn; ++i)
         {
-        if (spa[i]==NULL) continue;
-        if (strncmp(s,spa[i],len)==0) break;
+        if (spa[i]==NULL) { continue;
+}
+        if (strncmp(s,spa[i],len)==0) { break;
+}
         }
-    if (i<spn) return(i);
+    if (i<spn) { return(i);
+}
     return(-1);
     }
     
@@ -13010,8 +13994,10 @@ int spnfind(char *s) // RS ADD 2010
         len=strlen(s);
         for (i=0; i<spn; ++i)
                 {
-                if (spa[i]==NULL) continue;
-                if (strncmp(s,spa[i],len)==0) return(i);
+                if (spa[i]==NULL) { continue;
+}
+                if (strncmp(s,spa[i],len)==0) { return(i);
+}
                 }
         return(-1);
         }
@@ -13040,9 +14026,11 @@ own_spec_line2=0; // RS ADD
         if ((p=strstr(x,"SPECS="))!=NULL) // 20.12.2010
             {
             i=0;
-            while(p[i]!=' ') ++i; p[i]=EOS;
+            while(p[i]!=' ') { ++i; 
+}p[i]=EOS;
             i=split(p+6,s,2);
-            k=edline2(s[0],1,1); if (k<0) return(-1);
+            k=edline2(s[0],1,1); if (k<0) { return(-1);
+}
 
             if (i==1)
                 {
@@ -13052,13 +14040,15 @@ own_spec_line2=0; // RS ADD
             else if (i==2)
                 {
                 own_spec_line1=k;
-                k=edline2(s[1],k,1); if (k<0) return(-1);
+                k=edline2(s[1],k,1); if (k<0) { return(-1);
+}
                 own_spec_line2=k;
                 }
             }
 
         sp_check();
-        i=1; if (own_spec_line1) i=2; // 20.12.2010
+        i=1; if (own_spec_line1) { i=2; // 20.12.2010
+}
         speclist+=i*extra_bytes;
         specmax+=i*extra_specs;
 
@@ -13134,7 +14124,8 @@ own_spec_line2=0; // RS ADD
     
 if (muste_gplot_init)
 	{
-    spn=varnimet(); if (spn<0) return(spn); // RS FROM GPLOT
+    spn=varnimet(); if (spn<0) { return(spn); // RS FROM GPLOT
+}
 	if (muste_gplot_init2>0)
 		{
     	sur_screen_dim(&par[0],&par[1]);
@@ -13142,7 +14133,8 @@ if (muste_gplot_init)
     	sp_add_value("WY",(double)par[1]);
     	muste_gplot_init2=0;
     	}
-	if (muste_gplot_init>1) muste_gplot_init2=1;    	
+	if (muste_gplot_init>1) { muste_gplot_init2=1;    	
+}
     muste_gplot_init=0;
     
 	}
@@ -13186,7 +14178,8 @@ if (muste_gplot_init)
         spxxxx();
         return(spn);
     }
-    if (global==1) spn=spn1;
+    if (global==1) { spn=spn1;
+}
     spxxxx();
 
     return(spn);
@@ -13217,7 +14210,8 @@ int sp_init(int lin)
     i=sp_init_extra(lin,60,10);
 
 /* Väärinkirjoitettujen spesifikaatioiden arvailua */
-if (i>=0 && spec_check) i=spec_word_dist(spec_check);  
+if (i>=0 && spec_check) { i=spec_word_dist(spec_check);  
+}
 
     return(i);
     }
@@ -13226,7 +14220,8 @@ int spec_init(int lin)
         {
         int i;
         i=sp_init(lin);
-        if (i==-2) return(-1); /* <- spec_word_dist() */
+        if (i==-2) { return(-1); /* <- spec_word_dist() */
+}
 
         if (i<0)
             {
@@ -13248,11 +14243,15 @@ static int spec_jatkorivit(char *t, int j, int len)
             {
             edread(x,j);
             p=x+1;
-            while (*p==' ') ++p;
-            q=p; while (*q!=' ') ++q; *q=EOS;
-            if (strlen(t)+strlen(p)>len) return(1);
+            while (*p==' ') { ++p;
+}
+            q=p; while (*q!=' ') { ++q; 
+}*q=EOS;
+            if (strlen(t)+strlen(p)>len) { return(1);
+}
             *(t+strlen(t)-1)=EOS; strcat(t,p);
-            if (*(t+strlen(t)-1)!='&') break;
+            if (*(t+strlen(t)-1)!='&') { break;
+}
             ++j;
             }
         return(1);
@@ -13270,17 +14269,22 @@ static int spec_read3(char *s,char *t, char *x, int j, int len)
         while (pos<ed1)
             {
             p=strchr(x+pos,'=');
-            if (p==NULL) break;
+            if (p==NULL) { break;
+}
             pos=p-x; i=pos-1;
-            while (i>0 && x[i]!=' ') --i;
+            while (i>0 && x[i]!=' ') { --i;
+}
             *spa=EOS; strncat(spa,x+i+1,pos-i-1);
             if (strcmp(spa,s)==0)
                 {
                 i=pos+1;
-                while (i<ed1 && x[i]!=' ') ++i;
-                len1=i-pos-1; if (len<len1) len1=len;
+                while (i<ed1 && x[i]!=' ') { ++i;
+}
+                len1=i-pos-1; if (len<len1) { len1=len;
+}
                 *t=EOS; strncat(t,x+pos+1,len1);
-                if (*(t+strlen(t)-1)=='&') spec_jatkorivit(t,j+1,len);
+                if (*(t+strlen(t)-1)=='&') { spec_jatkorivit(t,j+1,len);
+}
                 return(1);
                 }
             ++pos;
@@ -13290,7 +14294,8 @@ static int spec_read3(char *s,char *t, char *x, int j, int len)
 
 static int spec_instr(char *s,char *c)
         {
-        if (strstr(s,c)!=NULL) return(1);
+        if (strstr(s,c)!=NULL) { return(1);
+}
         return(-1);
         }
 
@@ -13303,15 +14308,18 @@ static int spec_read2(char *s,char *t,int lin,int *raja1,int len)
             {
             edread(x,j);
             i=spec_instr(x,raja);
-            if (i>=0) break;
+            if (i>=0) { break;
+}
             }
         *raja1=j;
         for (j=*raja1+1; j<=ed2; ++j)
             {
             edread(x,j);
             i=spec_instr(x,raja);
-            if (i>=0) break;
-            i=spec_read3(s,t,x,j,len); if (i>=0) return(1);
+            if (i>=0) { break;
+}
+            i=spec_read3(s,t,x,j,len); if (i>=0) { return(1);
+}
             }
         return (-1);
         }
@@ -13327,7 +14335,8 @@ static int find_global()
         p=strstr(z,"*GLOBAL*");
         if (p==NULL) { *pch=ch; return(-1); }
         q=strstr(z,raja); *pch=ch;
-        if (q==NULL || p<q) return(1);
+        if (q==NULL || p<q) { return(1);
+}
         return(-1);
         }
 
@@ -13355,9 +14364,11 @@ own_spec_line2=0; // RS ADD
         if ((p=strstr(x,"SPECS="))!=NULL) // 20.12.2010
             {
             i=0;
-            while(p[i]!=' ') ++i; p[i]=EOS;
+            while(p[i]!=' ') { ++i; 
+}p[i]=EOS;
             i=split(p+6,rs,2);
-            j=edline2(rs[0],1,1); if (j<0) return(-1);
+            j=edline2(rs[0],1,1); if (j<0) { return(-1);
+}
 
             if (i==1)
                 {
@@ -13367,7 +14378,8 @@ own_spec_line2=0; // RS ADD
             else if (i==2)
                 {
                 own_spec_line1=j;
-                j=edline2(rs[1],j,1); if (j<0) return(-1);
+                j=edline2(rs[1],j,1); if (j<0) { return(-1);
+}
                 own_spec_line2=j;
                 }
             }
@@ -13375,7 +14387,8 @@ own_spec_line2=0; // RS ADD
         
         
         
-        i=spec_read3(s,t,x,lin,len); if (i>=0) return(1);
+        i=spec_read3(s,t,x,lin,len); if (i>=0) { return(1);
+}
         
 /* RS ADD SPECS override */
         if (own_spec_line1) // 20.12.2010
@@ -13383,15 +14396,19 @@ own_spec_line2=0; // RS ADD
             for (j=own_spec_line1; j<=own_spec_line2; ++j)
                 {
                 edread(x,j);
-                i=spec_read3(s,t,x,j,len); if (i>=0) return(1);
+                i=spec_read3(s,t,x,j,len); if (i>=0) { return(1);
+}
                 }
             }          
         
         
         i=spec_read2(s,t,lin,&raja1,len);
-        if (i>=0) return(i);
-        if (raja1==0) return(-1);
-        i=find_global(); if (i<0) return(-1);
+        if (i>=0) { return(i);
+}
+        if (raja1==0) { return(-1);
+}
+        i=find_global(); if (i<0) { return(-1);
+}
         i=spec_read2(s,t,1,&raja1,len);
         return(i);
         }
@@ -13403,7 +14420,8 @@ int seek_char2(int m)  /* 18.2.90 */
         char *p;
 
         edread(x,r1+r-1);
-        p=strchr(x+c1+c,(char)m); if (p==NULL) return(1);
+        p=strchr(x+c1+c,(char)m); if (p==NULL) { return(1);
+}
         if (p-x>c1+c3-1) { c1=p-x-c3+1; disp(); } /* 28.1.89 */
         c=p-x-c1+1;
         return(1);
@@ -13414,7 +14432,8 @@ int seek_char()
         int m;
 
         m=nextch_editor();
-        if (m==CODE_CODE) m=special_code;
+        if (m==CODE_CODE) { m=special_code;
+}
         seek_char2(m);
         return(1);
         }
@@ -13425,7 +14444,8 @@ void seek_string(char *s)    /* 17.5.1992 */
         char *p;
 
         edread(x,r1+r-1);
-        p=strstr(x+c1+c,s); if (p==NULL) return;
+        p=strstr(x+c1+c,s); if (p==NULL) { return;
+}
         c=p-x-c1+1;
         col_display();
         }
@@ -13436,10 +14456,14 @@ int seek_word0(int mode)
         char *p;
 
         edread(x,r1+r-1); p=x+c1+c-1;
-        while (*p!=' ') ++p;
-        while (*p==' ') ++p;
-        if (p-x>c2) return(1); // RS 20.4.2013 moved here from below next line
-        if (mode==1) { if (p-x<=c1+c3-1) c=p-x-c1+1; return(1); }
+        while (*p!=' ') { ++p;
+}
+        while (*p==' ') { ++p;
+}
+        if (p-x>c2) { return(1); // RS 20.4.2013 moved here from below next line
+}
+        if (mode==1) { if (p-x<=c1+c3-1) { c=p-x-c1+1; 
+}return(1); }
         c=p-x-c1+1;
         col_display();
         return(1);
@@ -13460,7 +14484,8 @@ int miau_koodit()
         if (m=='!') { strcpy(tut_info2,tut_info); return(1); }
         if (m=='&')
             {
-            if (strlen(tut_info)+strlen(tut_info2)>=LLENGTH) return(1);
+            if (strlen(tut_info)+strlen(tut_info2)>=LLENGTH) { return(1);
+}
             strcat(tut_info,tut_info2); return(1);
             }
         if (m=='~') /* 16.5.92 */
@@ -13479,7 +14504,8 @@ static void disp_nappihaku(char *haku)
 
 static void sp_vaihto(char *s)
         {
-        while ((s=strchr(s,'_'))!=NULL) *s=' ';
+        while ((s=strchr(s,'_'))!=NULL) { *s=' ';
+}
         }
 
 static void putsaa()
@@ -13522,14 +14548,18 @@ static void rivisar(unsigned int uusi)
         if (reverse_search)
             {
             if (rivi<r1) { r1=rivi; r=1; d=1; }
-            else r=rivi-r1+1;
+            else { r=rivi-r1+1;
+}
             c=sar;
-            if (c<=c3) { if (c1!=1) d=1; c1=1; }
+            if (c<=c3) { if (c1!=1) { d=1; 
+}c1=1; }
             else
                 {
                 d=c1; c1=sar;
-                if (c1>c2-c3+1) c1=c2-c3+1;
-                if (c1!=d) d=1; else d=0;
+                if (c1>c2-c3+1) { c1=c2-c3+1;
+}
+                if (c1!=d) { d=1; } else { d=0;
+}
                 c=sar-c1+1;
                 }
             }
@@ -13539,15 +14569,19 @@ static void rivisar(unsigned int uusi)
                                 if (r1>r2-r3+1) { r1=r2-r3+1; r=rivi-r1+1; }
                               }
             else if (rivi<r1) { d=1; r1=rivi; r=1; }
-            else r=rivi-r1+1;
-            if (sar==0) sar=1;
-            if (sar>=c1 && sar<c1+c3) c=sar-c1+1;
+            else { r=rivi-r1+1;
+}
+            if (sar==0) { sar=1;
+}
+            if (sar>=c1 && sar<c1+c3) { c=sar-c1+1;
+}
             if (sar<c1) { d=1; c1=sar; c=1; }
             if (sar>c1+c3-1) { d=1; c1=sar; c=1;
                                if (c1>c2-c3+1) { c1=c2-c3+1; c=sar-c1+1; }
                              }
             }
-        if (d) disp();
+        if (d) { disp();
+}
         cursor(r,c);
         }
     
@@ -13563,7 +14597,8 @@ static int vaihda(char *haku,char *korvaus,unsigned int uusi)
 
         i=strlen(korvaus)-strlen(haku);  /* 11.1.1997 */
         if (i>0)
-            { i=mahtuu(x,i,rivi); if (i<0) return(-1); }
+            { i=mahtuu(x,i,rivi); if (i<0) { return(-1); 
+}}
 
         strcpy(y,korvaus); strcat(y,x+sar+strlen(haku));
         edwrite(space,rivi,sar);
@@ -13575,7 +14610,8 @@ static int vaihda(char *haku,char *korvaus,unsigned int uusi)
             if (i==0)
                 {
                 k=creatshad(rivi);
-                if (k<0) return(-1);
+                if (k<0) { return(-1);
+}
                 }
             }
 
@@ -13584,16 +14620,18 @@ static int vaihda(char *haku,char *korvaus,unsigned int uusi)
             {
             edread(x,i);
             *y=EOS;
-            if (sh && *sh_korvaus)
+            if (sh && *sh_korvaus) {
                 strncat(y,sh_korvaus,strlen(korvaus));
-            else
+            } else {
                 strncat(y,space,strlen(korvaus));
+}
             strcat(y,x+sar+strlen(haku));
             edwrite(space,i,sar);
             edwrite(y,i,sar);
             testshad(rivi);
             }
-        if (rivi>=r1 && rivi<r1+r3) displine2(rivi);
+        if (rivi>=r1 && rivi<r1+r3) { displine2(rivi);
+}
         return(1);
         }
 
@@ -13611,19 +14649,27 @@ static int etsi(char *haku,unsigned int paikka)
             {
             if (reverse_search)
                 {
-                if (caps_on)
-                    while (upf(z[u])!=*haku && u>0) --u;
-                else
-                    while (z[u]!=*haku && u>0) --u;
-                if (u==0) return(0);
+                if (caps_on) {
+                    while (upf(z[u])!=*haku && u>0) { --u;
+}
+                } else {
+                    while (z[u]!=*haku && u>0) { --u;
+}
+}
+                if (u==0) { return(0);
+}
                 }
             else
                 {
-                if (caps_on)
-                    while (upf(z[u])!=*haku && u<ed1*ed2) ++u;
-                else
-                    while (z[u]!=*haku && u<ed1*ed2) ++u;
-                if (u==ed1*ed2) return(0);
+                if (caps_on) {
+                    while (upf(z[u])!=*haku && u<ed1*ed2) { ++u;
+}
+                } else {
+                    while (z[u]!=*haku && u<ed1*ed2) { ++u;
+}
+}
+                if (u==ed1*ed2) { return(0);
+}
                 }
             *vert_sana=EOS; strncat(vert_sana,z+u,strlen(haku));
 // Rprintf("\nhaku=%s vert=%s|",haku,struprf(vert_sana)); getck();
@@ -13632,7 +14678,8 @@ static int etsi(char *haku,unsigned int paikka)
                 {
                 if (u%ed1!=0)
                     {
-                    if (!sh) return(u);
+                    if (!sh) { return(u);
+}
                     j=u/ed1+1;
                     i=u%ed1;
       /*        Rprintf("\nj=%d i=%d",j,i); getch();  */
@@ -13640,17 +14687,21 @@ static int etsi(char *haku,unsigned int paikka)
                         {
                         edread(xs,zs[j]);
                         *sh_kohde=EOS; strncat(sh_kohde,xs+i,strlen(haku));
-                        if (strncmp(sh_kohde,space,strlen(haku))==0) *sh_kohde=EOS;
-                        if (strcmp(sh_haku,sh_kohde)==0) return(u);
+                        if (strncmp(sh_kohde,space,strlen(haku))==0) { *sh_kohde=EOS;
+}
+                        if (strcmp(sh_haku,sh_kohde)==0) { return(u);
+}
                         }
                     else /* zs[j]=0 */
                         {
-                        if (*sh_haku==EOS) return(u);
+                        if (*sh_haku==EOS) { return(u);
+}
                         }
                     }
                 }
-            if (reverse_search) --u;
-            else ++u;
+            if (reverse_search) { --u;
+            } else { ++u;
+}
             }
         return(0); /* ei tarvita? */
         }
@@ -13681,11 +14732,13 @@ static int op_find()
         unsigned int first,last=0;
         char *osa[2];
 
-        if (search_caps)
+        if (search_caps) {
           caps_on=s_caps_on();
-        else caps_on=0;
+        } else { caps_on=0;
+}
         edread(x,r1+r-1);
-        if (*x=='#') caps_on=1; // myˆs # kontr.sar. -> case insensitive
+        if (*x=='#') { caps_on=1; // myˆs # kontr.sar. -> case insensitive
+}
 
         soft_disp(0);
         first=0;
@@ -13702,12 +14755,14 @@ static int op_find()
                 if (i>0)
                     {
                     first=edline2(osa[0],1,1);
-                    if (first==0) return(1);
+                    if (first==0) { return(1);
+}
                     last=first;
                     if (i>1)
                         {
                         last=edline2(osa[1],first,1);
-                        if (last==0) return(1);
+                        if (last==0) { return(1);
+}
                         }
                     }
                 }
@@ -13715,12 +14770,14 @@ static int op_find()
         jatkuva2=0;
         nhaku=0; n_act=0;
 
-        if ( parm[0]!=NULL && *parm[0]=='-' && *info!='F') reverse_search=1;
+        if ( parm[0]!=NULL && *parm[0]=='-' && *info!='F') { reverse_search=1;
+}
 
         if (*info=='F')
             {
             nhaku=1; haku=nappihaku; *haku=EOS; replace=0;
-            if (info[1]=='-') reverse_search=1;
+            if (info[1]=='-') { reverse_search=1;
+}
             }
         else if (muste_strcmpi(parm[0]+reverse_search,"FIND")==0)
             {
@@ -13735,11 +14792,14 @@ static int op_find()
             i=split(actline+1,parm,2);
             edread(actline,r1+r-1);
             p=strstr(actline," / ");
-            if (p!=NULL) *p=EOS;
+            if (p!=NULL) { *p=EOS;
+}
             haku=parm[1];
-            if (caps_on) struprf(haku);
+            if (caps_on) { struprf(haku);
+}
             len=strlen(actline);
-            while (actline[len-1]==' ') --len; actline[len]=EOS;
+            while (actline[len-1]==' ') { --len; 
+}actline[len]=EOS;
             pline=actline;
 
             i=strlen(haku);  /* 20.1.1996 */
@@ -13791,7 +14851,8 @@ static int op_find()
                 {
                 edread(xs,i);
                 *sh_haku=EOS; strncat(sh_haku,xs+(haku-pline),strlen(haku));
-                if (strncmp(sh_haku,space,strlen(haku))!=0) sh=1;
+                if (strncmp(sh_haku,space,strlen(haku))!=0) { sh=1;
+}
 /* Rprintf("\nsh_haku=%s",sh_haku); getch(); */
                 }
             }
@@ -13802,7 +14863,8 @@ static int op_find()
             
                 edread(y,r1+r-1); // RS ADD
                 p=strstr(y," / ");
-            	if (p!=NULL) *p=EOS;                
+            	if (p!=NULL) { *p=EOS;                
+}
 
                 g=split(y+1,parm,MAXPARM); // RS ADD            
           
@@ -13831,7 +14893,8 @@ static int op_find()
             haku=parm[1]; korvaus=parm[2];
             strcpy(sbuf,haku); chrconv(sbuf,haku); // RS 22.3.2013
             strcpy(sbuf,korvaus); chrconv(sbuf,korvaus); // RS 22.3.2013
-            if (caps_on) struprf(haku); // 20.4.2002
+            if (caps_on) { struprf(haku); // 20.4.2002
+}
             lain=0;
             if (*haku=='"')
                 {
@@ -13846,7 +14909,8 @@ static int op_find()
                     {
                     *p2=EOS;
                     ++p2;
-                    while (*p2 && (*p2==' ' || *p2==',')) ++p2;
+                    while (*p2 && (*p2==' ' || *p2==',')) { ++p2;
+}
                     if (*p2=='"')
                         {
                         ++p2;
@@ -13860,7 +14924,8 @@ static int op_find()
 int muste_noshadow; // RS ADD
 			muste_noshadow=0;
 			i=spec_find("NOSHADOW",sbuf,LLENGTH-1);
-            if (i>=0) muste_noshadow=atoi(sbuf);
+            if (i>=0) { muste_noshadow=atoi(sbuf);
+}
             			
             i=zs[r1+r-1];
             if (i>0 && !muste_noshadow)
@@ -13869,9 +14934,12 @@ int muste_noshadow; // RS ADD
                 
     *sh_haku=EOS; strncat(sh_haku,xs+(haku-pline),strlen(haku));
     *sh_korvaus=EOS; strncat(sh_korvaus,xs+(korvaus-pline),strlen(korvaus));
-    if (strncmp(sh_haku,space,strlen(haku))==0) *sh_haku=EOS;  
-    if (strncmp(sh_korvaus,space,strlen(korvaus))==0) *sh_korvaus=EOS; 
-    if (*sh_haku || *sh_korvaus) sh=1;
+    if (strncmp(sh_haku,space,strlen(haku))==0) { *sh_haku=EOS;  
+}
+    if (strncmp(sh_korvaus,space,strlen(korvaus))==0) { *sh_korvaus=EOS; 
+}
+    if (*sh_haku || *sh_korvaus) { sh=1;
+}
 /* Rprintf("\nsh_haku=%s sh_korvaus=%s sh=%d\n",sh_haku,sh_korvaus,sh); getch(); */
                 }
                 
@@ -13879,14 +14947,17 @@ int muste_noshadow; // RS ADD
 
         n=0; /* tapauksia */
         paikka=(r1+r-1)*ed1;
-        if (reverse_search) paikka-=ed1;
+        if (reverse_search) { paikka-=ed1;
+}
         if (first)
             {
             paikka=vanha=(first-1)*ed1;
-            if (!jatkuva) rivisar(paikka);
+            if (!jatkuva) { rivisar(paikka);
+}
             loppu=last*ed1;
             }
-        if (nhaku) paikka=(r1+r-2)*ed1+c1+c;
+        if (nhaku) { paikka=(r1+r-2)*ed1+c1+c;
+}
         korvauksia=0; // RS 6.9.2013
         while (kesken)
             {
@@ -13901,7 +14972,8 @@ int muste_noshadow; // RS ADD
                 if (sur_kbhit()) 
                     { 
                     i=sur_getch(); 
-                    if (i==CODE_RETURN) kesken=0;
+                    if (i==CODE_RETURN) { kesken=0;
+}
                     }
                 korvauksia=0;
                 }
@@ -13915,9 +14987,10 @@ int muste_noshadow; // RS ADD
                 muste_sprintf(sbuf,"Search for word: %s",haku); sur_print(sbuf);
                 cursor(r,c); SAVE_CURSOR;
 
-                if (etu && etuu==1) m=read_nextkey_editor();  // 22.9.2009 RS 22.11.2012 read_
-                else                              // 22.9.2009
+                if (etu && etuu==1) { m=read_nextkey_editor();  // 22.9.2009 RS 22.11.2012 read_
+                } else {                              // 22.9.2009
                     m=nextch_editor();
+}
                 RESTORE_CURSOR;                
                 if (m==CODE_RETURN || m==CODE_HELP)
                     {
@@ -13932,12 +15005,13 @@ int muste_noshadow; // RS ADD
                     }
                 if (m==CODE_EXEC || m==CODE_DELETE)
                     {
-                    if (first_word_on_line_search) paikka+=ed1; // 25.9.2009
-                    else
+                    if (first_word_on_line_search) { paikka+=ed1; // 25.9.2009
+                    } else
                         {
                         ++n_act;
-                        if (reverse_search) --paikka;
-                        else ++paikka;  /* 26.9.92 */
+                        if (reverse_search) { --paikka;
+                        } else { ++paikka;  /* 26.9.92 */
+}
                         }
                     }
                else if (m==CODE_SRCH)
@@ -13946,10 +15020,13 @@ int muste_noshadow; // RS ADD
                     p=x+c1+c-1; *x=' ';
                     if (*p!=' ')
                         {
-                        p2=p; while (*p2!=' ') --p2;
-                        p3=p; while (*p3!=' ') ++p3; *p3=EOS;
+                        p2=p; while (*p2!=' ') { --p2;
+}
+                        p3=p; while (*p3!=' ') { ++p3; 
+}*p3=EOS;
                         strcpy(haku,p2+1); haku[MAX_PITUUS]=EOS;
-                        if (reverse_search) paikka-=(int)(p-p2)+1;
+                        if (reverse_search) { paikka-=(int)(p-p2)+1;
+}
                         disp_nappihaku(haku);
                         }
                     }
@@ -13972,14 +15049,16 @@ int muste_noshadow; // RS ADD
                     n_act=0;
                     *ch=(char)m; ch[1]=EOS;
                     strcat(haku,ch);
-            if (caps_on) muste_strupr(haku); // koe 15.1.2009
+            if (caps_on) { muste_strupr(haku); // koe 15.1.2009
+}
                     disp_nappihaku(haku);
                     }
       /*        LOCATE(rr,cc);    */
                 strcpy(vanha_haku,haku);
                 }
             uusi=etsi(haku,paikka);
-            if (uusi==0) break;
+            if (uusi==0) { break;
+}
             if (first)
                 {
                 if (uusi>=loppu) { uusi=vanha; break; }
@@ -14010,7 +15089,8 @@ int muste_noshadow; // RS ADD
                 m=nextch_editor();
                 RESTORE_CURSOR;
                 if (/* special && */ m==CODE_RETURN) { kesken=0; break; }
-                if (m=='N' || m=='n') break;
+                if (m=='N' || m=='n') { break;
+}
                 if (m=='C' || m=='c') { jatkuva=1; korvaa=1; break; }
                 if (m=='R' || m=='r') { korvaa=1; break; }
                 }
@@ -14019,12 +15099,14 @@ int muste_noshadow; // RS ADD
                 {
                 i=vaihda(haku,korvaus,uusi); if (i<0) { kesken=0; break; }
                 paikka=uusi+strlen(korvaus);    /* 15.10.88 */
-                if (reverse_search) paikka=uusi-strlen(haku);
+                if (reverse_search) { paikka=uusi-strlen(haku);
+}
                 }
             else
                 {
                 paikka=uusi+strlen(haku);
-                if (reverse_search) paikka=uusi-strlen(haku);
+                if (reverse_search) { paikka=uusi-strlen(haku);
+}
                 }
             }
         if (!jatkuva2)
@@ -14055,16 +15137,18 @@ int muste_noshadow; // RS ADD
                 muste_sprintf(sbuf,"%d@",n);
                 strcat(tut_info,sbuf);
                 }
-        else if (m!=CODE_RETURN && jatkuva2==0) while (1)
+        else if (m!=CODE_RETURN && jatkuva2==0) { while (1)
             {
             m=nextch_editor();
-            if (m==CODE_RETURN) break;
+            if (m==CODE_RETURN) { break;
+}
             if (m=='#')
                 {
                 muste_sprintf(sbuf,"%d@",n);
                 strcat(tut_info,sbuf);
                 }
             }
+}
 
     /*  if (nhaku) */ putsaa();
         soft_disp(1);
@@ -14092,10 +15176,11 @@ static int op_insertl()
         return(1);
         }
     j=r1+r;
-    if (g==2) k=atoi(parm[1]);
-    else
+    if (g==2) { k=atoi(parm[1]);
+    } else
         {
-        j=edline2(parm[1],1,1); if (!j) return(1);
+        j=edline2(parm[1],1,1); if (!j) { return(1);
+}
         ++j;
         k=atoi(parm[2]);
         }
@@ -14110,12 +15195,15 @@ static int copy_line(unsigned int i,unsigned int j)
         char x[LLENGTH];
         char sx[LLENGTH];
 
-        shad=0; if ( zs[i]!=0 || zs[j]!=0 ) shad=1;
+        shad=0; if ( zs[i]!=0 || zs[j]!=0 ) { shad=1;
+}
         edread(x,i);
         if (shad)
             {
-            if (zs[j]==0) creatshad(j);
-            if (zs[i]==0) creatshad(i);
+            if (zs[j]==0) { creatshad(j);
+}
+            if (zs[i]==0) { creatshad(i);
+}
             edread(sx,zs[i]);
             }
 //        len=c2+1;
@@ -14134,14 +15222,17 @@ static int delete_lines(int j1,int j2)
         int i,j,k;
         char x[LLENGTH];
 
-        if (j1>j2) return(1);
+        if (j1>j2) { return(1);
+}
         k=j2-j1+1;
 
-        for (j=j1; j<=r2-k; ++j) copy_line(j+k,j);
+        for (j=j1; j<=r2-k; ++j) { copy_line(j+k,j);
+}
         strcpy(x,"*"); strncat(x,space,c2-1);
         i=r2-k+1;
         edwrite(x,i,0); zs[i]=0;
-        for (j=i+1; j<=r2; ++j) copy_line(i,j);
+        for (j=i+1; j<=r2; ++j) { copy_line(i,j);
+}
         return(1);
         }
 
@@ -14169,7 +15260,8 @@ muste_sprintf(sbuf,"\nFence line %s (on line %d) before any #command!",fence1,i1
         break;
         }
 // Rprintf("\ni1: %d, j2: %d",i1,j2);        
-    if (i1>=j2) return(1);
+    if (i1>=j2) { return(1);
+}
     ++i1;
 // Rprintf("\ni1=%d j2=%d",i1,j2); getck();
 
@@ -14191,7 +15283,8 @@ muste_sprintf(sbuf,"\nA possible command (on line %d) before a fence line!",i2);
         j2-=i2-i1; i2=i1;
         break;
         }
-    if (i2>=j2) return(1);
+    if (i2>=j2) { return(1);
+}
    ++i2;
    }
     return(1);
@@ -14209,8 +15302,10 @@ static int op_deletel()
         return(1);
         }
 
-    j1=edline2(parm[1],1,1); if (!j1) return(1);
-    j2=edline2(parm[2],j1,1); if (!j2) return(1);
+    j1=edline2(parm[1],1,1); if (!j1) { return(1);
+}
+    j2=edline2(parm[2],j1,1); if (!j2) { return(1);
+}
     if (g>3 && muste_strnicmp(parm[3],"FENCE",5)==0) // 20.4.2010
           {
           delete_fenced_output(j1,j2);
@@ -14238,31 +15333,36 @@ static int ins_by_text(int tyyli,int j0,int nj,char *t,char *ts,int k,char ch)
 // Rprintf("\n%s|",ts);
 // getck();
 
-    if (k<0) ++k;
+    if (k<0) { ++k;
+}
 
     muste_sprintf(sbuf,"%sSURVO.TMP",etmpd);
     tmp=muste_fopen2(sbuf,"wb");
 
     len=strlen(t);
-    shad=0; if (*ts!=EOS) shad=1;
+    shad=0; if (*ts!=EOS) { shad=1;
+}
     n=0;
     for (j=k1; j<=k2; ++j)
         {
         edread(x,j);
         if (tyyli==1)
             {
-            if ((p=strstr(x+1,t))==NULL) continue;
+            if ((p=strstr(x+1,t))==NULL) { continue;
+}
             if (shad)
                 {
                 if (zs[j]>0)
                     {
                     edread(xs,zs[j]);
-                    if (strncmp(ts,xs+(p-x),len)!=0) continue;
+                    if (strncmp(ts,xs+(p-x),len)!=0) { continue;
+}
                     }
                 }
             }
        else // tyyli=2
-         if (*x!=ch) continue;
+         if (*x!=ch) { continue;
+}
 
         fwrite(&j,sizeof(int),1,tmp);
         ++n;
@@ -14271,14 +15371,16 @@ static int ins_by_text(int tyyli,int j0,int nj,char *t,char *ts,int k,char ch)
     tmp=muste_fopen2(sbuf,"rb");
 
 // Rprintf("\nn=%d",n); getck();
-    i=insert_lines(k2+1,n); if (i<0) return(1);
+    i=insert_lines(k2+1,n); if (i<0) { return(1);
+}
 
     j2=j+n-1;
 // Rprintf("\nj2=%d|",j2); getck();
     j1=k2;
 
-    if (nj==1) jh=0;
-    else jh=(n-1)%nj;
+    if (nj==1) { jh=0;
+    } else { jh=(n-1)%nj;
+}
 
     for (i=n-1; i>=0; --i)
         {
@@ -14295,7 +15397,8 @@ static int ins_by_text(int tyyli,int j0,int nj,char *t,char *ts,int k,char ch)
 
         if (nj>1)
             {
-            --jh; if (jh<0) jh=nj-1;
+            --jh; if (jh<0) { jh=nj-1;
+}
             }
         }
 
@@ -14312,7 +15415,8 @@ static int ins_by_steps(int j0,int nj)
     int jh;
 
     j=k1-1+step;
-    if (j>k2) return(1);
+    if (j>k2) { return(1);
+}
     n=1;
 // Rprintf("\nj=%d|",j); getck();
     while (j<=k2-step)
@@ -14322,19 +15426,22 @@ static int ins_by_steps(int j0,int nj)
 // Rprintf("\nj=%d|",j); getck();
         }
     k2=j;
-    i=insert_lines(k2+1,n); if (i<0) return(1);
+    i=insert_lines(k2+1,n); if (i<0) { return(1);
+}
     j2=j+n;
 // Rprintf("\nj2=%d|",j2); getck();
 
-    if (nj==1) jh=0;
-    else jh=(n-1)%nj;
+    if (nj==1) { jh=0;
+    } else { jh=(n-1)%nj;
+}
 // Rprintf("\njh=%d|",jh); getck();
     while (j>=k1)
         {
         copy_line(j0+jh,j2--);
         if (nj>1)
             {
-            --jh; if (jh<0) jh=nj-1;
+            --jh; if (jh<0) { jh=nj-1;
+}
             }
         for (i=0; i<step; ++i)
             {
@@ -14358,8 +15465,10 @@ static int op_lineins()
             return(1);
             }
 
-        k1=edline2(parm[1],1,1); if (!k1) return(1);
-        k2=edline2(parm[2],k1,1); if (!k2) return(1);
+        k1=edline2(parm[1],1,1); if (!k1) { return(1);
+}
+        k2=edline2(parm[2],k1,1); if (!k2) { return(1);
+}
 
         tyyli=0; h=4;
         step=atoi(parm[3]);
@@ -14367,12 +15476,15 @@ static int op_lineins()
             {
             k=1;
             strcpy(sbuf,parm[3]+4);
-            if (strlen(sbuf)>0) k=atoi(sbuf);
+            if (strlen(sbuf)>0) { k=atoi(sbuf);
+}
             tyyli=1; ++h;
-            j=edline2(parm[4],1,1); if (!j) return(1);
+            j=edline2(parm[4],1,1); if (!j) { return(1);
+}
             edread(txt,j);
             *stxt=EOS; stxt[1]=EOS;
-            if (zs[j]!=0) edread(stxt,zs[j]);
+            if (zs[j]!=0) { edread(stxt,zs[j]);
+}
             if ((p=strchr(stxt,'!'))!=NULL)
                 {
                 j=p-stxt;
@@ -14383,7 +15495,8 @@ static int op_lineins()
             else
                 {
                 j=strlen(txt)-1;
-                while (txt[j]==' ') txt[j--]=EOS;
+                while (txt[j]==' ') { txt[j--]=EOS;
+}
                 stxt[j+1]=EOS;
                 }
             }
@@ -14392,23 +15505,28 @@ static int op_lineins()
             {
             k=1;
             strcpy(sbuf,parm[3]+7);
-            if (strlen(sbuf)>0) k=atoi(sbuf);
+            if (strlen(sbuf)>0) { k=atoi(sbuf);
+}
             tyyli=2; ++h;
             }
 
         strcpy(sbuf,parm[h]);
         p=strchr(sbuf,':');
-        if (p!=NULL) *p=EOS;
-        j=edline2(sbuf,1,1); if (!j) return(1);
+        if (p!=NULL) { *p=EOS;
+}
+        j=edline2(sbuf,1,1); if (!j) { return(1);
+}
         nj=1;
         if (p!=NULL)
             {
-            if (*(p+1)==EOS) nj=1000000000;
-            else
+            if (*(p+1)==EOS) { nj=1000000000;
+            } else
                 {
-                i=edline2(p+1,1,1); if (!i) return(1);
+                i=edline2(p+1,1,1); if (!i) { return(1);
+}
                 }
-            nj=i-j+1; if (nj<1) nj=1;
+            nj=i-j+1; if (nj<1) { nj=1;
+}
             }
 //      edread(rivi,j);
 
@@ -14451,11 +15569,13 @@ int muste_editor_eventhandler()
                 {
                 special=FALSE;
                 m=nextch_editor_eventloop();              
-                if (m==-5 || m==-1) return(edrun); // RS REM continue; /* 13.4.1996 */
+                if (m==-5 || m==-1) { return(edrun); // RS REM continue; /* 13.4.1996 */
+}
 
                 prevkey=m;                
 
-                scroll_line=r+2; if (scroll_line>r3) scroll_line=r3;  // RS Needs to be known!
+                scroll_line=r+2; if (scroll_line>r3) { scroll_line=r3;  // RS Needs to be known!
+}
 
 
                 if (m==-7)
@@ -14471,7 +15591,8 @@ int muste_editor_eventhandler()
               if (special) 
                    {
                    i=key_special(m);
-                   if (i<0) edrun=FALSE; // RS exit
+                   if (i<0) { edrun=FALSE; // RS exit
+}
                    } 
               else
                    {

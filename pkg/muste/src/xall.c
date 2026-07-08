@@ -29,8 +29,10 @@ void muste_xall(char *argv)
     int i;
 
     s_init(argv);
-    i=spec_init(r1+r-1); if (i<0) return;
-    i=check_parameters(); if (i<0) return;
+    i=spec_init(r1+r-1); if (i<0) { return;
+}
+    i=check_parameters(); if (i<0) { return;
+}
     xall();
     s_end(argv);
     return;
@@ -76,13 +78,19 @@ static int xall(void)
     int vartotal;
     int howmany;
 
-    i=data_open(word[1],&d); if (i<0) return -1;
-    i=mask(&d); if (i<0) return -1;
-    i=conditions(&d); if (i<0) return -1;
-    var1=varfind(&d,word[2]); if (var1<0) return -1;
+    i=data_open(word[1],&d); if (i<0) { return -1;
+}
+    i=mask(&d); if (i<0) { return -1;
+}
+    i=conditions(&d); if (i<0) { return -1;
+}
+    var1=varfind(&d,word[2]); if (var1<0) { return -1;
+}
     vartotal=atoi(word[3]);
-    if (g>4) howmany=atoi(word[4]); else howmany=1;
-    if (howmany<1) return -1;
+    if (g>4) { howmany=atoi(word[4]); } else { howmany=1;
+}
+    if (howmany<1) { return -1;
+}
 
     muste_kv_s_disp("\nConverting \"X ALL\" responses in %d variables...", vartotal);
     muste_kv_s_disp("\nMoving values of %d variables at a time...", howmany);
@@ -93,7 +101,8 @@ static int xall(void)
     }
 
     for (j=d.l1; j<=d.l2; j++) {
-        if (unsuitable(&d,j)) continue;
+        if (unsuitable(&d,j)) { continue;
+}
         muste_kv_s_disp(" %d",j);
         for (i=(var1+howmany*vartotal-howmany); i>=var1; i-=howmany) {
             data_load(&d,j,i,&x);
@@ -104,8 +113,10 @@ static int xall(void)
                 }
                 continue;
             }
-            if (howmany==1 && ((int)x == i)) continue;
-            if (((int)x < 1) || ((int)x > vartotal)) continue; /* 20.5.97 */
+            if (howmany==1 && ((int)x == i)) { continue;
+}
+            if (((int)x < 1) || ((int)x > vartotal)) { continue; /* 20.5.97 */
+}
             data_save(&d,j,i,MISSING8);
             data_save(&d,j,var1+howmany*(int)x-howmany,x);
             for (k=1; k<howmany; k++) { /* 20.5.97 */

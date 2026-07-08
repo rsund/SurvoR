@@ -129,18 +129,22 @@ static void op_compare()
             sur_print(sbuf); WAIT; return;
             }
 
-        i=spec_init(r1+r-1); if (i<0) return;
-        i=load_samples(); if (i<0) return;
+        i=spec_init(r1+r-1); if (i<0) { return;
+}
+        i=load_samples(); if (i<0) { return;
+}
         i=spfind("SIMUMAX");
-        if (i<0) simumax=100000; else simumax=atol(spb[i]);
+        if (i<0) { simumax=100000; } else { simumax=atol(spb[i]);
+}
         i=spfind("SEED");
         if (i>=0) { i=atoi(spb[i]); muste_srand(i); }
 
         i=spfind("TEST");
-        if (i<0) *test=EOS; else { strcpy(test,spb[i]); muste_strupr(test); }
+        if (i<0) { *test=EOS; } else { strcpy(test,spb[i]); muste_strupr(test); }
 
         i=spfind("DISP_GAP");           // 3.7.2011/SM
-        if (i>=0) disp_gap=atoi(spb[i]);
+        if (i>=0) { disp_gap=atoi(spb[i]);
+}
 
         scroll_line=2; LOCATE(2,1);
         space_break=0;
@@ -212,16 +216,21 @@ static int load_samples()
                 *q=EOS;
                 var=p;
                 }
-            else var=x;
-            h=data_open(x,&d); if (h<0) return(-1);
-            nro=varfind(&d,var); if (nro<0) return(-1);
+            else { var=x;
+}
+            h=data_open(x,&d); if (h<0) { return(-1);
+}
+            nro=varfind(&d,var); if (nro<0) { return(-1);
+}
             ns[i]=0;
             for (j=d.l1; j<=d.l2; ++j)
                 {
                 data_load(&d,j,nro,&y);
-                if (y==MISSING8) continue;
+                if (y==MISSING8) { continue;
+}
                 p=(char *)&y;
-                for (h=0; h<sizeof(double); ++h,++p) putc((int)*p,data);
+                for (h=0; h<sizeof(double); ++h,++p) { putc((int)*p,data);
+}
                 ++n_total;
                 ++ns[i];
                 }
@@ -245,7 +254,8 @@ static int load_samples()
             for (j=0; j<ns[i]; ++j)
                 {
                 p=(char *)&x_space[k];
-                for (h=0; h<sizeof(double); ++h,++p) *p=(char)getc(data);
+                for (h=0; h<sizeof(double); ++h,++p) { *p=(char)getc(data);
+}
                 samp[k]=i;
                 ++k;
                 }
@@ -303,7 +313,8 @@ static int sort_joint_sample()
                         ind='0';
                         }
                     }
-                if (ind=='1') break;
+                if (ind=='1') { break;
+}
                 }
             }
 
@@ -311,10 +322,12 @@ static int sort_joint_sample()
         while (k<n_total)
             {
             y=x_space[k]; h=1;
-            while (k+h<n_total && y==x_space[k+h]) ++h;
+            while (k+h<n_total && y==x_space[k+h]) { ++h;
+}
             --h;
             a=(float)(k+1+h/2.0);
-            for (g=k; g<=k+h; ++g) rank[g]=a;
+            for (g=k; g<=k+h; ++g) { rank[g]=a;
+}
             k+=h+1;
             }
 /*
@@ -343,11 +356,13 @@ static int Mann_Whitney(int test)
         double dn1,dn2;
 
         if (n_sample!=2) { only_two_samples_permitted(); return(-1); }
-        i=sort_joint_sample(); if (i<0) return(-1);
+        i=sort_joint_sample(); if (i<0) { return(-1);
+}
         output_open(eout);
         clear_screen();
         basic_statistics();
-        if (!test) return(-1);
+        if (!test) { return(-1);
+}
         rsum1=rsum2=0.0;
         sum1=sum2=0.0;
         for (k=0; k<n_total; ++k)
@@ -397,7 +412,8 @@ static int Mann_Whitney(int test)
 
         while (1)
             {
-            for (k=0; k<n_total; ++k) perm[k]=k;
+            for (k=0; k<n_total; ++k) { perm[k]=k;
+}
             s1=0.0; s2=0.0;
             for (j=0; j<ns[0]; ++j)
                 {
@@ -406,8 +422,10 @@ static int Mann_Whitney(int test)
                 s1+=x_space[ii]; s2+=rank[ii]; perm[r]=perm[j];
                 }
             ++u; ++d;
-            if (s1<=sum1) ++u1;
-            if (s2<=rsum1) ++r1;
+            if (s1<=sum1) { ++u1;
+}
+            if (s2<=rsum1) { ++r1;
+}
             if (d==d1)
                 {
                 d=0;
@@ -418,7 +436,8 @@ static int Mann_Whitney(int test)
                                     ,muste_sqrt((double)(s2*(1.0-s2)/(double)u))); sur_print(sbuf);
                 sur_print("\n"); PR_UP; PR_UP;
                 CURSOR_OFF; headline(""); CURSOR_ON;
-                if (u>=simumax) break;
+                if (u>=simumax) { break;
+}
                 if (sur_kbhit())
                     {
                     i=sur_getch(); break;
@@ -528,14 +547,16 @@ static int set(char *x,char *s,int pos)
         char *p;
 
         p=x+pos;
-        while (*s && *p) *p++=*s++;
+        while (*s && *p) { *p++=*s++;
+}
         return(1);
         }
 
 static int eoutput(char *rivi)
         {
         output_line(rivi,eout,results_line);
-        if (results_line) ++results_line;
+        if (results_line) { ++results_line;
+}
         return(1);
         }
 
@@ -554,7 +575,8 @@ static int Wald_Wolfowitz()
 //  Rprintf("\nsamp:");
 //  for (i=0; i<n_total; ++i) Rprintf("%d ",samp[i]); getch();
 
-    i=sort_joint_sample(); if (i<0) return(-1);
+    i=sort_joint_sample(); if (i<0) { return(-1);
+}
 
 //  Rprintf("\nsamp:");
 //  for (i=0; i<n_total; ++i) Rprintf("%d ",samp[i]); getch();
@@ -580,7 +602,8 @@ static int count_runs()
     for (i=1; i<n_total; ++i)
         {
         r2=samp[i];
-        if (r2==r1) continue;
+        if (r2==r1) { continue;
+}
         r1=r2; ++nr;
         }
     return(nr);
@@ -601,10 +624,12 @@ static int ww_test(int n,int n1,int nr)
     for (i=3; i<=nr; ++i)
         {
         k=i/2; pariton=1-pariton;
-        if (!pariton)
+        if (!pariton) {
           a*=((double)n0/(double)(k-1)-1.0)*((double)n1/(double)(k-1)-1.0);
-        if (pariton) pr=((double)(n0+n1)/(double)k-2.0)*a;
-        else pr=2*a;
+}
+        if (pariton) { pr=((double)(n0+n1)/(double)k-2.0)*a;
+        } else { pr=2*a;
+}
         dp_run+=pr;
 // Rprintf("\ni=%d pr=%g sum=%g",i,pr,dp_run); getch();
         }
@@ -621,13 +646,19 @@ static double bin_coeff(int n,int m)
     int iu,iv;
 
     iv=v=n; iu=u=m;
-    if ((double)iu!=u) return(0.0);
-    if ((double)iv!=v) return(0.0);
-    if (u>v/2) u=v-u;
-    if (u<0 || v<0) return(0.0);
-    if (u==0.0) return(1.0);
+    if ((double)iu!=u) { return(0.0);
+}
+    if ((double)iv!=v) { return(0.0);
+}
+    if (u>v/2) { u=v-u;
+}
+    if (u<0 || v<0) { return(0.0);
+}
+    if (u==0.0) { return(1.0);
+}
     y=1.0;
-    for (; u>0; --u, --v) y*=(v/u);
+    for (; u>0; --u, --v) { y*=(v/u);
+}
     return(y);
     }
 
@@ -689,21 +720,25 @@ printf("\nn1=%d n2=%d",n1,n2); getch();
         if (qp1==NULL) { not_enough_memory(); return(-1); }
         qp2=(double *)muste_malloc(n2*sizeof(double));
         if (qp2==NULL) { not_enough_memory(); return(-1); }
-        for (i=0; i<n1; ++i) qp1[i]=((double)i+0.625)/((double)n1+0.25);
-        for (i=0; i<n2; ++i) qp2[i]=((double)i+0.625)/((double)n2+0.25);
+        for (i=0; i<n1; ++i) { qp1[i]=((double)i+0.625)/((double)n1+0.25);
+}
+        for (i=0; i<n2; ++i) { qp2[i]=((double)i+0.625)/((double)n2+0.25);
+}
         ss2=(double *)muste_malloc(n1*sizeof(double));
         if (ss2==NULL) { not_enough_memory(); return(-1); }
         j=0;
         for (i=0; i<n1; ++i)
             {
-            while (qp2[j]<qp1[i]) ++j;
+            while (qp2[j]<qp1[i]) { ++j;
+}
    ss2[i]=s2[j-1]+(s2[j]-s2[j-1])*(qp1[i]-qp2[j-1])/(qp2[j]-qp2[j-1]);
 // Rprintf("\nss2=%g",ss2[i]); getch();
 
 
             }
         }
-    else ss2=s2;
+    else { ss2=s2;
+}
 
     qq_create_data("_QQ",s1,ss2,n1);
 
@@ -768,16 +803,16 @@ static int tee_muuttujanimet(char *var1,char *var2)
     char x[LNAME];
 
     p=strchr(word[1],'(');
-    if (p==NULL) strcpy(var1,word[1]);
-    else
+    if (p==NULL) { strcpy(var1,word[1]);
+    } else
         {
         strcpy(x,p+1);
         i=strlen(x)-1; x[i]=EOS;
         strcpy(var1,x);
         }
     p=strchr(word[2],'(');
-    if (p==NULL) strcpy(var2,word[2]);
-    else
+    if (p==NULL) { strcpy(var2,word[2]);
+    } else
         {
         strcpy(x,p+1);
         i=strlen(x)-1; x[i]=EOS;
@@ -789,12 +824,14 @@ static int tee_muuttujanimet(char *var1,char *var2)
         {
         strcpy(x,word[1]);
         p=strchr(x,'(');
-        if (p!=NULL) *p=EOS;
+        if (p!=NULL) { *p=EOS;
+}
         strcpy(var1,x);
 
         strcpy(x,word[2]);
         p=strchr(x,'(');
-        if (p!=NULL) *p=EOS;
+        if (p!=NULL) { *p=EOS;
+}
         strcpy(var2,x);
         }
     return(1);
@@ -820,7 +857,8 @@ static int qq_sort(double *x,int n)
                     ind=0;
                     }
                 }
-            if (ind==1) break;
+            if (ind==1) { break;
+}
             }
         }
     return(1);
@@ -844,7 +882,8 @@ static int Smirnov()
         int ind[2];
 //        extern double probks();
 
-        i=sort_joint_sample(); if (i<0) return(-1);
+        i=sort_joint_sample(); if (i<0) { return(-1);
+}
         output_open(eout);
         clear_screen();
         basic_statistics();
@@ -875,18 +914,24 @@ static int Smirnov()
         j1=j2=0; ad0=ad1=ad2=0.0;
         while (j1<ns[0] && j2<ns[1])
             {
-            a=x2[sample[0]+j1]; if (a>=x2[sample[1]+j2]) a=x2[sample[1]+j2];
+            a=x2[sample[0]+j1]; if (a>=x2[sample[1]+j2]) { a=x2[sample[1]+j2];
+}
             k1=0;
-            while (j1+k1<ns[0] && x2[sample[0]+j1+k1]<=a) ++k1;  /* j?rj. vaihd. 17.4.1996 */
+            while (j1+k1<ns[0] && x2[sample[0]+j1+k1]<=a) { ++k1;  /* j?rj. vaihd. 17.4.1996 */
+}
             k2=0;
-            while (j2+k2<ns[1] && x2[sample[1]+j2+k2]<=a) ++k2;
+            while (j2+k2<ns[1] && x2[sample[1]+j2+k2]<=a) { ++k2;
+}
             j1+=k1; j2+=k2;
             a=(double)j1/(double)ns[0];
             b=(double)j2/(double)ns[1];
             diff=a-b;
-            if (muste_fabs(diff)>ad0) ad0=muste_fabs(diff);
-            if (diff>ad1) ad1=diff;
-            if (-diff>ad2) ad2=-diff;
+            if (muste_fabs(diff)>ad0) { ad0=muste_fabs(diff);
+}
+            if (diff>ad1) { ad1=diff;
+}
+            if (-diff>ad2) { ad2=-diff;
+}
             }
 
         a=muste_sqrt((double)(ns[0]*ns[1])/(double)(ns[0]+ns[1]));
@@ -920,15 +965,22 @@ static int Smirnov()
             f1=f2=as0=as1=as2=0.0; ae1=1.0/(double)ns[0]; ae2=1.0/(double)ns[1];
             for (k=0; k<n_total; ++k)
                 {
-                if (uu[k]) f2+=ae2; else f1+=ae1;
-                diff=f1-f2; if (muste_fabs(diff)>as0) as0=muste_fabs(diff);
-                if (diff>as1) as1=diff;
-                if (-diff>as2) as2=-diff;
+                if (uu[k]) { f2+=ae2; } else { f1+=ae1;
+}
+                diff=f1-f2; if (muste_fabs(diff)>as0) { as0=muste_fabs(diff);
+}
+                if (diff>as1) { as1=diff;
+}
+                if (-diff>as2) { as2=-diff;
+}
                 }
             ++t;
-            if (as0>=ad0) ++u;
-            if (as1>=ad1) ++u1;
-            if (as2>=ad2) ++u2;
+            if (as0>=ad0) { ++u;
+}
+            if (as1>=ad1) { ++u1;
+}
+            if (as2>=ad2) { ++u2;
+}
             ++d;
 
             if (d==d1)
@@ -946,7 +998,8 @@ static int Smirnov()
 
                 sur_print("\n"); PR_UP; PR_UP;
                 CURSOR_OFF; headline(""); CURSOR_ON;
-                if (t>simumax) break;
+                if (t>simumax) { break;
+}
                 if (sur_kbhit())
                     {
                     i=sur_getch(); break;
@@ -979,8 +1032,9 @@ static double probks(double alam)
             {
             term=fac*muste_exp((double)(a2*j*j));
             sum+=term;
-            if (muste_fabs(term)<=EPS1*termbf || muste_fabs(term)<EPS2*sum)
+            if (muste_fabs(term)<=EPS1*termbf || muste_fabs(term)<EPS2*sum) {
                 return(sum);
+}
             fac=-fac;
             termbf=muste_fabs(term);
             }
@@ -1010,11 +1064,14 @@ static int Kruskal_Wallis(int test)
         output_open(eout);
         clear_screen();
         anova();
-        if (!test) return(1);
-        i=sort_joint_sample(); if (i<0) return(-1);
+        if (!test) { return(1);
+}
+        i=sort_joint_sample(); if (i<0) { return(-1);
+}
 
         s2=0.0;
-        for (i=0; i<n_sample; ++i) ri[i]=0.0;
+        for (i=0; i<n_sample; ++i) { ri[i]=0.0;
+}
         for (k=0; k<n_total; ++k)
             {
             a=rank[k]; s2+=a*a;
@@ -1022,7 +1079,8 @@ static int Kruskal_Wallis(int test)
             }
         dn=(double)n_total;
         a=dn*(dn+1.0)*(dn+1.0)/4.0; s2=(s2-a)/(dn-1.0);
-        t=0.0; for (i=0; i<n_sample; ++i) t+=ri[i]*ri[i]/(double)ns[i];
+        t=0.0; for (i=0; i<n_sample; ++i) { t+=ri[i]*ri[i]/(double)ns[i];
+}
         kw=(t-a)/s2;
         fnconv(kw,accuracy-1,x);
 /*        
@@ -1055,7 +1113,8 @@ static int Kruskal_Wallis(int test)
 
         while (1)
             {
-            for (k=0; k<n_total; ++k) perm[k]=k;
+            for (k=0; k<n_total; ++k) { perm[k]=k;
+}
             t2=0.0; jy=0;
             for (h=0; h<n_sample; ++h)
                 {
@@ -1068,7 +1127,8 @@ static int Kruskal_Wallis(int test)
                 jy+=ns[h]; t2+=b*b/(double)ns[h];
                 }
             ++u; ++d;
-            if (t2>=t) ++u1;
+            if (t2>=t) { ++u1;
+}
             if (d==d1)
                 {
                 d=0;
@@ -1078,7 +1138,8 @@ static int Kruskal_Wallis(int test)
                 sur_print(sbuf);
                 sur_print("\n"); PR_UP; PR_UP;
                 CURSOR_OFF; headline(""); CURSOR_ON;
-                if (u>=simumax) break;
+                if (u>=simumax) { break;
+}
                 if (sur_kbhit())
                     {
                     i=sur_getch(); break;
@@ -1124,7 +1185,8 @@ static int anova()
             }
         a/=(double)n_total;
         b0/=(double)(n_total-n_sample);
-        c=0.0; for (h=0; h<n_sample; ++h) c+=ns[h]*(p[h]-a)*(p[h]-a);
+        c=0.0; for (h=0; h<n_sample; ++h) { c+=ns[h]*(p[h]-a)*(p[h]-a);
+}
         c/=(double)(n_sample-1);
 
         eoutput("Comparing independent samples:");
@@ -1225,18 +1287,21 @@ static int Wilcoxon()
         for (k=0; k<n; ++k)
             {
             j=order[k]; srank[j]=sgn(diff[j])*rank[k];
-            if (!srank[j]) ++n_ties;
+            if (!srank[j]) { ++n_ties;
+}
             }
 
         for (k=0; k<n; ++k)
             {
             float a;
-            a=srank[k]; if (a) srank[k]=a-sgn(a)*n_ties;
+            a=srank[k]; if (a) { srank[k]=a-sgn(a)*n_ties;
+}
             }
         output_open(eout);
         clear_screen();
         p1=24; p2=40;
-        i=paired_statistics(); if (i<0) return(-1);
+        i=paired_statistics(); if (i<0) { return(-1);
+}
 
         ar=ar2=0.0;
         for (k=0; k<n; ++k)
@@ -1294,8 +1359,10 @@ static int Wilcoxon()
                 }
 
             ++u; ++d;
-            if (ud<=td) ++u1;
-            if (us<=ts) ++r1;
+            if (ud<=td) { ++u1;
+}
+            if (us<=ts) { ++r1;
+}
             if (d==d1)
                 {
                 d=0;
@@ -1306,7 +1373,8 @@ static int Wilcoxon()
                                     ,muste_sqrt((double)(s2*(1.0-s2)/(double)u))); sur_print(sbuf);
                 sur_print("\n"); PR_UP; PR_UP;
                 CURSOR_OFF; headline(""); CURSOR_ON;
-                if (u>=simumax) break;
+                if (u>=simumax) { break;
+}
                 if (sur_kbhit())
                     {
                     i=sur_getch(); break;
@@ -1351,7 +1419,8 @@ static int rank_sort(int n,double *y,int *order,float *rank)
                         ind='0';
                         }
                     }
-                if (ind=='1') break;
+                if (ind=='1') { break;
+}
                 }
             }
 
@@ -1359,10 +1428,12 @@ static int rank_sort(int n,double *y,int *order,float *rank)
         while (k<n)
             {
             a=y[k]; h=1;
-            while (k+h<n && a==y[k+h]) ++h;  /* 20.2.1996 cond's exchanged */
+            while (k+h<n && a==y[k+h]) { ++h;  /* 20.2.1996 cond's exchanged */
+}
             --h;
             a=k+1+(double)h/2.0;
-            for (g=k; g<=k+h; ++g) rank[g]=(float)a;
+            for (g=k; g<=k+h; ++g) { rank[g]=(float)a;
+}
             k+=h+1;
             }
         return(1);
@@ -1432,8 +1503,10 @@ static int paired_statistics()
 
 static double sgn(double x)
         {
-        if (x>0.0) return((double)1.0);
-        if (x==0.0) return((double)0.0);
+        if (x>0.0) { return((double)1.0);
+}
+        if (x==0.0) { return((double)0.0);
+}
         return((double)-1.0);
         }
 
@@ -1485,7 +1558,8 @@ static int rank_corr()
             order[k]=k;
             }
         rank_sort(n,y,order,rank);
-        for (k=0; k<n; ++k) xrank[order[k]]=rank[k];
+        for (k=0; k<n; ++k) { xrank[order[k]]=rank[k];
+}
 /* Rprintf("\nxranks:");
    for (k=0; k<n; ++k) Rprintf(" %g",xrank[k]);
 */
@@ -1495,7 +1569,8 @@ static int rank_corr()
             order[k]=k;
             }
         rank_sort(n,y,order,rank);
-        for (k=0; k<n; ++k) yrank[order[k]]=rank[k];
+        for (k=0; k<n; ++k) { yrank[order[k]]=rank[k];
+}
 /* Rprintf("\nyranks:");
    for (k=0; k<n; ++k) Rprintf(" %g",yrank[k]); getch();
 */
@@ -1503,7 +1578,8 @@ static int rank_corr()
         clear_screen();
         p1=24; p2=40;
         i=corr_statistics(&ar,&sr1);
-        if (i<0) return(-1);
+        if (i<0) { return(-1);
+}
 
         mx=my=sx=sy=sxy=0.0;
         for (k=0; k<n; ++k)
@@ -1522,7 +1598,8 @@ static int rank_corr()
         muste_sprintf(rivi,"Spearman's Rho=%s",spois(x));
         eoutput(rivi);
         i=Kendall_tau(n,xrank,yrank,&nc,&nd,&tau,&ptau);
-        if (i<0) return(-1);
+        if (i<0) { return(-1);
+}
         ncd=(double)nc-(double)nd;
         a=muste_st_norm((double)(ncd/muste_sqrt(n*(n-1)*(2.0*n+5.0)/18.0)),(double)0.0);
         fnconv(tau,accuracy,x);
@@ -1569,7 +1646,8 @@ static int rank_corr()
 
         while (1)
             {
-            for (j=0; j<n; ++j) perm[j]=j;
+            for (j=0; j<n; ++j) { perm[j]=j;
+}
             tr1=tr2=0.0;
             for (j=0; j<n; ++j)
                 {
@@ -1579,8 +1657,10 @@ static int rank_corr()
                 tr2+=xrank[j]*yrank[ii];
                 }
             ++u; ++d;
-            if (tr1<=sr1) ++rr;
-            if (tr2<=sr2) ++rs;
+            if (tr1<=sr1) { ++rr;
+}
+            if (tr2<=sr2) { ++rs;
+}
             if (d==d1)
                 {
                 d=0;
@@ -1591,7 +1671,8 @@ static int rank_corr()
                                     ,muste_sqrt((double)(s2*(1.0-s2)/(double)u))); sur_print(sbuf);
                 sur_print("\n"); PR_UP; PR_UP;
                 CURSOR_OFF; headline(""); CURSOR_ON;
-                if (u>=simumax) break;
+                if (u>=simumax) { break;
+}
                 if (sur_kbhit())
                     {
                     i=sur_getch(); break;
@@ -1673,7 +1754,8 @@ static int corr_statistics(double *par,double *psr1)
 
 static char *spois(char *s)
         {
-        while (*s==' ') ++s;
+        while (*s==' ') { ++s;
+}
         return(s);
         }
 
@@ -1706,21 +1788,26 @@ static int Kendall_tau(int n,float *xrank,float *yrank,int *pnc,int *pnd,double 
                         ind='0';
                         }
                     }
-                if (ind=='1') break;
+                if (ind=='1') { break;
+}
                 }
             }
         k_order=(int *)muste_malloc(n*sizeof(int));
         if (k_order==NULL) { not_enough_memory(); return(-1); }
-        for (k=0; k<n; ++k) k_order[k]=k;
+        for (k=0; k<n; ++k) { k_order[k]=k;
+}
         *pnc=*pnd=0;
-        for (i=0; i<n; ++i)
+        for (i=0; i<n; ++i) {
             for (j=i; j<n; ++j)
                 {
-                if (xrank[i]==xrank[j]) continue;
+                if (xrank[i]==xrank[j]) { continue;
+}
                 h=k_order[j]; k=k_order[i];
-                if (yrank[h]>yrank[k]) ++*pnc;
-                else if (yrank[h]<yrank[k]) ++*pnd;
+                if (yrank[h]>yrank[k]) { ++*pnc;
+                } else if (yrank[h]<yrank[k]) { ++*pnd;
+}
                 }
+}
         *ptau=((double)*pnc-(double)*pnd)/(double)(n*(n-1)/2);
         if (n>30) { *pptau=-1.0; return(1); }
 
@@ -1733,7 +1820,8 @@ static int Kendall_tau(int n,float *xrank,float *yrank,int *pnc,int *pnd,double 
         v=(double *)muste_malloc(m*sizeof(double));
         if (v==NULL) { not_enough_memory(); return(-1); }
 
-        for (i=1; i<m; ++i) u[i]=v[i]=0.0;
+        for (i=1; i<m; ++i) { u[i]=v[i]=0.0;
+}
         u[1]=u[2]=1.0; k=2;
         while (k<n)
             {
@@ -1744,14 +1832,18 @@ static int Kendall_tau(int n,float *xrank,float *yrank,int *pnc,int *pnd,double 
                 {
                 int a;
                 ++i;
-                a=i-k+1; if (a<1) a=1;
+                a=i-k+1; if (a<1) { a=1;
+}
                 t=0.0;
-                for (h=a; h<=i; ++h) t+=u[h]; v[i]=t;
+                for (h=a; h<=i; ++h) { t+=u[h]; 
+}v[i]=t;
                 }
             muste_sprintf(sbuf,"%d/%d\n",k,n); sur_print(sbuf); PR_UP;
-            for (i=1; i<=mk; ++i) u[i]=v[i];
+            for (i=1; i<=mk; ++i) { u[i]=v[i];
+}
             }
-        t=0.0; for (i=1; i<=mk; ++i) t+=u[i];
+        t=0.0; for (i=1; i<=mk; ++i) { t+=u[i];
+}
         a=0.0; for (i=1; i<=mk; ++i) { a+=u[i]; u[i]=a/t; }
 
         *pptau=u[(*pnc-*pnd+n*(n-1)/2+1)/2+1];
@@ -1780,15 +1872,18 @@ static int op_compd()
         if (g==4)
             {
             i=edline2(word[3],1,1);
-            if (i==0) return(1);
+            if (i==0) { return(1);
+}
             results_line=i;
             }
-        i=sp_init(r1+r-1); if (i<0) return(1);
-        i=d_load_samples(); if (i<0) return(1);
+        i=sp_init(r1+r-1); if (i<0) { return(1);
+}
+        i=d_load_samples(); if (i<0) { return(1);
+}
         strcpy(distr,word[2]+1);
         muste_strupr(distr);
         i=spfind("TEST");
-        if (i<0) *test=EOS; else { strcpy(test,spb[i]); muste_strupr(test); }
+        if (i<0) { *test=EOS; } else { strcpy(test,spb[i]); muste_strupr(test); }
 
         if (strncmp(distr,"NORM",4)==0)
             { test_normality(); return(1); }
@@ -1837,17 +1932,22 @@ static int d_load_samples()
                 *q=EOS;
                 var=p;
                 }
-            else var=x;
+            else { var=x;
+}
 
-            h=data_open(x,&d); if (h<0) return(-1);
-            nro=varfind(&d,var); if (nro<0) return(-1);
+            h=data_open(x,&d); if (h<0) { return(-1);
+}
+            nro=varfind(&d,var); if (nro<0) { return(-1);
+}
             ns[i]=0;
             for (j=d.l1; j<=d.l2; ++j)
                 {
                 data_load(&d,j,nro,&y);
-                if (y==MISSING8) continue;
+                if (y==MISSING8) { continue;
+}
                 p=(char *)&y;
-                for (h=0; h<sizeof(double); ++h,++p) putc((int)*p,data);
+                for (h=0; h<sizeof(double); ++h,++p) { putc((int)*p,data);
+}
                 ++n_total;
                 ++ns[i];
                 }
@@ -1871,7 +1971,8 @@ static int d_load_samples()
             for (j=0; j<ns[i]; ++j)
                 {
                 p=(char *)&x_space[k];
-                for (h=0; h<sizeof(double); ++h,++p) *p=(char)getc(data);
+                for (h=0; h<sizeof(double); ++h,++p) { *p=(char)getc(data);
+}
                 samp[k]=i;
                 ++k;
                 }
@@ -1911,7 +2012,8 @@ static int sort_sample()
                         ind='0';
                         }
                     }
-                if (ind=='1') break;
+                if (ind=='1') { break;
+}
                 }
             }
 
@@ -1919,10 +2021,12 @@ static int sort_sample()
         while (k<n_total)
             {
             y=x_space[k]; h=1;
-            while (k+h<n_total && y==x_space[k+h]) ++h;
+            while (k+h<n_total && y==x_space[k+h]) { ++h;
+}
             --h;
             a=(float)(k+1+h/2.0);
-            for (g=k; g<=k+h; ++g) rank[g]=a;
+            for (g=k; g<=k+h; ++g) { rank[g]=a;
+}
             k+=h+1;
             }
         return(1);
@@ -1933,7 +2037,8 @@ static int test_normality()
         int i;
         char rivi[LLENGTH];
 
-        i=sort_sample(); if (i<0) return(-1);
+        i=sort_sample(); if (i<0) { return(-1);
+}
 
         output_open(eout);
 
@@ -1965,7 +2070,8 @@ static int d_basic_statistics()
    //   char strp[32];
         dn=n_total;
         s1=s2=s3=s4=0.0;
-        for (k=0; k<n_total; ++k) s1+=x_space[k];
+        for (k=0; k<n_total; ++k) { s1+=x_space[k];
+}
         s1/=dn;
         for (k=0; k<n_total; ++k)
             {
@@ -2002,10 +2108,11 @@ static int d_basic_statistics()
         muste_sprintf(rivi,"Skewness=%s  Kurtosis=%s  (normal values=0)",
                         spois(x),spois(y));
         eoutput(rivi);
-        if ((n_total>>1)<<1==n_total)
+        if ((n_total>>1)<<1==n_total) {
             median=(x_space[n_total/2-1]+x_space[n_total/2])/2.0;
-        else
+        } else {
             median=x_space[(n_total-1)/2];
+}
         fnconv(median,accuracy+2,x);
 /*        
         used = 0;
@@ -2035,7 +2142,8 @@ static int Shapiro_Wilk()
         char rivi[LLENGTH], x[LLENGTH], xp[16];
         double a,x1,x2,x3;
 
-        if (n_total>50) return(1);
+        if (n_total>50) { return(1);
+}
         strcpy(tbl_name,survo_path); strcat(tbl_name,"SYS/SWCOEFF.TBL"); // RS CHA TBL\\ -> SYS/
         taulu=muste_fopen(tbl_name,"rb");
         if (taulu==NULL)
@@ -2045,8 +2153,9 @@ static int Shapiro_Wilk()
             }
 
         n2=(n_total+1)/2;
-        if (2*n2!=n_total+1) seekpos=n_total*n_total/4;
-        else                 seekpos=(n_total*n_total-1)/4;
+        if (2*n2!=n_total+1) { seekpos=n_total*n_total/4;
+        } else {                 seekpos=(n_total*n_total-1)/4;
+}
         muste_fseek(taulu,(int)sizeof(float)*(int)seekpos,0);
         for (i=0; i<n2; ++i)
             {
@@ -2061,7 +2170,8 @@ static int Shapiro_Wilk()
         muste_fclose(taulu);
 
         sw=0.0;
-        for (i=0; i<n2; ++i) sw+=coeff[i]*(x_space[n_total-i-1]-x_space[i]);
+        for (i=0; i<n2; ++i) { sw+=coeff[i]*(x_space[n_total-i-1]-x_space[i]);
+}
         sw=sw*sw/sd_copy; // sd_copy saatu edellisess? funktiossa
 
         strcpy(tbl_name,survo_path); strcat(tbl_name,"SYS/SWPERC.TBL"); // RS CHA TBL\\ -> SYS/
@@ -2086,18 +2196,22 @@ static int Shapiro_Wilk()
         y[0]=0.01; y[1]=0.02; y[2]=0.05; y[3]=0.10; y[4]=0.50;
         y[5]=0.90; y[6]=0.95; y[7]=0.98; y[8]=0.99;
 
-        if (sw<p[0]) strcpy(xp,"(P<0.01)");
-        else if (sw>p[8]) strcpy(xp,"(P>0.99)");
-        else
+        if (sw<p[0]) { strcpy(xp,"(P<0.01)");
+        } else if (sw>p[8]) { strcpy(xp,"(P>0.99)");
+        } else
             {
             i=0;
             while (1)
                 {
                 ++i;
-                if (sw>=p[i]) continue;
-                if (sw-p[i-1]<p[i]-sw) i-=2; else i-=1;
-                if (i<0) i=0;
-                if (i>6) i=6;
+                if (sw>=p[i]) { continue;
+}
+                if (sw-p[i-1]<p[i]-sw) { i-=2; } else { i-=1;
+}
+                if (i<0) { i=0;
+}
+                if (i>6) { i=6;
+}
                 break;
                 }
 
@@ -2204,7 +2318,8 @@ static int Anderson_Darling()
         y[20]=0.990; b0[20]=-1.013; b1[20]=-0.93; aa[20]=1.0348;
         y[21]=0.995; b0[21]=-1.063; b1[21]=-1.34; aa[21]=1.1578;
 
-        for (i=0; i<22; ++i) p[i]=aa[i]*(1+(b0[i]+b1[i]/n_total)/n_total);
+        for (i=0; i<22; ++i) { p[i]=aa[i]*(1+(b0[i]+b1[i]/n_total)/n_total);
+}
 
 
         sx=muste_sqrt(sd_copy/(n_total-1.0));
@@ -2212,22 +2327,27 @@ static int Anderson_Darling()
         for (k=0; k<n_total; ++k)
             {
             b=muste_st_norm((double)((x_space[k]-mean_copy)/sx),(double)0.0);
-            if (b>0.0 && b<1.0)
+            if (b>0.0 && b<1.0) {
                 a+=(2*k+1)*muste_log(b)+(2*n_total-2*k-1)*muste_log(1.0-b);
+}
             }
         ad=-a/n_total-n_total;
-        if (ad<p[0]) strcpy(xp,"(P>0.95)");
-        else if (ad>p[21]) strcpy(xp,"(P<0.005)");
-        else
+        if (ad<p[0]) { strcpy(xp,"(P>0.95)");
+        } else if (ad>p[21]) { strcpy(xp,"(P<0.005)");
+        } else
             {
             i=0;
             while (1)
                 {
                 ++i;
-                if (ad>=p[i]) continue;
-                if (ad-p[i-1]<p[i]-ad) i-=2; else i-=1;
-                if (i<0) i=0;
-                if (i>19) i=19;
+                if (ad>=p[i]) { continue;
+}
+                if (ad-p[i-1]<p[i]-ad) { i-=2; } else { i-=1;
+}
+                if (i<0) { i=0;
+}
+                if (i>19) { i=19;
+}
                 break;
                 }
 

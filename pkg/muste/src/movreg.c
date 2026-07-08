@@ -69,16 +69,20 @@ void muste_movreg(char *argv)
     if (g<2) { muste_kv_usage_info(); return; }
     if (word[1][0]=='?') { muste_kv_usage_info(); return; }
 
-    k=spec_init(r1+r-1); if (k<0) return;
-    i=fi_open(word[1],&d2); if (i<0) return;
-    i=data_open2(word[1],&dat,0,1,0); if (i<0) return;
+    k=spec_init(r1+r-1); if (k<0) { return;
+}
+    i=fi_open(word[1],&d2); if (i<0) { return;
+}
+    i=data_open2(word[1],&dat,0,1,0); if (i<0) { return;
+}
     mask(&dat);
 
  /* PRIND & prind */
     prind=0; // SM's suggestion 29.10.2001
     i=spfind("PRIND");
-    if (i>=0) prind=atoi(spb[i]);
-    else if (hae_apu("prind",sbuf)) prind=atoi(sbuf);
+    if (i>=0) { prind=atoi(spb[i]);
+    } else if (hae_apu("prind",sbuf)) { prind=atoi(sbuf);
+}
 
     i=spfind("SPAN");
     if (i<0) {
@@ -130,9 +134,12 @@ void muste_movreg(char *argv)
            default : break;
         }
     }
-    if (b_vars>0) coeffs=1;
-    if (s_vars>0) stddevs=1;
-    if (t_vars>0) tvalues=1;
+    if (b_vars>0) { coeffs=1;
+}
+    if (s_vars>0) { stddevs=1;
+}
+    if (t_vars>0) { tvalues=1;
+}
     if (Yvar<0) { muste_kv_s_err("No regressand (Y)!"); return; }
     if (x_vars==0) { muste_kv_s_err("No regressors (X)!"); return; }
 
@@ -144,7 +151,8 @@ void muste_movreg(char *argv)
 
     constant=1;
     i=spfind("CONSTANT");
-    if (i>=0) constant=atoi(spb[i]);
+    if (i>=0) { constant=atoi(spb[i]);
+}
     if (!constant && squaredcorr) {
         muste_kv_s_err("R^2 values are valid only when the model has a constant!");
     }
@@ -156,7 +164,8 @@ void muste_movreg(char *argv)
     if (Xvars==NULL) { no_memory(); return; }
 
     p=x_vars;
-    if (constant) p++;
+    if (constant) { p++;
+}
 
     if (coeffs) {
         if (b_vars<p) {
@@ -186,14 +195,18 @@ void muste_movreg(char *argv)
         ch=dat.vartype[dat.v[i]][1];
         switch (ch) {
           case 'X' :              Xvars[k0++]=dat.v[i]; break;
-          case 'B' : if (coeffs)  Bvars[k1++]=dat.v[i]; break;
-          case 'S' : if (stddevs) Svars[k2++]=dat.v[i]; break;
-          case 'T' : if (tvalues) Tvars[k3++]=dat.v[i]; break;
+          case 'B' : if (coeffs) {  Bvars[k1++]=dat.v[i]; 
+}break;
+          case 'S' : if (stddevs) { Svars[k2++]=dat.v[i]; 
+}break;
+          case 'T' : if (tvalues) { Tvars[k3++]=dat.v[i]; 
+}break;
           default : break;
         }
     }
 
-    i=alloc_mem(); if (i<0) return;
+    i=alloc_mem(); if (i<0) { return;
+}
     mov_reg();
     update_varnames();
     free_mem();
@@ -209,7 +222,8 @@ static int alloc_mem(void)
 {
     int p=x_vars;
 
-    if (constant) p++;
+    if (constant) { p++;
+}
 
     Qy=(QUEUE)muste_malloc(sizeof(QUEUE_RECORD));
       if (Qy==NULL) { no_memory(); return -1; }
@@ -273,13 +287,15 @@ static void mov_reg(void)
     eps=1e-16; tol=(1e-300)/eps; /* for SVD */
     split=span-1; /* ehkä säädettävissä: span/2 ?? */
 
-    p=x_vars; if (constant) p++;
+    p=x_vars; if (constant) { p++;
+}
     muste_kv_s_disp("\n"); /* postipankki(p); */
     muste_kv_s_disp("Loading first %d observations...", span);
     for (j=dat.l1, n=nn=0L; j<=dat.l2; j++) {
         obsmiss=0;
         data_load(&dat,j,Yvar,&y);
-        if (y==MISSING8) obsmiss=1;
+        if (y==MISSING8) { obsmiss=1;
+}
         for(i=0; i<x_vars; i++) {
             data_load(&dat,j,Xvars[i],&x);
             if (x==MISSING8) { obsmiss=1; break; }
@@ -297,7 +313,8 @@ static void mov_reg(void)
         }
 /*      if (n>=span) muste_kv_s_disp("\n%d ",++nn);
         else muste_kv_s_disp("%d ",++nn); */
-        if (prind) muste_kv_s_disp("%d ",++nn);
+        if (prind) { muste_kv_s_disp("%d ",++nn);
+}
         enqueue(y,Qy);
         enqueue2(1.0,QX,0);
         for(i=0; i<x_vars; i++) {
@@ -308,13 +325,17 @@ static void mov_reg(void)
             save_missvals(j);
             continue;
         }
-        for (i=0; i<span; i++) for (k=0; k<p; k++)
+        for (i=0; i<span; i++) { for (k=0; k<p; k++) {
             U[i+span*k]=QX->A[i+span*k]; /* copy X to U before svd */
+}
+}
         mat_svd(U,D,V,span,p,eps,tol);
-        for (i=0; i<p; i++) for (k=0; k<p; k++) {
+        for (i=0; i<p; i++) { for (k=0; k<p; k++) {
             iD[i+k*p]=0.0;
-            if (i==k && D[i]!=0.0) iD[i+k*p]=1.0/D[i];
+            if (i==k && D[i]!=0.0) { iD[i+k*p]=1.0/D[i];
+}
         }
+}
         mat_mltd(xx,V,iD,p,p);
         mat_transp(Ut,U,span,p);
         mat_mlt(iX,xx,Ut,p,p,span);
@@ -324,7 +345,8 @@ static void mov_reg(void)
         mat_mmt(xtxi,xx,p,p);
         for (i=0, SSE=0.0; i<span; i++) { x=res[i]; SSE+=x*x; }
         sigma2=SSE/(span-p);
-        for (i=0; i<p; i++) varb[i]=sqrt(sigma2*xtxi[i+i*p]);
+        for (i=0; i<p; i++) { varb[i]=sqrt(sigma2*xtxi[i+i*p]);
+}
         mat_sum(&ysum,Qy->A,span,1);
         ysum/=span;
         for (i=0, SST=0.0; i<span; i++) { x=Qy->A[i]-ysum; SST+=x*x; }
@@ -342,7 +364,8 @@ static void mov_reg(void)
         if (residuals) {
             data_save(&dat,j,Rvar,res[split]);
         }
-        if (++split==span) split=0;
+        if (++split==span) { split=0;
+}
         if (coeffs) {
             for (i=0; i<b_vars; i++) {
                 data_save(&dat,j,Bvars[i],beta[i]);
@@ -359,26 +382,34 @@ static void mov_reg(void)
              }
         }
     }
-    if (n==0L) muste_kv_s_err("No acceptable observations!");
+    if (n==0L) { muste_kv_s_err("No acceptable observations!");
+}
 }
 
 static void save_missvals(int obs)
 {
     int i;
 
-    if (prediction) data_save(&dat,obs,Pvar,MISSING8);
-    if (residuals) data_save(&dat,obs,Rvar,MISSING8);
-    if (squaredcorr) data_save(&dat,obs,R2var,MISSING8);
-    if (resvariance) data_save(&dat,obs,Vvar,MISSING8);
+    if (prediction) { data_save(&dat,obs,Pvar,MISSING8);
+}
+    if (residuals) { data_save(&dat,obs,Rvar,MISSING8);
+}
+    if (squaredcorr) { data_save(&dat,obs,R2var,MISSING8);
+}
+    if (resvariance) { data_save(&dat,obs,Vvar,MISSING8);
+}
 
     if (coeffs) {
-        for (i=0; i<b_vars; i++) data_save(&dat,obs,Bvars[i],MISSING8);
+        for (i=0; i<b_vars; i++) { data_save(&dat,obs,Bvars[i],MISSING8);
+}
     }
     if (stddevs) {
-        for (i=0; i<s_vars; i++) data_save(&dat,obs,Svars[i],MISSING8);
+        for (i=0; i<s_vars; i++) { data_save(&dat,obs,Svars[i],MISSING8);
+}
     }
     if (tvalues) {
-        for (i=0; i<t_vars; i++) data_save(&dat,obs,Tvars[i],MISSING8);
+        for (i=0; i<t_vars; i++) { data_save(&dat,obs,Tvars[i],MISSING8);
+}
     }
 }
 
@@ -393,13 +424,15 @@ static void enqueue(e_type x, QUEUE Q)
 {
     Q->size++;
     Q->A[Q->rear] = x;
-    if (++Q->rear == Q->max_size) Q->rear=0;
+    if (++Q->rear == Q->max_size) { Q->rear=0;
+}
 }
 
 static void enqueue2(e_type x, QUEUE Q, int col)
 {
     if (col==0) {
-        if (Q->size == (Q->max_size-1)) Q->size=-1;
+        if (Q->size == (Q->max_size-1)) { Q->size=-1;
+}
         Q->size++;
     }
     Q->rear=(Q->size+Q->max_size*col);
@@ -411,10 +444,14 @@ static void update_varnames(void)
     int i;
     char comment[LNAME];
 
-    if (prediction) put_varname(Pvar,"~Predicted values from MOVREG");
-    if (residuals) put_varname(Rvar,"~Residuals from MOVREG");
-    if (squaredcorr) put_varname(R2var,"~R^2 values from MOVREG");
-    if (resvariance) put_varname(Vvar,"~Residual variances from MOVREG");
+    if (prediction) { put_varname(Pvar,"~Predicted values from MOVREG");
+}
+    if (residuals) { put_varname(Rvar,"~Residuals from MOVREG");
+}
+    if (squaredcorr) { put_varname(R2var,"~R^2 values from MOVREG");
+}
+    if (resvariance) { put_varname(Vvar,"~Residual variances from MOVREG");
+}
 
     if (coeffs) {
         put_varname(Bvars[0],"~Constant values from MOVREG");
@@ -456,7 +493,8 @@ static void put_varname(int m, char *str)
         sbuf[9]='\0';
         strcat(sbuf,str);
         size=d2.l;
-        for (i=strlen(sbuf); i<size; i++) sbuf[i]=' '; sbuf[i]='\0';
+        for (i=strlen(sbuf); i<size; i++) { sbuf[i]=' '; 
+}sbuf[i]='\0';
         d2.varname[m]=sbuf;
         pd2=&d2.varname[m][0];
         offset=d2.var+(int)d2.extra;
@@ -466,7 +504,9 @@ static void put_varname(int m, char *str)
 }
 static void trim2(char *s) /* remove spaces from the end */
 {
-    while(*s) s++; s--;
-    while(*s==' ') s--; s++;
+    while(*s) { s++; 
+}s--;
+    while(*s==' ') { s--; 
+}s++;
     *s='\0';
 }

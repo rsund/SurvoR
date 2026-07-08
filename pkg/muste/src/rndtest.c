@@ -171,9 +171,11 @@ return;
     coup_ind=NULL;
     s_coup=NULL;
 
-        i=spec_init(r1+r-1); if (i<0) return;
+        i=spec_init(r1+r-1); if (i<0) { return;
+}
 
-        for(i=0; i<MAXRUN; ++i) runs_up[i]=runs_down[i]=0;
+        for(i=0; i<MAXRUN; ++i) { runs_up[i]=runs_down[i]=0;
+}
 
 
 
@@ -188,10 +190,11 @@ return;
                         WAIT; return;
                      }
             n_sub=atoi(sana[0]); n_subclass=10;
-            if (i>1) n_subclass=atoi(sana[1]);
+            if (i>1) { n_subclass=atoi(sana[1]);
+}
             }
 
-        if (results==0) fr_n=0; else { fr_n=10; fr_a=0.0; fr_d=0.1; }
+        if (results==0) { fr_n=0; } else { fr_n=10; fr_a=0.0; fr_d=0.1; }
         i=spfind("FREQUENCIES");
         if (i>=0)
             {
@@ -203,10 +206,12 @@ return;
             fr_d=(atof(sana[2])-fr_a)/(double)fr_n;
             }
 
-        if (results==0) maxlag=0; else maxlag=10;
-        i=spfind("MAXLAG"); if (i>=0) maxlag=atoi(spb[i]);
+        if (results==0) { maxlag=0; } else { maxlag=10;
+}
+        i=spfind("MAXLAG"); if (i>=0) { maxlag=atoi(spb[i]);
+}
 
-        if (results==0) maxgap=0; else { maxgap=10; a_gap=0; b_gap=0.5; }
+        if (results==0) { maxgap=0; } else { maxgap=10; a_gap=0; b_gap=0.5; }
         i=spfind("GAPTEST");
         if (i>=0)
             {
@@ -215,10 +220,12 @@ return;
                         WAIT; return;
                      }
             a_gap=atof(sana[0]); b_gap=atof(sana[1]);
-            maxgap=10; if (i>2) maxgap=atoi(sana[2]);
+            maxgap=10; if (i>2) { maxgap=atoi(sana[2]);
+}
             }
 
-        if (results==0) permlen=0; else permlen=4;
+        if (results==0) { permlen=0; } else { permlen=4;
+}
         i=spfind("PERMTEST");
         if (i>=0)
             {
@@ -230,7 +237,7 @@ return;
                 }
             }
 
-        if (results==0) poklen=0; else { poklen=5; n_pok=5; pok_a=0.0; pok_d=0.2; }
+        if (results==0) { poklen=0; } else { poklen=5; n_pok=5; pok_a=0.0; pok_d=0.2; }
         i=spfind("POKER");
         if (i>=0)
             {
@@ -244,7 +251,7 @@ return;
             pok_d=(atof(sana[3])-pok_a)/(double)n_pok;
             }
 
-        if (results==0) couplen=0; else { couplen=5; coup_max=20; coup_a=0.0; coup_d=0.2; }
+        if (results==0) { couplen=0; } else { couplen=5; coup_max=20; coup_a=0.0; coup_d=0.2; }
         i=spfind("COUPON");
         if (i>=0)
             {
@@ -262,18 +269,23 @@ return;
         if (g>3)
             {
             results_line=edline2(word[3],1,1);
-            if (results_line==0) return;
+            if (results_line==0) { return;
+}
             }
-        i=data_read_open(word[1],&d); if (i<0) return;
+        i=data_read_open(word[1],&d); if (i<0) { return;
+}
         var=varfind(&d,word[2]);
-        if (var<0) return;
+        if (var<0) { return;
+}
         i=sp_init(r1+r-1);
         if (i<0) { sur_print("\nToo many specifications!"); WAIT; return; }
-        i=conditions(&d); if (i<0) return;
+        i=conditions(&d); if (i<0) { return;
+}
 
         i=space_allocation(); if (i<0) { sur_print("\nNot enough memory!"); return; }
 
-        i=read_data(); if (i<0) return;
+        i=read_data(); if (i<0) { return;
+}
 
         rnd_printout();
         data_close(&d);
@@ -287,17 +299,21 @@ static int space_allocation()
         if (n_sub)
             {
             p_mean=(unsigned int *)muste_malloc(n_subclass*sizeof(unsigned int));
-            if (p_mean==NULL) return(-1);
+            if (p_mean==NULL) { return(-1);
+}
             p_min=(unsigned int *)muste_malloc(n_subclass*sizeof(unsigned int));
-            if (p_min==NULL) return(-1);
+            if (p_min==NULL) { return(-1);
+}
             p_max=(unsigned int *)muste_malloc(n_subclass*sizeof(unsigned int));
-            if (p_max==NULL) return(-1);
+            if (p_max==NULL) { return(-1);
+}
             }
 
         if (fr_n)
             {
             fr_f=(unsigned int *)muste_malloc(fr_n*sizeof(unsigned int));
-            if (fr_f==NULL) return(-1);
+            if (fr_f==NULL) { return(-1);
+}
             }
 
         if (maxlag>8191)
@@ -313,43 +329,55 @@ static int space_allocation()
         if (maxlag)
             {
             lagv=(double *)muste_malloc(maxlag*sizeof(double));
-            if (lagv==NULL) return(-1);
+            if (lagv==NULL) { return(-1);
+}
             lagvv=(double *)muste_malloc(maxlag*sizeof(double));
-            if (lagvv==NULL) return(-1);
+            if (lagvv==NULL) { return(-1);
+}
             first_x=(double *)muste_malloc(maxlag*sizeof(double));
-            if (first_x==NULL) return(-1);
+            if (first_x==NULL) { return(-1);
+}
             }
         if (maxgap)
             {
             gap=(unsigned int *)muste_malloc(maxgap*sizeof(unsigned int));
-            if (gap==NULL) return(-1);
+            if (gap==NULL) { return(-1);
+}
             }
 
         if (permlen)
             {
-            n_perm=1; for (u=2; u<=permlen; ++u) n_perm*=u;
+            n_perm=1; for (u=2; u<=permlen; ++u) { n_perm*=u;
+}
             f_perm=(unsigned int *)muste_malloc((unsigned int)n_perm*sizeof(unsigned int));
-            if (f_perm==NULL) return(-1);
+            if (f_perm==NULL) { return(-1);
+}
             }
 
         if (poklen)
             {
             f_pok=(unsigned int *)muste_malloc(n_pok*sizeof(unsigned int));
-            if (f_pok==NULL) return(-1);
+            if (f_pok==NULL) { return(-1);
+}
             s_pok=(double *)muste_malloc(poklen*sizeof(double));
-            if (s_pok==NULL) return(-1);
+            if (s_pok==NULL) { return(-1);
+}
             f1_pok=(int *)muste_malloc(poklen*sizeof(int));
-            if (f1_pok==NULL) return(-1);
+            if (f1_pok==NULL) { return(-1);
+}
             }
 
         if (couplen)
             {
             f_coup=(unsigned int *)muste_malloc(coup_max*sizeof(unsigned int));
-            if (f_coup==NULL) return(-1);
+            if (f_coup==NULL) { return(-1);
+}
             coup_ind=(int *)muste_malloc(couplen*sizeof(int));
-            if (coup_ind==NULL) return(-1);
+            if (coup_ind==NULL) { return(-1);
+}
             s_coup=(double *)muste_malloc(coup_max*sizeof(double));
-            if (s_coup==NULL) return(-1);
+            if (s_coup==NULL) { return(-1);
+}
             }
 
         return(1);
@@ -376,34 +404,44 @@ static int read_data()
                 }
             }
 
-        if (fr_n)
-            for (i=0; i<fr_n; ++i) fr_f[i]=0L;
+        if (fr_n) {
+            for (i=0; i<fr_n; ++i) { fr_f[i]=0L;
+}
+}
 
         lagpos=0;
-        for (i=0; i<maxlag; ++i) lagv[i]=lagvv[i]=0.0;
-        for (i=0; i<maxgap; ++i) gap[i]=0L;
+        for (i=0; i<maxlag; ++i) { lagv[i]=lagvv[i]=0.0;
+}
+        for (i=0; i<maxgap; ++i) { gap[i]=0L;
+}
         gaplen=gapmax=0L;
         if (permlen)
             {
             i_perm=0;
-            for (u=0; u<n_perm; ++u) f_perm[u]=0L;
+            for (u=0; u<n_perm; ++u) { f_perm[u]=0L;
+}
             }
         if (poklen)
             {
             i_pok=0;
-            for (u=0; u<n_pok; ++u) f_pok[u]=0L;
-            for (u=0; u<poklen; ++u) f1_pok[u]=0;
+            for (u=0; u<n_pok; ++u) { f_pok[u]=0L;
+}
+            for (u=0; u<poklen; ++u) { f1_pok[u]=0;
+}
             }
         if (couplen)
             {
             init_coup();
-            for (u=0; u<coup_max; ++u) f_coup[u]=0L;
+            for (u=0; u<coup_max; ++u) { f_coup[u]=0L;
+}
             }
-        i=spfind("PRIND"); if (i>=0) prind=atoi(spb[i]); else prind=0;
+        i=spfind("PRIND"); if (i>=0) { prind=atoi(spb[i]); } else { prind=0;
+}
         sur_print("\n");
         for (j=d.l1; j<=d.l2; ++j)
             {
-            if (unsuitable(&d,j)) continue;
+            if (unsuitable(&d,j)) { continue;
+}
 /***********************
             if (sur_kbhit()) { sur_getch(); prind=1-prind; }
 ************************/
@@ -413,14 +451,17 @@ static int read_data()
                 }
 
             data_load(&d,j,var,&x);
-            if (x==MISSING8) continue;
+            if (x==MISSING8) { continue;
+}
             ++n;
             sum1+=x; sum2+=x*x;
             if (n_sub)
                 {
                 sub_sum1+=x;
-                if (x<sub_min) sub_min=x;
-                if (x>sub_max) sub_max=x;
+                if (x<sub_min) { sub_min=x;
+}
+                if (x>sub_max) { sub_max=x;
+}
                 ++i_sub;
                 if (i_sub==n_sub)
                     {
@@ -437,23 +478,32 @@ static int read_data()
                     i_sub=0; sub_sum1=0.0; sub_min=1e30; sub_max=-1e30;
                     }
                 }
-            if (fr_n) freq();
+            if (fr_n) { freq();
+}
             runs_updown();
             lags();
-            if (maxgap) gaps();
-            if (permlen) permtest();
-            if (poklen) poker();
-            if (couplen) coupon();
+            if (maxgap) { gaps();
+}
+            if (permlen) { permtest();
+}
+            if (poklen) { poker();
+}
+            if (couplen) { coupon();
+}
             xlag=x;
             }
         runlen=n-run_start;
-        if (runlen>MAXRUN) runlen=MAXRUN-1;
-        if (up) ++runs_up[(int)(runlen-1)];
-        else    ++runs_down[(int)(runlen-1)];
+        if (runlen>MAXRUN) { runlen=MAXRUN-1;
+}
+        if (up) { ++runs_up[(int)(runlen-1)];
+        } else {    ++runs_down[(int)(runlen-1)];
+}
         if (maxgap)
             {
-            if (gaplen>gapmax) gapmax=gaplen;
-            if (gaplen>(unsigned int)(maxgap-1)) gaplen=maxgap-1;
+            if (gaplen>gapmax) { gapmax=gaplen;
+}
+            if (gaplen>(unsigned int)(maxgap-1)) { gaplen=maxgap-1;
+}
             ++gap[(int)gaplen];
             }
         return(1);
@@ -485,25 +535,30 @@ static int runs_updown()
             }
         if (up==-1)
             {
-            if (x>=xlag) up=1; else up=0;
+            if (x>=xlag) { up=1; } else { up=0;
+}
             return(1);
             }
         if (up)
             {
-            if (x>=xlag) return(1);
+            if (x>=xlag) { return(1);
+}
             runlen=n-run_start-1;
 /*  Rprintf("\nUP:   %d",runlen); getch();        */
-            if (runlen>MAXRUN) runlen=MAXRUN-1;
+            if (runlen>MAXRUN) { runlen=MAXRUN-1;
+}
             ++runs_up[(int)(runlen-1)];
             run_start=n-1L; up=0;
             return(1);
             }
         else
             {
-            if (x<=xlag) return(1);
+            if (x<=xlag) { return(1);
+}
             runlen=n-run_start-1;
 /*  Rprintf("\nDown: %d",runlen); getch();         */
-            if (runlen>MAXRUN) runlen=MAXRUN-1;
+            if (runlen>MAXRUN) { runlen=MAXRUN-1;
+}
             ++runs_down[(int)(runlen-1)];
             run_start=n-1L; up=1;
             return(1);
@@ -521,10 +576,12 @@ static int lags()
                 first_x[(int)(n-1L)]=x;
                 break;
                 }
-            if (lagpos>=i) lagvv[i]+=x*lagv[lagpos-i];
-            else lagvv[i]+=x*lagv[maxlag-i+lagpos];
+            if (lagpos>=i) { lagvv[i]+=x*lagv[lagpos-i];
+            } else { lagvv[i]+=x*lagv[maxlag-i+lagpos];
+}
             }
-        ++lagpos; if (lagpos==maxlag) lagpos=0;
+        ++lagpos; if (lagpos==maxlag) { lagpos=0;
+}
         lagv[lagpos]=x;
         return(1);
         }
@@ -532,8 +589,10 @@ static int lags()
 static int gaps()
         {
         if (x<a_gap || x>b_gap) { ++gaplen; return(1); }
-        if (gaplen>gapmax) gapmax=gaplen;
-        if (gaplen>(unsigned int)(maxgap-1)) gaplen=maxgap-1;
+        if (gaplen>gapmax) { gapmax=gaplen;
+}
+        if (gaplen>(unsigned int)(maxgap-1)) { gaplen=maxgap-1;
+}
         ++gap[(int)gaplen];
         gaplen=0L;
         return(1);
@@ -547,14 +606,16 @@ static int permtest()
 
         x_perm[i_perm]=x;
         ++i_perm;
-        if (i_perm<permlen) return(1);
+        if (i_perm<permlen) { return(1);
+}
         i_perm=0;
 
         for (r=permlen-1; r>=0; --r)
             {
             max=x_perm[0]; imax=0;
-            for (i=1; i<=r; ++i)
+            for (i=1; i<=r; ++i) {
                 if (x_perm[i]>max) { max=x_perm[i]; imax=i; }
+}
             c_perm[r]=imax;
             x_perm[imax]=x_perm[r]; x_perm[r]=max;
             }
@@ -581,9 +642,11 @@ static int poker()
             }
         ++f1_pok[i];
         ++i_pok;
-        if (i_pok<poklen) return(1);
+        if (i_pok<poklen) { return(1);
+}
         i_pok=0;
-        k=0; for (i=0; i<poklen; ++i) { if (f1_pok[i]>0) ++k; f1_pok[i]=0; }
+        k=0; for (i=0; i<poklen; ++i) { if (f1_pok[i]>0) { ++k; 
+}f1_pok[i]=0; }
         ++f_pok[k-1];
         return(1);
         }
@@ -593,7 +656,8 @@ static int init_coup()
         int u;
 
         coup_found=0; n_coup=0;
-        for (u=0; u<couplen; ++u) coup_ind[u]=0;
+        for (u=0; u<couplen; ++u) { coup_ind[u]=0;
+}
         return(1);
         }
 
@@ -655,11 +719,14 @@ static int rnd_printout()
         if (stddev<1e-15) { muste_sprintf(sbuf,"\nVariable %s is constant=%g",
                             word[2],mean); sur_print(sbuf); WAIT; return(-1);
                            }
-        if (n_sub) sub_results();
-        if (fr_n) fr_results();
+        if (n_sub) { sub_results();
+}
+        if (fr_n) { fr_results();
+}
         for (imax=MAXRUN-1; imax>=0; --imax)
             {
-            if (runs_up[imax]+runs_down[imax]>0) break;
+            if (runs_up[imax]+runs_down[imax]>0) { break;
+}
             }
         runs_hald();
         runtest2();
@@ -678,12 +745,14 @@ static int rnd_printout()
                 sumx-=a; sumx2-=a*a;
                 a=lagv[lagpos];
                 sumy-=a; sumy2-=a*a;
-                if (lagpos>0) --lagpos; else lagpos=maxlag-1;
+                if (lagpos>0) { --lagpos; } else { lagpos=maxlag-1;
+}
                 df=n-(int)(i+1);
                 a=lagvv[i]-sumx*sumy/df;
                 a1=sumx2-sumx*sumx/df; a2=sumy2-sumy*sumy/df;
                 a2=a/sqrt(a1*a2);
-                if (fabs(a2)>amax) amax=fabs(a2);
+                if (fabs(a2)>amax) { amax=fabs(a2);
+}
                 a3=2*muste_cdf_std(-fabs(a2)*sqrt((double)n));
                 fnconv(a2,accuracy,s1);
 /*  Rprintf("\nlag=%d sumx=%g sumx2=%g sumy=%g sumy2=%g S=%g",
@@ -698,10 +767,14 @@ static int rnd_printout()
                 print_line(sbuf);
                 }
             }
-        if (maxgap) gap_results();
-        if (permlen) perm_results();
-        if (poklen) poker_results();
-        if (couplen) coup_results();
+        if (maxgap) { gap_results();
+}
+        if (permlen) { perm_results();
+}
+        if (poklen) { poker_results();
+}
+        if (couplen) { coup_results();
+}
         output_close(eout);
         return(1);
         }
@@ -709,7 +782,8 @@ static int rnd_printout()
 static int print_line(char *line)
         {
         output_line(line,eout,results_line);
-        if (results_line) ++results_line;
+        if (results_line) { ++results_line;
+}
         return(1);
         }
 
@@ -719,8 +793,10 @@ static int fnconv2(double a,int len,char *s)
         char *p,*q;
 
         fnconv(a,len,t);
-        p=t; while (*p==' ') ++p;
-        q=s; while (*p!=EOS) *q++=*p++;
+        p=t; while (*p==' ') { ++p;
+}
+        q=s; while (*p!=EOS) { *q++=*p++;
+}
         *q=EOS;
         return(1);
         }
@@ -735,7 +811,8 @@ static int sub_results()
 
         n1=n/n_sub;
         sum=0L;
-        for (i=0; i<n_subclass; ++i) sum+=p_mean[i];
+        for (i=0; i<n_subclass; ++i) { sum+=p_mean[i];
+}
         e_sub=(double)sum/(double)n_subclass;
         print_line(" ");
         muste_sprintf(sbuf,"Subsample statistics: samplesize=%u Number of samples =%u",
@@ -802,8 +879,10 @@ static int fr_results()
         for (i=0; i<fr_n; ++i)
             {
             f=fr_f[i];
-            if (f<min) min=f;
-            if (f>max) max=f;
+            if (f<min) { min=f;
+}
+            if (f>max) { max=f;
+}
             a=f-e; chi2+=a*a/e;
             }
         fnconv2(e,accuracy,s1);
@@ -868,31 +947,41 @@ static int runtest2()
         double fact;
 
 
-        for (i=1; i<5; ++i)
+        for (i=1; i<5; ++i) {
             up2[i]=runs_up[i-1];
+}
         li=0L;
-        for (i=4; i<=imax; ++i)
+        for (i=4; i<=imax; ++i) {
             li+=runs_up[i];
+}
         up2[5]=li;
-        li=0; for (i=1; i<=imax; ++i) li+=(int)i*runs_down[i];
+        li=0; for (i=1; i<=imax; ++i) { li+=(int)i*runs_down[i];
+}
         up2[0]=li;
         v_up=0.0;
-        for (i=0; i<6; ++i)
-            for (j=0; j<6; ++j)
+        for (i=0; i<6; ++i) {
+            for (j=0; j<6; ++j) {
                v_up+=(up2[i]-(double)n*bb[i])*(up2[j]-(double)n*bb[j])*aa[i+6*j];
+}
+}
         v_up/=(double)n;
-        for (i=1; i<5; ++i)
+        for (i=1; i<5; ++i) {
             dn2[i]=runs_down[i-1];
+}
         li=0L;
-        for (i=4; i<=imax; ++i)
+        for (i=4; i<=imax; ++i) {
             li+=runs_down[i];
+}
         dn2[5]=li;
-        li=0; for (i=1; i<=imax; ++i) li+=(int)i*runs_up[i];
+        li=0; for (i=1; i<=imax; ++i) { li+=(int)i*runs_up[i];
+}
         dn2[0]=li;
         v_dn=0.0;
-        for (i=0; i<6; ++i)
-            for (j=0; j<6; ++j)
+        for (i=0; i<6; ++i) {
+            for (j=0; j<6; ++j) {
                v_dn+=(dn2[i]-(double)n*bb[i])*(dn2[j]-(double)n*bb[j])*aa[i+6*j];
+}
+}
         v_dn/=(double)n;
 
         muste_sprintf(sbuf,"Runs up and down (Levene and Wolfowitz 1944):"); print_line(sbuf);
@@ -928,9 +1017,12 @@ static int gap_results()
         int df;
 
 
-        for (i=maxgap-1; i>=0; --i) if (gap[i]>0L) break;
+        for (i=maxgap-1; i>=0; --i) { if (gap[i]>0L) { break;
+}
+}
         max=i;
-        n2=0L; for (i=0; i<=max; ++i) n2+=gap[i];
+        n2=0L; for (i=0; i<=max; ++i) { n2+=gap[i];
+}
         dp=(double)(n-n2)/(double)n;
         fconv(a_gap,"",s1); fconv(b_gap,"",s2);
         fnconv2(1.0-dp,accuracy,s3);
@@ -944,7 +1036,8 @@ static int gap_results()
             if (e<5.0 || i==max)
                 {
                 e/=(double)(1.0-dp);
-                for (k=i+1; k<=max; ++k) gap[i]+=gap[k];
+                for (k=i+1; k<=max; ++k) { gap[i]+=gap[k];
+}
                 stop=1;
                 }
             a=gap[i]-e; chi2=a*a/e;
@@ -952,9 +1045,11 @@ static int gap_results()
             fnconv(e,accuracy,s1); fnconv(chi2,accuracy,s2);
             muste_sprintf(sbuf,"%6d  %8u      %s      %s",
                           i, gap[i], s1, s2);
-            if (stop) sbuf[7]='-';
+            if (stop) { sbuf[7]='-';
+}
             print_line(sbuf);
-            if (stop) break;
+            if (stop) { break;
+}
             e*=dp;
             }
         fnconv2(schi2,accuracy,s1);
@@ -1008,7 +1103,8 @@ static int poker_results()
             muste_sprintf(sbuf,"%6d   %8u        %s",r,f_pok[r-1],s1);
             print_line(sbuf);
             e2+=e; f2+=f_pok[r-1];
-            if (e2<5.0 && r<n_pok) continue;
+            if (e2<5.0 && r<n_pok) { continue;
+}
             a=f2-e2;
             chi2+=a*a/e2; ++df;
             e2=f2=0.0;
@@ -1025,7 +1121,8 @@ static int stirling(int n,double *s)
         int k,r;
         double s0,s1;
 
-        for (r=0; r<n; ++r) s[r]=0.0;
+        for (r=0; r<n; ++r) { s[r]=0.0;
+}
         s[0]=1.0;
         s[1]=1.0;
         for (k=3; k<=n; ++k)
@@ -1055,8 +1152,10 @@ static int coup_results()
 
                           /* d=couplen t=coupmax */
         b=1.0;
-        for (r=2; r<couplen; ++r) b*=(double)r/(double)couplen;
-        nc=0L; for (i=couplen-1; i<coup_max; ++i) nc+=f_coup[i];
+        for (r=2; r<couplen; ++r) { b*=(double)r/(double)couplen;
+}
+        nc=0L; for (i=couplen-1; i<coup_max; ++i) { nc+=f_coup[i];
+}
 
         print_line(" ");
         muste_sprintf(sbuf,"Coupon collector's test: Waiting time r for a complete series of %d alternatives.",couplen);
@@ -1072,7 +1171,8 @@ static int coup_results()
             muste_sprintf(sbuf,"%6d   %8u     %s",r,f_coup[r-1],s1);
             print_line(sbuf);
             e2+=e; f2+=f_coup[r-1];
-            if (e2<5.0) continue;
+            if (e2<5.0) { continue;
+}
             a=f2-e2; chi2+=a*a/e2; ++df;
             e2=f2=0.0;
             }

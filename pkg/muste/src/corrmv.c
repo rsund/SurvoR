@@ -167,61 +167,77 @@ rem_pr("of observations is saved as PAIRFREQ.M .");
         if (g>2)
             {
             tulosrivi=edline2(word[2],1,1);
-            if (tulosrivi==0) return;
+            if (tulosrivi==0) { return;
+}
             }
 
-        i=spec_init(r1+r-1); if (i<0) return;
+        i=spec_init(r1+r-1); if (i<0) { return;
+}
         strcpy(aineisto,word[1]);
 
         replace=0;
         i=spfind("IMPUTE");
-        if (i<0) i=spfind("REPLACE");
+        if (i<0) { i=spfind("REPLACE");
+}
         if (i>=0)
             {
             strcpy(x2,spb[i]);
             if (muste_strnicmp(x2,"REG+",4)==0) { replace=1; rnd_def(x2+4); }
-            else replace=2;
+            else { replace=2;
+}
             }
         if (!replace)
-            { i=data_read_open(aineisto,&d); if (i<0) return; }
+            { i=data_read_open(aineisto,&d); if (i<0) { return; 
+}}
         else
-            { i=data_open2(aineisto,&d,0,1,0); if (i<0) return; }
+            { i=data_open2(aineisto,&d,0,1,0); if (i<0) { return; 
+}}
 
-        i=mask(&d); if (i<0) return;
-        i=mask_sort(&d); if (i<0) return;
+        i=mask(&d); if (i<0) { return;
+}
+        i=mask_sort(&d); if (i<0) { return;
+}
         scales(&d);
         if (d.m_act<2)
             {
             sur_print("\nAt least 2 active variables required!");
             WAIT; return;
             }
-        i=conditions(&d); if (i<0) return;
+        i=conditions(&d); if (i<0) { return;
+}
 
-        if ((i=spfind("RESULTS"))>=0) results=atoi(spb[i]);
-        i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
-        if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);
+        if ((i=spfind("RESULTS"))>=0) { results=atoi(spb[i]);
+}
+        i=hae_apu("prind",sbuf); if (i) { prind=atoi(sbuf);
+}
+        if ((i=spfind("PRIND"))>=0) { prind=atoi(spb[i]);
+}
 
         method=1;
         i=spfind("METHOD");
         if (i>=0)
             {
             strcpy(x2,spb[i]);
-            if (strcmp(x2,"PAIRWISE2")==0 || atoi(x2)==3)  method=3;
-            else if (muste_strnicmp(x2,"PAIR",4)==0 || atoi(x2)==2)  method=2;
+            if (strcmp(x2,"PAIRWISE2")==0 || atoi(x2)==3) {  method=3;
+            } else if (muste_strnicmp(x2,"PAIR",4)==0 || atoi(x2)==2) {  method=2;
+}
             }
         max_iter=20;
-        if ((i=spfind("ITER"))>=0) max_iter=atoi(spb[i]);
+        if ((i=spfind("ITER"))>=0) { max_iter=atoi(spb[i]);
+}
 
 
         m=d.m_act; m1=m+1; k=0;
-        for (i=0; i<m; ++i)
+        for (i=0; i<m; ++i) {
             if (!scale_ok(&d,d.v[i],SCORE_SCALE))
                 {
-                if (k==0)
+                if (k==0) {
                     sur_print("\nInsufficient scale in variables: ");
+}
                 k=1;
                 muste_sprintf(sbuf,"%.8s ",d.varname[d.v[i]]); sur_print(sbuf);
                 }
+}
         if (k)
             {
             if (etu==2)
@@ -233,12 +249,14 @@ rem_pr("of observations is saved as PAIRFREQ.M .");
                     }
                 }
             sur_print("\nInterval or score scale required, at least!");
-            WAIT; if (scale_check==SCALE_INTERRUPT) return;
+            WAIT; if (scale_check==SCALE_INTERRUPT) { return;
+}
             }
 
         if (method>1) { pairwise_corr(); s_end(argv);  return; }
                                       // 3.3.2005
-        i=varaa_tilat(); if (i<0) return;
+        i=varaa_tilat(); if (i<0) { return;
+}
 
         strcpy(nimi,etmpd); strcat(nimi,"SURVO.TMP");
         ftemp=muste_fopen(nimi,"w+b");
@@ -247,14 +265,17 @@ rem_pr("of observations is saved as PAIRFREQ.M .");
             muste_sprintf(sbuf,"\nCannot open temporary file %s !",nimi);
             sur_print(sbuf); WAIT; return;
             }
-        i=summat(); if (i<0) return;
-        i=sijoita_keskiarvot(); if (i<0) return;
+        i=summat(); if (i<0) { return;
+}
+        i=sijoita_keskiarvot(); if (i<0) { return;
+}
         iter=0; ero0=1e30;
         if (miss_total==0) { max_iter=0; replace=0; }
         while (iter<max_iter)
             {
             i=iteroi(iter);
-            if (i<0) break;
+            if (i<0) { break;
+}
             ++iter;
             muste_sprintf(sbuf,"\nIteration %d: mean squared difference %g",
                                       iter,ero/(double)miss_total);
@@ -267,7 +288,8 @@ rem_pr("of observations is saved as PAIRFREQ.M .");
                 }
             ero0=ero;
             sur_print(sbuf);
-            if (sur_kbhit()) break;
+            if (sur_kbhit()) { break;
+}
             }
 
         if (!iter && max_iter>0)
@@ -275,7 +297,8 @@ rem_pr("of observations is saved as PAIRFREQ.M .");
             sur_print("\nCannot continue!"); return;
             }
         i=momentit();
-        for (i=0; i<m; ++i) varname[i]=d.varname[d.v[i]];
+        for (i=0; i<m; ++i) { varname[i]=d.varname[d.v[i]];
+}
         i=tulostus();
         mat_talletus();
         if (replace) { replacement(); }
@@ -345,14 +368,17 @@ static int summat()
         sur_print("\n");
         for (l=d.l1; l<=d.l2; ++l)
             {
-            if (unsuitable(&d,l)) continue;
+            if (unsuitable(&d,l)) { continue;
+}
             if (prind) { muste_sprintf(sbuf," %d",l); sur_print(sbuf); }
-            if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); prind=1-prind; }
+            if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) { sur_getch(); 
+}prind=1-prind; }
             ++n;
             for (i=0; i<m; ++i)
                 {
                 k=data_load(&d,l,d.v[i],&x[i]);
-                if (k<0) return(-1);
+                if (k<0) { return(-1);
+}
                 miss[i]=0;
                 if (x[i]==MISSING8) { miss[i]=1; ++miss_total; }
                                else { ++nx[i]; sum[i]+=x[i]; mm2[i]+=x[i]*x[i]; }
@@ -366,7 +392,9 @@ static int summat()
             sur_print("\nNo missing values! Interrupting..."); WAIT; return(-1);
             }
 */
-        l=n; for (i=0; i<m; ++i) if (nx[i]<l) l=nx[i];
+        l=n; for (i=0; i<m; ++i) { if (nx[i]<l) { l=nx[i];
+}
+}
 
         if (l<2L)  /* suurempi alaraja ? */
             {
@@ -412,8 +440,9 @@ static int sijoita_keskiarvot()
             pit+=muste_fread(miss,sizeof(int),m,ftemp);
             for (i=0; i<m; ++i)
                 {
-                if (miss[i]) x[i]=0.0;
-                else x[i]=(x[i]-mm1[i])/mm2[i];
+                if (miss[i]) { x[i]=0.0;
+                } else { x[i]=(x[i]-mm1[i])/mm2[i];
+}
                 }
             muste_fseek(ftemp,l*tila,SEEK_SET);
             fwrite(x,sizeof(double),m,ftemp);
@@ -443,11 +472,13 @@ static int momentit()
         for (i=0; i<m; ++i)
             {
             sum[i]=0.0;
-            for (j=0; j<=i; ++j)
+            for (j=0; j<=i; ++j) {
                 aa[i+m*j]=0.0;
+}
             }
 
-        for (i=0; i<m; ++i) sum2[i]=1.0/(double)(n-m1)/sum2[i];
+        for (i=0; i<m; ++i) { sum2[i]=1.0/(double)(n-m1)/sum2[i];
+}
 
         rewind(ftemp);
         sur_print("\n");
@@ -455,7 +486,8 @@ static int momentit()
         for (l=0L; l<n; ++l)
             {
             if (prind) { muste_sprintf(sbuf," %d",l); sur_print(sbuf); }
-            if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); prind=1-prind; }
+            if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) { sur_getch(); 
+}prind=1-prind; }
 
             pit+=muste_fread(x,sizeof(double),m,ftemp);
             pit+=muste_fread(miss,sizeof(int),m,ftemp);
@@ -464,20 +496,23 @@ static int momentit()
                 zz=x[i];
                 sum[i]+=zz;
 
-                for (j=0; j<i; ++j)
+                for (j=0; j<i; ++j) {
                     aa[i+m*j]+=zz*x[j];
+}
 
-                if (miss[i])
+                if (miss[i]) {
                     aa[i*(m+1)]+=zz*zz+sum2[i];
-                else
+                } else {
                     aa[i*(m+1)]+=zz*zz;
+}
                 }
             } /* l */
 
         for (i=0; i<m; ++i)
             {
-            for (j=0; j<=i; ++j)
+            for (j=0; j<=i; ++j) {
                 aa[i+m*j]-=sum[i]*sum[j]/n;
+}
             }
         for (i=0; i<m; ++i)
             {
@@ -490,8 +525,9 @@ static int momentit()
                 double xxx;
 
                 tulo=sum2[i]*sum2[j];
-                if (tulo==0.0) aa[i+m*j]=0.0;
-                else aa[i+m*j]/=sum2[i]*sum2[j];
+                if (tulo==0.0) { aa[i+m*j]=0.0;
+                } else { aa[i+m*j]/=sum2[i]*sum2[j];
+}
                 xxx=aa[i+m*j];
                 aa[j+m*i]=xxx;
                 }
@@ -534,31 +570,37 @@ char otsikko[]
 
         j1=0; j2=m-1;
         j3=(int)floor((double)((lev-sar-3)/sar));
-        if (j3<m) j2=j3-1;
+        if (j3<m) { j2=j3-1;
+}
         while (j2<=m-1)
             {
             k=0;
-            for (i=0; i<sar+4; ++i) k+=muste_sprintf(rivi+k," ");
+            for (i=0; i<sar+4; ++i) { k+=muste_sprintf(rivi+k," ");
+}
             for (j=j1; j<=j2; ++j)
                 {
                 strcpy(nimi,xname[j]); nimi[sar-1]=EOS;
-                if (sar-1>8) nimi[8]=EOS; // 23.9.2011
+                if (sar-1>8) { nimi[8]=EOS; // 23.9.2011
+}
                 k+=muste_sprintf(rivi+k,xsar,nimi);
                 }
             eoutput(rivi);
             for (i=0; i<m; ++i)
                 {
                 strcpy(nimi,xname[i]); nimi[sar+2]=EOS;
-                if (sar+2>8) nimi[8]=EOS; // 23.9.2011
+                if (sar+2>8) { nimi[8]=EOS; // 23.9.2011
+}
                 k=muste_sprintf(rivi,xriv,nimi);
-                for (j=j1; j<=j2; ++j)
+                for (j=j1; j<=j2; ++j) {
                     k+=muste_sprintf(rivi+k,rriv,S[i+j*m]);
+}
 
                 eoutput(rivi);
                 }
             j1=j2+1;
-            if (j2==m-1) ++j2;
-            else         { j2+=j3; if (j2>m-1) j2=m-1; }
+            if (j2==m-1) { ++j2;
+            } else         { j2+=j3; if (j2>m-1) { j2=m-1; 
+}}
             }
         output_close(eout);
 
@@ -570,7 +612,8 @@ static int tulostus()
         int i;
         char rivi[LLENGTH];
 
-        i=output_open(eout);  if (i<0) return(-1);
+        i=output_open(eout);  if (i<0) { return(-1);
+}
 
         muste_sprintf(rivi,"Means, std.devs and correlations of %s  N=%d",
                               word[1],n);
@@ -616,7 +659,8 @@ static int tulostus()
 static int eoutput(char *rivi)
         {
         output_line(rivi,eout,tulosrivi);
-        if (tulosrivi) ++tulosrivi;
+        if (tulosrivi) { ++tulosrivi;
+}
         return(1);
         }
 
@@ -646,12 +690,14 @@ static int tee_lab(char *lab,char **varname)
         {
         int i,h;
 
-        for (i=0; i<8*m; ++i) lab[i]=' ';
+        for (i=0; i<8*m; ++i) { lab[i]=' ';
+}
         for (i=0; i<m; ++i)
             {
             for (h=0; h<8; ++h)
                 {
-                if (varname[i][h]==EOS) break;
+                if (varname[i][h]==EOS) { break;
+}
                 lab[8*i+h]=varname[i][h];
                 }
             }
@@ -695,8 +741,10 @@ static int iteroi(int iter)
         pit=0;
         if (iter==0)
             {
-            for (i=0; i<m1; ++i)
-                for (j=0; j<m1; ++j) A[i+m1*j]=0.0;
+            for (i=0; i<m1; ++i) {
+                for (j=0; j<m1; ++j) { A[i+m1*j]=0.0;
+}
+}
             for (l=0L; l<n; ++l)
                 {
                 pit+=muste_fread(x,sizeof(double),m,ftemp);
@@ -704,8 +752,9 @@ static int iteroi(int iter)
                 for (i=0; i<m1; ++i)
                     {
                     zz=x[i];   /* missing values all 0 */
-                    for (j=0; j<=i; ++j)
+                    for (j=0; j<=i; ++j) {
                         A[i+m1*j]+=zz*x[j];
+}
                     }
                 }
 
@@ -729,21 +778,26 @@ static int iteroi(int iter)
                 for (i=0; i<m1; ++i)
                     {
                     zz=x[i];  /* only pairs with missing values */
-                    for (j=0; j<=i; ++j)
-                        if (miss[i] || miss[j]) A[i+m1*j]+=zz*x[j];
+                    for (j=0; j<=i; ++j) {
+                        if (miss[i] || miss[j]) { A[i+m1*j]+=zz*x[j];
+}
+}
                     }
                 }
              }
 
-        for (i=0; i<m1; ++i) for(j=0; j<=i; ++j) A[j+m1*i]=A[i+m1*j];
+        for (i=0; i<m1; ++i) { for(j=0; j<=i; ++j) { A[j+m1*i]=A[i+m1*j];
+}
+}
 
         i=mat_cholinv(A,m1);
         if (i<1)
             {
-            if (-i<m)
+            if (-i<m) {
                 muste_sprintf(sbuf,"\nVariable %.8s is linearly dependent on the previous ones!",
                               d.varname[d.v[-i]]);
-            else muste_sprintf(sbuf,"\nLinear combination of variables is a constant!");
+            } else { muste_sprintf(sbuf,"\nLinear combination of variables is a constant!");
+}
             sur_print(sbuf); WAIT; return(-1);
             }
         mat_cholmove(A,m1);
@@ -753,7 +807,8 @@ static int iteroi(int iter)
             res_dev[j]=A[j*(m1+1)]; /* "arvontaa" varten */
             sum2[j]=A[j*(m1+1)];
             zz=-1.0/A[j*(m1+1)];
-            for (i=0; i<m1; ++i) A[i+m1*j]*=zz;
+            for (i=0; i<m1; ++i) { A[i+m1*j]*=zz;
+}
             A[j*(m1+1)]=0.0; /* jotta korjatut arvot suoraan skalaarituloina */
             }
 
@@ -810,10 +865,13 @@ static int pairwise_corr()
         int l,nmin;
         double a,b;
 
-        if (method==2) method=3; else method=2;
+        if (method==2) { method=3; } else { method=2;
+}
 
-        i=pair_varaus(); if (i<0) return(-1);
-        for (i=0; i<m; ++i) varname[i]=d.varname[d.v[i]];
+        i=pair_varaus(); if (i<0) { return(-1);
+}
+        for (i=0; i<m; ++i) { varname[i]=d.varname[d.v[i]];
+}
 
         n=0L;
         for (i=0; i<m; ++i)
@@ -824,27 +882,33 @@ static int pairwise_corr()
                 {
                 A[i+m*j]=0.0;
                 nn[i+m*j]=0L;
-                if (method==3) xy[i+m*j]=xy[j+m*i]=xy2[i+m*j]=xy2[j+m*i]=0.0;
+                if (method==3) { xy[i+m*j]=xy[j+m*i]=xy2[i+m*j]=xy2[j+m*i]=0.0;
+}
                 }
             }
 
         sur_print("\n");
         for (l=d.l1; l<=d.l2; ++l)
             {
-            if (unsuitable(&d,l)) continue;
+            if (unsuitable(&d,l)) { continue;
+}
             if (prind) { muste_sprintf(sbuf," %d",l); sur_print(sbuf); }
-            if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); prind=1-prind; }
+            if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) { sur_getch(); 
+}prind=1-prind; }
             ++n;
             for (i=0; i<m; ++i)
                 {
                 k=data_load(&d,l,d.v[i],&a);
-                if (k<0) return(-1);
+                if (k<0) { return(-1);
+}
                 x[i]=a;
-                if (a==MISSING8) continue;
+                if (a==MISSING8) { continue;
+}
                 ++n1[i]; sum[i]+=a; sum2[i]+=a*a;
                 for (j=0; j<=i; ++j)
                     {
-                    b=x[j]; if (b==MISSING8) continue;
+                    b=x[j]; if (b==MISSING8) { continue;
+}
                     ++nn[i+m*j];
                     A[i+m*j]+=a*b;
                     if (method==3 && j<i)
@@ -857,12 +921,16 @@ static int pairwise_corr()
             } /* l */
 
         nmin=n;
-        for (i=0; i<m; ++i)
-            for (j=0; j<=i; ++j)
-                if (nn[i+m*j]<nmin) nmin=nn[i+m*j];
+        for (i=0; i<m; ++i) {
+            for (j=0; j<=i; ++j) {
+                if (nn[i+m*j]<nmin) { nmin=nn[i+m*j];
+}
+}
+}
         if (nmin<2L)
             {
-            i=output_open(eout); if (i<0) return(-1);
+            i=output_open(eout); if (i<0) { return(-1);
+}
             muste_sprintf(sbuf,"Smallest # pairwise observations is less than 2!");
             sur_print("\n"); sur_print(sbuf);
             eoutput(sbuf);
@@ -873,12 +941,14 @@ static int pairwise_corr()
             return(-1);
             }
 
-        for (i=0; i<m; ++i) sum[i]/=n1[i];
-        for (i=0; i<m; ++i) sum2[i]=sqrt((sum2[i]-n1[i]*sum[i]*sum[i])/(n1[i]-1L));
+        for (i=0; i<m; ++i) { sum[i]/=n1[i];
+}
+        for (i=0; i<m; ++i) { sum2[i]=sqrt((sum2[i]-n1[i]*sum[i]*sum[i])/(n1[i]-1L));
+}
 
         if (method==3)
             {
-            for (i=0; i<m; ++i)
+            for (i=0; i<m; ++i) {
                 for (j=0; j<i; ++j)
                     {
                     h1=i+m*j; h2=j+m*i;
@@ -887,29 +957,34 @@ static int pairwise_corr()
                     xy2[h1]=sqrt((xy2[h1]-nn[h1]*xy[h1]*xy[h1])/(nn[h1]-1L));
                     xy2[h2]=sqrt((xy2[h2]-nn[h1]*xy[h2]*xy[h2])/(nn[h1]-1L));
                     }
+}
             }
 
         if (method==2)
             {
-            for (i=0; i<m; ++i)
-                for (j=0; j<i; ++j)
+            for (i=0; i<m; ++i) {
+                for (j=0; j<i; ++j) {
                     A[i+m*j]=(A[i+m*j]-nn[i+m*j]*sum[i]*sum[j])/
                                      ((nn[i+m*j]-1L)*sum2[i]*sum2[j]);
+}
+}
             }
         else
             {
-            for (i=0; i<m; ++i)
+            for (i=0; i<m; ++i) {
                 for (j=0; j<i; ++j)
                     {
                     h1=i+m*j; h2=j+m*i;
                     A[h1]=(A[h1]-nn[h1]*xy[h1]*xy[h2])/
                                      ((nn[h1]-1L)*xy2[h1]*xy2[h2]);
                     }
+}
             }
 
         for (i=0; i<m; ++i)
             {
-            for (j=0; j<i; ++j) A[j+m*i]=A[i+m*j];
+            for (j=0; j<i; ++j) { A[j+m*i]=A[i+m*j];
+}
             A[i*(m+1)]=1.0;
             }
         pair_tulostus();
@@ -922,7 +997,8 @@ static int pair_varaus()
         {
         int mm;
 
-        mm=m*m; if (mm<=6) mm=6;
+        mm=m*m; if (mm<=6) { mm=6;
+}
 
         x=(double *)muste_malloc(m*sizeof(double));
         if (x==NULL) { not_enough_memory(); return(-1); }
@@ -959,9 +1035,11 @@ static int talleta_frekvenssit()
 
         tee_lab(lab,varname);
 
-        for (i=0; i<m; ++i)
-            for (j=0; j<=i; ++j)
+        for (i=0; i<m; ++i) {
+            for (j=0; j<=i; ++j) {
                 A[i+m*j]=A[j+i*m]=nn[i+m*j];
+}
+}
         int used = 0;
         used += snprintf(expr + used, LLENGTH - used, "N(");
         used += snprintf(expr + used, LLENGTH - used, "%s", aineisto);
@@ -977,16 +1055,19 @@ static int pair_tulostus()
         char rivi[LLENGTH];
         char x[LLENGTH];
 
-        i=output_open(eout);  if (i<0) return(-1);
+        i=output_open(eout);  if (i<0) { return(-1);
+}
 
-        if (m>1 && results>0)
+        if (m>1 && results>0) {
             muste_sprintf(rivi,"Means, std.devs and pairwise correlations of %s  N=%d",
                               word[1],n);
-        else
+        } else {
             muste_sprintf(rivi,"%s  N=%d",word[1],n);
+}
         eoutput(rivi);
 
-        muste_sprintf(x,"%d",n); for (i=0; i<strlen(x); ++i) x[i]='#';
+        muste_sprintf(x,"%d",n); for (i=0; i<strlen(x); ++i) { x[i]='#';
+}
         int used = 0;
         used += snprintf(rivi + used, LLENGTH - used, "MAT LOAD PAIRFREQ.M,");
         used += snprintf(rivi + used, LLENGTH - used, "%s", x);
@@ -1067,7 +1148,8 @@ static int replacement()
                 }
             }
 
-        for (i=0; i<m; ++i) res_dev[i]=sqrt(1.0/(double)(n-m1)/res_dev[i]);
+        for (i=0; i<m; ++i) { res_dev[i]=sqrt(1.0/(double)(n-m1)/res_dev[i]);
+}
 /* Rprintf("\n"); for (i=0; i<m; ++i) Rprintf("%g ",res_dev[i]); getch(); */
 
         rewind(ftemp);
@@ -1075,14 +1157,17 @@ static int replacement()
         pit=0;
         for (l=d.l1; l<=d.l2; ++l)
             {
-            if (unsuitable(&d,l)) continue;
+            if (unsuitable(&d,l)) { continue;
+}
             if (prind) { muste_sprintf(sbuf," %d",l); sur_print(sbuf); }
-            if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); prind=1-prind; }
+            if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) { sur_getch(); 
+}prind=1-prind; }
             ++n;
             for (i=0; i<m; ++i)
                 {
                 k=data_load(&d,l,d.v[i],&x[i]);
-                if (k<0) return(-1);
+                if (k<0) { return(-1);
+}
                 }
             pit+=muste_fread(sum,sizeof(double),m,ftemp);
             pit+=muste_fread(miss,sizeof(int),m,ftemp);
@@ -1090,18 +1175,23 @@ static int replacement()
                 {
                 if (miss[i])
                     {
-                    if (replace==1) sum[i]+=res_dev[i]*normal_dev(); /* 20.6.1996 */
+                    if (replace==1) { sum[i]+=res_dev[i]*normal_dev(); /* 20.6.1996 */
+}
 
                     b=mm2[i]*sum[i]+mm1[i];
-                    if (b<min[i]) b=min[i];
-                    if (b>max[i]) b=max[i];
+                    if (b<min[i]) { b=min[i];
+}
+                    if (b>max[i]) { b=max[i];
+}
                     if (type[i]=='1' || type[i]=='2')
                         {
-                        if (b>=0.0) b+=0.5;
-                        else b-=0.5;
+                        if (b>=0.0) { b+=0.5;
+                        } else { b-=0.5;
+}
                         }
                     k=data_save(&d,l,d.v[i],b);
-                    if (k<0) return(-1);
+                    if (k<0) { return(-1);
+}
               /*    Rprintf("\ni=%d %g",i+1,sum[i]); getch(); */
                     }
                 }
@@ -1118,11 +1208,14 @@ static int rajat(int i,double *pmin,double *pmax)
         int k;
 
         strcpy(teksti,d.varname[i]);
-        p=strchr(teksti,'{'); if (p==NULL) return(1);
-        q=strchr(p,'}'); if (q==NULL) return(1);
+        p=strchr(teksti,'{'); if (p==NULL) { return(1);
+}
+        q=strchr(p,'}'); if (q==NULL) { return(1);
+}
         *q=EOS;
         k=split(p+1,sana,2);
-        if (k<2) return(1);
+        if (k<2) { return(1);
+}
         *pmin=atof(sana[0]); *pmax=atof(sana[1]);
         return(1);
         }

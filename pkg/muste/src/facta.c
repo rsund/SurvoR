@@ -90,9 +90,11 @@ void muste_facta(char *argv)
         if (g>3)
             {
             results_line=edline2(word[3],1,1);
-            if (results_line==0) return;
+            if (results_line==0) { return;
+}
             }
-        i=sp_init(r1+r-1); if (i<0) return;
+        i=sp_init(r1+r-1); if (i<0) { return;
+}
         i=matrix_load(word[1],&E,&p,&n,&rlab,&clab,&lr,&lc,&type,expr);
         if (i<0) { s_end(argv); return; } // RS CHA argv[1]
 
@@ -119,20 +121,25 @@ void muste_facta(char *argv)
             double eps;
 
             eps=1.0-atof(spb[i]);
-            for (i=0; i<p; ++i)
-            for (j=0; j<p; ++j) { if (i==j) continue; E[i+j*p]*=eps; }
+            for (i=0; i<p; ++i) {
+            for (j=0; j<p; ++j) { if (i==j) { continue; 
+}E[i+j*p]*=eps; }
+}
 
             }
         ind=3; i=spfind("METHOD");
         if (i>=0)
             {
-            if (muste_strcmpi(spb[i],"ULS")==0) ind=1;
-            if (muste_strcmpi(spb[i],"GLS")==0) ind=2;
+            if (muste_strcmpi(spb[i],"ULS")==0) { ind=1;
+}
+            if (muste_strcmpi(spb[i],"GLS")==0) { ind=2;
+}
             }
 
         for (i=0; i<p; ++i)
             {
-            if (E[i*(p+1)]!=0.0) continue;
+            if (E[i*(p+1)]!=0.0) { continue;
+}
             muste_sprintf(sbuf,"Variable %.*s is a constant!",lr,rlab+i*lr);
             if (etu==2)
                 {
@@ -154,9 +161,12 @@ void muste_facta(char *argv)
             }
 */
 
-        i=varaa_tilat(); if (i<0) return;
-        for (ui=0; ui<p*p; ++ui) S[ui]=E[ui];
-        sumlogsii=0.0; for (i=0; i<p; ++i) sumlogsii+=log(S[i*(p+1)]);
+        i=varaa_tilat(); if (i<0) { return;
+}
+        for (ui=0; ui<p*p; ++ui) { S[ui]=E[ui];
+}
+        sumlogsii=0.0; for (i=0; i<p; ++i) { sumlogsii+=log(S[i*(p+1)]);
+}
 
         i=nwtrap();
         if (i<0)
@@ -166,7 +176,8 @@ void muste_facta(char *argv)
             s_end(argv); // RS CHA argv[1]
             return;
             }
-        h=output_open(eout); if (h<0) return;
+        h=output_open(eout); if (h<0) { return;
+}
         strcpy(x,"Factor analysis: ");
         switch (ind)
             {
@@ -215,12 +226,14 @@ void muste_facta(char *argv)
 
                 n1=atof(spb[i]);
                 if (n1<(double)k) { sur_print("\nIncorrect N!"); WAIT; return; }
-                for (i=0; i<p; ++i) for (j=0; j<i; ++j)
+                for (i=0; i<p; ++i) { for (j=0; j<i; ++j)
                     {
                     da=0.0;
-                    for (h=0; h<k; ++h) da+=L[i+p*h]*L[j+p*h];
+                    for (h=0; h<k; ++h) { da+=L[i+p*h]*L[j+p*h];
+}
                     S[i+p*j]=da; S[j+p*i]=da;
                     }  /* Huom. S-diagonaali s?ilytet??n */
+}
                 mat_dcholinv(S,p,&uu);
                 uu=(n1-1.0)*log(uu/det);
                 dk=((p-k)*(p-k)+p-k)/2.0;   /* ei sama kuin yll?! */
@@ -281,7 +294,8 @@ static int varaa_tilat()
         delta=(double *)muste_malloc(p*sizeof(double));
         if (delta==NULL) { fnot_enough_memory(); return(-1); }
 
-        for (i=0; i<p; ++i) u[i]=0.0; /* 3.5.1996 */
+        for (i=0; i<p; ++i) { u[i]=0.0; /* 3.5.1996 */
+}
 
         return(1);
         }
@@ -295,7 +309,8 @@ static int fnot_enough_memory()
 static int print_line(char *x)
         {
         output_line(x,eout,results_line);
-        if (results_line) ++results_line;
+        if (results_line) { ++results_line;
+}
         return(1);
         }
 
@@ -310,9 +325,12 @@ static int f_orientation(double *L,int p,int k)
             for (i=0; i<p; ++i)
                 {
                 a=L[i+p*j];
-                if (a<0) neg+=a*a; else pos+=a*a;
+                if (a<0) { neg+=a*a; } else { pos+=a*a;
+}
                 }
-            if (neg>pos) for (i=0; i<p; ++i) L[i+p*j]=-L[i+p*j];
+            if (neg>pos) { for (i=0; i<p; ++i) { L[i+p*j]=-L[i+p*j];
+}
+}
             }
         return(1);
         }
@@ -324,18 +342,22 @@ static int text_labels(char *lab,int n,int len,char *text)
         char label[32];
         int i,j;
 
-        if (*text=='"') t=text+1; else t=text;
-        p=strchr(t,'"'); if (p!=NULL) *p=EOS;
+        if (*text=='"') { t=text+1; } else { t=text;
+}
+        p=strchr(t,'"'); if (p!=NULL) { *p=EOS;
+}
 //        pit=strlen(t);
 
 
-        for (i=0; i<n*len; ++i) lab[i]=' ';
+        for (i=0; i<n*len; ++i) { lab[i]=' ';
+}
         for (i=0; i<n; ++i)
             {
             snprintf(label,32,"%s%d",t,i+1);
             for (j=0; j<len; ++j)
                 {
-                if (label[j]==EOS) break;
+                if (label[j]==EOS) { break;
+}
                 lab[i*len+j]=label[j];
                 }
             }
@@ -357,12 +379,13 @@ static int solve_symm2(double *x,double *a,double *b,int m,int k,double eps)
         p=(double *)muste_malloc(m*sizeof(double));
         if (p==NULL) { fnot_enough_memory(); return(-1); }
 
-        for (i=0; i<m; ++i)             /* choldet1 */
+        for (i=0; i<m; ++i) {             /* choldet1 */
             for (j=i; j<m; ++j)
                 {
                 s=a[i+m*j];
-                for (h=i-1; h>=0; --h)
+                for (h=i-1; h>=0; --h) {
                     s-=a[j+m*h]*a[i+m*h];
+}
                 if (j==i)
                     {
                     if (s<eps)
@@ -372,26 +395,31 @@ static int solve_symm2(double *x,double *a,double *b,int m,int k,double eps)
                         }
                     p[i]=1/sqrt(s);
                     }
-                else a[j+m*i]=s*p[i];
+                else { a[j+m*i]=s*p[i];
+}
                 } /* j,i */
+}
 
         for (j=0; j<k; ++j)              /* cholsol1 */
             {
             for (i=0; i<m; ++i)
                 {
                 s=b[i+m*j];
-                for (h=i-1; h>=0; --h)
+                for (h=i-1; h>=0; --h) {
                     s-=a[i+m*h]*b[h+m*j];
+}
                 b[i+m*j]=s*p[i];
                 }
             for (i=m-1; i>=0; --i)
                 {
                 s=b[i+m*j];
-                for (h=i+1; h<m; ++h) s-=a[h+m*i]*b[h+m*j];
+                for (h=i+1; h<m; ++h) { s-=a[h+m*i]*b[h+m*j];
+}
                 b[i+m*j]=s*p[i];
                 }
             }
-        for (i=0; i<m*k; ++i) x[i]=b[i];
+        for (i=0; i<m*k; ++i) { x[i]=b[i];
+}
         muste_free(p);
         return(1);
         }
@@ -423,18 +451,21 @@ static int nwtrap()
         f0=1.0E10;
         if (ind>1)
             {
-            for (i=0; i<p; ++i) v[i]=log((1.0-(double)k/(2*p))/S[i*(p+1)] );
+            for (i=0; i<p; ++i) { v[i]=log((1.0-(double)k/(2*p))/S[i*(p+1)] );
+}
             }
         else
             {
             bnd=sqrt(eps);
             i=mat_dcholinv(S,p,&det);
-            if (i!=1)
-                for (i=0; i<p; ++i) v[i]=0.6*E[i*(p+1)];
-            else
+            if (i!=1) {
+                for (i=0; i<p; ++i) { v[i]=0.6*E[i*(p+1)];
+}
+            } else
                 {
                 mat_cholmove(S,p);
-                for (i=0; i<p; ++i) v[i]=sqrt((1.0-(double)k/(2*p))/S[i*(p+1)]);
+                for (i=0; i<p; ++i) { v[i]=sqrt((1.0-(double)k/(2*p))/S[i*(p+1)]);
+}
                 }
             for (ui=0; ui<p*p; ++ui) { apu=E[ui]; E[ui]=S[ui]; S[ui]=apu; }
             }
@@ -509,19 +540,26 @@ static int iteration()
 */
                 if (ind>1)
                     {
-                    for (i=0; i<p; ++i) psi[i]=sqrt(exp(v[i]));
-                    for (i=0; i<k; ++i) d[i]=sqrt(1/facta_gamma[p-1-i]-1.0);
-                    for (i=0; i<p; ++i) for (j=0; j<k; ++j)
+                    for (i=0; i<p; ++i) { psi[i]=sqrt(exp(v[i]));
+}
+                    for (i=0; i<k; ++i) { d[i]=sqrt(1/facta_gamma[p-1-i]-1.0);
+}
+                    for (i=0; i<p; ++i) { for (j=0; j<k; ++j) {
                         L[i+p*j]=psi[i]*om[i+p*(p-1-j)]*d[j];
+}
+}
                     }
                 else
                     {
-                    for (i=0; i<p; ++i) for (j=0; j<k; ++j)
+                    for (i=0; i<p; ++i) { for (j=0; j<k; ++j) {
                         L[i+p*j]=om[i+p*j]*sqrt(facta_gamma[j]);
+}
+}
                     }
                 return(1);
                 }
-            else { i=incpsi(); if(i<0) return(-1); }
+            else { i=incpsi(); if(i<0) { return(-1); 
+}}
 
             }
         return(1);
@@ -539,9 +577,12 @@ static int fctgr()
             {
             if (ind>1)
                 {
-                for (i=0; i<p; ++i) psi[i]=sqrt(exp(v[i]));
-                for (i=0; i<p; ++i)
-                    for (j=0; j<p; ++j) E[i+p*j]=om[i+p*j]=psi[i]*psi[j]*S[i+p*j];
+                for (i=0; i<p; ++i) { psi[i]=sqrt(exp(v[i]));
+}
+                for (i=0; i<p; ++i) {
+                    for (j=0; j<p; ++j) { E[i+p*j]=om[i+p*j]=psi[i]*psi[j]*S[i+p*j];
+}
+}
 
                 mat_tred2(facta_gamma,psi,om,p,1e-300/1e-16);
                 mat_tql2(facta_gamma,psi,om,p,1e-16,30);
@@ -549,41 +590,51 @@ static int fctgr()
                 if (ind==2)
                     {
                     f=0.0;
-                    for (i=0; i<p-k; ++i) f+=(facta_gamma[i]-1)*(facta_gamma[i]-1);
+                    for (i=0; i<p-k; ++i) { f+=(facta_gamma[i]-1)*(facta_gamma[i]-1);
+}
                     f/=2;
-                    for (i=0; i<p; ++i) d[i]=facta_gamma[i]*(facta_gamma[i]-1.0);
+                    for (i=0; i<p; ++i) { d[i]=facta_gamma[i]*(facta_gamma[i]-1.0);
+}
                     }
                 else /* ind=3 */
                     {
                     f=0.0;
-                    for (i=0; i<p-k; ++i) f+=log(facta_gamma[i])+1/facta_gamma[i]-1;
-                    for (i=0; i<p; ++i) d[i]=1-1/facta_gamma[i];
+                    for (i=0; i<p-k; ++i) { f+=log(facta_gamma[i])+1/facta_gamma[i]-1;
+}
+                    for (i=0; i<p; ++i) { d[i]=1-1/facta_gamma[i];
+}
                     }
 
                 /* 16 */
                 for (i=0; i<p; ++i)
                     {
-                    gg[i]=0.0; for (j=0; j<p-k; ++j) gg[i]+=d[j]*om[i+p*j]*om[i+p*j];
+                    gg[i]=0.0; for (j=0; j<p-k; ++j) { gg[i]+=d[j]*om[i+p*j]*om[i+p*j];
+}
                     }
                 }
             else
                 {
-                for (i=0; i<p; ++i) psi[i]=v[i];
-                for (i=0; i<p; ++i)
+                for (i=0; i<p; ++i) { psi[i]=v[i];
+}
+                for (i=0; i<p; ++i) {
                     for (j=0; j<p; ++j)
                         {
                         da=S[i+p*j];
-                        if (i==j) da-=psi[i]*psi[i];
+                        if (i==j) { da-=psi[i]*psi[i];
+}
                         E[i+p*j]=om[i+p*j]=da;
                         }
+}
                 mat_tred2(facta_gamma,d,om,p,1e-300/1e-16);
                 mat_tql2(facta_gamma,d,om,p,1e-16,30);
                 f=0.0;
-                for (i=k; i<p; ++i) f+=facta_gamma[i]*facta_gamma[i];
+                for (i=k; i<p; ++i) { f+=facta_gamma[i]*facta_gamma[i];
+}
                 f/=2;
                 for (i=0; i<p; ++i)
                     {
-                    gg[i]=0.0; for (j=k; j<p; ++j) gg[i]+=facta_gamma[j]*om[i+p*j]*om[i+p*j];
+                    gg[i]=0.0; for (j=k; j<p; ++j) { gg[i]+=facta_gamma[j]*om[i+p*j]*om[i+p*j];
+}
                     gg[i]*=-2*psi[i];
                     }
                 }
@@ -595,13 +646,15 @@ static int fctgr()
                 if (itry<maxtry)
                     {
 /*     Rprintf("\nu&v: ");for (i=0; i<p; ++i) Rprintf("%g & %g ",u[i],v[i]); getch(); */
-                    for (i=0; i<p; ++i) v[i]=0.5*(u[i]+v[i]);
+                    for (i=0; i<p; ++i) { v[i]=0.5*(u[i]+v[i]);
+}
                     continue;
                     }
                 }
 
             f0=f;
-            for (i=0; i<p; ++i) u[i]=v[i];
+            for (i=0; i<p; ++i) { u[i]=v[i];
+}
             break;
             } /* while */
 /* Rprintf("\ngg:"); for (i=0; i<p; ++i) Rprintf(" %g",gg[i]); getch();
@@ -615,7 +668,8 @@ static int incpsi()
         int i,j,h;
         int sn;
 
-        if (mor==0) appr_der2(); else der2();
+        if (mor==0) { appr_der2(); } else { der2();
+}
         sn=0;
         while (1)
             {
@@ -623,8 +677,10 @@ static int incpsi()
                 {
                 if (E[i*(p+1)]<epsu)
                     {
-                    for (j=0; j<p; ++j)
-                        if (j!=i) E[i+p*j]=E[j+p*i]=0.0;
+                    for (j=0; j<p; ++j) {
+                        if (j!=i) { E[i+p*j]=E[j+p*i]=0.0;
+}
+}
                     }
                 }
 /*
@@ -639,7 +695,8 @@ getch();
 
             i=solve_symm2(delta,E,gg,p,1,(double)1e-10);
      muste_sprintf(sbuf," s=%d",i); sur_print(sbuf);
-            if (i<0) ++sn; else sn=0;
+            if (i<0) { ++sn; } else { sn=0;
+}
             if (sn>10)
                 {
                 if (etu==2)
@@ -662,14 +719,16 @@ getch();
 /*          for (i=0; i<p; ++i) Rprintf(" %g",delta[i]); getch();
 */
 
-            for (i=0; i<p; ++i) v[i]-=delta[i];
+            for (i=0; i<p; ++i) { v[i]-=delta[i];
+}
 
 
             /* kokeilu 18.1.89 */
             if (ind==3)
                 {
                 h=0;
-                for (i=0; i<p; ++i) if (v[i]>0) { v[i]=0; h=1; }
+                for (i=0; i<p; ++i) { if (v[i]>0) { v[i]=0; h=1; }
+}
                 if (h)
                     {
                     sur_print(" Almost singular corr.matrix??? ");
@@ -682,15 +741,18 @@ getch();
                 {
                 if (v[i]>bnd)
                     {
-                    if (fabs(delta[i])<epse) continue;
+                    if (fabs(delta[i])<epse) { continue;
+}
                     mor=1;  /* mor=0 kulkukaaviossa */
                     return(1);
                     }
-                else v[i]=bnd;
+                else { v[i]=bnd;
+}
                 }
             for (i=0; i<p; ++i)
                 {
-                if (v[i]<=bnd) continue;
+                if (v[i]<=bnd) { continue;
+}
                 if (fabs(delta[i])>eps) { mor=k; return(1); }
                 }
             mor=0;
@@ -708,8 +770,9 @@ static int der2()
         switch (ind)
             {
           case 1:
-            for (i=0; i<p; ++i) psi[i]=v[i];
-            for (i=0; i<p; ++i) for (j=0; j<=i; ++j)
+            for (i=0; i<p; ++i) { psi[i]=v[i];
+}
+            for (i=0; i<p; ++i) { for (j=0; j<=i; ++j)
                 {
                 da=da2=0.0;
                 for (m=k; m<p; ++m)
@@ -718,19 +781,22 @@ static int der2()
                     for (n=0; n<k; ++n)
                         {
                         ggg=facta_gamma[m]-facta_gamma[n];
-                        if (ggg==0.0) invalid_R();
+                        if (ggg==0.0) { invalid_R();
+}
                         db+=(facta_gamma[m]+facta_gamma[n])/ggg
                             *om[i+p*n]*om[j+p*n];
                         }
                     db*=om[i+p*m]*om[j+p*m];
                     da+=db;
-                    if (i==j) da2+=(psi[i]*psi[i]-facta_gamma[m]/2.0)
+                    if (i==j) { da2+=(psi[i]*psi[i]-facta_gamma[m]/2.0)
                                    *om[i+p*m]*om[i+p*m];
+}
                     }
                 da*=psi[i]*psi[j];
                 da=4*(da+da2);
                 E[i+p*j]=da; E[j+p*i]=da;
                 }
+}
             break;
 /*
           case 1:
@@ -756,17 +822,20 @@ static int der2()
             break;
 */
           case 2:
-            for (i=0; i<p; ++i) psi[i]=sqrt(exp(v[i]));
-            for (i=0; i<p; ++i) for (j=0; j<=i; ++j)
+            for (i=0; i<p; ++i) { psi[i]=sqrt(exp(v[i]));
+}
+            for (i=0; i<p; ++i) { for (j=0; j<=i; ++j)
                 {
-                if (i==j) da=gg[i]; else da=0.0;
+                if (i==j) { da=gg[i]; } else { da=0.0;
+}
                 for (m=0; m<p-k; ++m)
                     {
                     db=0.0;
                     for (n=p-k; n<p; ++n)
                         {
                         ggg=facta_gamma[m]-facta_gamma[n];
-                        if (ggg==0.0) invalid_R();
+                        if (ggg==0.0) { invalid_R();
+}
                         db+=facta_gamma[n]*(facta_gamma[m]+facta_gamma[n]-2)/ggg
                             *om[i+p*n]*om[j+p*n];
                         }
@@ -775,27 +844,33 @@ static int der2()
                     }
                 E[i+p*j]=da; E[j+p*i]=da;
                 }
+}
             break;
           case 3:
-            for (i=0; i<p; ++i) psi[i]=sqrt(exp(v[i]));
-            for (i=0; i<p; ++i) for (j=0; j<=i; ++j)
+            for (i=0; i<p; ++i) { psi[i]=sqrt(exp(v[i]));
+}
+            for (i=0; i<p; ++i) { for (j=0; j<=i; ++j)
                 {
-                if (i==j) da=-gg[i]; else da=0.0;
+                if (i==j) { da=-gg[i]; } else { da=0.0;
+}
                 for (m=0; m<p-k; ++m)
                     {
                     db=0.0;
                     for (n=p-k; n<p; ++n)
                         {
                         ggg=facta_gamma[m]-facta_gamma[n];
-                        if (ggg==0.0) invalid_R();
+                        if (ggg==0.0) { invalid_R();
+}
                         db+=(facta_gamma[m]+facta_gamma[n]-2)/ggg
                             *om[i+p*n]*om[j+p*n];
                         }
-                    if (i==j) db+=1.0;
+                    if (i==j) { db+=1.0;
+}
                     da+=db*om[i+p*m]*om[j+p*m];
                     }
                 E[i+p*j]=da; E[j+p*i]=da;
                 }
+}
             break;
             }
         return(1);
@@ -819,21 +894,26 @@ static int appr_der2()
         switch (ind)
             {
           case 1:
-            for (i=0; i<p; ++i) psi[i]=v[i];
-            for (i=0; i<p; ++i) for (j=0; j<=i; ++j)
+            for (i=0; i<p; ++i) { psi[i]=v[i];
+}
+            for (i=0; i<p; ++i) { for (j=0; j<=i; ++j)
                 {
                 da=0.0;
-                for (m=k; m<p; ++m) da+=om[i+p*m]*om[j+p*m];
+                for (m=k; m<p; ++m) { da+=om[i+p*m]*om[j+p*m];
+}
                 da*=da; da*=4*psi[i]*psi[j]; E[i+p*j]=da; E[j+p*i]=da;
                 }
+}
             break;
           case 2: case 3:
-            for (i=0; i<p; ++i) for (j=0; j<=i; ++j)
+            for (i=0; i<p; ++i) { for (j=0; j<=i; ++j)
                 {
                 da=0.0;
-                for (m=0; m<p-k; ++m) da+=om[i+p*m]*om[j+p*m];
+                for (m=0; m<p-k; ++m) { da+=om[i+p*m]*om[j+p*m];
+}
                 da*=da; E[i+p*j]=da; E[j+p*i]=da;
                 }
+}
             break;
             }
         return(1);

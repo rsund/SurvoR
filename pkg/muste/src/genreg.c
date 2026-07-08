@@ -140,26 +140,34 @@ void muste_genreg(char *argv)
         if (g>2)
             {
             results_line=edline2(word[2],1,1);
-            if (results_line<0) return;
+            if (results_line<0) { return;
+}
             }
 
         strcpy(data,word[1]);
-        i=data_read_open(data,&d); if (i<0) return;
+        i=data_read_open(data,&d); if (i<0) { return;
+}
         i=sp_init(r1+r-1);
         if (i<0)
             {
             sur_print("\nToo many specifications!");
             WAIT; return;
             }
-        i=mask(&d); if (i<0) return;
-        i=conditions(&d); if (i<0) return;  /* permitted only once */
-        i=spfind("RESULTS"); if (i>=0) results=atoi(spb[i]);
+        i=mask(&d); if (i<0) { return;
+}
+        i=conditions(&d); if (i<0) { return;  /* permitted only once */
+}
+        i=spfind("RESULTS"); if (i>=0) { results=atoi(spb[i]);
+}
         prind=0;
-        i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
-        if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);
+        i=hae_apu("prind",sbuf); if (i) { prind=atoi(sbuf);
+}
+        if ((i=spfind("PRIND"))>=0) { prind=atoi(spb[i]);
+}
 
         strcpy(tempd,etmpd);
-        i=spfind("TEMP"); if (i>=0) strcpy(tempd,spb[i]);
+        i=spfind("TEMP"); if (i>=0) { strcpy(tempd,spb[i]);
+}
         strcat(tempd,"SURVO.TMP");
 
         weightvar=activated(&d,'W');
@@ -175,7 +183,8 @@ void muste_genreg(char *argv)
                 sur_print("\nToo many regressors!");
                 WAIT; return;
                 }
-            if (ch=='X') xvar[nxvar++]=i;
+            if (ch=='X') { xvar[nxvar++]=i;
+}
             if (ch=='Y')
                 {
                 if (yvar>=0)
@@ -206,9 +215,12 @@ getch();
         nbinvar=activated(&d,'N');
         m1=m; if (nbinvar>=0) { ++m1; xvar[nxvar]=nbinvar; }
 
-        i=lue_datat(); if (i<0) return;
-        i=varaa_tilat(); if (i<0) return;
-        i=lue_temp(); if (i<0) return;
+        i=lue_datat(); if (i<0) { return;
+}
+        i=varaa_tilat(); if (i<0) { return;
+}
+        i=lue_temp(); if (i<0) { return;
+}
         i=fit(); if (i<0) { s_end(argv); return; }
         i=save_variables(word[1]);
     //  muste_fclose(temp);   9.8.2011
@@ -258,7 +270,8 @@ static int lue_datat()
         double a,w,y;
         int miss,i;
 
-        for (i=0; i<3; ++i) pp[i]=i*sizeof(double);
+        for (i=0; i<3; ++i) { pp[i]=i*sizeof(double);
+}
         templen=pp[2]+m1*sizeof(double);
 
         temp=muste_fopen(tempd,"wb");
@@ -271,22 +284,27 @@ static int lue_datat()
                 muste_sprintf(sbuf,"\nCannot save temporary data in %s!",tempd);
                 sur_print(sbuf); WAIT; return(-1);
                 }
-            if (unsuitable(&d,j)) continue;
+            if (unsuitable(&d,j)) { continue;
+}
             if (weightvar>=0)
                 {
                 data_load(&d,j,weightvar,&w);
-                if (w==MISSING8) continue;
+                if (w==MISSING8) { continue;
+}
                 }
-            else w=1.0;
+            else { w=1.0;
+}
             data_load(&d,j,yvar,&y);
-            if (y==MISSING8) continue;
+            if (y==MISSING8) { continue;
+}
             miss=0;
             for (i=0; i<m1; ++i)
                 {
                 data_load(&d,j,xvar[i],&a);
                 if (a==MISSING8) { miss=1; break; }
                 }
-            if (miss) continue;
+            if (miss) { continue;
+}
             temp_save(w);
             temp_save(y);
             for (i=0; i<m1; ++i)
@@ -295,7 +313,8 @@ static int lue_datat()
                 temp_save(a);
                 }
             ++n;
-            if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); prind=1-prind; }
+            if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) { sur_getch(); 
+}prind=1-prind; }
             if (prind) { muste_sprintf(sbuf,"%d ",j); sur_print(sbuf); }
             }
         muste_fclose(temp);
@@ -332,13 +351,15 @@ static int lue_temp()
         {
         int i,j;
 
-        for (i=0; i<m1; ++i) u[i]=i;
+        for (i=0; i<m1; ++i) { u[i]=i;
+}
         temp=muste_fopen(tempd,"rb");
         for (j=0; j<n; ++j)    /* n0 aikaisemmin! */
             {
             W[j]=temp_load();
             Y[j]=temp_load();
-            for (i=0; i<m1; ++i) X[(int)u[i]*(int)n0+(int)j]=temp_load();
+            for (i=0; i<m1; ++i) { X[(int)u[i]*(int)n0+(int)j]=temp_load();
+}
             }
         muste_fclose(temp); // 9.8.2011/SM
         return(1);
@@ -357,7 +378,8 @@ static int save_variables(char *data)
         int j;
         double x;
 
-        if (resvar<0 && predvar<0) return(1);
+        if (resvar<0 && predvar<0) { return(1);
+}
         i=data_to_write(data,&d);
         if (i<0) { muste_sprintf(sbuf,"\nCannot write residuals etc. in %s!",data);
                    sur_print(sbuf); WAIT; return(-1);
@@ -367,36 +389,45 @@ static int save_variables(char *data)
         ig=0;
         for (j=d.l1; j<=d.l2; ++j)
             {
-            if (unsuitable(&d,j)) continue;
+            if (unsuitable(&d,j)) { continue;
+}
             if (weightvar>=0)
                 {
                 data_load(&d,j,weightvar,&x);
-                if (x==MISSING8) continue;
+                if (x==MISSING8) { continue;
+}
                 }
             data_load(&d,j,yvar,&x);
-            if (x==MISSING8) continue;
+            if (x==MISSING8) { continue;
+}
             miss=0;
             for (i=0; i<m1; ++i)
                 {
                 data_load(&d,j,xvar[i],&x);
                 if (x==MISSING8) { miss=1; break; }
                 }
-            if (miss) continue;
-            if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); prind=1-prind; }
+            if (miss) { continue;
+}
+            if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) { sur_getch(); 
+}prind=1-prind; }
             if (prind) { muste_sprintf(sbuf,"%d ",j); sur_print(sbuf); }
 
-            if (resvar>=0)
+            if (resvar>=0) {
                 data_save(&d,j,resvar,(Y[ig]-my[ig])/sqrt((*vf)(my[ig])));
+}
 
-            if (predvar>=0)
+            if (predvar>=0) {
                 data_save(&d,j,predvar,my[ig]);
+}
             ++ig;
             }
 
-if (resvar>=0)
+if (resvar>=0) {
     update_varname(&d,resvar,"(Scaled) Pearson residuals from GENREG");
-if (predvar>=0)
+}
+if (predvar>=0) {
     update_varname(&d,predvar,"Predicted value from GENREG");
+}
         return(1);
         }
 
@@ -452,22 +483,29 @@ static int fit()
 
         math_error=0;
         *lab=EOS;
-        for (i=0; i<m; ++i) strncat(lab,d.varname[xvar[i]],8);
-        for (j=0; j<n; ++j) V[j]=Y[j];
+        for (i=0; i<m; ++i) { strncat(lab,d.varname[xvar[i]],8);
+}
+        for (j=0; j<n; ++j) { V[j]=Y[j];
+}
 
-        i=lue_error(); if (i<0) return(-1);
-        i=lue_link(); if (i<0) return(-1);
+        i=lue_error(); if (i<0) { return(-1);
+}
+        i=lue_link(); if (i<0) { return(-1);
+}
 
-        if (math_error) return(-1);
+        if (math_error) { return(-1);
+}
         i=glm_fit(flink,filink,dfilink,vf,devf,fscale,
                       X,n,m,Y,W,V,lab,b,sb,my,&deviance,&df);
-        k=output_open(eout); if (k<0) return(-1);
+        k=output_open(eout); if (k<0) { return(-1);
+}
         if (i==-2)
             {
             print_line("Model is saturated!");
             return(-1);
             }
-        if (i<0) return(-1);
+        if (i<0) { return(-1);
+}
 /*      da=1-cdf_chi2(deviance,(double)df,1e-7);        */
         fnconv(deviance,accuracy+2,s1);
         muste_sprintf(s,"Data %s: Deviance=%s df=%d",
@@ -475,7 +513,8 @@ static int fit()
         print_line(s);
 // i=8; muste_fieldcopy(s1,d.varname[yvar],8); while (s1[i-1]==' '&i>0) --i;
 // 9.8.2011/SM
- i=8; muste_fieldcopy(s1,d.varname[yvar],8); while (i>0 && s1[i-1]==' ') --i;
+ i=8; muste_fieldcopy(s1,d.varname[yvar],8); while (i>0 && s1[i-1]==' ') { --i;
+}
         muste_sprintf(s,"Yvariate=%.*s ERROR=%s LINK=%s",i,s1,g_error,g_link);
         print_line(s);
         if (results>0)
@@ -515,14 +554,16 @@ static int regr_talletus()
 
 static char *spois(char *s)
         {
-        while (*s==' ') ++s;
+        while (*s==' ') { ++s;
+}
         return(s);
         }
 
 static int print_line(char *x)
         {
         output_line(x,eout,results_line);
-        if (results_line) ++results_line;
+        if (results_line) { ++results_line;
+}
         return(1);
         }
 
@@ -538,7 +579,8 @@ static double log0(double x)
             sur_print("\nLINK=LOG: Negative values not allowed!"); WAIT;
             return(0.0);
             }
-        if (x==0.0) return(0.5);
+        if (x==0.0) { return(0.5);
+}
         return(log(x));
         }
 static double inv0(double x)
@@ -583,7 +625,8 @@ static double dilogit(double y)
         double a,b,c;
 
         a=X[ig+nxvar*n0];
-        if (a<=0.0) a=0.1;
+        if (a<=0.0) { a=0.1;
+}
         b=exp(-y); c=b+1.0;
         return ( a*b/(c*c) );
         }
@@ -614,7 +657,8 @@ static double diprobit(double y)
         double a;
 
         a=X[ig+nxvar*n0];
-        if (a<=0.0) a=0.1;
+        if (a<=0.0) { a=0.1;
+}
         return ( a/sqrt((double)(2.0*3.14159265))*exp(-y*y/2) );
         }
 
@@ -643,7 +687,8 @@ static double dicomplog(double y)
         double a,b;
 
         a=X[ig+nxvar*n0];
-        if (a<=0.0) a=0.1;
+        if (a<=0.0) { a=0.1;
+}
         b=exp(y);
         return ( a*exp(-b)*b );
         }
@@ -687,11 +732,14 @@ static double devbin(double y,double my)
 
         a=X[ig+nxvar*n0];
 /*      if (y=0.0 || my==0.0 || a<=y || a<=my) return(0.0); -13.2.98 */
-        if (a==0.0) return(0.0);
+        if (a==0.0) { return(0.0);
+}
 //      return( 2*(y*log(y/my)+(a-y)*log((a-y)/(a-my))) );
 
-        if (y==0.0) y1=0.0; else y1=y*log(y/my);
-        if (a<=y) y2=0.0; else y2=(a-y)*log((a-y)/(a-my));
+        if (y==0.0) { y1=0.0; } else { y1=y*log(y/my);
+}
+        if (a<=y) { y2=0.0; } else { y2=(a-y)*log((a-y)/(a-my));
+}
         return( 2*(y1+y2) );
         }
 
@@ -708,7 +756,8 @@ static double vfbin(double my)
         double a;
 
         a=X[ig+nxvar*n0];
-        if (a<=0.0) return(1.0);
+        if (a<=0.0) { return(1.0);
+}
         return ( my*(a-my)/a );
         }
 
@@ -767,7 +816,8 @@ static int lue_link()
         char s[LLENGTH],*part[2];
 
         i=spfind("LINK");
-        if (i<0) return(1);
+        if (i<0) { return(1);
+}
         strcpy(s,spb[i]); strcpy(g_link,s); muste_strupr(s);
         if (*s=='I')  /* Identity */
             {
@@ -876,11 +926,15 @@ printf("\nW:"); mprint(W,nx,1); getch();
 printf("\nV:"); mprint(V,nx,1); getch();
 */
 
-        *pdf=-mx; for (i=0; i<nx; ++i) *pdf+=(int)W[i];
-        if (*pdf<=0) return(-2);
+        *pdf=-mx; for (i=0; i<nx; ++i) { *pdf+=(int)W[i];
+}
+        if (*pdf<=0) { return(-2);
+}
 
-        i=glm_fit_space(mx,nx); if (i<0) return(-1);
-        for (i=0; i<8*mx; ++i) lab_fit[i]=lab[i];
+        i=glm_fit_space(mx,nx); if (i<0) { return(-1);
+}
+        for (i=0; i<8*mx; ++i) { lab_fit[i]=lab[i];
+}
 /*      for (ig=0; ig<nx; ++ig) V[ig]=sqrt(fabs(V[ig]));  23.12.90  */
 
         while (1)
@@ -888,7 +942,8 @@ printf("\nV:"); mprint(V,nx,1); getch();
             for (i=0; i<mx; ++i)
                 {
                 XY[i]=0.0;
-                for (j=0; j<=i; ++j) XX[i+mx*j]=0.0;
+                for (j=0; j<=i; ++j) { XX[i+mx*j]=0.0;
+}
                 }
 
             for (ig=0; ig<nx; ++ig)
@@ -900,19 +955,23 @@ printf("\nV:"); mprint(V,nx,1); getch();
                     bb=X[ig+u[i]*n0];
                     XY[i]+=da*bb*aa;
 // Rprintf("\npaino=%g x=%g y=%g",da,bb,aa); getch();
-                    for (j=0; j<=i; ++j) XX[i+mx*j]+=da*bb*X[ig+u[j]*n0];
+                    for (j=0; j<=i; ++j) { XX[i+mx*j]+=da*bb*X[ig+u[j]*n0];
+}
                     }
                 }
 
 
-            for (i=0; i<mx; ++i) for(j=0; j<=i; ++j) XX[j+mx*i]=XX[i+mx*j];
+            for (i=0; i<mx; ++i) { for(j=0; j<=i; ++j) { XX[j+mx*i]=XX[i+mx*j];
+}
+}
 
 // mprint(XX,mx,mx);
 // mprint(XY,1,mx); getch();
 
             i=mat_cholinv_genreg(XX,mx,(double)1e-10);
 
-            if (i>0) break;
+            if (i>0) { break;
+}
             muste_sprintf(sbuf,"\nCol. %.8s linearly dependent on previous ones!",
                                         lab_fit-8*i); sur_print(sbuf);
             reduce(X,lab_fit,nx,mx,-i);
@@ -926,7 +985,8 @@ printf("\nV:"); mprint(V,nx,1); getch();
    Rprintf("\nb0: ");
    for (i=0; i<mx; ++i) Rprintf("%g ",b[i]); getch();
 */
-        if (*pdf<=0) return(1);
+        if (*pdf<=0) { return(1);
+}
 
         iteration=0;
         while (1)
@@ -934,24 +994,29 @@ printf("\nV:"); mprint(V,nx,1); getch();
             for (ig=0; ig<nx; ++ig)
                 {
                 da=0.0;
-                for (j=0; j<mx; ++j) da+=X[ig+u[j]*n0]*b[j];
+                for (j=0; j<mx; ++j) { da+=X[ig+u[j]*n0]*b[j];
+}
                 lmy_fit[ig]=da;
                 }
-            for (ig=0; ig<nx; ++ig) my[ig]=(*filink)(lmy_fit[ig]);
-            for (ig=0; ig<nx; ++ig)
-                z_fit[ig]=lmy_fit[ig]+(Y[ig]-my[ig])/(*dfilink)(lmy_fit[ig]); ;
+            for (ig=0; ig<nx; ++ig) { my[ig]=(*filink)(lmy_fit[ig]);
+}
+            for (ig=0; ig<nx; ++ig) {
+                z_fit[ig]=lmy_fit[ig]+(Y[ig]-my[ig])/(*dfilink)(lmy_fit[ig]); 
+};
 
             for (ig=0; ig<nx; ++ig)
                 {
                 db=(*vf)(my[ig]); /* 4.7.1996 */
-                if (db<=1e-15) db=1e-15;
+                if (db<=1e-15) { db=1e-15;
+}
                 V[ig]=(*dfilink)(lmy_fit[ig])/sqrt(db);
                 }
 
             for (i=0; i<mx; ++i)
                 {
                 XY[i]=0.0;
-                for (j=0; j<=i; ++j) XX[i+mx*j]=0.0;
+                for (j=0; j<=i; ++j) { XX[i+mx*j]=0.0;
+}
                 }
             for (ig=0; ig<nx; ++ig)
                 {
@@ -962,10 +1027,13 @@ printf("\nV:"); mprint(V,nx,1); getch();
                     {
                     bb=X[ig+u[i]*n0];
                     XY[i]+=da*bb*aa;
-                    for (j=0; j<=i; ++j) XX[i+mx*j]+=da*bb*X[ig+u[j]*n0];
+                    for (j=0; j<=i; ++j) { XX[i+mx*j]+=da*bb*X[ig+u[j]*n0];
+}
                     }
                 }
-            for (i=0; i<mx; ++i) for(j=0; j<=i; ++j) XX[j+mx*i]=XX[i+mx*j];
+            for (i=0; i<mx; ++i) { for(j=0; j<=i; ++j) { XX[j+mx*i]=XX[i+mx*j];
+}
+}
             i=mat_cholinv_genreg(XX,mx,(double)1e-10);
             if (i<0)
                 {
@@ -1010,7 +1078,8 @@ getch();
                 {
                 if (sur_kbhit())
                     {
-                    i=sur_getch(); while (sur_kbhit()) sur_getch();
+                    i=sur_getch(); while (sur_kbhit()) { sur_getch();
+}
                     if (i=='.')
               { std_errors(XX,mx,sb,lab_fit,(*fscale)(*pdev,(double)*pdf));
                 restore(b,sb,ndel,mx); return(2); }
@@ -1025,11 +1094,16 @@ static int glm_fit_space(int mx,int nx)
         {
         int i;
 
-        i=mspace(&XX,mx,mx+1); if (i<0) return(-1);
-        i=mspace(&XY,mx,1); if (i<0) return(-1);
-        i=mspace(&a_fit,mx,1); if (i<0) return(-1);
-        i=mspace(&lmy_fit,nx,1); if (i<0) return(-1);
-        i=mspace(&z_fit,nx,1); if (i<0) return(-1);
+        i=mspace(&XX,mx,mx+1); if (i<0) { return(-1);
+}
+        i=mspace(&XY,mx,1); if (i<0) { return(-1);
+}
+        i=mspace(&a_fit,mx,1); if (i<0) { return(-1);
+}
+        i=mspace(&lmy_fit,nx,1); if (i<0) { return(-1);
+}
+        i=mspace(&z_fit,nx,1); if (i<0) { return(-1);
+}
 
 /*******************
         XX=(double *)muste_malloc(mx*(mx+1)*sizeof(double));
@@ -1038,19 +1112,22 @@ static int glm_fit_space(int mx,int nx)
         lmy_fit=(double *)muste_malloc(nx*sizeof(double));
         z_fit=(double *)muste_malloc(nx*sizeof(double));
 **********************/
-        if (idel_fit!=NULL) idel_fit=(int *)muste_realloc(idel_fit,mx*sizeof(int));
-        else          idel_fit=(int *)muste_malloc(mx*sizeof(int));
+        if (idel_fit!=NULL) { idel_fit=(int *)muste_realloc(idel_fit,mx*sizeof(int));
+        } else {          idel_fit=(int *)muste_malloc(mx*sizeof(int));
+}
         if (idel_fit==NULL) { not_enough_memory(); return(-1); }
-        if (lab_fit!=NULL) lab_fit=(char *)muste_realloc(lab_fit,8*mx+1);
-        else          lab_fit=(char *)muste_malloc(8*mx+1);
+        if (lab_fit!=NULL) { lab_fit=(char *)muste_realloc(lab_fit,8*mx+1);
+        } else {          lab_fit=(char *)muste_malloc(8*mx+1);
+}
         if (lab_fit==NULL) { not_enough_memory(); return(-1); }
         return(1);
         }
 
 static int mspace(double **A,int m,int n)
         {
-        if (*A!=NULL) *A=(double *)muste_realloc(*A,m*n*sizeof(double));
-        else          *A=(double *)muste_malloc(m*n*sizeof(double));
+        if (*A!=NULL) { *A=(double *)muste_realloc(*A,m*n*sizeof(double));
+        } else {          *A=(double *)muste_malloc(m*n*sizeof(double));
+}
         if (*A==NULL) { not_enough_memory(); return(-1); }
         return(1);
         }
@@ -1080,8 +1157,10 @@ static int reduce(double *X,char *lab,int nx,int mx,int i1)
 
 /*      for (li=(int)nx*(int)i1; li<(int)nx*(int)(mx-1); ++li)
             X[li]=X[li+(int)nx]; */
-        for (i=i1; i<mx-1; ++i) u[i]=u[i+1];
-        for (i=8*i1; i<8*(mx-1); ++i) lab[i]=lab[i+8];
+        for (i=i1; i<mx-1; ++i) { u[i]=u[i+1];
+}
+        for (i=8*i1; i<8*(mx-1); ++i) { lab[i]=lab[i+8];
+}
         return(1);
         }
 
@@ -1089,7 +1168,8 @@ static int restore(double *b,double *sb,int ndel,int mx)
         {
         int i,j,i1;
 
-        if (ndel==0) return(1);
+        if (ndel==0) { return(1);
+}
         for (j=ndel-1; j>=0; --j)
             {
             i1=idel_fit[j];
@@ -1134,35 +1214,42 @@ static int mat_cholinv_genreg(double *a,int n,double eps)
                 x=a[n*i+j];     /* ajattele: i=sarake, j=rivi */
                                 /* alunperin talletus riveitt?in */
                                 /* nyt sarakkeittain */
-                for (k=i-1; k>=0; --k)
+                for (k=i-1; k>=0; --k) {
                     x-=a[n*j1+k]*a[n*i1+k];
+}
                 if (j==i)
                     {
-                    if (x<=eps) return(-j);
+                    if (x<=eps) { return(-j);
+}
                     a[n*i1+i]=y=1/sqrt(x);
                     }
-                else a[n*j1+i]=x*y;
+                else { a[n*j1+i]=x*y;
+}
                 }
             }
 
-        for (i=0; i<n; ++i)
+        for (i=0; i<n; ++i) {
         for (j=i+1; j<n; ++j)
             {
             z=0;
             j1=j+1;
-            for (k=j-1; k>=i; --k)
+            for (k=j-1; k>=i; --k) {
                 z-=a[n*j1+k]*a[n*(k+1)+i];
+}
             a[n*j1+i]=z*a[n*j1+j];
             }
-        for (i=0; i<n; ++i)
+}
+        for (i=0; i<n; ++i) {
         for (j=i; j<n; ++j)
             {
             z=0;
             j1=n;
-            for (k=j+1; k<=j1; ++k)
+            for (k=j+1; k<=j1; ++k) {
                 z+=a[n*k+j]*a[n*k+i];
+}
             a[n*(j+1)+i]=z;
             }
+}
         return(1);
         }
 /************

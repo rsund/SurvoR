@@ -38,10 +38,13 @@ int prompt(char *kysymys,char *vastaus,int pituus)
         char tila[LLENGTH];
         int m, pos;
 
-        for (i=0; i<pituus; ++i) tila[i]=' ';
-        for (i=0; i<strlen(vastaus); ++i) tila[i]=vastaus[i];
+        for (i=0; i<pituus; ++i) { tila[i]=' ';
+}
+        for (i=0; i<strlen(vastaus); ++i) { tila[i]=vastaus[i];
+}
         muste_sprintf(sbuf,"%s%.*s*",kysymys,pituus,tila); sur_print(sbuf);
-        for (i=0; i<pituus+1; ++i) PR_LEFT;
+        for (i=0; i<pituus+1; ++i) { PR_LEFT;
+}
 
         pos=1;
         while (1)
@@ -54,19 +57,23 @@ int prompt(char *kysymys,char *vastaus,int pituus)
                   case -9:
                     return(-9);
                   case CODE_LEFT:
-                    if (pos==1) break;
+                    if (pos==1) { break;
+}
                     PR_LEFT; --pos; break;
                   case CODE_RIGHT:
-                    if (pos==pituus) break;
+                    if (pos==pituus) { break;
+}
                     PR_RIGHT; ++pos; break;
                   case CODE_RETURN:
                     i=pituus;
-                    while(tila[i-1]==' ') --i;
+                    while(tila[i-1]==' ') { --i;
+}
                     tila[i]=EOS;
                     strcpy(vastaus,tila);
                     return(1);
                   case CODE_HOME:
-                    for (;pos>1;--pos) PR_LEFT;
+                    for (;pos>1;--pos) { PR_LEFT;
+}
                     break;
                   case CODE_ERASE:
                     for (i=pos-1; i<pituus; ++i)
@@ -74,26 +81,32 @@ int prompt(char *kysymys,char *vastaus,int pituus)
                         tila[i]=' ';
                         sur_print(" ");
                         }
-                    for (i=pos-1; i<pituus; ++i) PR_LEFT;
+                    for (i=pos-1; i<pituus; ++i) { PR_LEFT;
+}
                     break;
                   case CODE_INSERT:
                     if (tila[pituus-1]!=' ') { BEEP; break; }
-                    for (i=pituus-1; i>=pos; --i) tila[i]=tila[i-1];
+                    for (i=pituus-1; i>=pos; --i) { tila[i]=tila[i-1];
+}
                     tila[pos-1]=' ';
                     for (i=pos; i<=pituus; ++i) { muste_sprintf(sbuf,"%c",tila[i-1]); sur_print(sbuf); }
-                    for (i=pos; i<=pituus; ++i) PR_LEFT;
+                    for (i=pos; i<=pituus; ++i) { PR_LEFT;
+}
                     break;
                   case CODE_DELETE:
-                    for (i=pos; i<pituus; ++i) tila[i-1]=tila[i];
+                    for (i=pos; i<pituus; ++i) { tila[i-1]=tila[i];
+}
                     tila[pituus-1]=' ';
                     for (i=pos; i<=pituus; ++i) { muste_sprintf(sbuf,"%c",tila[i-1]); sur_print(sbuf); }
-                    for (i=pos; i<=pituus; ++i) PR_LEFT;
+                    for (i=pos; i<=pituus; ++i) { PR_LEFT;
+}
                     break;
                   case CODE_BACKSP: return(2);
 
                   default:
                     muste_sprintf(sbuf,"%c",m); sur_print(sbuf); tila[pos-1]=(char)m;
-                    if (pos<pituus) ++pos; else PR_LEFT;
+                    if (pos<pituus) { ++pos; } else { PR_LEFT;
+}
                     break;
                     }
             }
@@ -121,7 +134,8 @@ static void check_alarm(char *aika)    /* 14.8.1992 */
                 display_off=0; 
                 LOCATE(1,1); BEEP; PR_EBLK;
                 sur_print("\n ALARM!!!     Press # "); PR_ENRM;
-                while (k!='#') k=sur_getch();
+                while (k!='#') { k=sur_getch();
+}
 //                LOCATE(1,1); PR_ENRM; sur_print("\n                      ");
                 ++sur_alarm;  disp();
                 }
@@ -208,7 +222,8 @@ static int nextkey(char *valinta)
                     }
                 }
     
-            if (sur_kbhit()) break;
+            if (sur_kbhit()) { break;
+}
             time((time_t *)&time2);
             if (difftime(time2,time1)>0.5)
                 {
@@ -251,7 +266,8 @@ if (muste_get_R_int(".muste$exitpressed")) // RS 27.2.2013
                         case CODE_TOUCH:
                         case CODE_DISK:
                         case CODE_CODE: break;
-                        case CODE_BACKSP: if (!muste_help_running) m=CODE_LEFT; break; // RS ADD
+                        case CODE_BACKSP: if (!muste_help_running) { m=CODE_LEFT; 
+}break; // RS ADD
                         case CODE_REF:
                         case CODE_MERGE:
                         case CODE_COPY:
@@ -340,8 +356,10 @@ muste_mousewheel=FALSE;
             {
             headline(valinta);
             m=tutch();
-            while (m==255) m=tutch();
-            if (m!=0) return(m);
+            while (m==255) { m=tutch();
+}
+            if (m!=0) { return(m);
+}
             }
         if (etu==1) { m=nextkey(valinta); tutsave(m); return(m); }
 
@@ -360,13 +378,15 @@ static int press_key(int m)
         if (etu1<2) { Wdisp(); return(1); }   /* 23.10.89 ennen etu1==1 */
         k=sur_wait(1000L*(long)tut_wait_c,Wdisp,1);
 
-        if (k) ch=nextkey(""); else ch=m;
+        if (k) { ch=nextkey(""); } else { ch=m;
+}
         while (ch!=m && ch!=CODE_LEFT)
             {
             if (ch==CODE_HELP) { etu2=0; ch=m; break; }
             BEEP;
             k=sur_wait(1000L*(long)tut_wait_c,Wdisp,1);
-            if (k) ch=nextkey(""); else ch=m;
+            if (k) { ch=nextkey(""); } else { ch=m;
+}
             }
 
         return(1);
@@ -380,13 +400,15 @@ int tutch()
         char nimi[16];
 
         m=getc(tutor);
-        while (m==TUT_COMMENT_CODE) m=getc(tutor);  /* 22.10.88 */
+        while (m==TUT_COMMENT_CODE) { m=getc(tutor);  /* 22.10.88 */
+}
         if (m==10) { m=13; muste_fixme("\nFIXME: Check LF in sucro!!!"); } // RS 17.11.2013    
         
         if (m==CODE_PRE)
             {
             ch=getc(tutor); ungetc(ch,tutor);
-            if (ch=='T') tut_special_code=1;
+            if (ch=='T') { tut_special_code=1;
+}
             }
         if (!feof(tutor))
             {
@@ -396,17 +418,23 @@ int tutch()
                 ch=sur_getch(); // RS CHA nextkey("");
                 switch (ch)
                     {
-/* 23.1.2001 */   case '+': --tut_wait_c; if (tut_wait_c<1) tut_wait_c=1;  // RS CHA 2 -> 1
+/* 23.1.2001 */   case '+': --tut_wait_c; if (tut_wait_c<1) { tut_wait_c=1;  // RS CHA 2 -> 1
+}
                             break;
                   case '-': ++tut_wait_c; break;
 
-                  case '*': if (etu1<0) break;
-                            --etu1; if (etu1<=0) etu1=1; break;
-                  case '/': if (etu1<0) break;
-                            ++etu1; if (etu1>20) etu1=20; break;
+                  case '*': if (etu1<0) { break;
+}
+                            --etu1; if (etu1<=0) { etu1=1; 
+}break;
+                  case '/': if (etu1<0) { break;
+}
+                            ++etu1; if (etu1>20) { etu1=20; 
+}break;
                   case '.': etu=0; muste_fclose(tutor); return(0);
                   case CODE_HELP:
-                            etu2=2; if (etu1<2) etu1=2; break;
+                            etu2=2; if (etu1<2) { etu1=2; 
+}break;
 
                   default: break; // RS CHA FIXME???while(!sur_kbhit()) ; sur_getch(); break;
                     }
@@ -416,21 +444,25 @@ int tutch()
             if (m==TUT_EFFECTS_OFF) { etu2=etu3=0; return(255); }
             if (m==CODE_PRE && tut_special_code) { tut_special(); return(255); }
                             /* lis. 4.10.88  */
-            if (etu>1 && etu2!=2) sur_wait((long)tut_wait_c*etu1,nop,0);
+            if (etu>1 && etu2!=2) { sur_wait((long)tut_wait_c*etu1,nop,0);
+}
 
             if (etu2>0)
                 {
                 int rr,cc;
 
-                if (tut_special_code) return(m); /* 23.10.89 ennen etu2==2 && */
+                if (tut_special_code) { return(m); /* 23.10.89 ennen etu2==2 && */
+}
                 CURSOR_POS(&rr,&cc);
                 CURSOR_OFF; LOCATE(r3+2,c3-10);
-             if (etu2==1) sur_print("       "); else { PR_EBLK; sur_print(" Press "); }
+             if (etu2==1) { sur_print("       "); } else { PR_EBLK; sur_print(" Press "); }
                 PR_EINV; label(m,nimi); muste_sprintf(sbuf,"%s",nimi); sur_print(sbuf);
                 LOCATE(rr,cc);
                 PR_ENRM; CURSOR_ON;
-                if (etu2==1) { if (etu1>1) sur_wait((long)4*(long)(tut_wait_c*etu1),Wdisp,0); }
-                else press_key(m);
+                if (etu2==1) { if (etu1>1) { sur_wait((long)4*(long)(tut_wait_c*etu1),Wdisp,0); 
+}}
+                else { press_key(m);
+}
                 CURSOR_OFF; LOCATE(r3+2,c3-10);
              /* Rprintf("%s","               "); */
                 sur_print("               ");
@@ -459,10 +491,11 @@ static int tut_special()
                 {
               case 'W':
                 read_tutword(sana);
-                if (etu1>1 && etu2!=2)
+                if (etu1>1 && etu2!=2) {
                     sur_wait((long)(5*tut_wait_c)*atol(sana)*(long)etu1,Wdisp,1);
                    
-                else Wdisp();
+                } else { Wdisp();
+}
                 break;
 /*            case 'L':
                 read_tutword(sana);
@@ -472,12 +505,15 @@ static int tut_special()
 */
               case 's':
                 read_tutword(sana);
-                if (etu1>1) etu1=atoi(sana);
+                if (etu1>1) { etu1=atoi(sana);
+}
                 break;
               case 't':   /* t1=maksiminopeuteen ja t2=pois */
                 read_tutword(sana);
-                if (*sana=='1') { if (etu1>0) etu1=-etu1; }
-                else { if (etu1<0) etu1=-etu1; }
+                if (*sana=='1') { if (etu1>0) { etu1=-etu1; 
+}}
+                else { if (etu1<0) { etu1=-etu1; 
+}}
                 break;
               case 'D':
                 read_tutword(sana);

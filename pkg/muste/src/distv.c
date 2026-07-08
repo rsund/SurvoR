@@ -105,21 +105,27 @@ void muste_distv(char *argv)
 
         l_virhe=0;
         strcpy(aineisto,word[1]);
-        i=data_read_open(aineisto,&d); if (i<0) return;
-        i=sp_init(r1+r-1); if (i<0) return;
+        i=data_read_open(aineisto,&d); if (i<0) { return;
+}
+        i=sp_init(r1+r-1); if (i<0) { return;
+}
 
      // if (spec_check) i=spec_word_dist(spec_check); // 11.7.2004
 
-        i=mask(&d); if (i<0) return;
-        i=conditions(&d); if (i<0) return;
+        i=mask(&d); if (i<0) { return;
+}
+        i=conditions(&d); if (i<0) { return;
+}
 
         painomuuttuja=activated(&d,'W');
         if (painomuuttuja>=0)
             {
             k=0;
-            for (i=0; i<d.m; ++i)
-                if (d.vartype[i][1]!='-' && d.vartype[i][1]!='W')
+            for (i=0; i<d.m; ++i) {
+                if (d.vartype[i][1]!='-' && d.vartype[i][1]!='W') {
                     d.v[k++]=i;
+}
+}
             d.m_act=k;
             }
         m=d.m_act;
@@ -146,8 +152,9 @@ void muste_distv(char *argv)
                     muste_sprintf(sbuf,"\nThe index (k) missing in %s(k)",measure_name);
                     sur_print(sbuf); WAIT; return;
                     }
-                else
+                else {
                     power2=atof(p+1);
+}
                 if (power2==1.0)
                     {
                     measure=CITY;
@@ -169,30 +176,39 @@ void muste_distv(char *argv)
         if (i>=0)
             {
             strcpy(x,spb[i]); muste_strupr(x);
-            if (strncmp(x,"Y",1)==0) scaling=1;
-            else if (strncmp(x,"N",1)==0) scaling=0;
-            else scaling=atoi(x);
+            if (strncmp(x,"Y",1)==0) { scaling=1;
+            } else if (strncmp(x,"N",1)==0) { scaling=0;
+            } else { scaling=atoi(x);
+}
             }
 
-        i=varaa_tilat(); if (i<0) return;
+        i=varaa_tilat(); if (i<0) { return;
+}
 
         if (measure==BINARY)
             {
             i=etsi_coeff();
-            if (i<0) return;
+            if (i<0) { return;
+}
             i=binlimits();
-            if (i<0) return;
-            i=kokoa_tiedot(); if (i<0) return;
-            i=laske_matriisi(); if (i<0) return;
+            if (i<0) { return;
+}
+            i=kokoa_tiedot(); if (i<0) { return;
+}
+            i=laske_matriisi(); if (i<0) { return;
+}
             }
         else
 
             {
-            i=load_cases(); if (i<0) return;
-            i=laske_matriisi2(); if (i<0) return;
+            i=load_cases(); if (i<0) { return;
+}
+            i=laske_matriisi2(); if (i<0) { return;
+}
             }
 
-        for (i=0; i<m; ++i) varname[i]=d.varname[d.v[i]];
+        for (i=0; i<m; ++i) { varname[i]=d.varname[d.v[i]];
+}
         mat_talletus();
         s_end(argv);
         }
@@ -213,10 +229,11 @@ static int etsi_coeff()
         int i;
 
         i=spfind("COEFF");
-        if (i<0)
+        if (i<0) {
             strcpy(coeff,"1-(a+d)/(a+b+c+d)");
-        else
+        } else {
             strcpy(coeff,spb[i]);
+}
         return(1);
         }
 
@@ -235,19 +252,22 @@ static int binlimits()
                 strcpy(x,spb[k]);
                 k=split(x,osa,2);
                 bin_c=atof(osa[0]); bin_dir=0;
-                if (k==2) bin_dir=1;
+                if (k==2) { bin_dir=1;
+}
                 }
         for (i=0; i<m; ++i)
             {
             *nimi=EOS; strncat(nimi,d.varname[d.v[i]],8);
-            k=strlen(nimi)-1; while (k>=0 && nimi[k]==' ') nimi[k--]=EOS;
+            k=strlen(nimi)-1; while (k>=0 && nimi[k]==' ') { nimi[k--]=EOS;
+}
             k=spfind(nimi);
             if (k>=0)
                 {
                 strcpy(x,spb[k]);
                 k=split(x,osa,2);
                 binlimit[i]=atof(osa[0]); bindir[i]=0;
-                if (k==2) bindir[i]=1;
+                if (k==2) { bindir[i]=1;
+}
                 }
             else
                 {
@@ -322,48 +342,59 @@ static int kokoa_tiedot()
             {
             double paino;
 
-            if (unsuitable(&d,l)) continue;
-            if (painomuuttuja<0) paino=1.0;
-            else
+            if (unsuitable(&d,l)) { continue;
+}
+            if (painomuuttuja<0) { paino=1.0;
+            } else
                 {
                 k=data_load(&d,l,painomuuttuja,&paino);
-                if (k<0) return(-1);
-                if (paino==MISSING8) continue;
+                if (k<0) { return(-1);
+}
+                if (paino==MISSING8) { continue;
+}
                 }
             if (prind) { muste_sprintf(sbuf,"% d",l); sur_print(sbuf); }
-            if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); prind=1-prind; }
+            if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) { sur_getch(); 
+}prind=1-prind; }
             for (i=0; i<m; ++i)
                 {
                 k=data_load(&d,l,d.v[i],&xx[i]);
-                if (k<0) return(-1);
+                if (k<0) { return(-1);
+}
                 }
 
             for (i=0; i<m; ++i)
                 {
-                if (xx[i]==MISSING8) xxx[i]=-1;
-                else
+                if (xx[i]==MISSING8) { xxx[i]=-1;
+                } else
                     {
-                    if (xx[i]<=binlimit[i]) xxx[i]=0; else xxx[i]=1;
-                    if (bindir[i]) xxx[i]=1-xxx[i];
+                    if (xx[i]<=binlimit[i]) { xxx[i]=0; } else { xxx[i]=1;
+}
+                    if (bindir[i]) { xxx[i]=1-xxx[i];
+}
                     }
                 }
 
             k=-1;
             for (i=0; i<m; ++i)
                 {
-                h=xxx[i]; if (h<0) continue;
+                h=xxx[i]; if (h<0) { continue;
+}
                 for (j=0; j<=i; ++j)
                     {
                     ++k;
-                    if (xxx[j]<0) continue;
+                    if (xxx[j]<0) { continue;
+}
                     nn[k]+=paino;
                     if (h)
                         {
-                        if (xxx[j]) na[k]+=paino;
-                        else nb[k]+=paino;
+                        if (xxx[j]) { na[k]+=paino;
+                        } else { nb[k]+=paino;
+}
                         }
                     else
-                        if (xxx[j]) nc[k]+=paino;
+                        if (xxx[j]) { nc[k]+=paino;
+}
                     }
                 }
             }
@@ -414,22 +445,28 @@ static int load_cases()
         int miss;
 
         strcpy(tmpdata,etmpd); strcat(tmpdata,"SURVO.TMP");
-        i=open_data("wb"); if (i<0) return(-1);
+        i=open_data("wb"); if (i<0) { return(-1);
+}
 
-        for (i=0; i<m; ++i) mean[i]=stddev[i]=0.0;
+        for (i=0; i<m; ++i) { mean[i]=stddev[i]=0.0;
+}
         wsum=0.0;
-        if (cov_ind) { for (i=0; i<m*m; ++i) cov[i]=0.0; }
+        if (cov_ind) { for (i=0; i<m*m; ++i) { cov[i]=0.0; 
+}}
         n=0L; sur_print("\n");
         for (j=d.l1; j<=d.l2; ++j)
             {
-            if (unsuitable(&d,j)) continue;
+            if (unsuitable(&d,j)) { continue;
+}
 
             if (painomuuttuja>=0)
                 {
                 data_load(&d,j,painomuuttuja,&paino);
-                if (paino==MISSING8) continue;
+                if (paino==MISSING8) { continue;
+}
                 }
-            else paino=1.0;
+            else { paino=1.0;
+}
 
             miss=0;
             for (i=0; i<m; ++i)
@@ -437,15 +474,18 @@ static int load_cases()
                 data_load(&d,j,d.v[i],&xx[i]);
                 if (xx[i]==MISSING8) { miss=1; break; }
                 }
-            if (miss) continue;
+            if (miss) { continue;
+}
             ++n; wsum+=paino;
             for (i=0; i<m; ++i)
                 {
                 a=paino*xx[i];
                 mean[i]+=a; stddev[i]+=a*xx[i];
-                if (cov_ind)
-                    for (k=0; k<=i; ++k)
+                if (cov_ind) {
+                    for (k=0; k<=i; ++k) {
                         cov[i+m*k]+=a*xx[k];
+}
+}
                 }
             muste_sprintf(sbuf,"%d ",j); sur_print(sbuf);
 
@@ -466,12 +506,13 @@ static int load_cases()
 
         if (cov_ind)
                 {
-                for (i=0; i<m; ++i)
+                for (i=0; i<m; ++i) {
                     for (k=0; k<=i; ++k)
                         {
                         cov[i+m*k]=(cov[i+m*k]-wsum*mean[i]*mean[k])/(wsum-1.0)/(stddev[i]*stddev[k]);
                         cov[k+m*i]=cov[i+m*k];
                         }
+}
 /*
                 if (measure==MAHAL)
                     {
@@ -511,12 +552,15 @@ static int laske_matriisi2()
 
         if (measure==CORREL)
             {
-            for (i=0; i<m*m; ++i) dd[i]=1.0-cov[i];
+            for (i=0; i<m*m; ++i) { dd[i]=1.0-cov[i];
+}
             return(1);
             }
-        i=open_data("rb"); if (i<0) return(-1);
+        i=open_data("rb"); if (i<0) { return(-1);
+}
 
-        for (i=0; i<m*m; ++i) dd[i]=0.0;
+        for (i=0; i<m*m; ++i) { dd[i]=0.0;
+}
 
         for (j=0L; j<n; ++j)
             {
@@ -524,29 +568,33 @@ static int laske_matriisi2()
             muste_fread(xx,sizeof(double),m,data);
             if (scaling)
                 {
-                for (i=0; i<m; ++i) xx[i]=(xx[i]-mean[i])/stddev[i];
+                for (i=0; i<m; ++i) { xx[i]=(xx[i]-mean[i])/stddev[i];
+}
                 }
             switch (measure)
                 {
               case EUCLID:
-                for (i=0; i<m; ++i) for (k=0; k<=i; ++k)
+                for (i=0; i<m; ++i) { for (k=0; k<=i; ++k)
                     {
                     a=xx[i]-xx[k];
                     dd[i+m*k]+=paino*a*a;
                     }
+}
                 break;
               case CITY:
-                for (i=0; i<m; ++i) for (k=0; k<=i; ++k)
+                for (i=0; i<m; ++i) { for (k=0; k<=i; ++k)
                     {
                     dd[i+m*k]+=paino*fabs(xx[i]-xx[k]);
                     }
+}
                 break;
               case MINKOWSKI:
-                for (i=0; i<m; ++i) for (k=0; k<=i; ++k)
+                for (i=0; i<m; ++i) { for (k=0; k<=i; ++k)
                     {
                     a=xx[i]-xx[k];
                     dd[i+m*k]+=paino*pow(a,power2);
                     }
+}
                 break;
 
 
@@ -556,23 +604,31 @@ static int laske_matriisi2()
         switch (measure)
             {
           case EUCLID:
-            for (i=0; i<m; ++i) for (k=0; k<=i; ++k)
+            for (i=0; i<m; ++i) { for (k=0; k<=i; ++k) {
                 dd[i+m*k]=sqrt(dd[i+m*k]);
+}
+}
             break;
           case CITY:
-            for (i=0; i<m; ++i) for (k=0; k<=i; ++k)
+            for (i=0; i<m; ++i) { for (k=0; k<=i; ++k) {
                 dd[i+m*k]=fabs(dd[i+m*k]);
+}
+}
             break;
           case MINKOWSKI:
-            for (i=0; i<m; ++i) for (k=0; k<=i; ++k)
+            for (i=0; i<m; ++i) { for (k=0; k<=i; ++k) {
                 dd[i+m*k]=pow(dd[i+m*k],1.0/power2);
+}
+}
             break;
 
 
             }
 
-        for (i=0; i<m; ++i) for (k=0; k<=i; ++k)
+        for (i=0; i<m; ++i) { for (k=0; k<=i; ++k) {
             dd[k+m*i]=dd[i+m*k];
+}
+}
 
         return(1);
         }
@@ -589,12 +645,14 @@ static int mat_talletus()
         char expr[LLENGTH];
    //   char *p;
 
-        for (i=0; i<8*m; ++i) lab[i]=' ';
+        for (i=0; i<8*m; ++i) { lab[i]=' ';
+}
         for (i=0; i<m; ++i)
             {
             for (h=0; h<8; ++h)
                 {
-                if (varname[i][h]==EOS) break;
+                if (varname[i][h]==EOS) { break;
+}
                 lab[8*i+h]=varname[i][h];
                 }
             }
@@ -686,18 +744,21 @@ static int laske(char *lauseke,double *y)
             {
             *x='0'; strcpy(x+1,lauseke);
             }
-        else strcpy(x,lauseke);
+        else { strcpy(x,lauseke);
+}
         len=0;
         p=x;
         t=0;
         while (*p)
             {
-            if (l_virhe) return(-1);
+            if (l_virhe) { return(-1);
+}
             switch (*p)
                 {
               case '+':
                 if (len==0) { ++p; break; }
-                if (len>0) opnd[t]=luku(sana,len); len=0;
+                if (len>0) { opnd[t]=luku(sana,len); 
+}len=0;
                 op[t]='+'; v[t++]=1;
                 supista(&t,opnd,op,v);
                 ++p;
@@ -705,7 +766,8 @@ static int laske(char *lauseke,double *y)
 
               case '-':
                 if (len==0) { sana[len++]=*p; ++p; break; }
-                if (len>0) opnd[t]=luku(sana,len); len=0;
+                if (len>0) { opnd[t]=luku(sana,len); 
+}len=0;
                 op[t]='-'; v[t++]=1;
                 supista(&t,opnd,op,v);
                 ++p;
@@ -713,7 +775,8 @@ static int laske(char *lauseke,double *y)
 
               case '*':
                 if (len==0) { syntax_error(lauseke); return(-1); }
-                if (len>0) opnd[t]=luku(sana,len); len=0;
+                if (len>0) { opnd[t]=luku(sana,len); 
+}len=0;
                 op[t]='*'; v[t++]=2;
                 supista(&t,opnd,op,v);
                 ++p;
@@ -721,14 +784,16 @@ static int laske(char *lauseke,double *y)
 
               case '/':
                 if (len==0) { syntax_error(lauseke); return(-1); }
-                if (len>0) opnd[t]=luku(sana,len); len=0;
+                if (len>0) { opnd[t]=luku(sana,len); 
+}len=0;
                 op[t]='/'; v[t++]=2;
                 supista(&t,opnd,op,v);
                 ++p;
                 break;
               case '^':
                 if (len==0) { syntax_error(lauseke); return(-1); }
-                if (len>0) opnd[t]=luku(sana,len); len=0;
+                if (len>0) { opnd[t]=luku(sana,len); 
+}len=0;
                 op[t]='^'; v[t++]=3;
                 supista(&t,opnd,op,v);
                 ++p;
@@ -752,7 +817,8 @@ static int laske(char *lauseke,double *y)
                 *p=EOS; ++p;
 //   Rprintf("\nq=%s",q); getch();
                 i=laske(q,&opnd[t]);
-                if (i<0 || l_virhe) return(-1);
+                if (i<0 || l_virhe) { return(-1);
+}
                 if (i==2) { sur_print("\nError! ret2"); WAIT; }
 
 /*   Rprintf("\ntulos1=%f",opnd[t]); getch();  */
@@ -760,11 +826,13 @@ static int laske(char *lauseke,double *y)
                 sana[len]=EOS;
 
                 /* Yhden muuttujan funktiot */
-                if (*sana=='-')
+                if (*sana=='-') {
                     opnd[t]=-funktio(sana+1,opnd[t]);
-                else
+                } else {
                     opnd[t]=funktio(sana,opnd[t]);
-                if (l_virhe) return(-1);
+}
+                if (l_virhe) { return(-1);
+}
                 len=-1;
                 break;
 
@@ -775,7 +843,8 @@ static int laske(char *lauseke,double *y)
                 if (strchr("+-.0123456789",sana[0])!=NULL)
                     {
                     sana[len++]=*p; ++p;
-                    if (*p!='+' && *p!='-') break;
+                    if (*p!='+' && *p!='-') { break;
+}
                     }
               default:
                 /* tarkistukset puuttuvat */
@@ -801,11 +870,14 @@ static double luku(char *sana,int len)
         int i;
 
         sana[len]=EOS;
-        p=sana; if (*p=='-') ++p;
+        p=sana; if (*p=='-') { ++p;
+}
         if (strchr("1234567890.",*p)==NULL)
             {
-            i=laske2(p,&tulos); if (i<0) return((double)1.0);
-            if (*sana=='-') return(-tulos);
+            i=laske2(p,&tulos); if (i<0) { return((double)1.0);
+}
+            if (*sana=='-') { return(-tulos);
+}
             return(tulos);
             }
         return(atof(sana));
@@ -814,7 +886,8 @@ static double luku(char *sana,int len)
 static double oper(double x1,double x2,char laji)
         {
 
-        if (x1==MISSING8 || x2==MISSING8) return(MISSING8);
+        if (x1==MISSING8 || x2==MISSING8) { return(MISSING8);
+}
         switch (laji)
             {
           case '+':
@@ -839,7 +912,8 @@ static double power(double x,double y)
         if (y>=0 && y==floor(y) && y<10)
                 {
                 f=1;
-                for (i=0; i<(int)y; ++i) f*=x;
+                for (i=0; i<(int)y; ++i) { f*=x;
+}
                 return(f);
                 }
         return (pow(x,y));
@@ -851,7 +925,8 @@ static int supista(int *t,double opnd[],char op[],int v[])
 
         while (*t>1)
             {
-            if (v[*t-1]>v[*t-2]) return(1);
+            if (v[*t-1]>v[*t-2]) { return(1);
+}
             opnd[*t-2]=oper(opnd[*t-2],opnd[*t-1],op[*t-2]);
             op[*t-2]=op[*t-1]; v[*t-2]=v[*t-1];
             --(*t);
@@ -865,21 +940,34 @@ static double funktio(char *s,double x)
    //   double y;
         char S[32];
 
-        if (*s==EOS) return(x);
-        if (x==MISSING8) return(x);
+        if (*s==EOS) { return(x);
+}
+        if (x==MISSING8) { return(x);
+}
         muste_fieldcopy(S,s,31); S[31]=EOS; muste_strupr(S);
 
-        if (strncmp(S,"SQR",3)==0) return(muste_sqrt(x));
-        if (strcmp(S,"LOG")==0) return(muste_log(x));
-        if (strcmp(S,"EXP")==0) return(muste_exp(x));
-        if (strcmp(S,"SIN")==0) return(muste_sin(x));
-        if (strcmp(S,"COS")==0) return(muste_cos(x));
-        if (strcmp(S,"TAN")==0) return(tan(x));
-        if (strcmp(S,"ATN")==0 || strcmp(S,"ARCTAN")==0) return(muste_atan(x));
-        if (strcmp(S,"ARCSIN")==0) return(muste_asin(x));
-        if (strcmp(S,"ARCCOS")==0) return(muste_acos(x));
-        if (strcmp(S,"ABS")==0) return(muste_fabs(x));
-        if (strcmp(S,"INT")==0) return(muste_floor(x));
+        if (strncmp(S,"SQR",3)==0) { return(muste_sqrt(x));
+}
+        if (strcmp(S,"LOG")==0) { return(muste_log(x));
+}
+        if (strcmp(S,"EXP")==0) { return(muste_exp(x));
+}
+        if (strcmp(S,"SIN")==0) { return(muste_sin(x));
+}
+        if (strcmp(S,"COS")==0) { return(muste_cos(x));
+}
+        if (strcmp(S,"TAN")==0) { return(tan(x));
+}
+        if (strcmp(S,"ATN")==0 || strcmp(S,"ARCTAN")==0) { return(muste_atan(x));
+}
+        if (strcmp(S,"ARCSIN")==0) { return(muste_asin(x));
+}
+        if (strcmp(S,"ARCCOS")==0) { return(muste_acos(x));
+}
+        if (strcmp(S,"ABS")==0) { return(muste_fabs(x));
+}
+        if (strcmp(S,"INT")==0) { return(muste_floor(x));
+}
 
 // RS ADD
             if (*s=='R' && strncmp(s,"R>",2)==0)

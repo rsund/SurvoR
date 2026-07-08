@@ -122,13 +122,17 @@ void muste_dcluster(char *argv)
         if (g>3)
             {
             tulosrivi=edline2(word[3],1,1);
-            if (tulosrivi<0) return;
+            if (tulosrivi<0) { return;
+}
             }
 
         strcpy(aineisto,word[1]);
-        i=data_open(aineisto,&d); if (i<0) return;
-        i=sp_init(r1+r-1); if (i<0) return;
-        i=mask(&d); if (i<0) return;
+        i=data_open(aineisto,&d); if (i<0) { return;
+}
+        i=sp_init(r1+r-1); if (i<0) { return;
+}
+        i=mask(&d); if (i<0) { return;
+}
 
         gvar=activated(&d,'G');
         if (gvar<0)
@@ -138,22 +142,28 @@ void muste_dcluster(char *argv)
             }
 
         label_var=activated(&d,'L');
-        if (label_var<0) label_var=0;
-        if (d.vartype[label_var][0]!='S') label_var=-1;
+        if (label_var<0) { label_var=0;
+}
+        if (d.vartype[label_var][0]!='S') { label_var=-1;
+}
 
         i=spfind("GROUPS");
-        if (i<0) ng=2; else ng=atoi(spb[i]);
+        if (i<0) { ng=2; } else { ng=atoi(spb[i]);
+}
   /*    if (ng<2) ng=2;   */
 
         method=1;
         i=spfind("METHOD");
-        if (i>=0) method=atoi(spb[i]);
+        if (i>=0) { method=atoi(spb[i]);
+}
 
         silh_var=activated(&d,'S');
-        if (method==3) silh_var=-1;
+        if (method==3) { silh_var=-1;
+}
 
         i=matrix_load(word[2],&xx,&m2,&m,&rlab,&clab,&lr,&lc,&type,expr);
-        if (i<0) return;
+        if (i<0) { return;
+}
 
         if (m2!=m)
             {
@@ -161,7 +171,8 @@ void muste_dcluster(char *argv)
                                word[2],m2,m);
             sur_print(sbuf); WAIT; return;
             }
-        i=varaa_tilat(); if (i<0) return;
+        i=varaa_tilat(); if (i<0) { return;
+}
 
         switch (method)
             {
@@ -169,14 +180,17 @@ void muste_dcluster(char *argv)
                   iterate1(); break; /* short cut technique by S.M. */
           case 2: initial_medoids();
                   iterate2(); break;
-          case 3: i=single_linkage(); if (i<0) return; break;
+          case 3: i=single_linkage(); if (i<0) { return; 
+}break;
             }
-        i=save_grouping(); if (i<0) return;
+        i=save_grouping(); if (i<0) { return;
+}
         if (method==3)
             {
             print_results3(); s_end(argv); return;
             }
-        if (silh_var>=0) save_silhouettes();
+        if (silh_var>=0) { save_silhouettes();
+}
         print_results();
         s_end(argv);
         }
@@ -213,7 +227,8 @@ static int initial_medoids()
         for (i=0; i<m; ++i)
             {
             sum=0.0;
-            for (j=0; j<m; ++j) sum+=xx[i+m*j];
+            for (j=0; j<m; ++j) { sum+=xx[i+m*j];
+}
             if (sum<min) { min=sum; i_min=i; }
             }
 
@@ -222,8 +237,11 @@ static int initial_medoids()
             {
             for (i=0; i<m; ++i)
                 {
-                for (j=0; j<k; ++j) if (i==medoid[j]) break;
-                if (j!=k) continue;
+                for (j=0; j<k; ++j) { if (i==medoid[j]) { break;
+}
+}
+                if (j!=k) { continue;
+}
                 medoid[k]=i;
                 sum=0.0;
                 for (h=0; h<m; ++h)
@@ -232,7 +250,8 @@ static int initial_medoids()
                     for (kk=1; kk<=k; ++kk)
                         {
                         a=xx[h+m*medoid[kk]];
-                        if (a<min2) min2=a;
+                        if (a<min2) { min2=a;
+}
                         }
                     sum+=min2;
                     }
@@ -260,7 +279,8 @@ static int iterate1()
         while (1)
             {
             med0=medoid[0]; ++iter;
-            for (i=1; i<ng; ++i) medoid[i-1]=medoid[i];
+            for (i=1; i<ng; ++i) { medoid[i-1]=medoid[i];
+}
             i_min=-1;
             for (i=0; i<m; ++i)
                 {
@@ -272,7 +292,8 @@ static int iterate1()
                     for (kk=1; kk<ng; ++kk)
                         {
                         a=xx[h+m*medoid[kk]];
-                        if (a<min2) min2=a;
+                        if (a<min2) { min2=a;
+}
                         }
                     sum+=min2;
                     }
@@ -289,7 +310,8 @@ static int iterate1()
             else
                 {
                 medoid[ng-1]=med0; ++no_change;
-                if (no_change>ng) return(1);
+                if (no_change>ng) { return(1);
+}
                 }
             muste_sprintf(sbuf,"\n%d:",iter); sur_print(sbuf);
             for (i=0; i<ng; ++i)
@@ -300,7 +322,8 @@ static int iterate1()
             if (sur_kbhit())
                 {
                 i=sur_getch();
-                if (i=='.') break;
+                if (i=='.') { break;
+}
                 }
             }
         return(1);
@@ -330,7 +353,8 @@ static int iterate2()
                         for (kk=1; kk<ng; ++kk)
                             {
                             a=xx[h+m*medoid[kk]];
-                            if (a<min2) min2=a;
+                            if (a<min2) { min2=a;
+}
                             }
                         sum+=min2;
                         }
@@ -345,7 +369,8 @@ static int iterate2()
             else
                 {
                 ++no_change;
-                if (no_change>ng) return(1);
+                if (no_change>ng) { return(1);
+}
                 }
             muste_sprintf(sbuf,"\n%d:",iter); sur_print(sbuf);
             for (i=0; i<ng; ++i)
@@ -355,7 +380,8 @@ static int iterate2()
             if (sur_kbhit())
                 {
                 i=sur_getch();
-                if (i=='.') break;
+                if (i=='.') { break;
+}
                 }
             }
         return(1);
@@ -385,12 +411,14 @@ static int single_linkage()
         if (init_group_var>=0)
             {
             k=init_groups1(init_group_var);
-            if (k<0) return(-1);
+            if (k<0) { return(-1);
+}
             ++k;
             }
         else
             {
-            for (i=0; i<m; ++i) group[i]=i;
+            for (i=0; i<m; ++i) { group[i]=i;
+}
             k=m;
             }
 
@@ -410,11 +438,14 @@ static int single_linkage()
           if (weight_ind)
               {
               kk=0;
-              for (i=0; i<k; ++i) size3[i]=0;
+              for (i=0; i<k; ++i) { size3[i]=0;
+}
               for (i=0; i<m; ++i)
                   {
                   gi=group[i];
-                  for (j=0; j<kk; ++j) if (gi==g3[j]) break;
+                  for (j=0; j<kk; ++j) { if (gi==g3[j]) { break;
+}
+}
                   if (j==kk) { g3[kk]=gi; ++kk; }
                   group[i]=j;
                   ++size3[j];
@@ -424,20 +455,24 @@ static int single_linkage()
           min2=1e100;
           if (sur_kbhit())
               {
-              i=sur_getch(); if (i=='#') return(-1);
-              if (i=='.') prind=1-prind;
+              i=sur_getch(); if (i=='#') { return(-1);
+}
+              if (i=='.') { prind=1-prind;
+}
               }
           if (prind) { muste_sprintf(sbuf,"%d ",k); sur_print(sbuf); }
-if (weight_ind)
+if (weight_ind) {
           for (i=0; i<m; ++i)
               {
               gi=group[i]; n1=size3[gi];
               for (j=i+1; j<m; ++j)
                   {
-                  if (group[j]==gi) continue;
+                  if (group[j]==gi) { continue;
+}
                   a=xx[i+m*j];
                   n2=size3[group[j]];
-                  nn=n1; if (n2<n1) nn=n2;
+                  nn=n1; if (n2<n1) { nn=n2;
+}
                   if (nn==1)
                       {
                       if (a<min2) { i_min=i; j_min=j; min2=a; }
@@ -449,30 +484,37 @@ if (weight_ind)
                       }
                   }
               }
-else /* !weight_ind */
+} else { /* !weight_ind */
           for (i=0; i<m; ++i)
               {
               gi=group[i];
               for (j=i+1; j<m; ++j)
                   {
-                  if (group[j]==gi) continue;
+                  if (group[j]==gi) { continue;
+}
                   a=xx[i+m*j];
                   if (a<min2) { i_min=i; j_min=j; min2=a; }
                   }
               }
+}
 
           gi=group[i_min]; gj=group[j_min];
-          for (i=0; i<m; ++i)
-              if (group[i]==gj) group[i]=gi;
+          for (i=0; i<m; ++i) {
+              if (group[i]==gj) { group[i]=gi;
+}
+}
           --k;
           } /* while (k>ng) */
 
         k=0;
-        for (i=0; i<ng; ++i) gsize[i]=0;
+        for (i=0; i<ng; ++i) { gsize[i]=0;
+}
         for (i=0; i<m; ++i)
             {
             gi=group[i];
-            for (j=0; j<k; ++j) if (gi==g1[j]) break;
+            for (j=0; j<k; ++j) { if (gi==g1[j]) { break;
+}
+}
             if (j==k) { g1[k]=gi; ++k; }
             group[i]=j;
             ++gsize[j];
@@ -492,7 +534,8 @@ static int init_groups1(int var)
         for (i=0; i<m; ++i)
             {
             muste_fieldcopy(ots,rlab+lr*i,lr); ots[lr]=EOS;
-            pots=ots; while (*pots==' ') ++pots;
+            pots=ots; while (*pots==' ') { ++pots;
+}
             len=strlen(pots);
             while (1)
                 {
@@ -500,17 +543,20 @@ static int init_groups1(int var)
                 if (label_var>=0)
                     {
                     data_alpha_load(&d,j,label_var,ots2);
-                    if (strncmp(pots,ots2,len)==0) ok=1;
+                    if (strncmp(pots,ots2,len)==0) { ok=1;
+}
                     }
                 else
                     {
-                    if (atol(ots)==j) ok=1;
+                    if (atol(ots)==j) { ok=1;
+}
                     }
                 if (ok)
                     {
                     data_load(&d,j,var,&a);
                     h=group[i]=(int)a-1;
-                    if (h>k) k=h;
+                    if (h>k) { k=h;
+}
                     ++j;
                     break;
                     }
@@ -533,13 +579,14 @@ static int save_grouping()
         char ots[16],*pots;
         char ots2[LNAME];
 
-        if (method!=3) { for (i=0; i<ng; ++i) gsize[i]=0; }
+        if (method!=3) { for (i=0; i<ng; ++i) { gsize[i]=0; 
+}}
 
         j=d.l1;
         for (i=0; i<m; ++i)
             {
-            if (method==3) g_min=group[i];
-            else
+            if (method==3) { g_min=group[i];
+            } else
                 {
                 min2=xx[i+m*medoid[0]]; g_min=0;
                 for (kk=1; kk<ng; ++kk)
@@ -548,12 +595,14 @@ static int save_grouping()
                     if (a<min2) { min2=a; g_min=kk; }
                     }
 
-                if (silh_var>=0) group[i]=g_min;
+                if (silh_var>=0) { group[i]=g_min;
+}
                 ++gsize[g_min];
                 }
 
             muste_fieldcopy(ots,rlab+lr*i,lr); ots[lr]=EOS;
-            pots=ots; while (*pots==' ') ++pots;
+            pots=ots; while (*pots==' ') { ++pots;
+}
             len=strlen(pots);
             while (1)
                 {
@@ -561,11 +610,13 @@ static int save_grouping()
                 if (label_var>=0)
                     {
                     data_alpha_load(&d,j,label_var,ots2);
-                    if (strncmp(pots,ots2,len)==0) ok=1;
+                    if (strncmp(pots,ots2,len)==0) { ok=1;
+}
                     }
                 else
                     {
-                    if (atol(ots)==j) ok=1;
+                    if (atol(ots)==j) { ok=1;
+}
                     }
                 if (ok)
                     {
@@ -592,13 +643,15 @@ static int save_silhouettes()
         char ots[16],*pots;
         char ots2[LNAME];
 
-        for (k=0; k<ng; ++k) ssum[k]=0.0;
+        for (k=0; k<ng; ++k) { ssum[k]=0.0;
+}
         j=d.l1;
         for (i=0; i<m; ++i)
             {
 
             muste_fieldcopy(ots,rlab+lr*i,lr); ots[lr]=EOS;
-            pots=ots; while (*pots==' ') ++pots;
+            pots=ots; while (*pots==' ') { ++pots;
+}
             len=strlen(pots);
             while (1)
                 {
@@ -606,27 +659,34 @@ static int save_silhouettes()
                 if (label_var>=0)
                     {
                     data_alpha_load(&d,j,label_var,ots2);
-                    if (strncmp(pots,ots2,len)==0) ok=1;
+                    if (strncmp(pots,ots2,len)==0) { ok=1;
+}
                     }
                 else
                     {
-                    if (atol(ots)==j) ok=1;
+                    if (atol(ots)==j) { ok=1;
+}
                     }
                 if (ok)
                     {
                     g_min=group[i];
-                    for (h=0; h<ng; ++h) dd[h]=0.0;
-                    for (k=0; k<m; ++k)
+                    for (h=0; h<ng; ++h) { dd[h]=0.0;
+}
+                    for (k=0; k<m; ++k) {
                         dd[group[k]]+=xx[i+m*k];
+}
                     aa=dd[g_min]/(gsize[g_min]-1);
                     bb=1e100;
                     for (h=0; h<ng; ++h)
                         {
-                        if (h==g_min) continue;
+                        if (h==g_min) { continue;
+}
                         a=dd[h]/gsize[h];
-                        if (a<bb) bb=a;
+                        if (a<bb) { bb=a;
+}
                         }
-                    a=aa; if (bb>aa) a=bb;
+                    a=aa; if (bb>aa) { a=bb;
+}
                     a=(bb-aa)/a;
                     data_save(&d,j,silh_var,a);
                     ssum[g_min]+=a;
@@ -652,7 +712,8 @@ static int print_results()
         char med_name[16];
         double mean;
 
-        i=output_open(eout); if (i<0) return(-1);
+        i=output_open(eout); if (i<0) { return(-1);
+}
         eoutput("Cluster analysis by medoids of Kaufman and Rousseeuw (1987)");
         muste_sprintf(sbuf,"Data %s  N=%d",word[1],m);
         eoutput(sbuf);
@@ -692,10 +753,12 @@ static int print_results3()
         {
         int i;
 
-        i=output_open(eout); if (i<0) return(-1);
+        i=output_open(eout); if (i<0) { return(-1);
+}
 
         i=muste_sprintf(sbuf,"Cluster analysis by the single linkage method ");
-        if (weight_ind) muste_sprintf(sbuf+i,"(WEIGHT=%g)",weight);
+        if (weight_ind) { muste_sprintf(sbuf+i,"(WEIGHT=%g)",weight);
+}
         eoutput(sbuf);
         muste_sprintf(sbuf,"Data %s  N=%d",word[1],m);
         eoutput(sbuf);
@@ -713,7 +776,8 @@ static int print_results3()
 static int eoutput(char *rivi)
         {
         output_line(rivi,eout,tulosrivi);
-        if (tulosrivi) ++tulosrivi;
+        if (tulosrivi) { ++tulosrivi;
+}
         return(1);
         }
 

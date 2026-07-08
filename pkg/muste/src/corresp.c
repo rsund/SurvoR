@@ -85,24 +85,36 @@ void muste_corresp(char *argv)
         if (g>2)
             {
             tulosrivi=edline2(word[2],1,1);
-            if (tulosrivi==0) return;
+            if (tulosrivi==0) { return;
+}
             }
 
         strcpy(aineisto,word[1]);
-        i=data_open(aineisto,&d); if (i<0) return;
-        i=spec_init(r1+r-1); if (i<0) return;
-        i=mask(&d); if (i<0) return;
-        i=conditions(&d); if (i<0) return;
-        i=valitse_muuttujat(); if (i<0) return;
-        i=varaa_tilat2(); if (i<0) return;
+        i=data_open(aineisto,&d); if (i<0) { return;
+}
+        i=spec_init(r1+r-1); if (i<0) { return;
+}
+        i=mask(&d); if (i<0) { return;
+}
+        i=conditions(&d); if (i<0) { return;
+}
+        i=valitse_muuttujat(); if (i<0) { return;
+}
+        i=varaa_tilat2(); if (i<0) { return;
+}
 
-        i=laskut1(); if (i<0) return;
+        i=laskut1(); if (i<0) { return;
+}
 
         mm=n; nn=m;
-        i=corresp(); if (i<0) return;
-        i=tulostus1(); if (i<0) return;
-        i=y_talletus(); if (i<0) return;
-        i=x_talletus(); if (i<0) return;
+        i=corresp(); if (i<0) { return;
+}
+        i=tulostus1(); if (i<0) { return;
+}
+        i=y_talletus(); if (i<0) { return;
+}
+        i=x_talletus(); if (i<0) { return;
+}
 
         data_close(&d);
         s_end(argv);
@@ -132,7 +144,8 @@ static int show_usage()
 static int varaa_tilat2()
         {
         int mm;                    /* 10.12.1999 */
-        mm=m; if (nss>m) mm=nss;
+        mm=m; if (nss>m) { mm=nss;
+}
 
 /*
         if (m>90)
@@ -221,39 +234,47 @@ static int laskut1()
         for (i=0; i<m; ++i)
             {
             sum[i]=0.0;
-            for (j=0; j<=i; ++j)
+            for (j=0; j<=i; ++j) {
                 A[i+m*j]=0.0;
+}
             }
-        for (i=0; i<nss; ++i) ssum[i]=0.0;
+        for (i=0; i<nss; ++i) { ssum[i]=0.0;
+}
         prind=1;
         sur_print("\n");
         for (l=d.l1; l<=d.l2; ++l)
             {
             double msum;
 
-            if (unsuitable(&d,l)) continue;
+            if (unsuitable(&d,l)) { continue;
+}
             if (prind) { muste_sprintf(sbuf,"%d",l); sur_print(sbuf); }
-            if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); prind=1-prind; }
+            if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) { sur_getch(); 
+}prind=1-prind; }
             ++n; msum=0.0;
             for (i=0; i<m; ++i)
                 {
                 k=data_load(&d,l,mv[i],&x[i]);
-                if (k<0) return(-1);
-                if (x[i]==MISSING8) break;
+                if (k<0) { return(-1);
+}
+                if (x[i]==MISSING8) { break;
+}
                 msum+=x[i];
                 }
             if (i<m) { sur_print("-"); continue; }
             for (i=0; i<nss; ++i)
                 {
                 k=data_load(&d,l,ssv[i],&sx[i]);
-                if (k<0) return(-1);
+                if (k<0) { return(-1);
+}
                 if (sx[i]==MISSING8)
                     {
          sur_print("\nMissing values in supplementary variables are not permitted!");
                     WAIT; return(-1);
                     }
                 }
-            for (i=0; i<nss; ++i) ssum[i]+=sx[i];
+            for (i=0; i<nss; ++i) { ssum[i]+=sx[i];
+}
 
             if (msum==0.0)
                 {
@@ -266,34 +287,42 @@ static int laskut1()
             for (i=0; i<m; ++i)
                 {
                 sum[i]+=x[i];
-                for (j=0; j<=i; ++j)
+                for (j=0; j<=i; ++j) {
                     A[i+m*j]+=x[i]*x[j]/msum;
+}
                 }
 
             } /* l */
 
-        for (i=0; i<m; ++i)
+        for (i=0; i<m; ++i) {
             if (sum[i]==0.0) { sum_is_0(mv[i]); return(-1); }
-        for (i=0; i<nss; ++i)
+}
+        for (i=0; i<nss; ++i) {
             if (ssum[i]==0.0) { sum_is_0(ssv[i]); return(-1); }
+}
 
-        for (i=0; i<m; ++i)
+        for (i=0; i<m; ++i) {
             for (j=0; j<=i; ++j)
                 {
                 A[i+m*j]-=sum[i]*sum[j]/tot_sum;
                 }
+}
 
-        for (i=0; i<m; ++i) x[i]=1/sqrt(sum[i]);
-        for (i=0; i<m; ++i)
-            for (j=0; j<=i; ++j)
+        for (i=0; i<m; ++i) { x[i]=1/sqrt(sum[i]);
+}
+        for (i=0; i<m; ++i) {
+            for (j=0; j<=i; ++j) {
                 A[i+m*j]*=x[i]*x[j];
+}
+}
 
         chi2=0.0;
         for (i=0; i<m; ++i)
             {
             chi2+=A[i*(m+1)];
-            for (j=0; j<=i; ++j)
+            for (j=0; j<=i; ++j) {
                 A[j+m*i]=A[i+m*j];
+}
             }
         chi2*=tot_sum;
 
@@ -325,7 +354,8 @@ int m,n;
 static int eoutput(char *rivi)
         {
         output_line(rivi,eout,tulosrivi);
-        if (tulosrivi) ++tulosrivi;
+        if (tulosrivi) { ++tulosrivi;
+}
         return(1);
         }
 
@@ -355,18 +385,24 @@ static int corresp()
         int i,j;
         double a1;
 
-        i=varaa_tilat3(); if (i<0) return(-1);
-        i=mat_tred2(dd,ee,A,nn,tol); if (i<0) return(-1);
-        i=mat_tql2(dd,ee,A,nn,1e-16,30); if (i<0) return(-1);
+        i=varaa_tilat3(); if (i<0) { return(-1);
+}
+        i=mat_tred2(dd,ee,A,nn,tol); if (i<0) { return(-1);
+}
+        i=mat_tql2(dd,ee,A,nn,1e-16,30); if (i<0) { return(-1);
+}
 /*
 matprint(A,nn,nn);
 matprint(dd,1,nn);
 */
         a1=sqrt(tot_sum);
-        for (i=0; i<nn; ++i) ee[i]=sqrt(fabs(dd[i]));
-        for (i=0; i<nn; ++i)
-            for (j=0; j<nn; ++j)
+        for (i=0; i<nn; ++i) { ee[i]=sqrt(fabs(dd[i]));
+}
+        for (i=0; i<nn; ++i) {
+            for (j=0; j<nn; ++j) {
                 yy[i+m*j]=a1*A[i+m*j]*x[i]*ee[j];
+}
+}
 /* matprint(yy,nn,nn);  */
         tee_otsikot(lab1,mv,m);
         tee_otsikot(lab2,cv,nc);
@@ -403,7 +439,8 @@ static int varaa_tilat3()
             {
             ss=(double *)muste_malloc(nss*nn*sizeof(double));
             if (ss==NULL) { not_enough_memory(); return(-1); }
-            for (k=0; k<nss*nn; ++k) ss[k]=0.0;
+            for (k=0; k<nss*nn; ++k) { ss[k]=0.0;
+}
             }
 
         return(1);
@@ -413,12 +450,14 @@ static int tee_otsikot(char *lab,int *v,int nl)
         {
         int i,h;
 
-        for (i=0; i<8*nl; ++i) lab[i]=' ';
+        for (i=0; i<8*nl; ++i) { lab[i]=' ';
+}
         for (i=0; i<nl; ++i)
             {
             for (h=0; h<8; ++h)
                 {
-                if (d.varname[v[i]][h]==EOS) break;
+                if (d.varname[v[i]][h]==EOS) { break;
+}
                 lab[8*i+h]=d.varname[v[i]][h];
                 }
             }
@@ -453,8 +492,10 @@ static int y_talletus()
             }
         if (na>0)
             {
-        for (i=0; i<nn; ++i) for (j=0; j<nn; ++j)
+        for (i=0; i<nn; ++i) { for (j=0; j<nn; ++j) {
             ann[i+nn*j]=100*A[i+nn*j]*A[i+nn*j];
+}
+}
         tee_otsikot(lab,av,na);
         matrix_save("CR_CONTR.M",ann,m,na,lab1,lab,8,8,-1,"CR_CONTR.M",0,0);
         tulosrivi=matrix_print(ann,m,na,lab1,lab,8,8,m,na,NULL,NULL,acc,c3,
@@ -464,8 +505,10 @@ static int y_talletus()
             {
         for (i=0; i<nn; ++i)
             {
-            a1=0.0; for (j=0; j<nn; ++j) a1+=yy[i+nn*j]*yy[i+nn*j];
-            for (j=0; j<ns; ++j) ann[i+nn*j]=yy[i+nn*j]*yy[i+nn*j]/a1;
+            a1=0.0; for (j=0; j<nn; ++j) { a1+=yy[i+nn*j]*yy[i+nn*j];
+}
+            for (j=0; j<ns; ++j) { ann[i+nn*j]=yy[i+nn*j]*yy[i+nn*j]/a1;
+}
             }
         tee_otsikot(lab,sv,ns);
         matrix_save("CR_CORR2.M",ann,m,ns,lab1,lab,8,8,-1,"CR_CORR2.M",0,0);
@@ -476,7 +519,8 @@ static int y_talletus()
             {
             for (i=0; i<nn; ++i)
                 {
-                a1=0.0; for (j=0; j<nn; ++j) a1+=yy[i+nn*j]*yy[i+nn*j];
+                a1=0.0; for (j=0; j<nn; ++j) { a1+=yy[i+nn*j]*yy[i+nn*j];
+}
                 ann[nn+i]=a1;
                 ann[i]=sum[i]/tot_sum;
                 }
@@ -498,12 +542,14 @@ static int x_talletus()
         double a1,a2,a3;
 
 
-        for (i=0; i<nn; ++i) ee[i]=sqrt(sum[i]);
+        for (i=0; i<nn; ++i) { ee[i]=sqrt(sum[i]);
+}
         sqrt_tot=sqrt(tot_sum);
 
         for (l=d.l1; l<=d.l2; ++l)
             {
-            if (unsuitable(&d,l)) continue;
+            if (unsuitable(&d,l)) { continue;
+}
             x_tall(l);
             }
 
@@ -517,7 +563,8 @@ static int x_talletus()
             }
 
         i=spfind("SUPPL_CASES");
-        if (i<0) return(1);
+        if (i<0) { return(1);
+}
         strcpy(s,spb[i]);
         i=split(s,osa,3);
         if (i==0)
@@ -525,25 +572,30 @@ static int x_talletus()
             sur_print("\nUsage: SUPPL_CASES=<indicator_variable>,<lower_limit>,<upper_limit>");
             WAIT; return(-1);
             }
-        if (strcmp(osa[0],"ORDER")==0) cvar=-1;
-        else
+        if (strcmp(osa[0],"ORDER")==0) { cvar=-1;
+        } else
             {
             cvar=varfind(&d,osa[0]);
-            if (i<0) return(-1);
+            if (i<0) { return(-1);
+}
             }
         a1=a2=1.0;
-        if (i>1) a1=a2=atof(osa[1]);
-        if (i>2) a2=atof(osa[2]);
+        if (i>1) { a1=a2=atof(osa[1]);
+}
+        if (i>2) { a2=atof(osa[2]);
+}
         for (l=d.l1; l<=d.l2; ++l)
             {
             if (cvar==-1)
                 {
-                if ((double)l<a1 || (double)l>a2) continue;
+                if ((double)l<a1 || (double)l>a2) { continue;
+}
                 }
             else
                 {
                 data_load(&d,l,cvar,&a3);
-                if (a3==MISSING8 || a3<a1 || a3>a2) continue;
+                if (a3==MISSING8 || a3<a1 || a3>a2) { continue;
+}
                 }
             x_tall(l);
             }
@@ -557,20 +609,24 @@ static int x_tall(int l)
         double msum,msum2;
 
         if (prind) { muste_sprintf(sbuf,"%d",l); sur_print(sbuf); }
-        if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); prind=1-prind; }
+        if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) { sur_getch(); 
+}prind=1-prind; }
         msum=0.0;
         for (i=0; i<m; ++i)
             {
             k=data_load(&d,l,mv[i],&x[i]);
-            if (k<0) return(-1);
-            if (x[i]==MISSING8) break;
+            if (k<0) { return(-1);
+}
+            if (x[i]==MISSING8) { break;
+}
             msum+=x[i];
             }
         if (i<m) { sur_print("-"); return(1); }
         msum2=1/msum;
 
-        for (i=0; i<m; ++i)
+        for (i=0; i<m; ++i) {
             x[i]-=sum[i]*msum/tot_sum;
+}
         for (j=0; j<m; ++j)
             {
             a2=0.0;
@@ -581,8 +637,9 @@ static int x_tall(int l)
             cc[j]=sqrt_tot*msum2*a2;
             }
 /* matprint(cc,1,nn);  */
-        for (i=0; i<nc; ++i)
+        for (i=0; i<nc; ++i) {
             data_save(&d,l,cv[i],cc[i]);    /* Coordinates */
+}
 
         if (nu>0)
             {
@@ -603,18 +660,21 @@ static int x_tall(int l)
             }
         if (ns>0)
             {
-            a2=0.0; for (i=0; i<nn; ++i) a2+=cc[i]*cc[i];
+            a2=0.0; for (i=0; i<nn; ++i) { a2+=cc[i]*cc[i];
+}
             for (i=0; i<ns; ++i)
                 {
                 data_save(&d,l,sv[i],cc[i]*cc[i]/a2);
                 }
             }
 
-        if (mvar>=0)
+        if (mvar>=0) {
             data_save(&d,l,mvar,msum/tot_sum);
+}
         if (dvar>=0)
             {
-            a2=0.0; for (i=0; i<nn; ++i) a2+=cc[i]*cc[i];
+            a2=0.0; for (i=0; i<nn; ++i) { a2+=cc[i]*cc[i];
+}
             data_save(&d,l,dvar,a2);
             }
 
@@ -622,7 +682,8 @@ static int x_tall(int l)
             {
             for (i=0; i<nr; ++i)
                 {
-                a2=0.0; for (j=nc; j<nn; ++j) a2+=cc[j]*A[i+m*j]*ee[i];
+                a2=0.0; for (j=nc; j<nn; ++j) { a2+=cc[j]*A[i+m*j]*ee[i];
+}
                 a2*=msum/sqrt_tot;
                 data_save(&d,l,rv[i],a2);
                 }
@@ -653,7 +714,8 @@ static int tulostus1()
         int df;
         int ni;
 
-        i=output_open(eout);  if (i<0) return(-1);
+        i=output_open(eout);  if (i<0) { return(-1);
+}
 
         muste_sprintf(rivi,"Correspondence analysis on data %s: Rows=%d Columns=%d",
                                        word[1],n,m);
@@ -666,13 +728,16 @@ static int tulostus1()
         muste_sprintf(rivi,"    correlation %.*svalue     %.*s      %.*spercentage",
                       accuracy-4,space,accuracy-0,space,accuracy-4,space);
         eoutput(rivi);
-        sum_eig=0.0; for (i=0; i<nn; ++i) sum_eig+=dd[i];
+        sum_eig=0.0; for (i=0; i<nn; ++i) { sum_eig+=dd[i];
+}
         a1=0.0;
 
-        ni=nc+3; if (ni>nn-1) ni=nn-1;
+        ni=nc+3; if (ni>nn-1) { ni=nn-1;
+}
         for (i=0; i<ni; ++i)
             {
-            if (dd[i]<0.00001) break;
+            if (dd[i]<0.00001) { break;
+}
             fnconv(fabs(sqrt(dd[i])),accuracy,sana1);
             fnconv(dd[i],accuracy,sana2);
             k=muste_sprintf(rivi,"%2d %.*s        %.*s",
@@ -684,7 +749,8 @@ static int tulostus1()
             k+=muste_sprintf(rivi+k,"     %.*s      %s",accuracy+4,sana1,sana2);
             eoutput(rivi);
             }
-        if (ni<nn-1) eoutput(" ...");
+        if (ni<nn-1) { eoutput(" ...");
+}
         fnconv(sum_eig,accuracy,sana1);
         fnconv(chi2,accuracy+3,sana2);
         muste_sprintf(sana2,"%*g",accuracy,chi2);

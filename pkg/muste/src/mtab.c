@@ -248,7 +248,8 @@ void muste_mtab(int argc,char *argv[])
  {
   int i,l; // j
 /*                                                               */
-  if(argc==1)return;
+  if(argc==1) {return;
+}
 
 
 // RS ADD Variable init
@@ -349,9 +350,11 @@ for (i=0; i<1000; i++) nambuff[i]=NULL;
  nested_maxn=0;
  values_nested=NULL;
  labels_nested=NULL;
-for (i=0; i<289; i++) frmt_nested[i]=0;
+for (i=0; i<289; i++) { frmt_nested[i]=0;
+}
 // max_gvals_nest[9];
-for (i=0; i<248; i++) address_nested[i]=-1;
+for (i=0; i<248; i++) { address_nested[i]=-1;
+}
  n_of_nests=0;
 // nest_width[9],nest_des[9];
  nested_exist=0;
@@ -379,8 +382,10 @@ for (i=0; i<248; i++) address_nested[i]=-1;
 // char x2[32];                                                      
  p_wrk=NULL;
 // vble_seqs[200];
-for (i=0;i<200;i++) vble_seqs[i]=0;
-for (i=0;i<200;i++) oper_list[i]=0;
+for (i=0;i<200;i++) { vble_seqs[i]=0;
+}
+for (i=0;i<200;i++) { oper_list[i]=0;
+}
 // oper_list[200];                                        
  p_test=NULL;
  p_bf1=NULL;
@@ -415,12 +420,14 @@ for (i=0;i<200;i++) oper_list[i]=0;
    htmlfile_open=0; html_on=0;
    max_des=3;   mess_char='1';
    i=meanscmp(argv);
-   if(i<0)goto dclose;
+   if(i<0) {goto dclose;
+}
 /*                                                              */
 /* phase for collecting sums of numbers, sums and crossproducts */
 /*                                                              */
     i=spacealloc3();
-    if(i<0)goto notenough;
+    if(i<0) {goto notenough;
+}
     
     i=meansums();
 /*  set the default formats if they are not given          */
@@ -494,7 +501,8 @@ for (i=0;i<200;i++) oper_list[i]=0;
       mh=ny;
 /*       calling the printout routine originally a child   */
         i=(int)meanspr();
-        if(i<0)goto lab3301;
+        if(i<0) {goto lab3301;
+}
 /*                                                         */
 
       ;
@@ -505,7 +513,8 @@ lab3301: if(html_on>0)
              strcpy(xx,"</BODY></HTML>");
              foutput(0);
             }
-           if(htmlfile_open>0)muste_fclose(html_stream);
+           if(htmlfile_open>0) {muste_fclose(html_stream);
+}
           }
          output_close(eout);
          s_end(argv[1]);
@@ -523,8 +532,10 @@ errclose: goto dclose;
   int ldm1;
   int ijm;
   ntulo=ny;
-  if(ny>0 && ivariables==1)ntulo=2*ny;
-  if(ny==0)ntulo=1;
+  if(ny>0 && ivariables==1) {ntulo=2*ny;
+}
+  if(ny==0) {ntulo=1;
+}
   for(ijm=0;ijm<pway;ijm++)
    {
     if(nd[ijm]>0)
@@ -539,37 +550,48 @@ errclose: goto dclose;
     ntulo=ntulo/ny;
    }
   pspacelkm=(char *)muste_malloc(ldm1*sizeof(long));
-  if(pspacelkm==NULL)return(-1);
+  if(pspacelkm==NULL) {return(-1);
+}
   lkm=(long *)pspacelkm;
-  ijm=ny; if(ijm<1)ijm=1;
+  ijm=ny; if(ijm<1) {ijm=1;
+}
   pspacetotlkm=(char *)muste_malloc(ijm*sizeof(long));
-  if(pspacetotlkm==NULL)return(-1);
+  if(pspacetotlkm==NULL) {return(-1);
+}
   total_lkm=(long *)pspacetotlkm;
   if(ny>0) // RS 26.11.2012 REM && ivariables==0)
    {
     pspacesz=(char *)muste_malloc(ldm1*sizeof(double));
-    if(pspacesz==NULL)return(-1);
+    if(pspacesz==NULL) {return(-1);
+}
     sz=(double *)pspacesz;
     pspaceszy=(char *)muste_malloc(ldm1*sizeof(double));
-    if(pspaceszy==NULL)return(-1);
+    if(pspaceszy==NULL) {return(-1);
+}
     szy=(double *)pspaceszy;
     pspacemin=(char *)muste_malloc(ldm1*sizeof(double));
-    if(pspacemin==NULL)return(-1);
+    if(pspacemin==NULL) {return(-1);
+}
     min_yvals=(double *)pspacemin;
     pspacemax=(char *)muste_malloc(ldm1*sizeof(double));
-    if(pspacemax==NULL)return(-1);
+    if(pspacemax==NULL) {return(-1);
+}
     max_yvals=(double *)pspacemax;
     pspacetotmin=(char *)muste_malloc(ny*sizeof(double));
-    if(pspacetotmin==NULL)return(-1);
+    if(pspacetotmin==NULL) {return(-1);
+}
     total_miny=(double *)pspacetotmin;
     pspacetotmax=(char *)muste_malloc(ny*sizeof(double));
-    if(pspacetotmax==NULL)return(-1);
+    if(pspacetotmax==NULL) {return(-1);
+}
     total_maxy=(double *)pspacetotmax;
     pspacetotals=(char *)muste_malloc(ny*sizeof(double));
-    if(pspacetotals==NULL)return(-1);
+    if(pspacetotals==NULL) {return(-1);
+}
     total_sums=(double *)pspacetotals;
     pspacetotalss=(char *)muste_malloc(ny*sizeof(double));
-    if(pspacetotalss==NULL)return(-1);
+    if(pspacetotalss==NULL) {return(-1);
+}
     total_ss=(double *)pspacetotalss;
     for(ijm=0;ijm<ldm1;ijm++)
      {
@@ -588,7 +610,8 @@ errclose: goto dclose;
    {
     lkm[ijm]=0L;
    }
-  if(ny<1)total_lkm[0]=0;
+  if(ny<1) {total_lkm[0]=0;
+}
   return(1);
  }
 
@@ -604,9 +627,11 @@ static void linspace(char *xx,int k)
 static int rmvblnks(char *zz,char *yy)
  {
   int i,l;
-  l=strlen(zz)-1;if(l<0)return(l);
+  l=strlen(zz)-1;if(l<0) {return(l);
+}
   for(i=l;i>=0;i--)
-   { if(zz[i] != ' ')break; }
+   { if(zz[i] != ' ') {break; 
+}}
   i++;
   strcpy(yy,zz);
   yy[i]='\0';
@@ -655,7 +680,8 @@ nonblank: return(l);
 static void foutput(int i)
  {
   int l; // j
-  if(i==-1)strcpy(xx," ");
+  if(i==-1) {strcpy(xx," ");
+}
  strt:
   if(htmlfile_open>0)
    {
@@ -670,9 +696,11 @@ static void foutput(int i)
    }
   else
    {
-    output_line(xx,eout,nextln);if(nextln)++nextln;
+    output_line(xx,eout,nextln);if(nextln) {++nextln;
+}
    }
-  if(i<=0)return;
+  if(i<=0) {return;
+}
   strcpy(xx," ");i--; goto strt;
  }
 
@@ -700,7 +728,8 @@ static int a_spfind(char *parname)
  {
   int i,j;     
   i=spfind(parname); 
-  if(i>=0)return(i);
+  if(i>=0) {return(i);
+}
   for(i=0;i<n_specs;i++)
    {
     j=muste_strcmpi(spa[i],parname);
@@ -759,10 +788,12 @@ static int meanscmp(char *argv[])
   if(g>2)
    {
     nextln=edline2(word[2],1,1);
-    if(nextln==0)return(-1);
+    if(nextln==0) {return(-1);
+}
    }
   i=data_read_open(word[1],&d);
-  if(i<0)return(-1);
+  if(i<0) {return(-1);
+}
   n_specs=sp_init(r1+r-1);
   if(n_specs<0)
     {
@@ -775,21 +806,25 @@ static int meanscmp(char *argv[])
   col_address=&col_buffseq;
   pspace_yfmt=NULL; pspace_ydes=NULL; pspace_changep=NULL;
   pspace_values=NULL; pspace_labls=NULL;
-  i=conditions(&d); if(i<0)return(-1);
+  i=conditions(&d); if(i<0) {return(-1);
+}
   maxn=512; maxp=32; label_length=32;
   nested_maxn=512; n_of_nests=0;
   pway_nested=6; nested_exist=0;
 /*     length of string variable values and labels    */
   label_length1=label_length+1;
-  if(d.m_act<32)maxp=d.m_act;
+  if(d.m_act<32) {maxp=d.m_act;
+}
 /*     HTMLTITLE  title for the whole HTML-file         */
   html_start=0; html_end=0;
   i=ano_spfind(&html_start,"HTML_BEGIN");
   i=ano_spfind(&html_end,"HTML_END");
-  if(html_start>0 || html_end>0)html_on=1;
+  if(html_start>0 || html_end>0) {html_on=1;
+}
   strcpy(ltotal,"Total");
   i=a_spfind("LTOTAL");
-  if(i>=0)strcpy(ltotal,spb[i]);
+  if(i>=0) {strcpy(ltotal,spb[i]);
+}
   strcpy(htmltitle," ");
   i=a_spfind("HTMLTITLE");
   if(i>=0)
@@ -877,12 +912,15 @@ avaa: html_stream=muste_fopen(html_file,"w");
    }
   hrefvble=-1; strcpy(hrefbase," ");
   i=a_spfind("HREFVBLE");
-  if(i>=0)hrefvble=varfind2(&d,spb[i],1);
+  if(i>=0) {hrefvble=varfind2(&d,spb[i],1);
+}
   i=a_spfind("HREFBASE");
-  if(i>=0)strcpy(hrefbase,spb[i]);
+  if(i>=0) {strcpy(hrefbase,spb[i]);
+}
   j=strlen(hrefbase);
   for(i=j-1;i>=0;i--)
-   { if(hrefbase[i] != ' ')break;
+   { if(hrefbase[i] != ' ') {break;
+}
      hrefbase[i]='\0';
    }
 /*                                                               */
@@ -909,24 +947,31 @@ avaa: html_stream=muste_fopen(html_file,"w");
       }
   i=ano_spfind(&nested_maxn,"MAXNEST");
   i=anovbl_spfind_fmt(&ngv,"GROUPING",igv,grp_fmt,1);
-  if(i==-2)return(-1);
-  if(i==-3)return(-1);
+  if(i==-2) {return(-1);
+}
+  if(i==-3) {return(-1);
+}
   if(i<0)
    {
     j=anovbl_spfind_fmt(&ngv,"CLASS",igv,grp_fmt,1);
-    if(j>=0)i=j;
-    if(j==-2)return(-1);
-    if(j==-3)return(-1);
+    if(j>=0) {i=j;
+}
+    if(j==-2) {return(-1);
+}
+    if(j==-3) {return(-1);
+}
    }
  /*      form from grp_fmt -list the following lists            */
  /*          grp_width  contains the format lengths               */
  /*          grp_des    contains the n of decimals, -1: not given */
-   if(ngv==0)goto nogrping;   
+   if(ngv==0) {goto nogrping;   
+}
    for(i=0;i<ngv;i++)
     {
      k=comp_format(grp_fmt,i,&grp_width[i],&grp_des[i],
                     &format_given);
-     if(k<0)return(-1);
+     if(k<0) {return(-1);
+}
     }    /* end of loop for grouping vbles      */
    if(n_of_nests>0)
     {
@@ -943,26 +988,35 @@ avaa: html_stream=muste_fopen(html_file,"w");
 nogrping: i=ano_spfind(&maxp,"MAXVBLS");
   ivariables=0;
   p_comp2=(char *)muste_malloc(maxp*sizeof(int));
-  if(p_comp2==NULL)goto notenough;
+  if(p_comp2==NULL) {goto notenough;
+}
   iy=(int *)p_comp2;
   y_fmt=(char *)muste_malloc((36*maxp+1)*sizeof(char));
-  if(y_fmt==NULL)goto notenough;
+  if(y_fmt==NULL) {goto notenough;
+}
   linspace(y_fmt,36*maxp+1);
   y_title=(char *)muste_malloc((41*maxp+1)*sizeof(char));
-  if(y_title==NULL)goto notenough;
+  if(y_title==NULL) {goto notenough;
+}
   ny=0;
 /*     y_fmt will contain possible format definitions                */
 /*     VARIABLES/VARIABLE                                            */
   i=anovbl_spfind_yfmt(&ny,"VARIABLES",iy,y_fmt,1);
-  if(i==-2)return(-1);
-  if(i==-3)return(-1);
+  if(i==-2) {return(-1);
+}
+  if(i==-3) {return(-1);
+}
   if(i<0)
    {
     j=anovbl_spfind_yfmt(&ny,"VARS",iy,y_fmt,1);
-    if(j<0)j=anovbl_spfind_yfmt(&ny,"VARIABLE",iy,y_fmt,1);
-    if(j>=0)i=j;
-    if(j==-2)return(-1);
-    if(j==-3)return(-1);
+    if(j<0) {j=anovbl_spfind_yfmt(&ny,"VARIABLE",iy,y_fmt,1);
+}
+    if(j>=0) {i=j;
+}
+    if(j==-2) {return(-1);
+}
+    if(j==-3) {return(-1);
+}
    }
 /*                                                                   */
 /*     IVARIABLES                                                    */
@@ -970,45 +1024,56 @@ nogrping: i=ano_spfind(&maxp,"MAXVBLS");
   if(i<0)
    {
     j=anovbl_spfind_yfmt(&ny,"IVARIABLES",iy,y_fmt,1);
-    if(j==-3)return(-1);
-    if(j==-2)return(-1);
+    if(j==-3) {return(-1);
+}
+    if(j==-2) {return(-1);
+}
     if(j>=0)
      {
       pspace_itype=NULL; pspace_imin=NULL; pspace_imax=NULL;
       ivbles_ilabs=NULL;
       ivariables=1;
       pspace_itype=(char *)muste_malloc(maxp*sizeof(int));
-      if(pspace_itype==NULL)goto notenough;
+      if(pspace_itype==NULL) {goto notenough;
+}
       ivbles_type=(int *)pspace_itype;
       pspace_imin=(char *)muste_malloc(maxp*sizeof(double));
-      if(pspace_itype==NULL)goto notenough;
+      if(pspace_itype==NULL) {goto notenough;
+}
       ivbles_imin=(double *)pspace_imin;
       pspace_imax=(char *)muste_malloc(maxp*sizeof(double));
-      if(pspace_imax==NULL)goto notenough;
+      if(pspace_imax==NULL) {goto notenough;
+}
       ivbles_imax=(double *)pspace_imax;
       ivbles_ilabs=(char *)muste_malloc(maxp*label_length1*sizeof(char));
-      if(ivbles_ilabs==NULL)goto notenough;
+      if(ivbles_ilabs==NULL) {goto notenough;
+}
       k=ivbldefs();
-      if(k<0)return(-1);
+      if(k<0) {return(-1);
+}
      }
    }
   mh=ny;
-  if(ny==0)goto nodeps;
+  if(ny==0) {goto nodeps;
+}
  /*                                                           */
  /*      form from y_fmt -list the following lists            */
  /*          y_width  contains the format lengths               */
  /*          y_des    contains the n of decimals, -1: not given */
    pspace_yfmt=(char *)muste_malloc(ny*sizeof(int));
-   if(pspace_yfmt==NULL)goto notenough;
+   if(pspace_yfmt==NULL) {goto notenough;
+}
    y_width=(int *)pspace_yfmt;
    pspace_ydes=(char *)muste_malloc(ny*sizeof(int));
-   if(pspace_ydes==NULL)goto notenough;
+   if(pspace_ydes==NULL) {goto notenough;
+}
    y_des=(int *)pspace_ydes;
    for(i=0;i<ny;i++)
     {
      k=comp_format(y_fmt,i,&y_width[i],&y_des[i],
                    &format_given);
-     if(k<0)return(-1);
+     if(k<0) {return(-1);
+}
      strcpy(y_title+i*41," ");
      strcpy(yyapu,d.varname[iy[i]]);
      strcat(yyapu,"TITLE");
@@ -1017,55 +1082,67 @@ nogrping: i=ano_spfind(&maxp,"MAXVBLS");
       {
        strcpy(y_title+i*41,spb[k]);
        ijk=replace_underscore(y_title+i*41);
-       if(html_on>0)ijk=replace_aakkos(y_title+i*41);
+       if(html_on>0) {ijk=replace_aakkos(y_title+i*41);
+}
       }
      else
       {
        strcpy(y_title+i*41,d.varname[iy[i]]);
-       if(html_on>0)ijk=replace_aakkos(y_title+i*41);
+       if(html_on>0) {ijk=replace_aakkos(y_title+i*41);
+}
       }
      }
-nodeps:if(ngv==0)goto lab708;
+nodeps:if(ngv==0) {goto lab708;
+}
 /*     definitions for grouping variables           */
    i=ano_spfind(&maxn,"MAXNCL");
    pway=ngv;
-   ngv1=ngv;if(ngv<1)ngv1=1;
+   ngv1=ngv;if(ngv<1) {ngv1=1;
+}
     k=ngv1*maxn;
     ij_long=k*label_length1+1;
     pspace_values=(char *)muste_malloc(k*sizeof(double));
-    if(pspace_values==NULL)goto notenough;
+    if(pspace_values==NULL) {goto notenough;
+}
     values=(double *)pspace_values;
     pspace_labls=(char *)muste_malloc(ij_long*sizeof(char));
-    if(pspace_labls==NULL)goto notenough;
+    if(pspace_labls==NULL) {goto notenough;
+}
     labls=(char *)pspace_labls;
     linspace_long(labls,ij_long);
     if(n_of_nests>0)
      {
       ij=(n_of_nests+1)*nested_maxn;
       pspace_nested=(char *)muste_malloc(ij*sizeof(double));
-      if(pspace_nested==NULL)goto notenough;
+      if(pspace_nested==NULL) {goto notenough;
+}
       values_nested=(double *)pspace_nested;
       pspace_nested=NULL;
       nestwrds=label_length1;
       nestwrds=nestwrds*ij+1;
       pspace_nested=(char *)muste_malloc(nestwrds*sizeof(char));
-      if(pspace_nested==NULL)goto notenough;
+      if(pspace_nested==NULL) {goto notenough;
+}
       labels_nested=(char *)pspace_nested;
       linspace_long(labels_nested,nestwrds);
       pspace_changep=NULL;
       pspace_changep=(char *)muste_malloc(ij*sizeof(int));
-      if(pspace_changep==NULL)goto notenough;
+      if(pspace_changep==NULL) {goto notenough;
+}
       change_points=(int *)pspace_changep;
      }
 lab708: 	i=mnsdefs();
-    if(i<0)return(-1);
+    if(i<0) {return(-1);
+}
     j=optintpr();   /* options for statistics, etc.   */
     line_length=ed1-2;
     i=ano_spfind(&line_length,"MAXCOLS");
-    if(line_length>ed1)line_length=ed1;
+    if(line_length>ed1) {line_length=ed1;
+}
     pctdec=2;
     i=ano_spfind(&pctdec,"PCTDEC");
-    if(pctdec>5)pctdec=5;
+    if(pctdec>5) {pctdec=5;
+}
 /*                                                       */
 /*   check if row or col definitions are given           */
 /*                                                       */
@@ -1077,8 +1154,10 @@ lab708: 	i=mnsdefs();
    {
     k=0; col_given=1; totalclass=coltotals;
     j=(int)list_comp(col_address,spb[i],&k);
-    if(k>1)y_used=1;
-    if(j<0)return(-1);
+    if(k>1) {y_used=1;
+}
+    if(j<0) {return(-1);
+}
    }
   i=a_spfind("ROW");
   if(i>=0)
@@ -1086,7 +1165,8 @@ lab708: 	i=mnsdefs();
     k=0;
     row_given=1; totalclass=rowtotals;
     j=(int)list_comp(row_address,spb[i],&k);
-    if(j<0)return(-1);
+    if(j<0) {return(-1);
+}
     if(k==1 && ny>0)
      {
       if(y_used==0 && col_given==1)
@@ -1135,12 +1215,18 @@ static int replace_aakkos(char *source)
    ijk=strlen(source);
    for(j=0;j<ijk;j++)
     {
-     if(source[j]=='\204')source[j]='\344'; 
-     if(source[j]=='\224')source[j]='\366';
-     if(source[j]=='\206')source[j]='\345';
-     if(source[j]=='\216')source[j]='\304';
-     if(source[j]=='\217')source[j]='\326';
-     if(source[j]=='\231')source[j]='\305';
+     if(source[j]=='\204') {source[j]='\344'; 
+}
+     if(source[j]=='\224') {source[j]='\366';
+}
+     if(source[j]=='\206') {source[j]='\345';
+}
+     if(source[j]=='\216') {source[j]='\304';
+}
+     if(source[j]=='\217') {source[j]='\326';
+}
+     if(source[j]=='\231') {source[j]='\305';
+}
     }
    return(1);
   }
@@ -1155,7 +1241,8 @@ static int anovbl_spfind_fmt(int *npar,char *parname,int *parlist,char *flist,in
 /*              -3: error, message already printed            */
   *npar=0;
   i=a_spfind(parname);
-  if(i<0)return(-1);
+  if(i<0) {return(-1);
+}
   if(i>=0)
    {
 /*    8 is the maximum number of grouping variables   */
@@ -1170,7 +1257,8 @@ static int anovbl_spfind_fmt(int *npar,char *parname,int *parlist,char *flist,in
     for(i=0;i<*npar;i++)
      {
         i24=i*36;
-        p=(char *)strcpy(x2,nambuff[i]); if (p==NULL) return(-1); // RS 4.2.2013 ADD if    
+        p=(char *)strcpy(x2,nambuff[i]); if (p==NULL) { return(-1); // RS 4.2.2013 ADD if    
+}
         l=strlen(x2);
         n_exist=0;
         for(k=0;k<l;k++)
@@ -1184,25 +1272,31 @@ static int anovbl_spfind_fmt(int *npar,char *parname,int *parlist,char *flist,in
          {
           for(k=0;k<l;k++)
            {
-            if(x2[k]=='(' || x2[k]=='[')break;
+            if(x2[k]=='(' || x2[k]=='[') {break;
+}
            }
           k_strted=k;
           muste_fieldcopy(vble,x2,k);
           vble[k]='\0';
           ivble=varfind2(&d,vble,1);
-          if(ivble<0)return(-3);
+          if(ivble<0) {return(-3);
+}
           ijk=n_ofnested+i*pway_nested;
           address_nested[ijk]=n_of_nests;
           igv_nested[ijk]=ivble;
           k_frst=k;
           nested_exist=1;
          }
-nextpart:   if(k_frst>l)goto nextdef;
+nextpart:   if(k_frst>l) {goto nextdef;
+}
         for (k=k_frst;k<l;k++)
          {
-          if(x2[k]=='(')goto labformat;
-          if(x2[k]=='[')goto nestlab;
-          if(x2[k]==']')goto nextdef;
+          if(x2[k]=='(') {goto labformat;
+}
+          if(x2[k]=='[') {goto nestlab;
+}
+          if(x2[k]==']') {goto nextdef;
+}
          }
         if(no_format==1)
            {
@@ -1223,7 +1317,8 @@ nextpart:   if(k_frst>l)goto nextdef;
 /*    ============================                                   */
 /*    strings in parenthesis into flist                              */
 /*                                                                   */
-labformat: if(k<k_strted)k_strted=k;
+labformat: if(k<k_strted) {k_strted=k;
+}
         k1=k+1; k2=-1;
         for(k=k1;k<l;k++)
          {
@@ -1268,13 +1363,15 @@ nestlab:  if(no_format==1)
 lab3:   muste_fieldcopy(vble,x2+k1,k2-k1);
         vble[k2-k1]='\0';
         ivble=varfind2(&d,vble,1);
-        if(ivble<0)return(-3);
+        if(ivble<0) {return(-3);
+}
         n_ofnested++; n_of_nests++;
         ijk=n_of_nests+i*pway_nested;
         address_nested[ijk]=n_of_nests;
         igv_nested[ijk]=ivble;
         k_frst=k2;
-        if(x2[k]=='(')k_frst=k2;
+        if(x2[k]=='(') {k_frst=k2;
+}
         no_format=1;
         goto nextpart;
 /*                                                       */
@@ -1290,7 +1387,8 @@ nextdef: x2[k_strted]='\0';
     }    /*   end of loop for variables in VBLES        */
 /*             next get the indices for variables        */
     j=mns_findvblelist(parlist,*npar,indik);
-   if(j<0)return(-3);
+   if(j<0) {return(-3);
+}
    }
   return(1);
  }
@@ -1300,7 +1398,8 @@ static int anovbl_spfind_yfmt(int *npar,char *parname,int *parlist,char *flist,i
   char *p,x2[32];
   *npar=0;
   i=a_spfind(parname);
-  if(i<0)return(-1);
+  if(i<0) {return(-1);
+}
   if(i>=0)
    {  
     j=split(spb[i],nambuff,maxp);
@@ -1308,13 +1407,16 @@ static int anovbl_spfind_yfmt(int *npar,char *parname,int *parlist,char *flist,i
     for(i=0;i<*npar;i++)
      {
         i24=i*36;
-        p=(char *)strcpy(x2,nambuff[i]); if (p==NULL) return(-1); // RS 4.2.2013 ADD if
+        p=(char *)strcpy(x2,nambuff[i]); if (p==NULL) { return(-1); // RS 4.2.2013 ADD if
+}
         l=strlen(x2);
         k1=-1; k2=-1;
         for (k=0;k<l;k++)
          {
-          if(x2[k]=='(')k1=k;
-          if(x2[k]==')')k2=k;
+          if(x2[k]=='(') {k1=k;
+}
+          if(x2[k]==')') {k2=k;
+}
          }
         if(k1==-1 && k2==-1)
          {
@@ -1335,7 +1437,8 @@ write_string("*Err008: Left or right parenthesis is missing! ",47,
       }    /*   end of loop for variables in VBLES        */
 /*             next get the indices for variables        */
     j=mns_findvblelist(parlist,*npar,indik);
-    if(j<0)return(-3);
+    if(j<0) {return(-3);
+}
    }
   return(1);
  }
@@ -1352,7 +1455,8 @@ static int mns_findvblelist(int *ivbles,int nvbls,int indik)
     if(indik<2)
      {
       k=varfind2(&d,nambuff[j],1);
-      if(k<0)return(-1);
+      if(k<0) {return(-1);
+}
      }
     ivbles[j]=k;
   }
@@ -1367,7 +1471,8 @@ static int comp_format(char *source,int index,int *width,int *des,int *format_gi
      ind24=index*36;
      strcpy(x2,source+ind24);
      l=strlen(x2);
-     if(l>0)i=(int)strcmp(x2,"def");
+     if(l>0) {i=(int)strcmp(x2,"def");
+}
 /*     width/des = -1 means unknown or default         */
      if(i==0 || l==0)
       {
@@ -1377,11 +1482,14 @@ static int comp_format(char *source,int index,int *width,int *des,int *format_gi
      ipoint=-1; ifend=-1;
      for(i=0;i<l;i++)
       {
-       if(x2[i]=='f')ifend=i;
-       if(x2[i]=='.')ipoint=i;
+       if(x2[i]=='f') {ifend=i;
+}
+       if(x2[i]=='.') {ipoint=i;
+}
       }
      ipros=0;
-     if(x2[0]=='%')ipros=1;
+     if(x2[0]=='%') {ipros=1;
+}
      strcpy(x_intpart," ");
      strcpy(x_despart," ");
      if(ipros==1)
@@ -1406,8 +1514,10 @@ write_string("*Err010: Erreneous printing format ",35,mess_char,11,1);
      if(ipros==0)
       {
        l=strlen(x2); *width=l; *des=0;
-       if(ipoint>0)*des=l-ipoint-1;
-       if(ipoint==0)*des=l-1;
+       if(ipoint>0) {*des=l-ipoint-1;
+}
+       if(ipoint==0) {*des=l-1;
+}
       }
     return(1);
    }
@@ -1497,12 +1607,14 @@ static int mnsdefs(void)
      {
       strcpy(gtitle+j*128,spb[i]);
       kk=replace_underscore(y_title+i*41);
-      if(html_on>0)kk=replace_aakkos(y_title+i*41);
+      if(html_on>0) {kk=replace_aakkos(y_title+i*41);
+}
      }
     else
      {
       strcpy(gtitle+j*128,d.varname[ij]);
-      if(html_on>0)kk=replace_aakkos(y_title+i*41);
+      if(html_on>0) {kk=replace_aakkos(y_title+i*41);
+}
      }
     i=(int)spfind(yy);
     if(i<0)
@@ -1515,7 +1627,8 @@ static int mnsdefs(void)
       for(i2=0;i2<pway_nested;i2++)
        {
         ij2=igv_nested[j*pway_nested+i2];
-        if(ij2<0)break;
+        if(ij2<0) {break;
+}
         nestaddr=address_nested[j*pway_nested+i2];
         strcpy(xyz,d.vartype[ij2]);
         igv_vartype_nested[nestaddr]=0;
@@ -1529,7 +1642,8 @@ static int mnsdefs(void)
        {
       i2=muste_sprintf(sbuf,"obs. %ld ",iii);
       write_string(sbuf,i2,'8',25,60);
-        if(unsuitable(&d,iii))continue;
+        if(unsuitable(&d,iii)) {continue;
+}
         if(nested[j]>0)
          {
 /*           for a nested class variable A[B[C...]]                    */
@@ -1537,26 +1651,30 @@ static int mnsdefs(void)
           for(i2=0;i2<pway_nested;i2++)
            {
             ij2=igv_nested[j*pway_nested+i2];
-            if(ij2<0)continue;
+            if(ij2<0) {continue;
+}
             nestaddr=address_nested[j*pway_nested+i2];
             i2long=i2; i2long=i2long*33;
             jfnd=read_obs(iii,ij2,igv_vartype_nested[nestaddr],
                 &nested_xval[i2],&nested_area[i2long]);
-            if(jfnd==0)goto nexti;
+            if(jfnd==0) {goto nexti;
+}
            }
           for(j2=0;j2<kk_nest;j2++)
            {
             for(i2=0;i2<pway_nested;i2++)
              {
               nestaddr=address_nested[i2+j*pway_nested];
-              if(nestaddr<0)break;
+              if(nestaddr<0) {break;
+}
               if(igv_vartype_nested[nestaddr]==0)
                {
 /*                    real value                                        */
-                if(values_nested[nestaddr*nested_maxn+j2] == nested_xval[i2])
+                if(values_nested[nestaddr*nested_maxn+j2] == nested_xval[i2]) {
                   continue;
-                else
+                } else {
                  goto nextlab;
+}
                }
               else
 /*                    character value                                   */
@@ -1564,9 +1682,10 @@ static int mnsdefs(void)
                 kk9=label_length1;
                 kk9=kk9*(j2+nestaddr*nested_maxn);
           ivrt=(int)strncmp(labels_nested+kk9,nested_area+i2*33,label_length);
-          if(ivrt==0)continue;
-          else
+          if(ivrt==0) {continue;
+          } else {
            goto nextlab;
+}
                }
              }            /* end of loop for nesting ways  i2  */
             goto nexti;   /* same nest vble values         */
@@ -1574,7 +1693,8 @@ static int mnsdefs(void)
            }              /* loop nest values  j2         */
 /*      add a new value list for nested vbles             */
           kk_nest++;
-          if(kk_nest>nested_maxn)goto errmaxn;
+          if(kk_nest>nested_maxn) {goto errmaxn;
+}
           for(i2=0;i2<pway_nested;i2++)
            {
             nestaddr=address_nested[i2+j*pway_nested];
@@ -1601,10 +1721,12 @@ static int mnsdefs(void)
               for(i_str=0;i_str<label_length;i_str++)
                {
                 i2long=i2; i2long=i2long*33;
-                if(nested_area[i2long+label_length-i_str-1] != ' ')goto lstbl;
+                if(nested_area[i2long+label_length-i_str-1] != ' ') {goto lstbl;
+}
                }
-lstbl:        if(label_length-i_str>str_maxlen_nest[i2])
+lstbl:        if(label_length-i_str>str_maxlen_nest[i2]) {
                  str_maxlen_nest[i2]=label_length-i_str;
+}
               igv_vartype_nested[nestaddr]=str_maxlen_nest[i2];
              }
            } /*  end of loop for i2    */
@@ -1613,44 +1735,55 @@ lstbl:        if(label_length-i_str>str_maxlen_nest[i2])
          {
           if(igv_vartype[j]==0)
            {
-            ky=data_load(&d,iii,ij,&xval); if (ky<0) return(-1); // RS 4.2.2013 ADD if
-            if(xval==MISSING8)continue;
+            ky=data_load(&d,iii,ij,&xval); if (ky<0) { return(-1); // RS 4.2.2013 ADD if
+}
+            if(xval==MISSING8) {continue;
+}
             for(j2=0;j2<kk;j2++)
              {
-              if(values[j2+jmaxn]==xval)goto nexti;
+              if(values[j2+jmaxn]==xval) {goto nexti;
+}
              }
             kk++;
-            if(kk>maxn)goto errmaxn;
+            if(kk>maxn) {goto errmaxn;
+}
             values[kk+jmaxn-1]=xval;
            }
           else
            {
             jjj=lenofvar;
-            if(jjj>label_length)jjj=label_length;
+            if(jjj>label_length) {jjj=label_length;
+}
             linspace(xx,label_length1);
-            ky=(int)data_alpha_load(&d,iii,ij,&xx[0]); if (ky<0) return(-1); // RS 4.2.2013 ADD if
+            ky=(int)data_alpha_load(&d,iii,ij,&xx[0]); if (ky<0) { return(-1); // RS 4.2.2013 ADD if
+}
             l2=strlen(xx);
             xx[l2]=' '; xx[label_length1]='\0';
             for(j2=0;j2<jjj;j2++)
              {
-              if(xx[j2] != ' ')goto notblank;
+              if(xx[j2] != ' ') {goto notblank;
+}
              }
             continue;  /*  blanks are treated as missing values   */
 /*         check the number of nonblank chars    */
 notblank:   for(i_str=0;i_str<label_length;i_str++)
              {
-              if(xx[label_length-i_str-1] != ' ')goto lstblnk;
+              if(xx[label_length-i_str-1] != ' ') {goto lstblnk;
+}
              }
-lstblnk:    if(label_length-i_str>str_maxlen)str_maxlen=label_length-i_str;
+lstblnk:    if(label_length-i_str>str_maxlen) {str_maxlen=label_length-i_str;
+}
             igv_vartype[j]=str_maxlen;
             for(j2=0;j2<kk;j2++)
              {
               kk9=label_length1*(j2+jmaxn);
               ivrt=(int)strncmp(labls+kk9,xx,label_length);
-              if(ivrt==0)goto nexti;
+              if(ivrt==0) {goto nexti;
+}
              }
             kk++;
-            if(kk>maxn)goto errmaxn;
+            if(kk>maxn) {goto errmaxn;
+}
             kk9=label_length1*(kk-1+jmaxn);
             muste_fieldcopy(labls+kk9,xx,label_length);
 /*  check if the string contains a real value   */
@@ -1680,7 +1813,8 @@ lstblnk:    if(label_length-i_str>str_maxlen)str_maxlen=label_length-i_str;
          }
         if(igv_vartype[j]>0)
          {
-          if(j_textvbl==0)igv_vartype[j]=-igv_vartype[j];
+          if(j_textvbl==0) {igv_vartype[j]=-igv_vartype[j];
+}
          }
        }
       else
@@ -1689,10 +1823,12 @@ lstblnk:    if(label_length-i_str>str_maxlen)str_maxlen=label_length-i_str;
         for(i2=0;i2<pway_nested;i2++)
          {
           iaddr=address_nested[i2+j*pway_nested];
-          if(iaddr<0)break;
+          if(iaddr<0) {break;
+}
           m++;
-          if(igv_vartype_nested[iaddr]>0 && textvbl[i2]==0)
+          if(igv_vartype_nested[iaddr]>0 && textvbl[i2]==0) {
              igv_vartype_nested[iaddr]=-igv_vartype_nested[iaddr];
+}
          }
         j2=address_nested[j*pway_nested];
         iij=nested_maxn*j2; jjj=iij*label_length1;
@@ -1705,16 +1841,19 @@ lstblnk:    if(label_length-i_str>str_maxlen)str_maxlen=label_length-i_str;
      {      
       k=(int)split(spb[i],nambuff,maxn);       
       kk=(int)grpvals(jmaxn,k,d.varname[ij],igv_vartype[j]);      
-      if(kk<0)goto errwait;
+      if(kk<0) {goto errwait;
+}
       if(igv_vartype[j]>0)
        {
-        if(real_vals==1)igv_vartype[j]=-igv_vartype[j];
+        if(real_vals==1) {igv_vartype[j]=-igv_vartype[j];
+}
        }
      }
-    if(nested[j]==0)
+    if(nested[j]==0) {
      nd[j]=kk;
-    else
+    } else {
      nd[j]=kk_nest;
+}
     if(nested[j]==0)
      {
       if(igv_vartype[j]<=0)
@@ -1729,7 +1868,8 @@ lstblnk:    if(label_length-i_str>str_maxlen)str_maxlen=label_length-i_str;
         max_gvals[j]=values[jmaxn];
         for(j2=1;j2<kk;j2++)
          {
-          if(values[j2+jmaxn]>max_gvals[j])max_gvals[j]=values[j2+jmaxn];
+          if(values[j2+jmaxn]>max_gvals[j]) {max_gvals[j]=values[j2+jmaxn];
+}
          }
        }
      }    /* if nested=0    */
@@ -1739,7 +1879,8 @@ lstblnk:    if(label_length-i_str>str_maxlen)str_maxlen=label_length-i_str;
        {
         nestaddr=i+pway_nested*j;
         ij=address_nested[j*pway_nested+i];
-        if(ij<0)break;
+        if(ij<0) {break;
+}
         if(igv_vartype_nested[ij]<=0)
          {
           isort=1; iij=ij*nested_maxn;
@@ -1752,8 +1893,9 @@ lstblnk:    if(label_length-i_str>str_maxlen)str_maxlen=label_length-i_str;
           max_gvals_nest[ij]=values_nested[ij*nested_maxn];
           for(j2=1;j2<kk_nest;j2++)
            {
-   if(values_nested[j2+iij]>max_gvals_nest[ij])
+   if(values_nested[j2+iij]>max_gvals_nest[ij]) {
           max_gvals_nest[ij]=values_nested[j2+iij];
+}
            }
          } /*  igv_vartype_nested  */
        }   /*  end of loop for i   */
@@ -1781,8 +1923,10 @@ static int grpvals(int jmaxn,int nvl,char *vname,int vtype)
 //        nm=(int)strlen(nambuff[k]);
         k1=(char *)strchr(nambuff[k],'(');
         k2=(char *)strchr(nambuff[k],')');
-        if(k1 != NULL)*k1=',';
-        if(k2 != NULL)*k2=',';
+        if(k1 != NULL) {*k1=',';
+}
+        if(k2 != NULL) {*k2=',';
+}
         if(k1 != NULL || k2 != NULL)
          {
           if(k1==NULL || k2==NULL)
@@ -1792,7 +1936,8 @@ static int grpvals(int jmaxn,int nvl,char *vname,int vtype)
         cs=(double)atof(cc1[0]);
         if(cs==0.)
          { iij=(int)strcmp(cc1[0],"0");
-           if(iij != 0)real_vals=0;
+           if(iij != 0) {real_vals=0;
+}
            if(vtype==0 && iij != 0)
             { grouperror(cc1[0]);return(-1);}
          }
@@ -1806,7 +1951,8 @@ static int grpvals(int jmaxn,int nvl,char *vname,int vtype)
             values[kkj]=cs;
             if(nwrds==2)
              {
-              l=(int)strlen(cc1[1]); if(l>label_length)l=label_length;
+              l=(int)strlen(cc1[1]); if(l>label_length) {l=label_length;
+}
               muste_fieldcopy(labls+kkj9,cc1[1],l);
              }
            }
@@ -1814,7 +1960,8 @@ static int grpvals(int jmaxn,int nvl,char *vname,int vtype)
            {
             if(real_vals==0)
              {
-              l=(int)strlen(cc1[0]); if(l>label_length)l=label_length;
+              l=(int)strlen(cc1[0]); if(l>label_length) {l=label_length;
+}
               muste_fieldcopy(labls+kkj9,cc1[0],l);
              }
            }
@@ -1865,7 +2012,8 @@ static int meansums(void)
   if(ivariables>0 && ny>0)
    {
     pspace_xvrt=(char *)muste_malloc(ny*sizeof(double));
-    if(pspace_xvrt==NULL)return(-1);
+    if(pspace_xvrt==NULL) {return(-1);
+}
     xvrt=(double *)pspace_xvrt;
     for(i=0;i<ny;i++)
      {
@@ -1892,7 +2040,8 @@ static int meansums(void)
     for(iii=d.l1;iii<=d.l2;iii++)
      {
       i=unsuitable(&d,iii);
-      if(i==1)continue;
+      if(i==1) {continue;
+}
       j=muste_sprintf(sbuf," %ld observations processed ",iii);
       write_string(sbuf,j,'8',25,1);
       iosot=0;
@@ -1908,9 +2057,11 @@ static int meansums(void)
             for(i2=0;i2<pway_nested;i2++)
              {
               nestaddr=address_nested[j*pway_nested+i2];
-              if(nestaddr<0)break;
+              if(nestaddr<0) {break;
+}
               ij2=igv_nested[j*pway_nested+i2];
-              if(ij2<0)break;
+              if(ij2<0) {break;
+}
                 jfnd=(int)read_obs(iii,ij2,igv_vartype_nested[nestaddr],
                 &nested_xval[i2],&nested_area[i2*33]);
               if(jfnd==0){ goto rjctd; }
@@ -1936,7 +2087,8 @@ static int meansums(void)
           if(ivariables==0)
            {
             jfnd=data_load(&d,iii,iyj,&yval);
-            if(yval==MISSING8)continue;
+            if(yval==MISSING8) {continue;
+}
             i1=m+iosot;
            }
           else
@@ -1945,43 +2097,54 @@ static int meansums(void)
             if(ivbles_type[m]==0)
              {
               jfnd=data_load(&d,iii,iyj,&yval);
-              if(yval==MISSING8)continue;
-        if(yval>=ivbles_imin[m]-xvrt[m] && yval<=ivbles_imax[m]+xvrt[m])
+              if(yval==MISSING8) {continue;
+}
+        if(yval>=ivbles_imin[m]-xvrt[m] && yval<=ivbles_imax[m]+xvrt[m]) {
                indpos=1;
+}
              }
             else
              {
               linspace(xx,label_length1);
               jfnd=data_alpha_load(&d,iii,iyj,&xx[0]);
               len_alphaval=d.varlen[iyj];
-              if(len_alphaval>label_length)len_alphaval=label_length;
+              if(len_alphaval>label_length) {len_alphaval=label_length;
+}
               l2=strlen(xx); xx[l2]=' '; xx[label_length]='\0';
               i=(int)muste_strcmpi(xx," ");
-              if(i==0)continue;
+              if(i==0) {continue;
+}
               ij2=m*label_length1;
               i=(int)strncmp(ivbles_ilabs+ij2,xx,label_length);
-              if(i==0)indpos=1;
+              if(i==0) {indpos=1;
+}
              }
             i1=2*m + iosot;
-            if(indpos>0)lkm[i1+1]++;
+            if(indpos>0) {lkm[i1+1]++;
+}
            }
           lkm[i1]++;
           total_lkm[m]++;
-          if(ivariables==1)continue;
+          if(ivariables==1) {continue;
+}
           sz[i1]+=yval; total_sums[m]+=yval;
           szy[i1]+=yval*yval; total_ss[m]+=yval;
           if(min_yvals[i1]>max_yvals[i1])
             {min_yvals[i1]=yval;
              max_yvals[i1]=yval;
             }
-          if(min_yvals[i1]>yval)min_yvals[i1]=yval;
-          if(max_yvals[i1]<yval)max_yvals[i1]=yval;
+          if(min_yvals[i1]>yval) {min_yvals[i1]=yval;
+}
+          if(max_yvals[i1]<yval) {max_yvals[i1]=yval;
+}
           if(total_maxy[m]<total_miny[m])
            {total_maxy[m]=yval;
             total_miny[m]=yval;
            }
-          if(total_maxy[m]<yval)total_maxy[m]=yval;
-          if(total_miny[m]>yval)total_miny[m]=yval;
+          if(total_maxy[m]<yval) {total_maxy[m]=yval;
+}
+          if(total_miny[m]>yval) {total_miny[m]=yval;
+}
          }   /*  end of loop for object variables */
        }
       if(ny==0)
@@ -2008,25 +2171,31 @@ static int read_obs(long iii,int ij,int vartype,double *xval,char *chrval)
      if(vartype<0)
        {
         linspace(chrval,label_length1);
-        jfnd=data_alpha_load(&d,iii,ij,&chrval[0]); if (jfnd<0) return(-1); // RS 4.2.2013 if
+        jfnd=data_alpha_load(&d,iii,ij,&chrval[0]); if (jfnd<0) { return(-1); // RS 4.2.2013 if
+}
         *xval=(double)atof(chrval);
        }
       else
        {
-        jfnd=data_load(&d,iii,ij,xval); if (jfnd<0) return(-1); // RS 4.2.2013 if
+        jfnd=data_load(&d,iii,ij,xval); if (jfnd<0) { return(-1); // RS 4.2.2013 if
+}
        }
-      if(*xval==MISSING8)return(0);
+      if(*xval==MISSING8) {return(0);
+}
     }
   else
     {
      linspace(chrval,label_length1);
-     jfnd=data_alpha_load(&d,iii,ij,&chrval[0]); if (jfnd<0) return(-1); // RS 4.2.2013 if
+     jfnd=data_alpha_load(&d,iii,ij,&chrval[0]); if (jfnd<0) { return(-1); // RS 4.2.2013 if
+}
      len_alphaval=d.varlen[ij];
-     if(len_alphaval>label_length)len_alphaval=label_length;
+     if(len_alphaval>label_length) {len_alphaval=label_length;
+}
      l2=strlen(chrval);
      chrval[l2]=' '; chrval[label_length1]='\0';
      i=(int)muste_strcmpi(chrval," ");
-     if(i==0)return(0);
+     if(i==0) {return(0);
+}
     }
    return(1);
   }
@@ -2045,7 +2214,8 @@ static void chr_sort(char *chrarr,int n)
      {
       jk=label_length1*j;
       icomp=strncmp(chrarr+jk,chrarr+ik,label_length);
-      if(icomp>=0)goto notchng;
+      if(icomp>=0) {goto notchng;
+}
       if(icomp<0)
        {
         muste_fieldcopy(ccc,chrarr+jk,label_length);
@@ -2078,7 +2248,8 @@ static void charsort(char *chrarr,double *xarr,int *types,int m,int n,int lngth_
         if(types[k]>0)
          {
           icomp=strncmp(chrarr+i1,chrarr+i2,label_length);
-          if(icomp>0)goto notchng;
+          if(icomp>0) {goto notchng;
+}
           if(icomp<0)
            { ichange=1; goto chnglab; }
          }
@@ -2111,7 +2282,8 @@ notchng: ;
      }
    }
 /*  compute number of distinct values in the topmost classif variable  */
-  if(m<2)return;
+  if(m<2) {return;
+}
   j=0; k=m-1; kln=k*lngth_array; xapu=-99999.99;
   strcpy(ccc," ");
   for(i=0;i<n;i++)
@@ -2121,7 +2293,8 @@ notchng: ;
        if(xapu != xarr[i+kln])
         {
          xapu=xarr[i+kln]; j++;
-         if(j>1)change_point[j-2]=i;
+         if(j>1) {change_point[j-2]=i;
+}
        }
       }
      else
@@ -2131,11 +2304,13 @@ notchng: ;
        if(icomp !=0 )
         {
          muste_fieldcopy(ccc,chrarr+i2,label_length); j++;
-         if(j>1)change_point[j-2]=i;
+         if(j>1) {change_point[j-2]=i;
+}
         }
       }
    }
-  if(j>1)change_point[j-1]=n;
+  if(j>1) {change_point[j-1]=n;
+}
   *ndtop=j;
   return;
  }
@@ -2184,8 +2359,10 @@ write_string("*Err011: String indicator variable definition missing ",
       if(cs==0.)
        {
         iij=(int)strcmp(nambuff[0],"0");
-        if(iij != 0)real_val=0;
-        if(ivbles_type[j]==0 && iij != 0)goto error;
+        if(iij != 0) {real_val=0;
+}
+        if(ivbles_type[j]==0 && iij != 0) {goto error;
+}
        }
       if(real_val==1)
        {
@@ -2197,7 +2374,8 @@ write_string("*Err011: String indicator variable definition missing ",
           if(cs2==0.)
            {
             iij=(int)strcmp(nambuff[1],"0");
-            if(iij != 0)goto error;
+            if(iij != 0) {goto error;
+}
            }
           ivbles_imax[j]=cs2;
          }
@@ -2206,7 +2384,8 @@ write_string("*Err011: String indicator variable definition missing ",
        {
         linspace(ccapu,33);
         l=strlen(nambuff[0]);
-        if(l>label_length)l=label_length;
+        if(l>label_length) {l=label_length;
+}
         muste_fieldcopy(ccapu,nambuff[0],l); ccapu[l]=' ';
         ccapu[label_length]='\0';
         muste_fieldcopy(ivbles_ilabs+j*label_length1,ccapu,label_length);
@@ -2251,7 +2430,8 @@ static int optintpr(void)
         i=(int)muste_strcmpi(x2,"NOTO");
         if(i==0){ nototals=1;}
         i=(int)muste_strcmpi(x2,"F");
-        if(i != 0)i=(int)muste_strcmpi(x2,"N");
+        if(i != 0) {i=(int)muste_strcmpi(x2,"N");
+}
         if(i==0){ prntopt[3]=1;jj++;statistics[jj]=4;continue;}
         i=(int)muste_strcmpi(x2,"ROWT");
         if(i==0){ coltotals=1;}
@@ -2262,12 +2442,14 @@ static int optintpr(void)
         i=(int)muste_strcmpi(x2,"%S");
         if(i==0) { prntopt[8]=1; jj++; statistics[jj]=9; continue;}
         i=(int)muste_strcmpi(x2,"C%F");
-        if(i != 0)i=(int)muste_strcmpi(x2,"C%");
+        if(i != 0) {i=(int)muste_strcmpi(x2,"C%");
+}
         if(i==0) { prntopt[9]=1; jj++; statistics[jj]=10; continue;}
         i=(int)muste_strcmpi(x2,"C%S");
         if(i==0) { prntopt[10]=1; jj++; statistics[jj]=11; continue;}
         i=(int)muste_strcmpi(x2,"R%F");
-        if(i != 0)i=(int)muste_strcmpi(x2,"R%");
+        if(i != 0) {i=(int)muste_strcmpi(x2,"R%");
+}
         if(i==0) { prntopt[11]=1; jj++; statistics[jj]=12; continue;}
         i=(int)muste_strcmpi(x2,"R%S");
         if(i==0) { prntopt[12]=1; jj++; statistics[jj]=13; continue;}
@@ -2296,7 +2478,8 @@ static int optintpr(void)
     nogiven=1;
     for(i=0;i<23;i++)
      {
-      if(prntopt[i]>=0)nogiven=0;
+      if(prntopt[i]>=0) {nogiven=0;
+}
      }
     if(nogiven==1)
      {
@@ -2320,7 +2503,8 @@ static int optintpr(void)
      {
       for(i=0;i<23;i++)
        {
-        if(prntopt[i]<0)prntopt[i]=0;
+        if(prntopt[i]<0) {prntopt[i]=0;
+}
        }
      }
     if(rowtotals<0 && coltotals<0 && nototals<0)
@@ -2329,9 +2513,12 @@ static int optintpr(void)
      }
     else
      {
-      if(rowtotals<0)rowtotals=0;
-      if(coltotals<0)coltotals=0;
-      if(nototals<0)nototals=0;
+      if(rowtotals<0) {rowtotals=0;
+}
+      if(coltotals<0) {coltotals=0;
+}
+      if(nototals<0) {nototals=0;
+}
      }
     if(nototals==1){rowtotals=0; coltotals=0;}
     return(1);
@@ -2353,14 +2540,16 @@ static int list_comp(int *result_address,char *source,int *vble_type)
   l_source=strlen(source);
   for(i=l_source-1;i>=0;i--)
    {
-    if(source[i] != ' ')break;
+    if(source[i] != ' ') {break;
+}
    }
   l_source=i+1;
   l_oper=-1;
   fchar=0;
 /*                                                    */
 nextw:  i=get_next_word(wrd,source,fchar,&lchar,l_source);
-  if(i<=0)goto nomore;
+  if(i<=0) {goto nomore;
+}
   ioper=0;
   i1=(int)muste_strcmpi(wrd,"*");
   if(i1==0){ioper=1;goto next;}
@@ -2380,10 +2569,11 @@ next:  if(ioper==0)
     ij=ny+ngv; i1=0;
     for(j=0;j<ij;j++)
      {
-      if(j<ny)
+      if(j<ny) {
        k=iy[j];
-      else
+      } else {
        k=igv[j-ny];
+}
       l=(int)rmvblnks(d.varname[k],xx);
       if(l<m){continue;}
       i2=(int)strncmp(wrd,xx,m);
@@ -2422,7 +2612,8 @@ labg: ;
 nomore: l_oper++;
         i=perform_operlist(result_address,&oper_list[0],
           &vble_seqs[0],l_oper);
-  if(i>=0)return(1);
+  if(i>=0) {return(1);
+}
 errwait: return(-1);
  }
 /*  perfopl.c  */
@@ -2440,13 +2631,16 @@ static int perform_operlist(int *address,int *op_list,int *vbl_seqs,int l_oper)
 nxtphase: last_left=-1;
   for(i=0;i<l_oper;i++)
    {
-    if(op_list[i]==3)last_left=i;
-    if(op_list[i]==4)goto labright;
+    if(op_list[i]==3) {last_left=i;
+}
+    if(op_list[i]==4) {goto labright;
+}
    }
 /*   no parenthesis                        */
      j=l_oper-1;
      i=eval_opers(op_list,0,j,vbl_seqs);
-     if(i<0)return(-1);
+     if(i<0) {return(-1);
+}
      goto alldone;
 /*   parenthesis from last_left to i        */
 labright:   right_par=i;
@@ -2465,7 +2659,8 @@ labright:   right_par=i;
        vbl_seqs[k]=vbl_seqs[j];
       }
      l_oper=k+1;
-     if(l_oper==1)goto alldone;
+     if(l_oper==1) {goto alldone;
+}
      goto nxtphase;
 /*                                         */
   alldone: *address=op_list[0]-50;
@@ -2492,7 +2687,8 @@ static int eval_opers(int *op_list,int i_from,int i_to,int *vbl_seqs)
 subint:
   for(ij=i;ij<=ito;ij++)
     {
-     if(op_list[ij]==2)goto labcomma;   /* comma found   */
+     if(op_list[ij]==2) {goto labcomma;   /* comma found   */
+}
     }
   lasti=ito;
   goto secondp;
@@ -2500,61 +2696,77 @@ subint:
 labcomma: lasti=ij-1;
 /*   subinterval is (i,lasti), it contains only cross operations  */
 /*                                                                */
-secondp: if(i>ito)goto subready;
+secondp: if(i>ito) {goto subready;
+}
 /*   convert first operand into buffer                            */
     j=op_list[i];
     if(j==-1){i++;goto secondp;}  /* -1 marks a deleted element   */
     ii=(int)buffcheck(&buff_addr,op_list,vbl_seqs,i);
-    if(ii<0)return(-1);
+    if(ii<0) {return(-1);
+}
     op_list[i]=50+buff_addr;
-    if(i==lasti)goto subready;
+    if(i==lasti) {goto subready;
+}
 /*                              */
 /*    find operation mark       */
 /*                              */
     i2=i;
-nexti: i2++; if(i2>lasti)goto subready;
+nexti: i2++; if(i2>lasti) {goto subready;
+}
     j2=op_list[i2];
-    if(j2==-1)goto nexti;
+    if(j2==-1) {goto nexti;
+}
     operation=j2; operseq=i2;
 /*                                                                  */
 /*  second operand in operation                                     */
 /*                                                                  */
-nextii:i2++; if(i2>lasti)goto subready;
-    j2=op_list[i2]; if(j2==-1)goto nextii;
+nextii:i2++; if(i2>lasti) {goto subready;
+}
+    j2=op_list[i2]; if(j2==-1) {goto nextii;
+}
     ii=(int)buffcheck(&buff_addr2,op_list,vbl_seqs,i2);
-    if(ii<0)return(-1);
+    if(ii<0) {return(-1);
+}
     op_list[i2]=50+buff_addr2;
 /*                                                   */
     combine_buffers(operation,buff_addr,buff_addr2,&buff_addr3);
     op_list[i]=50+buff_addr3;
     op_list[operseq]=-1;
     op_list[i2]=-1;
-    if(i2>=lasti)goto subready;
+    if(i2>=lasti) {goto subready;
+}
     buff_addr=buff_addr3;
     goto nexti;
 /*   subinterval ready                                           */
 subready: i=lasti;
 subready2: i++;
-    if(i>ito)goto scndphase;
-    if(op_list[i]==2)goto subready2;
-    if(i<=ito)goto subint;  /* next subinterval */
+    if(i>ito) {goto scndphase;
+}
+    if(op_list[i]==2) {goto subready2;
+}
+    if(i<=ito) {goto subint;  /* next subinterval */
+}
 /*                                                               */
 /*   next all comma operations are performed for the buffers     */
 /*   =======================================================     */
 scndphase: ito=i_to;
       i=i_from;
-scnd: if(i>ito)goto readylab;
+scnd: if(i>ito) {goto readylab;
+}
 /*   first operand                                              */
     j=op_list[i];
     if(j==-1){i++;goto scnd;}   /* -1 marks a deleted element   */
     buff_addr=j-50;
     i2=i;
-nextj: i++; if(i>ito)goto readylab;
-    j2=op_list[i];if(j2==-1)goto nextj;
+nextj: i++; if(i>ito) {goto readylab;
+}
+    j2=op_list[i];if(j2==-1) {goto nextj;
+}
     operseq=i;
     if(j2 != 2){muste_sprintf(sbuf,"\nLogical error in program");return(-1);}
 nextjj: i++;
-    jj2=op_list[i];if(jj2==-1)goto nextjj;
+    jj2=op_list[i];if(jj2==-1) {goto nextjj;
+}
     buff_addr2=jj2-50;
     combine_buffers(j2,buff_addr,buff_addr2,&buff_addr3);
     op_list[i2]=50+buff_addr3;
@@ -2582,7 +2794,8 @@ readylab: return(1);
 /*       group symbols, array length=nofways*lngth            */
        buftot=3+(2*nofways+1)*lngth;
        buffer[next_buffer]=(char *)muste_malloc(buftot*sizeof(int));
-       if(buffer[next_buffer]==NULL)goto notenough;
+       if(buffer[next_buffer]==NULL) {goto notenough;
+}
        p_wrk=(char *)buffer[next_buffer];
        dims=(int *)p_wrk;
        dims[0]=nofways;
@@ -2599,10 +2812,12 @@ notenough: muste_sprintf(sbuf,"\nNot enough memory!");return(-1);
        {
         vbltype=j/10;
         ii=put_into_buffer(buff_addr,vbltype,vbl_seqno[i]);
-        if(ii<0)return(-1);
+        if(ii<0) {return(-1);
+}
         op_list[i]=50+*buff_addr;
        }
-      if(j>=50)*buff_addr=j-50;
+      if(j>=50) {*buff_addr=j-50;
+}
       return(1);
      }
 /*     put into buffer                                       */
@@ -2617,14 +2832,16 @@ notenough: muste_sprintf(sbuf,"\nNot enough memory!");return(-1);
           {
            for(i=0;i<ngv;i++)
             {
-             if(igv[i]==vblseqno)break;
+             if(igv[i]==vblseqno) {break;
+}
             }
            igvno=i;
            length=nd[i];
            if(totalclass==1)
             {
              length++;
-             if(nested[i]>0)length+=nd_nested[i];
+             if(nested[i]>0) {length+=nd_nested[i];
+}
             }
            nofways=1;
           }
@@ -2644,7 +2861,8 @@ notenough: muste_sprintf(sbuf,"\nNot enough memory!");return(-1);
            p_buff=p_buff+length*nofways*sizeof(int);
            gsymbols=(int *)p_buff;
            kpoint=0;
-           if(nested[igvno]>0)nestaddr=address_nested[igvno*pway_nested];
+           if(nested[igvno]>0) {nestaddr=address_nested[igvno*pway_nested];
+}
            for(i=0;i<length;i++)
             {
              gnames[i]=vblseqno;
@@ -2662,7 +2880,8 @@ notenough: muste_sprintf(sbuf,"\nNot enough memory!");return(-1);
                    gsymbols[i]=i-kpoint;
                   }
                  }
-               if(i==length-1)gsymbols[i]=9999;
+               if(i==length-1) {gsymbols[i]=9999;
+}
               }
             }
           }
@@ -2720,13 +2939,17 @@ static int combine_buffers(int operation,int buff1,int buff2,int *resultbuff)
      }
     else
      {
-      nway3=nway1; if(nway2>nway3)nway3=nway2;
+      nway3=nway1; if(nway2>nway3) {nway3=nway2;
+}
       lngth3=lngth1+lngth2;
      }
-    if(vbltyp1 == vbltyp2)vbltyp3=vbltyp1;
-    if(vbltyp1 != vbltyp2)vbltyp3=3;
+    if(vbltyp1 == vbltyp2) {vbltyp3=vbltyp1;
+}
+    if(vbltyp1 != vbltyp2) {vbltyp3=3;
+}
     i=(int)new_buffer(lngth3,nway3,vbltyp3);
-    if(i<0)return(-1);
+    if(i<0) {return(-1);
+}
     *resultbuff=next_buffer;
     p_bf3=buffer[next_buffer];
     p_bf3+=3*sizeof(int);
@@ -2738,7 +2961,8 @@ static int combine_buffers(int operation,int buff1,int buff2,int *resultbuff)
     gsymbs3=(int *)p_bf3;
 /*     fill gnames3 and gsymbs3                      */
 /*          operation   buff1*buff2                  */
-    if(operation==2)goto commalab;
+    if(operation==2) {goto commalab;
+}
     ii=-1;
     for(i=0;i<lngth1;i++)
      {
@@ -2763,17 +2987,20 @@ static int combine_buffers(int operation,int buff1,int buff2,int *resultbuff)
        }
      }
 /*    fill object vble area             */
-    if(vbltyp3==1)goto endlab;
+    if(vbltyp3==1) {goto endlab;
+}
     ii=-1;
     for(i=0;i<lngth1;i++)
      {
       for(j=0;j<lngth2;j++)
        {
         ii++;
-        if(vbltyp2>=2)
+        if(vbltyp2>=2) {
           objvbl3[ii]=objvbl2[j];
-        if(vbltyp1>=2)
+}
+        if(vbltyp1>=2) {
           objvbl3[ii]=objvbl1[i];
+}
        }
      }
     goto endlab;
@@ -2804,16 +3031,19 @@ commalab:  ii=-1;
       gsymbs3[ii]=jj2;
      }
    }
-  if(vbltyp3==1)goto endlab;
+  if(vbltyp3==1) {goto endlab;
+}
 /*   fill objvbl3                   */
   ii=-1;
   for(i=0;i<lngth3;i++)
    {
     ii++;objvbl3[ii]=-1;
-    if(i<lngth1 && vbltyp1>=2)
+    if(i<lngth1 && vbltyp1>=2) {
         objvbl3[ii]=objvbl1[i];
-    if(i>=lngth1 && vbltyp2>=2)
+}
+    if(i>=lngth1 && vbltyp2>=2) {
         objvbl3[ii]=objvbl2[i-lngth1];
+}
    }
 /*                                  */
 /*    free buff1 and buff2          */
@@ -2841,11 +3071,13 @@ static int meanspr(void)
 /*  strcpy(xx," ");foutput(0);             */
   j=-1; lt=0;
   for(i=0;i<24;i++)
-   {if(statistics[i]>0)lasti=i;}
+   {if(statistics[i]>0) {lasti=i;
+}}
   for(i=0;i<24;i++)
    {
     k=statistics[i];
-    if(k<1)continue;
+    if(k<1) {continue;
+}
     j++;
     if(k==1){strcpy(yy,"Means");ltext=5;}
     if(k==2){strcpy(yy,"Sums");ltext=4;}
@@ -2881,7 +3113,8 @@ static int meanspr(void)
       else
        {strcat(xx,", ");lt+=2;}
       if(lt+ltext>72)
-       { if(html_on==0 || strlen(tabltitle)<2)foutput(0);
+       { if(html_on==0 || strlen(tabltitle)<2) {foutput(0);
+}
          lt=ltext; strcpy(xx,yy);}
       else
        {
@@ -2889,7 +3122,8 @@ static int meanspr(void)
        }
      }
    }
-  if(html_on==0 || strlen(tabltitle)<2)foutput(1);
+  if(html_on==0 || strlen(tabltitle)<2) {foutput(1);
+}
 /*                                                                       */
 /* determine which grouping variables should be used as background vbles */
 /*                                                                       */
@@ -2897,13 +3131,17 @@ static int meanspr(void)
   first_back=0;
   if(col_given==0)
    {
-    if(ny>0 && y_used==2)first_back=1;
-    if(ny<2 && y_used==0)first_back=1;
+    if(ny>0 && y_used==2) {first_back=1;
+}
+    if(ny<2 && y_used==0) {first_back=1;
+}
    }
   if(row_given==0)
    {
-    if(ny<2 || y_used>0)first_back++;
-    if(ny>1 && col_given==0 && y_used==0)first_back++;
+    if(ny<2 || y_used>0) {first_back++;
+}
+    if(ny>1 && col_given==0 && y_used==0) {first_back++;
+}
    }
   found_unused=0;
   for(i=0;i<8;i++)
@@ -2918,11 +3156,13 @@ static int meanspr(void)
         else
          {nwnd[i]=1;igv_used[i]=-1;}
        }
-      else
+      else {
        nwnd[i]=1;
+}
      }
-    else
+    else {
       nwnd[i]=1;
+}
    }
   firstb=1;
   for(ik8=0;ik8<nwnd[7];ik8++)
@@ -2953,9 +3193,11 @@ static int meanspr(void)
              {
               strcpy(xx," "); foutput(0);
              }
-         if(nbackvbles>0)i=(int)mns_prbackv(nbackvbles,first_back,pway);
+         if(nbackvbles>0) {i=(int)mns_prbackv(nbackvbles,first_back,pway);
+}
          i=(int)mnsprmdv();
-         if(i<0)return(-1);
+         if(i<0) {return(-1);
+}
           }
          }
        }
@@ -2987,24 +3229,31 @@ static int vbl_frmt(int i_grp,int index,int *width,int *des)
   indsums=0;
   if(ny>0)
    {
-    if(prntopt[1]>0 || prntopt[17]>0 || prntopt[18]>0)indsums=1;
+    if(prntopt[1]>0 || prntopt[17]>0 || prntopt[18]>0) {indsums=1;
+}
    }
-  if(i_grp==2)pfrmt=(char *)gnest_fmt;
-  if(i_grp==1)pfrmt=(char *)grp_fmt;
-  if(i_grp==0)pfrmt=(char *)y_fmt;
+  if(i_grp==2) {pfrmt=(char *)gnest_fmt;
+}
+  if(i_grp==1) {pfrmt=(char *)grp_fmt;
+}
+  if(i_grp==0) {pfrmt=(char *)y_fmt;
+}
   pfrmt+=ind24*sizeof(char);
   strcpy(x2,pfrmt);
   l=strlen(x2);
   i=0; // RS 2.2.2014
-  if(l>0)i=(int)strcmp(x2,"def");
+  if(l>0) {i=(int)strcmp(x2,"def");
+}
 /*     width/des = -1 means unknown or default         */
-  if(i != 0 && l>0)return(0);  /* format given         */
+  if(i != 0 && l>0) {return(0);  /* format given         */
+}
   if(i_grp==2)
    {
     if(igv_vartype_nested[index]>0)
      {
       *width=igv_vartype_nested[index]; *des=0;
-      if(*width<8)*width=8;
+      if(*width<8) {*width=8;
+}
       return(0);
      }
    }
@@ -3014,7 +3263,8 @@ static int vbl_frmt(int i_grp,int index,int *width,int *des)
      {
        *width=igv_vartype[index];
        *des=0;
-       if(*width<8)*width=8;
+       if(*width<8) {*width=8;
+}
        return(0);
      }
    }
@@ -3078,16 +3328,18 @@ static int vbl_frmt(int i_grp,int index,int *width,int *des)
        for(i=0;i<ndj;i++)
           {
            valos=i+jmaxn;
-           if(i_grp==1)
+           if(i_grp==1) {
              xv1=values[valos];
-           else
+           } else {
              xv1=values_nested[valos];
+}
            xintpart=floor(xv1);
            valx=xv1-xintpart;
            valx=fabs(valx);
            if(valx>xvert){ j=1; break;}
           }
-       if(j==0)strcpy(x2,"12345678"); *des=0;
+       if(j==0) {strcpy(x2,"12345678"); 
+}*des=0;
     }
   }
  strcpy(pfrmt,x2); *width=8;
@@ -3103,13 +3355,15 @@ static int mns_prbackv(int nbackvbls,int firstback,int i2)
   int maxlines,iyla,leveys,outermost=0,nestaddr=0;
   maxlines=line_length-1;
   linspace(xx,maxlines); ix1=0; ibackf=0; iprinted=0;
-  if(html_on>0)strcpy(xx," ");
+  if(html_on>0) {strcpy(xx," ");
+}
   for(k=0;k<i2;k++)
    {
     if(igv_used[k]<1)
      {
       ibackf++;
-      if(ibackf>firstback)goto found;
+      if(ibackf>firstback) {goto found;
+}
       igv_used[k]=-1;
      }
    }
@@ -3117,17 +3371,21 @@ static int mns_prbackv(int nbackvbls,int firstback,int i2)
 found: lowerlim=k;
   for(k=i2-1;k>=lowerlim;k--)
    {
-    if(igv_used[k]>0)continue;
+    if(igv_used[k]>0) {continue;
+}
     iyla=0;
-    if(nested[k]>0)iyla=pway_nested-1;
+    if(nested[k]>0) {iyla=pway_nested-1;
+}
     for(i=iyla;i>=0;i--)
      {
       if(iyla>0)
        {
         outermost=0;
-        if(iyla==i)outermost=1;
+        if(iyla==i) {outermost=1;
+}
         nestaddr=address_nested[i+k*pway_nested];
-        if(nestaddr<0)continue;
+        if(nestaddr<0) {continue;
+}
         if(html_on>0)
          {
           strcpy(yy,"?");
@@ -3137,15 +3395,17 @@ found: lowerlim=k;
               }
            }
          }
-        else
+        else {
          strcpy(yy,d.varname[igv_nested[i+k*pway_nested]]);
+}
        }
       else
        {
-        if(html_on>0)
+        if(html_on>0) {
          strcpy(yy,gtitle+128*k);
-        else
+        } else {
          strcpy(yy,d.varname[igv[k]]);
+}
        }
       l=strlen(yy);
       if(html_on>0)
@@ -3166,7 +3426,8 @@ found: lowerlim=k;
       else
        {
         leveys=grp_width[k];
-        if(leveys<1)leveys=label_length1;
+        if(leveys<1) {leveys=label_length1;
+}
         l=(int)mns_labcpy(ik[k],k,leveys,0);
        }
       if(html_on>0)
@@ -3189,7 +3450,8 @@ found: lowerlim=k;
      }
    }
   if(ix1>0){foutput(0);iprinted++;}
-  if(iprinted>0)foutput(-1);
+  if(iprinted>0) {foutput(-1);
+}
   return(1);
  }
 
@@ -3242,13 +3504,15 @@ static int mnsprmdv(void)
      {
      for(i=0;i<ngv;i++)
       {
-       if(igv_used[i]<1)goto gfound;
+       if(igv_used[i]<1) {goto gfound;
+}
       }
      col_ways=0; col_lngth=1;
      goto colcont;
 gfound: col_ways=1;
      col_lngth=nd[i];
-     if(coltotals>0)col_lngth++;
+     if(coltotals>0) {col_lngth++;
+}
      if(nested[i]>0)
       {
        nestaddr=address_nested[i*pway_nested];
@@ -3277,12 +3541,15 @@ colcont:  // p_mnspr=(char *)muste_malloc(3*col_lngth*sizeof(int)); // RS CHA
             }
           }
         }
-       if(coltotals>0 && j==col_lngth-1)col_symbols[j]=9999;
+       if(coltotals>0 && j==col_lngth-1) {col_symbols[j]=9999;
+}
        col_objvbles[j]=0;
-       if(y_used==0 && ny==1)col_objvbles[j]=iy[0];
+       if(y_used==0 && ny==1) {col_objvbles[j]=iy[0];
+}
        col_gvbles[j]=igv[i];
       }
-     if(ny>0 && y_used==0)col_vbltype=3;
+     if(ny>0 && y_used==0) {col_vbltype=3;
+}
      i1=i+1;
     }
    }
@@ -3312,11 +3579,13 @@ colcont:  // p_mnspr=(char *)muste_malloc(3*col_lngth*sizeof(int)); // RS CHA
      {
       for(i=i1;i<ngv;i++)
        {
-        if(igv_used[i]<1)goto rowfound;;
+        if(igv_used[i]<1) {goto rowfound;
+};
        }
       goto rowcont;
 rowfound: row_ways=1;
-      row_lngth=nd[i]; if(rowtotals>0)row_lngth++;
+      row_lngth=nd[i]; if(rowtotals>0) {row_lngth++;
+}
       if(nested[i]>0)
        {
         nestaddr=address_nested[i*pway_nested];
@@ -3352,17 +3621,20 @@ rowcont:  // p_mnspr=(char *)muste_malloc(3*row_lngth*sizeof(int)); // RS CHA
           row_symbols[j]=9999;
          }
         row_gvbles[j]=igv[i]; row_objvbles[j]=0;
-        if(ny>0 && y_used==0 && col_vbltype==1)row_objvbles[j]=iy[0];
+        if(ny>0 && y_used==0 && col_vbltype==1) {row_objvbles[j]=iy[0];
+}
        }
       row_vbltype=1;
-      if(y_used==0 && col_vbltype==1 && ny>0)row_vbltype=3;
+      if(y_used==0 && col_vbltype==1 && ny>0) {row_vbltype=3;
+}
      }
    }
 /*     compute col and row lengths and divide the table in parts    */
 /*     first the width of row definitions in columns                */
 /*           at this moment 8+1 char / variable is assumed            */
   icols=5; icolshtml=0;
-  if(row_vbltype>1)icols=9;
+  if(row_vbltype>1) {icols=9;
+}
   for(i=row_ways-1;i>=0;i--)
    {
     icols++;   /*  first a blank column as a separator  */
@@ -3377,9 +3649,12 @@ rowcont:  // p_mnspr=(char *)muste_malloc(3*row_lngth*sizeof(int)); // RS CHA
     if(j>0)
      {
       nof_stat++;
-      if(j>15)cumulative_results=1;
-      if(j>7 && j<16)percents_results=1;
-      if(j>19 && j<24)percents_results=1;
+      if(j>15) {cumulative_results=1;
+}
+      if(j>7 && j<16) {percents_results=1;
+}
+      if(j>19 && j<24) {percents_results=1;
+}
      }
    }
 /*  find the seq number of last column in this subtable   */
@@ -3387,17 +3662,19 @@ rowcont:  // p_mnspr=(char *)muste_malloc(3*row_lngth*sizeof(int)); // RS CHA
   firsti=0;
   max_length=line_length;
   row_stat=1; col_stat=1;
-  if(row_vbltype>1)
+  if(row_vbltype>1) {
     row_stat=nof_stat;
-  else
+  } else {
    col_stat=nof_stat;
+}
 /*  next subtable    */
 nextsubtabl:  cols_used=icols+1;
   for(i=firsti;i<col_lngth;i++)
    {
     j=get_colwidth(i);
     cols_used=cols_used+(j+1)*row_stat;
-    if(cols_used>max_length)goto lab1;
+    if(cols_used>max_length) {goto lab1;
+}
    }
   lasti=col_lngth;
   goto lab2;
@@ -3434,7 +3711,8 @@ lab2: subtable_no++;
        muste_itoa(subtable_no,yy,10);
        strcat(xx,yy);
      }
-    if(l>1)strcat(xx,"</font>");
+    if(l>1) {strcat(xx,"</font>");
+}
     strcat(xx,"<TR>"); foutput(0); goto jatkatabl;
    }
   if(lasti<col_lngth || subtable_no >1)
@@ -3451,13 +3729,15 @@ jatkatabl: ;
      {
 
       strcpy(xx,"<TH ROWSPAN=2 VALIGN=BOTTOM ALIGN=LEFT COLSPAN=1>");
-      if(col_ways<1)xx[12]='1'; /* jos ei col-mtjaa niin rowspan=1 */
+      if(col_ways<1) {xx[12]='1'; /* jos ei col-mtjaa niin rowspan=1 */
+}
       for(k=0;k<ngv;k++)
        {
         if(row_gvbles[i]==igv[k])
          {
           strcat(xx,gtitle+128*k);
-          if(col_ways<1)strcat(xx,"<TR ALIGN=RIGHT>");
+          if(col_ways<1) {strcat(xx,"<TR ALIGN=RIGHT>");
+}
           foutput(0); goto jatkagt;
          }
        }
@@ -3474,32 +3754,40 @@ for(i=0; i<col_ways;i++)
   nest_ways=0;
   for(j=firsti;j<lasti;j++)
    {
-    if(col_gvbles[j+i*col_lngth]<0)continue;
+    if(col_gvbles[j+i*col_lngth]<0) {continue;
+}
     for(i1=0;i1<pway;i1++)
      {
-      if(igv[i1]==col_gvbles[j+i*col_lngth])break;
+      if(igv[i1]==col_gvbles[j+i*col_lngth]) {break;
+}
      }
     k=0;
-    if(nested[i1]==0)continue;
+    if(nested[i1]==0) {continue;
+}
     for(j1=0;j1<pway_nested;j1++)
      {
       nestaddr=address_nested[j1+i1*pway_nested];
-      if(nestaddr<0)break;
+      if(nestaddr<0) {break;
+}
       k++;
      }
-    if(k>nest_ways)nest_ways=k;
+    if(k>nest_ways) {nest_ways=k;
+}
    }
 /*       loop over nested ways                                  */
-  if(nest_ways==0)nest_ways=1;
+  if(nest_ways==0) {nest_ways=1;
+}
   strcpy(former_outlab," ");
   for(j1=nest_ways-1;j1>=0;j1--)
 /* -----------------------------          */
    {
     outermost=0;
-    if(nest_ways>1 && j1==nest_ways-1)outermost=1;
+    if(nest_ways>1 && j1==nest_ways-1) {outermost=1;
+}
     linspace(xx,max_length);
     ix1=icols; ixhtml=icolshtml;
-    if(html_on>0)strcpy(xx," ");
+    if(html_on>0) {strcpy(xx," ");
+}
     for(j=firsti;j<lasti;j++)
      {
       strcpy(yy," ");
@@ -3509,17 +3797,20 @@ for(i=0; i<col_ways;i++)
        {
         for(j2=0;j2<ngv;j2++)
          {
-          if(igv[j2]==ij)break;
+          if(igv[j2]==ij) {break;
+}
          }
-        if(nested[j2]==0 && j1>0)fill_blank=1;
+        if(nested[j2]==0 && j1>0) {fill_blank=1;
+}
         if(nested[j2]>0)
          {
           nestaddr=address_nested[j1+j2*pway_nested];
-          if(nestaddr<0)fill_blank=1;
+          if(nestaddr<0) {fill_blank=1;
+}
          }
-        if(nested[j2]==0 || fill_blank==1)
+        if(nested[j2]==0 || fill_blank==1) {
           vbleos=ij;
-        else
+        } else
          {
           vbleos=igv_nested[j1+j2*pway_nested];
          }
@@ -3529,7 +3820,8 @@ for(i=0; i<col_ways;i++)
       for(k=0;k<row_stat;k++)
        {
         ix1++;
-        ix1+=ijk; if(l>ijk)l=ijk;
+        ix1+=ijk; if(l>ijk) {l=ijk;
+}
         if(html_on>0)
          {
           if(i==0)
@@ -3550,8 +3842,10 @@ for(i=0; i<col_ways;i++)
          }
         else
          {
-          if(fill_blank==0)muste_fieldcopy(xx+ix1-l,yy,l);
-          if(j<lasti-1 || k<row_stat-1)xx[ix1]=' ';
+          if(fill_blank==0) {muste_fieldcopy(xx+ix1-l,yy,l);
+}
+          if(j<lasti-1 || k<row_stat-1) {xx[ix1]=' ';
+}
          }
        }
      }
@@ -3567,24 +3861,30 @@ for(i=0; i<col_ways;i++)
 
 
     linspace(xx,max_length);
-    if(html_on>0)strcpy(xx," ");
+    if(html_on>0) {strcpy(xx," ");
+}
     ix1=icols;  ixhtml=icolshtml;
     for(j=firsti;j<lasti;j++)
      {
       ij=j+i*col_lngth;
       for(j2=0;j2<ngv;j2++)
        {
-        if(igv[j2]==col_gvbles[ij])break;
+        if(igv[j2]==col_gvbles[ij]) {break;
+}
        }
       fill_blank=0;
-      if(nested[j2]==0 && j1>0)fill_blank=1;
+      if(nested[j2]==0 && j1>0) {fill_blank=1;
+}
       if(nested[j2]>0)
        {
         nestaddr=address_nested[j1+j2*pway_nested];
-        if(nestaddr<0)fill_blank=1;
+        if(nestaddr<0) {fill_blank=1;
+}
        }
-      if(nested[j2]==0 || fill_blank==0)vbleos=col_gvbles[ij];
-      if(nested[j2]>0 && fill_blank==1)vbleos=igv_nested[j1+j2*pway_nested];
+      if(nested[j2]==0 || fill_blank==0) {vbleos=col_gvbles[ij];
+}
+      if(nested[j2]>0 && fill_blank==1) {vbleos=igv_nested[j1+j2*pway_nested];
+}
       ijk=get_colwidth(j);
       strcpy(yy," ");
       if(vbleos>=0)
@@ -3592,7 +3892,8 @@ for(i=0; i<col_ways;i++)
         ij2=col_symbols[ij];
         for(k=0;k<ngv;k++)
          {
-          if(igv[k]==vbleos)break;
+          if(igv[k]==vbleos) {break;
+}
          }
         if(nested[j2]==0)
           {
@@ -3601,7 +3902,8 @@ for(i=0; i<col_ways;i++)
         if(nested[j2]>0 && fill_blank==0)
           {
            l=mns_nest_labcpy(yy,ij2,nestaddr,ijk,1,outermost);
-           if(outermost==1)strcpy(former_outlab,yy);
+           if(outermost==1) {strcpy(former_outlab,yy);
+}
          }
        }
       l=strlen(yy);
@@ -3615,21 +3917,25 @@ for(i=0; i<col_ways;i++)
         else
          {
           ix1+=ijk; ix1++;
-          if(fill_blank==0)strcpy(xx+ix1-l,yy);
-          if(j<lasti-1 || k<row_stat-1)xx[ix1]=' ';
+          if(fill_blank==0) {strcpy(xx+ix1-l,yy);
+}
+          if(j<lasti-1 || k<row_stat-1) {xx[ix1]=' ';
+}
          }
        }
      }
-    if(html_on>0)
+    if(html_on>0) {
      strcat(xx,"<TR ALIGN=RIGHT>");
-    else
+    } else {
      xx[ix1]='\0';
+}
     foutput(0);
    }    /*  end of loop for column variables          */
  }      /*  end of loop for nested variables          */
 /*      print the row for col_objvbles              */
   linspace(xx,max_length);
-  if(html_on>0)strcpy(xx," ");
+  if(html_on>0) {strcpy(xx," ");
+}
 
 
   ix1=icols;   ixhtml=icolshtml;
@@ -3658,15 +3964,18 @@ for(i=0; i<col_ways;i++)
            {
             l=blnkaway(d.varname[col_objvbles[j]],yy);
            }
-          else
+          else {
            strcat(yy,&y_title[mijk*41]);
+}
          }
-        else
+        else {
           l=blnkaway(d.varname[col_objvbles[j]],yy);
+}
        }
       l=strlen(yy);
       ijk=get_column_width(j,j,0,1,1);
-      if(ijk<1)ijk=8;
+      if(ijk<1) {ijk=8;
+}
 
       if(html_on>0)
        { strcat(xx,"<TD align=center>");
@@ -3676,13 +3985,16 @@ for(i=0; i<col_ways;i++)
        {
         ix1+=ijk; ix1++;
         strcpy(xx+ix1-l,yy);
-        if(j<lasti-1)xx[ix1]=' ';
+        if(j<lasti-1) {xx[ix1]=' ';
+}
        }
      }
-    if(html_on>0)
+    if(html_on>0) {
      strcat(xx,"<TR ALIGN=RIGHT>");
-    if(html_on==0)
+}
+    if(html_on==0) {
      xx[ix1]='\0';
+}
     foutput(0);
    }
 
@@ -3690,7 +4002,8 @@ for(i=0; i<col_ways;i++)
    {
  /*   print the row for labels for statistics (M, D, N, S)   */
     linspace(xx,max_length);
-    if(html_on>0)strcpy(xx," ");
+    if(html_on>0) {strcpy(xx," ");
+}
     ix1=icols;
     for(j=firsti;j<lasti;j++)
      {
@@ -3700,15 +4013,24 @@ for(i=0; i<col_ways;i++)
        {
         ix1++;
         mijk=statistics[k];
-        if(mijk==1)strcpy(yy,"Means");
-        if(mijk==2)strcpy(yy,"Sums");
-        if(mijk==3)strcpy(yy,"St.d.");
-        if(mijk==4)strcpy(yy,"Freq.");
-        if(mijk==5)strcpy(yy,"Min");
-        if(mijk==6)strcpy(yy,"Max");
-        if(mijk==7)strcpy(yy,"Sem");
-        if(mijk==8)strcpy(yy,"%F");
-        if(mijk==9)strcpy(yy,"%Sums");
+        if(mijk==1) {strcpy(yy,"Means");
+}
+        if(mijk==2) {strcpy(yy,"Sums");
+}
+        if(mijk==3) {strcpy(yy,"St.d.");
+}
+        if(mijk==4) {strcpy(yy,"Freq.");
+}
+        if(mijk==5) {strcpy(yy,"Min");
+}
+        if(mijk==6) {strcpy(yy,"Max");
+}
+        if(mijk==7) {strcpy(yy,"Sem");
+}
+        if(mijk==8) {strcpy(yy,"%F");
+}
+        if(mijk==9) {strcpy(yy,"%Sums");
+}
         if(mijk>9)
          {
           l=4*(mijk-1);
@@ -3726,7 +4048,8 @@ for(i=0; i<col_ways;i++)
          {
           strcpy(xx+ix1,zz);xx[ix1+l]=' ';
           ix1+=ijk;
-          if(j<lasti-1 || k<row_stat-1)xx[ix1]=' ';
+          if(j<lasti-1 || k<row_stat-1) {xx[ix1]=' ';
+}
          }
        }
      }
@@ -3749,7 +4072,8 @@ for(i=0; i<col_ways;i++)
   if(i>statspacesize)
    {
     j=stat_space(i*100); // RS ADD *100
-    if(j<0)return(j);
+    if(j<0) {return(j);
+}
     statspacesize=i;
    }
 /*        */
@@ -3773,7 +4097,8 @@ for(i=0; i<col_ways;i++)
      {
       ix1=0;
       linspace(xx,max_length);
-      if(html_on>0)strcpy(xx," ");
+      if(html_on>0) {strcpy(xx," ");
+}
       for(j=0;j<row_ways;j++)
        {
         mijk=get_column_width(0,row_lngth-1,j,0,0);
@@ -3782,7 +4107,8 @@ for(i=0; i<col_ways;i++)
         ijk=i+j*row_lngth;
         for(k=0;k<ngv;k++)
          {
-          if(igv[k]==row_gvbles[ijk])break;
+          if(igv[k]==row_gvbles[ijk]) {break;
+}
          }
         if(nested[k]>0 && row_gvbles[ijk]>=0)
          {
@@ -3790,7 +4116,8 @@ for(i=0; i<col_ways;i++)
            {
             nik=i1+k*pway_nested;
             nestaddr=address_nested[nik];
-            if(nestaddr<0)continue;
+            if(nestaddr<0) {continue;
+}
             l=blnkaway(d.varname[igv_nested[nik]],yy);
             if(l>nest_width[nestaddr])
              {
@@ -3804,9 +4131,11 @@ for(i=0; i<col_ways;i++)
             else
              {
               muste_fieldcopy(xx+ix1,yy,l);
-              if(i1>0 || j<row_ways-1)xx[ix1+l]=' ';
+              if(i1>0 || j<row_ways-1) {xx[ix1+l]=' ';
+}
               ix1+=nest_width[nestaddr];
-              if(i1>0)ix1++;
+              if(i1>0) {ix1++;
+}
              }
            }
          }
@@ -3850,18 +4179,24 @@ for(i=0; i<col_ways;i++)
      {
       k=statistics[rowstat];
       j=1;
-      if(k==4 || k==8 || k==10 || k==12 || k==14 || k==16 || k==17)j=0;
-      if(k==20 || k==21)j=0;
+      if(k==4 || k==8 || k==10 || k==12 || k==14 || k==16 || k==17) {j=0;
+}
+      if(k==20 || k==21) {j=0;
+}
       if(j==1)
        {
-   if(col_vbltype<2 && row_vbltype<2)continue; /* only frequencies possible */
-   if(ivariables==1 && row_vbltype<2)continue;
+   if(col_vbltype<2 && row_vbltype<2) {continue; /* only frequencies possible */
+}
+   if(ivariables==1 && row_vbltype<2) {continue;
+}
        }
-      indij++; if(indij>1)indij=1;
+      indij++; if(indij>1) {indij=1;
+}
       ix1=0; iprst++;
       linspace(xx,max_length);
-      if(html_on>0)
+      if(html_on>0) {
        strcpy(xx," ");
+}
       if(iprst==1)
        {
         for(j=0;j<row_ways;j++)
@@ -3871,9 +4206,12 @@ for(i=0; i<col_ways;i++)
           strcpy(yy," ");
           ijk=i+j*row_lngth;
           same_subrow=1;
-          if(same_row==0 || i==0)same_subrow=0;
-          if(row_symbols[ijk-1] != row_symbols[ijk])same_subrow=0;
-          if(j==row_ways-1 && row_symbols[ijk]>=9999)total_row=1;
+          if(same_row==0 || i==0) {same_subrow=0;
+}
+          if(row_symbols[ijk-1] != row_symbols[ijk]) {same_subrow=0;
+}
+          if(j==row_ways-1 && row_symbols[ijk]>=9999) {total_row=1;
+}
           if(same_subrow==0)
            {
             if(row_gvbles[ijk]>=0)
@@ -3881,7 +4219,8 @@ for(i=0; i<col_ways;i++)
               ij=row_symbols[ijk];
               for(k=0;k<ngv;k++)
                {
-                if(igv[k]==row_gvbles[ijk])break;
+                if(igv[k]==row_gvbles[ijk]) {break;
+}
                }
               if(nested[k]>0)
                {
@@ -3891,19 +4230,24 @@ for(i=0; i<col_ways;i++)
                   outermost=0;
                   nik=i1+k*pway_nested;
                   nestaddr=address_nested[nik];
-                  if(nestaddr<0)continue;
-                  if(first_nestway<0)first_nestway=i1;
-                  if(i1==first_nestway)outermost=1;
+                  if(nestaddr<0) {continue;
+}
+                  if(first_nestway<0) {first_nestway=i1;
+}
+                  if(i1==first_nestway) {outermost=1;
+}
            l=mns_nest_labcpy(zz,ij,nestaddr,nest_width[nestaddr],0,outermost);
                   l=strlen(zz);
                   if(l>nest_width[nestaddr])
                    {
                     l=nest_width[nestaddr]; zz[l]='\0';
                    }
-                  if(outermost==1)strcpy(former_outlab,zz);
+                  if(outermost==1) {strcpy(former_outlab,zz);
+}
                   strcpy(yy+iix1,zz);
                   yy[iix1+l]=' ';
-                  iix1+=nest_width[nestaddr]; if(i1>0)iix1++;
+                  iix1+=nest_width[nestaddr]; if(i1>0) {iix1++;
+}
                  }
                }
               else
@@ -3922,10 +4266,12 @@ for(i=0; i<col_ways;i++)
              {
               strcat(xx,"<A HREF=");
               strcat(xx,hrefbase);
-              ijk=l; if(ijk>3)ijk=3;
+              ijk=l; if(ijk>3) {ijk=3;
+}
               for(ikx=l-1;ikx>=0;ikx--)
                {
-                if(yy[ikx] != ' ')break;
+                if(yy[ikx] != ' ') {break;
+}
                 ijk=ikx;
                }
               /*
@@ -3978,10 +4324,11 @@ for(i=0; i<col_ways;i++)
              {
               if(iy[ijk]==row_objvbles[i]){mijk=ijk; break;}
              }
-            if(mijk<0 || y_title[mijk*41]==' ')
+            if(mijk<0 || y_title[mijk*41]==' ') {
               strcat(xx,yy);
-            else
+            } else {
               strcat(xx,&y_title[mijk*41]);
+}
             strcat(xx,"</TD>");
            }
           else
@@ -4046,19 +4393,23 @@ for(i=0; i<col_ways;i++)
 /*  loop over statistics in diff cols                          */
         for(k=0;k<row_stat;k++)
          {
-          if(row_vbltype>1)
+          if(row_vbltype>1) {
            ij=statistics[k];
-          else
+          } else {
            ij=statistics[rowstat];
+}
           icode=1;
-          if(nobs<1)icode=0;
+          if(nobs<1) {icode=0;
+}
           if(ynam<0 || ivariables==1)
            {
-            if(ij<4 || ij==5 || ij==6 || ij==7)icode=0;
+            if(ij<4 || ij==5 || ij==6 || ij==7) {icode=0;
+}
            }
           if(ij==1)
            {
-            if(nobs>0 && icode>0)xmean=a/nobs;
+            if(nobs>0 && icode>0) {xmean=a/nobs;
+}
             l=dep_frmt(i,j,mijk,icode,xmean,nobs);
            }
           if(ij==2)
@@ -4073,7 +4424,8 @@ for(i=0; i<col_ways;i++)
              {
               icode=1;
               xdev=b-a*a/nobs;
-              if(xdev<0.0)xdev=0.0;
+              if(xdev<0.0) {xdev=0.0;
+}
               xdev=sqrt(xdev/(nobs-1));
               if(ij==7)
                { znobs=nobs;xdev=xdev/sqrt(znobs);
@@ -4090,15 +4442,20 @@ for(i=0; i<col_ways;i++)
           if(ij==16 || ij==17)
            {
             icode=2;
-            if(ij==17)l=dep_frmt(i,j,mijk,icode,xdev,cum_cnobs);
-            if(ij==16)l=dep_frmt(i,j,mijk,icode,xdev,cum_rnobs);
+            if(ij==17) {l=dep_frmt(i,j,mijk,icode,xdev,cum_cnobs);
+}
+            if(ij==16) {l=dep_frmt(i,j,mijk,icode,xdev,cum_rnobs);
+}
            }
 /*         cumulative sums                            */
           if(ij==18 || ij==19)
            {
-            if(ynam>=0)icode=1;
-            if(ij==19)l=dep_frmt(i,j,mijk,icode,cum_csumy,cum_cnobs);
-            if(ij==18)l=dep_frmt(i,j,mijk,icode,cum_rsumy,cum_rnobs);
+            if(ynam>=0) {icode=1;
+}
+            if(ij==19) {l=dep_frmt(i,j,mijk,icode,cum_csumy,cum_cnobs);
+}
+            if(ij==18) {l=dep_frmt(i,j,mijk,icode,cum_rsumy,cum_rnobs);
+}
            }
           if(ij==5)
            {
@@ -4111,10 +4468,12 @@ for(i=0; i<col_ways;i++)
           if(ij==8 || ij==9)
            {
             icode=3;
-            if(ij==8)prcnt=100.0*nobs/n_grandtotal;
+            if(ij==8) {prcnt=100.0*nobs/n_grandtotal;
+}
             if(ij==9)
              {
-              if(ynam<0)icode=0;
+              if(ynam<0) {icode=0;
+}
               prcnt=100.0*a/s_grandtotal;
              }
             l=dep_frmt(i,j,mijk,icode,prcnt,nobs);
@@ -4124,21 +4483,29 @@ for(i=0; i<col_ways;i++)
             icode=3; ndv=nobs;
             if(ynam<0)
              {
-               if(ij==11 || ij==13 || ij==15)icode=0;
+               if(ij==11 || ij==13 || ij==15) {icode=0;
+}
              }
-            if(ij==10 && n_coltotal>0L)prcnt=100.0*nobs/n_coltotal;
-            if(ij==11 && s_coltotal != 0.0)prcnt=100.0*a/s_coltotal;
-            if(ij==12 && n_rowtotal>0L)prcnt=100.0*nobs/n_rowtotal;
-            if(ij==13 && s_rowtotal != 0.0)prcnt=100.0*a/s_rowtotal;
-            if(ij==14 && n_tabletotal>0L)prcnt=100.0*nobs/n_tabletotal;
-            if(ij==15 && s_tabletotal != 0.0)prcnt=100.0*a/s_tabletotal;
+            if(ij==10 && n_coltotal>0L) {prcnt=100.0*nobs/n_coltotal;
+}
+            if(ij==11 && s_coltotal != 0.0) {prcnt=100.0*a/s_coltotal;
+}
+            if(ij==12 && n_rowtotal>0L) {prcnt=100.0*nobs/n_rowtotal;
+}
+            if(ij==13 && s_rowtotal != 0.0) {prcnt=100.0*a/s_rowtotal;
+}
+            if(ij==14 && n_tabletotal>0L) {prcnt=100.0*nobs/n_tabletotal;
+}
+            if(ij==15 && s_tabletotal != 0.0) {prcnt=100.0*a/s_tabletotal;
+}
             l=dep_frmt(i,j,mijk,icode,prcnt,nobs);
            }
 /*          percentages of cumulative frequencies and  sums     */
           if(ij>=20 && ij<24)
            {
             icode=3;ndv=cum_rnobs;
-            if(ij==20 || ij==22)ndv=cum_cnobs;
+            if(ij==20 || ij==22) {ndv=cum_cnobs;
+}
             if(ij==21 && n_coltotal>0L)
                {prcnt=100.0*cum_rnobs/n_coltotal;}
             if(ij==20 && n_rowtotal>0L)
@@ -4149,7 +4516,8 @@ for(i=0; i<col_ways;i++)
                {prcnt=100.0*cum_csumy/s_rowtotal;}
             if(ynam<0)
              {
-              if(ij==22 || ij==23)icode=0;
+              if(ij==22 || ij==23) {icode=0;
+}
              }
             l=dep_frmt(i,j,mijk,icode,prcnt,ndv);
            }
@@ -4168,11 +4536,14 @@ for(i=0; i<col_ways;i++)
            }
          }   /*   end of loop for statistics in cols   */
        }     /*   end of loop for columns              */
-      if(html_on>0)strcat(xx,"<TR ALIGN=RIGHT>");
+      if(html_on>0) {strcat(xx,"<TR ALIGN=RIGHT>");
+}
       foutput(0);
      }      /*   end of loop for statistics in rows   */
-    if(row_ways<=1)total_row=0;
-    if(row_vbltype>1)total_row=0;
+    if(row_ways<=1) {total_row=0;
+}
+    if(row_vbltype>1) {total_row=0;
+}
     if(col_stat>1 || total_row==1)
      {
       strcpy(xx," ");foutput(0);
@@ -4180,7 +4551,8 @@ for(i=0; i<col_ways;i++)
     }       /*   end of loop for rows                 */
    if(html_on>0)
     { strcpy(xx,"</TABLE></CENTER></P>"); foutput(0);}
-   if(lasti>=col_lngth)return(1);
+   if(lasti>=col_lngth) {return(1);
+}
    firsti=lasti;
    strcpy(xx," ");foutput(0);
    goto nextsubtabl;
@@ -4198,12 +4570,14 @@ static int mns_labcpy(int k,int j,int width,int i_col)
   if(los==9999)
    {
     los9=strlen(ltotal);
-    if(los9>label_length)los9=label_length;
+    if(los9>label_length) {los9=label_length;
+}
     muste_fieldcopy(ccapu,ltotal,los9); ccapu[los9]='\0';
    }
   else
    {
-    if(j>0)los+=j*maxn;
+    if(j>0) {los+=j*maxn;
+}
     los9=label_length1*los;
     muste_fieldcopy(ccapu,labls+los9,label_length);ccapu[label_length]='\0';
    }
@@ -4216,7 +4590,8 @@ static int mns_labcpy(int k,int j,int width,int i_col)
     fconv(values[los],frmtapu,ccapu); // ival=(int)
    }
   wuse=move_str(yy,ccapu,width,i_col);
-  if(html_on>0)j=replace_aakkos(&yy[0]);
+  if(html_on>0) {j=replace_aakkos(&yy[0]);
+}
   return(wuse);
  }
 
@@ -4227,7 +4602,8 @@ static int mns_nest_labcpy(char zz[],int k,int j,int width,int i_col,int outermo
 /*                                          */
   los=k; // i1=0;
   linspace(ccapu,35);
-  if(strlen(ltotal)>label_length)ltotal[label_length]='\0';
+  if(strlen(ltotal)>label_length) {ltotal[label_length]='\0';
+}
   if(los==9999)
    {
     strcpy(ccapu,ltotal);
@@ -4242,7 +4618,8 @@ static int mns_nest_labcpy(char zz[],int k,int j,int width,int i_col,int outermo
    }
   if(los<9999)
    {
-    if(j>0)los+=j*nested_maxn;
+    if(j>0) {los+=j*nested_maxn;
+}
     los9=label_length1*los;
     muste_fieldcopy(ccapu,labels_nested+los9,label_length);
     ccapu[label_length]='\0';
@@ -4256,7 +4633,8 @@ static int mns_nest_labcpy(char zz[],int k,int j,int width,int i_col,int outermo
     fconv(values_nested[los],frmtapu,ccapu); // ival=(int)
    }
   ii=replace_underscore(ccapu);
-  if(html_on>0)ii=replace_aakkos(ccapu);
+  if(html_on>0) {ii=replace_aakkos(ccapu);
+}
   wuse=move_str(zz,ccapu,width,i_col);
   return(wuse);
  }
@@ -4272,10 +4650,12 @@ static int ijth_cellstat(long *nobs,double *sumy,double *ssumy,double *ymin,doub
      int i,j;
 /*                                                             */
     *ynam=-1;
-    if(col_vbltype>1)
+    if(col_vbltype>1) {
      *ynam=col_objvbles[jthcol];
-    if(row_vbltype>1)
+}
+    if(row_vbltype>1) {
      *ynam=row_objvbles[ithrow];
+}
     j=-1;
     for(i=0;i<8;i++){gnam[i]=-1; gseqs[i]=-1;}
     for(i=0;i<col_ways;i++)
@@ -4390,15 +4770,16 @@ static int cellstat(long *nobs,double *sumy,double *ssumy,
       {
        for(i=0;i<ny;i++)
         {
-         if(ynam==iy[i])break;
+         if(ynam==iy[i]) {break;
+}
         }
        iyseq=i;
       }
      if(ngv==0)
       {
-       if(ivariables==0)
+       if(ivariables==0) {
          *nobs=lkm[iyseq];
-       else
+       } else
          {
           *nobs=lkm[iyseq*2+1];
           *n_coltotal=lkm[iyseq*2];
@@ -4419,26 +4800,31 @@ static int cellstat(long *nobs,double *sumy,double *ssumy,
        for(i=0;i<9;i++){rc_cols[i]=0;}
        for(k=0;k<ngv;k++)
         {
-         if(gnam[i_colseqs]==igv[k])break;
+         if(gnam[i_colseqs]==igv[k]) {break;
+}
         }
        rc_cols[k]=1;
        for(k=0;k<ngv;k++)
         {
-         if(gnam[i_rowseqs]==igv[k])break;
+         if(gnam[i_rowseqs]==igv[k]) {break;
+}
         }
        rc_cols[k]+=2;
       }
      for(i=0;i<ngv;i++){required[i]=-1;}
      for(i=0;i<ngv;i++)
       {
-       if(gnam[i]<0)continue;
+       if(gnam[i]<0) {continue;
+}
        for(j=0;j<ngv;j++)
         {
-         if(gnam[i]==igv[j])break;
+         if(gnam[i]==igv[j]) {break;
+}
         }
        required[j]=gseqs[i];
       }
-   if(percents_results==0)goto overprcnts;
+   if(percents_results==0) {goto overprcnts;
+}
 /*    percents                                                       */
    if(prntopt[9]>0 || prntopt[10]>0 || prntopt[20]>0 || prntopt[22]>0)
     {
@@ -4469,60 +4855,73 @@ overprcnts: for(j=0;j<ntlo;j++)
         {
          if(igv_used[k]==0)
           {
-           if(ind[k] != ik[k])goto rejected;
+           if(ind[k] != ik[k]) {goto rejected;
+}
           }
         }
        for(k=0;k<pway;k++)
         {
-         if(ind[k]<nd[k] && required[k]==9999)continue;
+         if(ind[k]<nd[k] && required[k]==9999) {continue;
+}
          if(required[k]>9999)
           {
            i_nest=required[k]-10000;
            nestaddr=address_nested[k*pway_nested]*nested_maxn;
            if(i_nest==0)
             {
-             if(ind[k]<change_points[nestaddr+i_nest])
+             if(ind[k]<change_points[nestaddr+i_nest]) {
                continue;
-             else
+             } else {
                goto rejected;
+}
             }
            if(i_nest>0)
             {
              if(ind[k]>=change_points[nestaddr+i_nest-1] &&
-                ind[k]<change_points[nestaddr+i_nest])
+                ind[k]<change_points[nestaddr+i_nest]) {
               continue;
-             else
+             } else {
               goto rejected;
+}
             }
           }
-         if(required[k]==-1)continue;
+         if(required[k]==-1) {continue;
+}
          if(required[k] != ind[k])
           {
            notsame++;
-           if(cumulative_results==0)goto rejected;
-           if(notsame>1)goto rejected;
-           if(rc_cols[k]<1)goto rejected;
+           if(cumulative_results==0) {goto rejected;
+}
+           if(notsame>1) {goto rejected;
+}
+           if(rc_cols[k]<1) {goto rejected;
+}
            if(rc_cols[k]==1 || rc_cols[k]==3)
             {
-             if(required[k]>=ind[k])i_col=1;
+             if(required[k]>=ind[k]) {i_col=1;
+}
             }
            if(rc_cols[k]==2 || rc_cols[k]==3)
             {
-             if(required[k]>=ind[k])i_row=1;
+             if(required[k]>=ind[k]) {i_row=1;
+}
             }
-           if(i_col==0 && i_row==0)goto rejected;
+           if(i_col==0 && i_row==0) {goto rejected;
+}
           }
         }
        if(ny>0)
         {
          i_gtot=0;
-         if(ynam>=0)i_gtot=iyseq;
+         if(ynam>=0) {i_gtot=iyseq;
+}
          if(ivariables==0)
           {
-           if(ynam>=0)
+           if(ynam>=0) {
              ijk=iyseq+j*ny;
-           else
+           } else {
              ijk=j*ny;
+}
           }
          else
           {
@@ -4546,20 +4945,26 @@ overprcnts: for(j=0;j<ntlo;j++)
                *ymin=min_yvals[ijk];
                *ymax=max_yvals[ijk];
               }
-             if(*ymin>min_yvals[ijk])*ymin=min_yvals[ijk];
-             if(*ymax<max_yvals[ijk])*ymax=max_yvals[ijk];
+             if(*ymin>min_yvals[ijk]) {*ymin=min_yvals[ijk];
+}
+             if(*ymax<max_yvals[ijk]) {*ymax=max_yvals[ijk];
+}
             }
           }
         }
        if(cumulative_results>0)
         {
          if(notsame==0){i_col=1;i_row=1;}
-         if(i_col==1)cum_cnobs+=lkm[ijk];
-         if(i_row==1)cum_rnobs+=lkm[ijk];
+         if(i_col==1) {cum_cnobs+=lkm[ijk];
+}
+         if(i_row==1) {cum_rnobs+=lkm[ijk];
+}
          if(ny>0 && ivariables==0 && ynam>=0)
           {
-           if(i_col==1)cum_csumy+=sz[ijk];
-           if(i_row==1)cum_rsumy+=sz[ijk];
+           if(i_col==1) {cum_csumy+=sz[ijk];
+}
+           if(i_row==1) {cum_rsumy+=sz[ijk];
+}
            if(i_col==1 && min_yvals[ijk]<=max_yvals[ijk])
             {
              if(cum_cymin>cum_cymax)
@@ -4567,8 +4972,10 @@ overprcnts: for(j=0;j<ntlo;j++)
                cum_cymin=min_yvals[ijk];
                cum_cymax=max_yvals[ijk];
               }
-             if(cum_cymin>min_yvals[ijk])cum_cymin=min_yvals[ijk];
-             if(cum_cymax<max_yvals[ijk])cum_cymax=max_yvals[ijk];
+             if(cum_cymin>min_yvals[ijk]) {cum_cymin=min_yvals[ijk];
+}
+             if(cum_cymax<max_yvals[ijk]) {cum_cymax=max_yvals[ijk];
+}
             }
            if(i_row==1 && min_yvals[ijk]<=max_yvals[ijk])
             {
@@ -4577,8 +4984,10 @@ overprcnts: for(j=0;j<ntlo;j++)
                cum_rymin=min_yvals[ijk];
                cum_rymax=max_yvals[ijk];
               }
-             if(cum_rymin>min_yvals[ijk])cum_rymin=min_yvals[ijk];
-             if(cum_rymax<max_yvals[ijk])cum_rymax=max_yvals[ijk];
+             if(cum_rymin>min_yvals[ijk]) {cum_rymin=min_yvals[ijk];
+}
+             if(cum_rymax<max_yvals[ijk]) {cum_rymax=max_yvals[ijk];
+}
             }
           }
         }
@@ -4601,10 +5010,12 @@ static int stat_space(int sze)
    return(1);
 */   
    p_statspacel=(char *)muste_realloc(p_statspacel,7*sze*sizeof(long));
-   if(p_statspacel==NULL)goto notenough;
+   if(p_statspacel==NULL) {goto notenough;
+}
    lstarea=(long *)p_statspacel;
    p_statspaced=(char *)muste_realloc(p_statspaced,14*sze*sizeof(double));
-   if(p_statspaced==NULL)goto notenough;
+   if(p_statspaced==NULL) {goto notenough;
+}
    dstarea=(double *)p_statspaced;
    return(1);
 notenough: muste_sprintf(sbuf,"\nNot enough memory"); sur_print(sbuf);
@@ -4626,8 +5037,10 @@ static int rc_pros(int iyseq,int gnam[],int i_colseqs,int i_rowseqs,int required
   if(ivariables==1)
    {
     indprs=0;
-    if(row_vbltype>1 && indcol != 1)indprs=1;
-    if(col_vbltype>1 && indcol != 0)indprs=1;
+    if(row_vbltype>1 && indcol != 1) {indprs=1;
+}
+    if(col_vbltype>1 && indcol != 0) {indprs=1;
+}
    }
   if(indprs==1)
    {
@@ -4637,7 +5050,8 @@ static int rc_pros(int iyseq,int gnam[],int i_colseqs,int i_rowseqs,int required
        {
         for(k=0;k<ngv;k++)
          {
-          if(gnam[i]==igv[k])break;
+          if(gnam[i]==igv[k]) {break;
+}
          }
         req[k]=9999;
        }
@@ -4648,7 +5062,8 @@ static int rc_pros(int iyseq,int gnam[],int i_colseqs,int i_rowseqs,int required
        {
         for(k=0;k<ngv;k++)
          {
-          if(gnam[i]==igv[k])break;
+          if(gnam[i]==igv[k]) {break;
+}
          }
         req[k]=9999;
        }
@@ -4668,24 +5083,30 @@ static int rc_pros(int iyseq,int gnam[],int i_colseqs,int i_rowseqs,int required
         {
          if(igv_used[k]==0)
           {
-           if(ind[k] != ik[k])goto rejected;
+           if(ind[k] != ik[k]) {goto rejected;
+}
           }
         }
        for(k=0;k<pway;k++)
         {
-         if(ind[k]<nd[k] && req[k]==9999)continue;
-         if(req[k]==-1)continue;
-         if(req[k] != ind[k])goto rejected;
+         if(ind[k]<nd[k] && req[k]==9999) {continue;
+}
+         if(req[k]==-1) {continue;
+}
+         if(req[k] != ind[k]) {goto rejected;
+}
         }
        if(ny>0)
         {
-         if(ivariables==0)
+         if(ivariables==0) {
           ijk=iyseq+j*ny;
-         else
+         } else
           {
            ijk=2*(iyseq+j*ny);
-           if(row_vbltype>1 && indcol != 1)ijk++;
-           if(col_vbltype>1 && indcol != 0)ijk++;
+           if(row_vbltype>1 && indcol != 1) {ijk++;
+}
+           if(col_vbltype>1 && indcol != 0) {ijk++;
+}
           }
         }
        else
@@ -4707,12 +5128,18 @@ static int get_next_word(char *result,char *source,int fchar,int *lchar,int maxl
   int i,j;
   i=fchar-1;
   nextchar: i++;
-  if(i>=maxlen)goto toend;
-  if(source[i]=='*')goto found;
-  if(source[i]==',')goto found;
-  if(source[i]=='(')goto found;
-  if(source[i]==')')goto found;
-  if(source[i]==' ')goto toend;
+  if(i>=maxlen) {goto toend;
+}
+  if(source[i]=='*') {goto found;
+}
+  if(source[i]==',') {goto found;
+}
+  if(source[i]=='(') {goto found;
+}
+  if(source[i]==')') {goto found;
+}
+  if(source[i]==' ') {goto toend;
+}
   goto nextchar;
 found: if(i==fchar)
    {
@@ -4743,7 +5170,8 @@ static int move_str(char *reslt,char *source,int width,int i_col)
   linspace(ccapu,32);
   strcpy(ccapu,source);
   l=strlen(ccapu);
-  wuse=width; if(width<1)wuse=8;
+  wuse=width; if(width<1) {wuse=8;
+}
   for(i=0;i<l;i++)
    {
     if(ccapu[i] != ' '){i1=i;break;}
@@ -4795,7 +5223,8 @@ static int get_colwidth(int i)
    {
     j=get_column_width(i,i,0,1,0);
    }
-  if(j<1)j=8;
+  if(j<1) {j=8;
+}
   return(j);
  }
 /* getwdth.c  */
@@ -4805,18 +5234,22 @@ static int get_colwidth(int i)
 static int get_column_width(int findx,int lindx,int index2,int i_col,int i_y)
  {
   int i,index,ijk,i2y,k=0,m,wdth=0,nestaddr;
-  if(ny==0 && ngv==0)return(8);
+  if(ny==0 && ngv==0) {return(8);
+}
   ijk=0;
   for(index=findx;index<=lindx;index++)
    {
     if(i_y==1)
      {
-      if(i_col==1)k=col_objvbles[index];
-      if(i_col==0)k=row_objvbles[index];
+      if(i_col==1) {k=col_objvbles[index];
+}
+      if(i_col==0) {k=row_objvbles[index];
+}
       if(k<0){wdth=-1;goto nextj;}
       for(i2y=0;i2y<ny;i2y++)
        {
-        if(iy[i2y]==k)break;
+        if(iy[i2y]==k) {break;
+}
        }
   /*
       for(i=0;i<ngv;i++)
@@ -4853,12 +5286,15 @@ static int get_column_width(int findx,int lindx,int index2,int i_col,int i_y)
      }
     if(i_y==0)
      {
-      if(i_col==1)k=col_gvbles[index+index2*col_lngth];
-      if(i_col==0)k=row_gvbles[index+index2*row_lngth];
+      if(i_col==1) {k=col_gvbles[index+index2*col_lngth];
+}
+      if(i_col==0) {k=row_gvbles[index+index2*row_lngth];
+}
       if(k<0){wdth=-1;goto nextj;}
       for(i=0;i<ngv;i++)
        {
-        if(igv[i]==k)break;
+        if(igv[i]==k) {break;
+}
        }
       if(nested[i]>0)
        {
@@ -4869,16 +5305,19 @@ static int get_column_width(int findx,int lindx,int index2,int i_col,int i_y)
         for(m=0;m<pway_nested;m++)
          {
           nestaddr=address_nested[m+i*pway_nested];
-          if(nestaddr<0)break;
+          if(nestaddr<0) {break;
+}
           if(i_col==0)
            {
             wdth+=nest_width[nestaddr];
-            if(m>0)wdth++;
+            if(m>0) {wdth++;
+}
            }
           else
            {
-            if(nest_width[nestaddr]>wdth)
+            if(nest_width[nestaddr]>wdth) {
               wdth=nest_width[nestaddr];
+}
            }
          }
        }
@@ -4887,9 +5326,11 @@ static int get_column_width(int findx,int lindx,int index2,int i_col,int i_y)
         wdth=grp_width[i];
        }
      }
-nextj: if(wdth>ijk)ijk=wdth;
+nextj: if(wdth>ijk) {ijk=wdth;
+}
    }
-  if(ijk<1)ijk=8;
+  if(ijk<1) {ijk=8;
+}
   return(ijk);
  }
 
@@ -4912,30 +5353,35 @@ static int comp_xval_nested(int j,double *xreal,char *xchrval)
      {
       impn=pway_nested*j+mm;
       iaddr=address_nested[impn];
-      if(iaddr<0)break;
+      if(iaddr<0) {break;
+}
       if(igv_vartype_nested[iaddr]<=0)
        {
         valos=ink+iaddr*nested_maxn;
         if(cutp_nested[iaddr]==1)
          {
-          if(xreal[mm]<=values_nested[valos]+xvert[iaddr])goto labfnd;
+          if(xreal[mm]<=values_nested[valos]+xvert[iaddr]) {goto labfnd;
+}
          }
         else
          {
           valx=values_nested[valos]-xreal[mm]; valx=fabs(valx);
-          if(valx<xvert[iaddr])goto labfnd;
+          if(valx<xvert[iaddr]) {goto labfnd;
+}
          }
        }
       else
        {
         valos=label_length1*(ink+iaddr*nested_maxn);
         i=(int)strncmp(labels_nested+valos,xchrval+mm*33,label_length);
-        if(i==0)goto labfnd;
+        if(i==0) {goto labfnd;
+}
        }
       ifound=0; break;   /* next class  */
 labfnd: ifound=1;
      }    /* end of loop for mm   (ways)      */
-    if(ifound==1)break;
+    if(ifound==1) {break;
+}
    }      /* end of loop for ink  (classes)   */
   return(ink);
 }
@@ -4949,9 +5395,11 @@ static void comp_xval_xvert(double *xvert)
 /*                                                              */
   for(j=0;j<pway;j++)
    {
-    if(nested[j]>0)continue;
+    if(nested[j]>0) {continue;
+}
     indalpha=0; jmaxn=j*maxn;
-    if(igv_vartype[j]>0)indalpha=1;
+    if(igv_vartype[j]>0) {indalpha=1;
+}
     if(indalpha==0)
      {
       valx=0.0000005;
@@ -4981,12 +5429,14 @@ static int comp_xval(int j,double xval,int ndj,int jmaxn)
       valos=imk+jmaxn;
       if(cutp[j]==1)
        {
-        if(xval<=values[valos]+gxvert[j])goto labfnd;
+        if(xval<=values[valos]+gxvert[j]) {goto labfnd;
+}
        }
       else
        {
         valx=values[valos]-xval; valx=fabs(valx);
-        if(valx<gxvert[j])goto labfnd;
+        if(valx<gxvert[j]) {goto labfnd;
+}
        }
      }
    }
@@ -4996,7 +5446,8 @@ static int comp_xval(int j,double xval,int ndj,int jmaxn)
       {
        valos=label_length1*(imk+j*maxn);
        i=(int)strncmp(labls+valos,xx,label_length);
-       if(i==0)goto labfnd;
+       if(i==0) {goto labfnd;
+}
       }
     }
    imk=ndj;
@@ -5011,12 +5462,14 @@ labfnd: return(imk);
 /*                                                              */
     for(j=0;j<pway;j++)
      {
-      if(nested[j]==0)continue;
+      if(nested[j]==0) {continue;
+}
       for(mm=0;mm<pway_nested;mm++)
        {
         impn=pway_nested*j+mm;
         iaddr=address_nested[impn];
-        if(iaddr<0)break;
+        if(iaddr<0) {break;
+}
         if(igv_vartype_nested[iaddr]<=0)
          {
           valx=0.0000005;
@@ -5055,16 +5508,19 @@ static void valsort2(double *xarr,char *arr,int n)
 static int blnkaway(char *zz,char *yy)
  {
   int i,j,l,pit;
-  l=strlen(zz);if(l<=0)return(l);
+  l=strlen(zz);if(l<=0) {return(l);
+}
 /* first nonblank char from the beginning  */
   for(j=0;j<l;j++)
    {
-    if(zz[j] != ' ')goto nonblank;
+    if(zz[j] != ' ') {goto nonblank;
+}
    }
   return(0);
 /* first nonblank char from the beginning is j */
 nonblank: for(i=l-1;i>=j;i--)
-      { if(zz[i] != ' ')break; }
+      { if(zz[i] != ' ') {break; 
+}}
       i++;
 /* last nonblank char  is i-1  */
   linspace(yy,24); pit=i-j;
@@ -5085,14 +5541,18 @@ int dep_frmt(int ithrow,int jthcol,int width,int i_code,double xval,long longval
   ynam=-1; ifmt=0; l=0;
   if(i_code != 3)
    {
-    if(ny<1 || i_code==2)goto lkmonly;
-    if(col_vbltype>1)
+    if(ny<1 || i_code==2) {goto lkmonly;
+}
+    if(col_vbltype>1) {
       ynam=col_objvbles[jthcol];
-    if(row_vbltype>1)
+}
+    if(row_vbltype>1) {
       ynam=row_objvbles[ithrow];
+}
     for(i=0;i<ny;i++)
      {
-      if(iy[i]==ynam)break;
+      if(iy[i]==ynam) {break;
+}
      }
     if(ynam>=0)
      {
@@ -5102,13 +5562,15 @@ int dep_frmt(int ithrow,int jthcol,int width,int i_code,double xval,long longval
       ifmt=(int)muste_strcmpi(fmtapu,"def");
      }
    }
-  if(i_code==3 && longval==0L)i_code=0;
+  if(i_code==3 && longval==0L) {i_code=0;
+}
   if(i_code==0)
    {
     linspace(ccapu,35);
     if(ifmt==0)
      {
-      l1=width; if(l1<1)l1=8;
+      l1=width; if(l1<1) {l1=8;
+}
       ccapu[l1-1]='-'; ccapu[l1]='\0';
      }
     else
@@ -5122,29 +5584,38 @@ int dep_frmt(int ithrow,int jthcol,int width,int i_code,double xval,long longval
   if(ifmt==0 && (i_code==1 || i_code==3))
    {
 /*          no format given                 */
-    l1=width; if(l1<8)l1=8;
+    l1=width; if(l1<8) {l1=8;
+}
     linspace(ccapu,35);
-    if(i_code==1)
+    if(i_code==1) {
      fconv(xval,"1234.123",ccapu);
-    else
+    } else
      {
       l1=width;
-      if(l1<5)fconv(xval,"1234",ccapu);
+      if(l1<5) {fconv(xval,"1234",ccapu);
+}
       if(l1==5)
        {
-        if(pctdec>0)
+        if(pctdec>0) {
           fconv(xval,"123.1",ccapu);
-        else
+        } else {
           fconv(xval,"12345",ccapu);
+}
        }
       if(l1>=6)
        {
-        if(pctdec==0)fconv(xval,"123456",ccapu);
-        if(pctdec==1)fconv(xval,"1234.1",ccapu);
-        if(pctdec==2 || (pctdec>2 && l1<7))fconv(xval,"123.12",ccapu);
-        if(pctdec==3 || (pctdec>3 && l1==7))fconv(xval,"123.123",ccapu);
-        if(pctdec==4 || (pctdec>4 && l1==8))fconv(xval,"123.1234",ccapu);
-        if(pctdec==5 || (pctdec>5 && l1==9))fconv(xval,"123.12345",ccapu);
+        if(pctdec==0) {fconv(xval,"123456",ccapu);
+}
+        if(pctdec==1) {fconv(xval,"1234.1",ccapu);
+}
+        if(pctdec==2 || (pctdec>2 && l1<7)) {fconv(xval,"123.12",ccapu);
+}
+        if(pctdec==3 || (pctdec>3 && l1==7)) {fconv(xval,"123.123",ccapu);
+}
+        if(pctdec==4 || (pctdec>4 && l1==8)) {fconv(xval,"123.1234",ccapu);
+}
+        if(pctdec==5 || (pctdec>5 && l1==9)) {fconv(xval,"123.12345",ccapu);
+}
        }
      }
     if(l1>8)

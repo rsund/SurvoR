@@ -145,12 +145,15 @@ static void swap(int v[], int i, int j) {
 static void specintsort(int satsi[], int left, int right) {
   int i, last;
 
-  if (left >= right) return;
+  if (left >= right) { return;
+}
   swap(satsi,left,(left+right)/2);
   last=left ;
-  for (i=left+1; i<=right; i++)
-    if ((unsigned int)satsi[i] < (unsigned int)satsi[left])
+  for (i=left+1; i<=right; i++) {
+    if ((unsigned int)satsi[i] < (unsigned int)satsi[left]) {
       swap(satsi,++last,i);
+}
+}
   swap(satsi,left,last);
   specintsort(satsi,left,last-1);
   specintsort(satsi,last+1,right);
@@ -173,7 +176,8 @@ static void testcands(int level, int obs, int candlkm) {
         }
         j++;
       }
-      if (loyto==0) eiole=1;
+      if (loyto==0) { eiole=1;
+}
       k++;
     }
     if (eiole==0) {
@@ -213,7 +217,8 @@ sur_print("\n");
 
             while (k<level && ac==0) {
               apu=candpointers[level-1][i*(level+1)+k];
-              if (apu != candpointers[level-1][j*(level+1)+k]) ac=1;
+              if (apu != candpointers[level-1][j*(level+1)+k]) { ac=1;
+}
               candpointers[level][cc*(level+2)+k]=apu;
               k++;
             }
@@ -276,7 +281,8 @@ static int freqitemsets() {
 
     l=0;
     for (j=0; j<k; j++) {
-      if (candpointers[i][j*(i+2)]>=minfreq) l++;
+      if (candpointers[i][j*(i+2)]>=minfreq) { l++;
+}
     }
     freqitems[i]=l;
     i++;
@@ -289,9 +295,12 @@ static int opendatafile() {
 
   int i,apu;
 
-  i=data_read_open(aineisto,&d); if (i<0) return(-1);
-  i=mask(&d); if (i<0) return(-1);
-  i=conditions(&d); if (i<0) return(-1);
+  i=data_read_open(aineisto,&d); if (i<0) { return(-1);
+}
+  i=mask(&d); if (i<0) { return(-1);
+}
+  i=conditions(&d); if (i<0) { return(-1);
+}
 
 
   if (d.m_act < 1) {
@@ -310,7 +319,8 @@ static int opendatafile() {
     }
 
     apu=d.varlen[d.v[i]];
-    if (apu>maxlen) maxlen=apu;
+    if (apu>maxlen) { maxlen=apu;
+}
 
   }
   if (check>0) { WAIT; return(-1); }
@@ -351,7 +361,8 @@ static int readitemfile() {
 //  char c;
 
   i=spfind("MAPFILE");
-  if (i < 0) i=spfind("REMAPFILE");
+  if (i < 0) { i=spfind("REMAPFILE");
+}
   if (i < 0) {
     muste_sprintf(sbuf,"\nCan't find MAPFILE specification!"); sur_print(sbuf);
     WAIT; return(-1);
@@ -434,9 +445,11 @@ int muste_disco(int argc, char *argv[]) {
   }
 
   tulosrivi=0;
-  if (g>2) tulosrivi=edline2(word[2],1,1);
+  if (g>2) { tulosrivi=edline2(word[2],1,1);
+}
 
-  i=spec_init(r1+r-1); if (i<0) return(-1);
+  i=spec_init(r1+r-1); if (i<0) { return(-1);
+}
 
   strcpy(aineisto,word[1]);
 
@@ -445,10 +458,14 @@ int muste_disco(int argc, char *argv[]) {
   if (met<0) { method=1; }
   else {
      method=1;
-     if (strcmp(spb[met],"FIND") == 0) method=1;
-     if (strcmp(spb[met],"EXTRACT") == 0) method=2;
-     if (strcmp(spb[met],"MAPFIND") == 0) method=3;
-     if (strcmp(spb[met],"REMAP") == 0) method=4;
+     if (strcmp(spb[met],"FIND") == 0) { method=1;
+}
+     if (strcmp(spb[met],"EXTRACT") == 0) { method=2;
+}
+     if (strcmp(spb[met],"MAPFIND") == 0) { method=3;
+}
+     if (strcmp(spb[met],"REMAP") == 0) { method=4;
+}
      if (strcmp(spb[met],"TRANSREMAP") == 0) { method=4; transremap=1; } // RS 17.1.2013
   }
 
@@ -483,12 +500,14 @@ int muste_disco(int argc, char *argv[]) {
 **********************************************************************************************/
 
     i=opendatafile();
-    if (i<0) return(-1);
+    if (i<0) { return(-1);
+}
 
     if (maxitems==0) { maxitems=maxvars*maxobs; }
   //  muste_sprintf(sbuf,"\n %i",maxitems); sur_print(sbuf);
     i=mapmalloc();
-    if (i<0) return(-1);
+    if (i<0) { return(-1);
+}
 
      groupvar=spfind("GROUP");
      if (groupvar < 0) { grov=0; groupvar=0;   }
@@ -517,7 +536,8 @@ int muste_disco(int argc, char *argv[]) {
 
     obscount=-1; items=0;
     for (l=d.l1; l<=d.l2; ++l) {
-      if (unsuitable(&d,l)) continue;
+      if (unsuitable(&d,l)) { continue;
+}
       obscount++;
       if (groupvar > 0) {
 		switch (d.vartype[grov][0]) // RS 21.11.2012
@@ -528,7 +548,8 @@ int muste_disco(int argc, char *argv[]) {
 			case '4':
 			case '8':				
 			data_load(&d,l,grov,&a);
-			if (a==MISSING8) a=0;
+			if (a==MISSING8) { a=0;
+}
 			i=(int)a;
 			muste_sprintf(groupvarname,"%d",i);             
 			break;
@@ -558,7 +579,8 @@ int muste_disco(int argc, char *argv[]) {
       for (i=0; i < blocklevels; i++) {
         curblock=spb[blocko][i];
         for (j=0; j < d.m_act; j++) {
-          if (d.vartype[d.v[j]][1] != curblock) continue;
+          if (d.vartype[d.v[j]][1] != curblock) { continue;
+}
           data_alpha_load(&d,l,d.v[j],&curitem[sizeofcuritem*blockcount]);
           blockcount++;
         }
@@ -574,7 +596,8 @@ int muste_disco(int argc, char *argv[]) {
           }
           else {
             apu=checkmap(&curitem[sizeofcuritem*(j+cumblockcount[i])],i);
-            if (apu<0) return(-1);
+            if (apu<0) { return(-1);
+}
 //    muste_sprintf(sbuf,"%3.0i ",apu); sur_print(sbuf);
             kama[obscount*sizeofkama+cumblockcount[i]+j+1]=apu;
           }
@@ -592,7 +615,8 @@ int muste_disco(int argc, char *argv[]) {
     data_close(&d);
 
     i=writeitemfile();
-    if (i<0) return(-1);
+    if (i<0) { return(-1);
+}
 
 /**********************************************************************************************/
   }
@@ -600,10 +624,12 @@ int muste_disco(int argc, char *argv[]) {
   if (method == 4) {
 
     i=opendatafile();
-    if (i<0) return(-1);
+    if (i<0) { return(-1);
+}
     if (maxitems==0) { maxitems=maxvars*maxobs; }
     i=mapmalloc();
-    if (i<0) return(-1);
+    if (i<0) { return(-1);
+}
 
   sizeofcuritem=maxlen;
   remap=(char *)muste_malloc(maxitems*sizeofcuritem);
@@ -612,7 +638,8 @@ int muste_disco(int argc, char *argv[]) {
     WAIT; return(-1);
   }
     i=readitemfile();
-    if (i<0) return(-1);
+    if (i<0) { return(-1);
+}
 
 //  writeitemfile();
 
@@ -697,7 +724,8 @@ else
 
 
     for (l=d.l1; l<=d.l2; ++l) {
-      if (unsuitable(&d,l)) continue;
+      if (unsuitable(&d,l)) { continue;
+}
 
 
 
@@ -705,7 +733,8 @@ else
       for (i=0; i < blocklevels; i++) {
         curblock=spb[blocko][i];
         for (j=0; j < d.m_act; j++) {
-          if (d.vartype[d.v[j]][1] != curblock) continue;
+          if (d.vartype[d.v[j]][1] != curblock) { continue;
+}
           data_alpha_load(&d,l,d.v[j],&curitem[sizeofcuritem*blockcount]);
 
 // muste_sprintf(sbuf,"%s ",&curitem[sizeofcuritem*blockcount]); sur_print(sbuf);
@@ -742,17 +771,20 @@ else
       
 if (transremap) // RS 17.1.2013
 	{
-	for (j=0; j<remapcn; j++) remapcc[j]=0;
+	for (j=0; j<remapcn; j++) { remapcc[j]=0;
+}
 	for (j=1; j < sizeofkama; j++)
 		{
 		apuc=kamamap[j];
 		apu=kama[j];
-		if (apu>=0) for (k=0; k<remapcn; k++)
+		if (apu>=0) { for (k=0; k<remapcn; k++)
 			{
 			if (strcmp(apuc,remapc[k])==0) { remapcc[k]=1; break; }
 			}
+}
 		}
-	for (j=0; j<remapcn; j++) fprintf(fp,"\t%d",remapcc[j]);
+	for (j=0; j<remapcn; j++) { fprintf(fp,"\t%d",remapcc[j]);
+}
 	}
 else	
 	{      
@@ -807,7 +839,8 @@ else
     muste_sprintf(sbuf,"freqitems=%i",j); sur_print(sbuf);
 
     i=freqitemsets();
-    if (i<0) return(-1);
+    if (i<0) { return(-1);
+}
 
     i=spfind("FREQOUTFILE");
     if (i >= 0) {

@@ -189,12 +189,15 @@ bb=0;
             return;
             }
         tut_init();
-        i=sp_init(r1+r-1); if (i<0) return;
-        i=spfind("RESULTS"); if (i>=0) results=atoi(spb[i]);
+        i=sp_init(r1+r-1); if (i<0) { return;
+}
+        i=spfind("RESULTS"); if (i>=0) { results=atoi(spb[i]);
+}
 
         vshow=0;
         i=matrix_load(word[1],&F,&m,&n,&rlab,&clab,&lr,&lc,&type,expr);
-        if (i<0) return;
+        if (i<0) { return;
+}
         k=n;
         if (g>2)
             {
@@ -217,13 +220,15 @@ bb=0;
         if (g>3)
             {
             results_line=edline2(word[3],1,1);
-            if (results_line==0) return;
+            if (results_line==0) { return;
+}
             }
 
         T=(double *)muste_malloc(k*k*sizeof(double));
         if (T==NULL) { not_enough_memory(); return; }
         for (i=0; i<k; ++i)
-            { for (j=0; j<k; ++j) T[i+k*j]=0.0; T[(k+1)*i]=1.0; }
+            { for (j=0; j<k; ++j) { T[i+k*j]=0.0; 
+}T[(k+1)*i]=1.0; }
 
         tt=tt2=0;
         i=spfind("T");
@@ -238,7 +243,8 @@ bb=0;
                 sur_print(sbuf); WAIT; return;
                 }
             tt=tt2=ttype(T,k1,k2,spb[i]);
-            if (tt<0) return;
+            if (tt<0) { return;
+}
             }
         else
             {
@@ -247,16 +253,19 @@ bb=0;
             if (trlab==NULL) { not_enough_memory(); return; }
             tclab=(char *)muste_malloc(lc*k);
             if (tclab==NULL) { not_enough_memory(); return; }
-            for (i=0; i<lc*k; ++i) trlab[i]=tclab[i]=clab[i];
+            for (i=0; i<lc*k; ++i) { trlab[i]=tclab[i]=clab[i];
+}
             }
 
 // For graphical rotation:  25.11.2004
         sh_ind=(int *)muste_malloc(m*sizeof(int));
         if (sh_ind==NULL) { not_enough_memory(); return; }
-        for (i=0; i<m; ++i) sh_ind[i]=1; // all variables shown!
+        for (i=0; i<m; ++i) { sh_ind[i]=1; // all variables shown!
+}
         weights_on=0;
         i=spfind("FSHOW");
-        if (i<0) i=spfind("WEIGHTS");
+        if (i<0) { i=spfind("WEIGHTS");
+}
         if (i>=0)
             {
 
@@ -272,7 +281,8 @@ bb=0;
                 muste_sprintf(sbuf,"\nErroneous # of rows in matrix %s!",spb[i]);
                 sur_print(sbuf); WAIT; return;
                 }
-            for (i=0; i<m; ++i) sh_ind[i]=(int)FS[i];
+            for (i=0; i<m; ++i) { sh_ind[i]=(int)FS[i];
+}
             weights_on=1; // CLF-rotaatioihin
             }
 
@@ -289,7 +299,8 @@ bb=0;
             }
 
         i=spfind("ROTATION");
-        if (i<0) i=spfind("METHOD");
+        if (i<0) { i=spfind("METHOD");
+}
         if (i>=0)
             {
             strcpy(x,spb[i]);
@@ -312,14 +323,18 @@ WAIT; return;
             else if (muste_strnicmp(sana[0],"COS",3)==0)
                 {
                 h2_limit=0.3;
-                if (h>1) h2_limit=atof(sana[1]);
-                i=cos_rot(F,m,k,T,h2_limit); if (i<0) return; method=2; ortho=0;
+                if (h>1) { h2_limit=atof(sana[1]);
+}
+                i=cos_rot(F,m,k,T,h2_limit); if (i<0) { return; 
+}method=2; ortho=0;
                 }
             else if (muste_strnicmp(sana[0],"OBL",3)==0)
                 {
                 delta=0.0; max_iter=30;
-                if (h>1) delta=atof(sana[1]);
-                if (h>2) max_iter=atoi(sana[2]);
+                if (h>1) { delta=atof(sana[1]);
+}
+                if (h>2) { max_iter=atoi(sana[2]);
+}
                 i=oblimin(F,m,k,T,delta,max_iter,1e-6);
                 method=3; ortho=0;
                 }
@@ -336,7 +351,8 @@ WAIT; return;
             else if (muste_strnicmp(sana[0],"ORTHO_CLF",9)==0)
                 {
                 delta=0.3; // Jennrich b
-                if (h>1) delta=atof(sana[1]);
+                if (h>1) { delta=atof(sana[1]);
+}
                 i=rot_ortho_clf(F,m,k,T,delta,1);
                 method=6; ortho=1;
                 }
@@ -355,7 +371,8 @@ WAIT; return;
             }
         else
             { i=varimax(F,m,k,T,1e-10); method=0; ortho=1; }
-        if (i<0) return;
+        if (i<0) { return;
+}
         matrix_save("AFACT.M",F,m,k,rlab,tclab,lr,tlc,0,"A",0,0);
         matrix_save("TFACT.M",T,k,k,trlab,tclab,tlr,tlc,0,"T",0,0);
 
@@ -365,7 +382,8 @@ WAIT; return;
             mat_mtm(corr,T,k,k);
             save_factcorr(corr,k,clab,lc);
             }
-        if (ortho) save_factcorr_1(k);
+        if (ortho) { save_factcorr_1(k);
+}
 
         print_results();
         tut_end();
@@ -378,17 +396,20 @@ static int print_results()
         char x[LLENGTH];
         char acc[24];
 
-        if (ortho==1)
+        if (ortho==1) {
             muste_sprintf(x,"Rotated factor matrix AFACT.M=%s*TFACT.M",word[1]);
-        else
+        } else {
             muste_sprintf(x,"Rotated factor matrix AFACT.M=%s*inv(TFACT.M)'",word[1]);
+}
         strcpy(acc,"12.1234567890123456");
         acc[accuracy-1]=EOS;
 
-        i=extend_fmatrix(F,m,k,rlab,tclab,&fh,&rlabh,&clabh); if (i<0) return(-1);
+        i=extend_fmatrix(F,m,k,rlab,tclab,&fh,&rlabh,&clabh); if (i<0) { return(-1);
+}
         i=matrix_print(fh,m+1,k+1,rlabh,clabh,lr,tlc,m+1,k+1,NULL,NULL,acc,c3,
                         results_line,eout,x);
-        if (results_line) results_line=i;
+        if (results_line) { results_line=i;
+}
         if (results<=70)
             {
             print_line("Rotation matrix saved as TFACT.M");
@@ -406,7 +427,8 @@ static int print_results()
         muste_sprintf(x,"Rotation matrix TFACT.M");
         i=matrix_print(T,k,k,trlab,tclab,tlr,tlc,k,k,NULL,NULL,acc,c3,
                         results_line,eout,x);
-        if (results_line) results_line=i;
+        if (results_line) { results_line=i;
+}
 
         if (ortho)
             {
@@ -415,11 +437,13 @@ static int print_results()
         else
             {
             i=matrix_load("RFACT.M",&T,&k,&k,&rlab,&clab,&lr,&lc,&type,expr);
-            if (i<0) return(-1);
+            if (i<0) { return(-1);
+}
             strcpy(x,"Factor correlation matrix RFACT.M");
             i=matrix_print(T,k,k,rlab,clab,lr,lc,k,k,NULL,NULL,acc,c3,
                             results_line,eout,x);
-            if (results_line) results_line=i;
+            if (results_line) { results_line=i;
+}
             print_line("The factor structure matrix SFACT.M is obtained by the commands:");
             print_line("MAT SFACT.M=AFACT.M*RFACT.M");
             muste_sprintf(x,"MAT LOAD SFACT.M,%s,CUR+1",acc); print_line(x);
@@ -447,9 +471,10 @@ static int ttype(double *T,int k1,int k2,char *name)
                                 name,k,k); sur_print(sbuf); WAIT; return(-1);
             }
         type=1;
-        for (i=0; i<k; ++i) for (j=0; j<=i; ++j)
+        for (i=0; i<k; ++i) { for (j=0; j<=i; ++j)
             {
-            s=0; for (h=0; h<k; ++h) s+=T[h+k*i]*T[h+k*j];
+            s=0; for (h=0; h<k; ++h) { s+=T[h+k*i]*T[h+k*j];
+}
             if (i==j)
                 {
                 if (fabs(s-1.0)>1e-3)
@@ -457,10 +482,12 @@ static int ttype(double *T,int k1,int k2,char *name)
                     muste_sprintf(sbuf,"\nColumn %d of T=%s not of length 1!",i,name);
                     sur_print(sbuf); WAIT; return(-1);
                     }
-                else continue;
+                else { continue;
+}
                 }
             if (fabs(s)>1e-3) { type=2; ortho=0; } /* T not orthogonal! */
             }
+}
         return(type);
         }
 
@@ -478,25 +505,31 @@ static int extend_fmatrix(double *f,int m,int k,char *rlab,char *clab,double **p
         *pclabh=clabh=muste_malloc((k+1)*lc+1);
         if (clabh==NULL) { not_enough_memory(); return(-1); }
 
-        for (i=0; i<m; ++i) for (j=0; j<k; ++j) fh[i+j*(m+1)]=f[i+j*m];
+        for (i=0; i<m; ++i) { for (j=0; j<k; ++j) { fh[i+j*(m+1)]=f[i+j*m];
+}
+}
 
         b=0.0;
         for (i=0; i<m; ++i)
             {
             a=0.0;
-            for (j=0; j<k; ++j) a+=f[i+j*m]*f[i+j*m];
+            for (j=0; j<k; ++j) { a+=f[i+j*m]*f[i+j*m];
+}
             fh[i+k*(m+1)]=a; b+=a;
             }
         fh[m+k*(m+1)]=b;
         for (j=0; j<k; ++j)
             {
             a=0.0;
-            for (i=0; i<m; ++i) a+=f[i+j*m]*f[i+j*m];
+            for (i=0; i<m; ++i) { a+=f[i+j*m]*f[i+j*m];
+}
             fh[m+j*(m+1)]=a;
             }
-        for (i=0; i<m*lr; ++i) rlabh[i]=rlab[i];
+        for (i=0; i<m*lr; ++i) { rlabh[i]=rlab[i];
+}
         strcpy(rlabh+m*lr,"Sumsqr  ");
-        for (i=0; i<k*lc; ++i) clabh[i]=clab[i];
+        for (i=0; i<k*lc; ++i) { clabh[i]=clab[i];
+}
         strcpy(clabh+k*lc,"Sumsqr  ");
         return(1);
         }
@@ -504,7 +537,8 @@ static int extend_fmatrix(double *f,int m,int k,char *rlab,char *clab,double **p
 static int print_line(char *line)
         {
         output_line(line,eout,results_line);
-        if (results_line) ++results_line;
+        if (results_line) { ++results_line;
+}
         return(1);
         }
 
@@ -524,10 +558,12 @@ static int varimax(double *F,int m,int k,double *T,double eps)
         double eps1=0.001;
 
         for (i=0; i<k; ++i)
-            { for (j=0; j<k; ++j) T[i+k*j]=0.0; T[i*(k+1)]=1.0; }
+            { for (j=0; j<k; ++j) { T[i+k*j]=0.0; 
+}T[i*(k+1)]=1.0; }
         sur_print("\nVarimax rotation:");
         muste_sprintf(sbuf,"  m=%d k=%d",m,k); sur_print(sbuf);
-        while (sur_kbhit()) sur_getch();
+        while (sur_kbhit()) { sur_getch();
+}
                        /* 15.9.94 */
         sur_print("\nTo interrupt, press any key!");
 
@@ -536,14 +572,15 @@ static int varimax(double *F,int m,int k,double *T,double eps)
 
         for (i=0; i<m; ++i)
             {
-            a1=0.0; for (j=0; j<k; ++j) a1+=F[i+j*m]*F[i+j*m];
+            a1=0.0; for (j=0; j<k; ++j) { a1+=F[i+j*m]*F[i+j*m];
+}
             h[i]=sqrt(a1);
             }
 
         while (1)
             {
             max_angle=0.0;
-            for (ix=0; ix<k; ++ix) for(iy=ix+1; iy<k; ++iy)
+            for (ix=0; ix<k; ++ix) { for(iy=ix+1; iy<k; ++iy)
                 {
                 a1=a2=a3=a4=0.0;
                 for (i=0; i<m; ++i)
@@ -554,12 +591,14 @@ static int varimax(double *F,int m,int k,double *T,double eps)
                     a1+=u; a2+=v; a3+=u*u-v*v; a4+=2*u*v;
                     }
                 a0=a3-(a1*a1-a2*a2)/m; a=a4-2*a1*a2/m;
-                if (fabs(a0)<eps1) angle=0.0;
-                else
+                if (fabs(a0)<eps1) { angle=0.0;
+                } else
                     {
                     a2=atan(a/a0);
-                    if (a0<0) a2+=PII;
-                    if (a2>=PII) a2-=2*PII;
+                    if (a0<0) { a2+=PII;
+}
+                    if (a2>=PII) { a2-=2*PII;
+}
                     angle=a2/4;
 /*
                     a2=atan(a/a0)+PI/4;
@@ -569,14 +608,18 @@ static int varimax(double *F,int m,int k,double *T,double eps)
 */
                     }
 
-                if (fabs(angle)>max_angle) max_angle=fabs(angle);
+                if (fabs(angle)>max_angle) { max_angle=fabs(angle);
+}
                 rotate(F,m,k,ix,iy,angle,T);
                 } /* next iy,ix  */
+}
             muste_sprintf(sbuf,"\nMax. rotation (in degrees) %f",360.0*max_angle/(2*PII));
             sur_print(sbuf);
-            if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); break; }
+            if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) { sur_getch(); 
+}break; }
 
-            if (max_angle<eps) break;
+            if (max_angle<eps) { break;
+}
             }
 //      save_factcorr_1(k);
 
@@ -632,16 +675,19 @@ static int cos_rot(double *F,int m,int k,double *T,double h2_limit)
 
         sur_print("\nCosine rotation (Ahmavaara):");
         oksum=0;
-        for (i=0; i<m; ++i) for (j=0; j<=i; ++j)
+        for (i=0; i<m; ++i) { for (j=0; j<=i; ++j)
             {
-            da=0.0; for (h=0; h<k; ++h) da+=F[i+m*h]*F[j+m*h];
+            da=0.0; for (h=0; h<k; ++h) { da+=F[i+m*h]*F[j+m*h];
+}
             cos_m[i+m*j]=da; cos_m[j+m*i]=da;
             if (i==j) /* 21.3.1994 */
                 {
-                if (da<h2_limit) ok[i]=0; else ok[i]=1;
+                if (da<h2_limit) { ok[i]=0; } else { ok[i]=1;
+}
                 oksum+=ok[i];
                 }
             }
+}
         if (oksum<k)
             {
  muste_sprintf(sbuf,"\nOnly %d (<%d) of variables exceeding communality level %g . Cannot continue!",
@@ -652,11 +698,13 @@ static int cos_rot(double *F,int m,int k,double *T,double h2_limit)
         detmax=0.0;
         for (i=0; i<m; ++i)
             {
-            if (!ok[i]) continue;  /* 21.3.1994 */
+            if (!ok[i]) { continue;  /* 21.3.1994 */
+}
             muste_sprintf(sbuf,"\n%2d",i+1); sur_print(sbuf);
             cos_i[0]=i;
             det1=cos_m[i*(m+1)];
-            if (det1==0.0) continue; /* 2.10.1996 */
+            if (det1==0.0) { continue; /* 2.10.1996 */
+}
             cos_t[0]=1/det1;
 
             for (h=2; h<=k; ++h)
@@ -664,47 +712,59 @@ static int cos_rot(double *F,int m,int k,double *T,double h2_limit)
                 detm=0.0;
                 for (j=0; j<m; ++j)
                     {
-                    if (!ok[j]) continue;  /* 21.3.1994 */
-                    for (ii=0; ii<h-1; ++ii) if (j==cos_i[ii]) break;
-                    if (ii<h-1) continue;
-                    for (ii=0; ii<h-1; ++ii) cos_u[ii]=cos_m[j+m*cos_i[ii]];
+                    if (!ok[j]) { continue;  /* 21.3.1994 */
+}
+                    for (ii=0; ii<h-1; ++ii) { if (j==cos_i[ii]) { break;
+}
+}
+                    if (ii<h-1) { continue;
+}
+                    for (ii=0; ii<h-1; ++ii) { cos_u[ii]=cos_m[j+m*cos_i[ii]];
+}
                     chh=cos_m[j*(m+1)];
                     da=chh;
                     for (ii=0; ii<h-1; ++ii)
                         {
                         da-=cos_t[ii*(k+1)]*cos_u[ii]*cos_u[ii];
-                        for (jj=0; jj<ii; ++jj) da-=2*cos_t[ii+k*jj]*cos_u[ii]*cos_u[jj];
+                        for (jj=0; jj<ii; ++jj) { da-=2*cos_t[ii+k*jj]*cos_u[ii]*cos_u[jj];
+}
                         }
                     if (da>detm) { detm=da; jmax=j; }
                     }
-                if (detm==0.0) break;  /* 2.10.1996 */
+                if (detm==0.0) { break;  /* 2.10.1996 */
+}
                 muste_sprintf(sbuf,"%3d",jmax+1); sur_print(sbuf);
                 cos_i[h-1]=jmax;
                 det1*=detm;
-                for (ii=0; ii<h-1; ++ii) cos_u[ii]=cos_m[jmax+m*cos_i[ii]];
+                for (ii=0; ii<h-1; ++ii) { cos_u[ii]=cos_m[jmax+m*cos_i[ii]];
+}
                 for (j=0; j<h-1; ++j)
                     {
                     da=0.0;
-                    for (ii=0; ii<h-1; ++ii) da+=cos_t[j+k*ii]*cos_u[ii];
+                    for (ii=0; ii<h-1; ++ii) { da+=cos_t[j+k*ii]*cos_u[ii];
+}
                     cos_u2[j]=da;
                     }
-                for (ii=0; ii<h-1; ++ii) for (jj=0; jj<=ii; ++jj)
+                for (ii=0; ii<h-1; ++ii) { for (jj=0; jj<=ii; ++jj)
                     {
                     da=cos_t[ii+k*jj]+cos_u2[ii]*cos_u2[jj]/detm;
                     cos_t[ii+k*jj]=da; cos_t[jj+k*ii]=da;
                     }
+}
                 for (j=0; j<h-1; ++j)
                     {
                     da=-cos_u2[j]/detm; cos_t[h-1+k*j]=da; cos_t[j+k*(h-1)]=da;
                     }
                 cos_t[(h-1)*(k+1)]=1/detm;
                 }
-            if (detm==0.0) continue; /* 2.10.1996 */
+            if (detm==0.0) { continue; /* 2.10.1996 */
+}
             muste_sprintf(sbuf," det=%g",det1); sur_print(sbuf);
             if (det1>detmax)
                 {
                 detmax=det1;
-                for (j=0; j<k; ++j) cos_imax[j]=cos_i[j];
+                for (j=0; j<k; ++j) { cos_imax[j]=cos_i[j];
+}
                 }
             } /* i */
 
@@ -715,11 +775,14 @@ static int cos_rot(double *F,int m,int k,double *T,double h2_limit)
             }
 
 /* names of factors from factor variables  5.4.1999 */
-        for (i=0; i<32; ++i) sbuf[i]=' ';  /* possible trailing spaces */
+        for (i=0; i<32; ++i) { sbuf[i]=' ';  /* possible trailing spaces */
+}
         for (i=0; i<k; ++i)
             {
-            for (h=0; h<lr; ++h) sbuf[h]=rlab[cos_imax[i]*lr+h];
-            for (h=0; h<tlc; ++h) tclab[i*tlc+h]=sbuf[h];
+            for (h=0; h<lr; ++h) { sbuf[h]=rlab[cos_imax[i]*lr+h];
+}
+            for (h=0; h<tlc; ++h) { tclab[i*tlc+h]=sbuf[h];
+}
             }
 
         for (j=0; j<k; ++j)
@@ -728,18 +791,23 @@ static int cos_rot(double *F,int m,int k,double *T,double h2_limit)
             for (i=0; i<k; ++i)
                 { db=F[cos_imax[j]+m*i]; T[i+k*j]=db; da+=db*db; }
             da=sqrt(da);
-            for (i=0; i<k; ++i) T[i+k*j]/=da;
+            for (i=0; i<k; ++i) { T[i+k*j]/=da;
+}
             }
-        for (i=0; i<k*k; ++i) cos_t[i]=T[i];
+        for (i=0; i<k*k; ++i) { cos_t[i]=T[i];
+}
         mat_inv(cos_m,cos_t,k,&det);
         mat_transp(cos_t,cos_m,k,k);
-        for (i=0; i<m*k; ++i) cos_m[i]=F[i];
+        for (i=0; i<m*k; ++i) { cos_m[i]=F[i];
+}
         mat_mlt(F,cos_m,cos_t,m,k,k);
-        for (i=0; i<k*k; ++i) cos_m[i]=T[i];  /* 2.5.1992 */
+        for (i=0; i<k*k; ++i) { cos_m[i]=T[i];  /* 2.5.1992 */
+}
         mat_nrm(cos_t,cos_m,k,k);
         mat_mtm(cos_t,cos_m,k,k);
         save_factcorr(cos_t,k,tclab,tlc);
-        if (sur_kbhit()) { while (sur_kbhit()) sur_getch(); WAIT; }
+        if (sur_kbhit()) { while (sur_kbhit()) { sur_getch(); 
+}WAIT; }
 
         return(1);
         }
@@ -753,7 +821,8 @@ static int save_factcorr_1(int k)
         apu=(double *)muste_malloc(k*k*sizeof(double));
         if (apu==NULL) { not_enough_memory(); p_close(); return(1); }
         for (i=0; i<k; ++i)
-            { for (h=0; h<k; ++h) apu[i+h*k]=0.0; apu[i+i*k]=1.0; }
+            { for (h=0; h<k; ++h) { apu[i+h*k]=0.0; 
+}apu[i+i*k]=1.0; }
         save_factcorr(apu,k,clab,lc);
         return(1);
         }
@@ -777,27 +846,35 @@ static int oblimin(double *F,int n,int m,double *T,double delta,int max_iter,dou
         int p,q;
         double dpq,gpq,ypq,zpq,tt,zz,pp,rr,pw,qw,rw,a,aa,t1,t2;
 
-        i=oblimin_tilat(n,m); if (i<0) return(-1);
-        for (i=0; i<m*n; ++i) ff0[i]=F[i];
+        i=oblimin_tilat(n,m); if (i<0) { return(-1);
+}
+        for (i=0; i<m*n; ++i) { ff0[i]=F[i];
+}
 
         dn=delta/n;
         for (i=0; i<m; ++i)
-            { for (k=0; k<m; ++k) cc[i+m*k]=0.0; cc[i*(m+1)]=1.0; }
+            { for (k=0; k<m; ++k) { cc[i+m*k]=0.0; 
+}cc[i*(m+1)]=1.0; }
         sur_print("\nOblimin rotation:");
         muste_sprintf(sbuf,"  n=%d m=%d",n,m); sur_print(sbuf);
 
-        while (sur_kbhit());
+        while (sur_kbhit()) {;
+}
         sur_print("\nTo interrupt, press any key!");
 
         for (k=0; k<n; ++k)
             {
-            a1=0.0; for (i=0; i<m; ++i) a1+=F[k+i*n]*F[k+i*n];
+            a1=0.0; for (i=0; i<m; ++i) { a1+=F[k+i*n]*F[k+i*n];
+}
             h[k]=sqrt(a1);
             }
-        for (k=0; k<n; ++k)
-            for (i=0; i<m; ++i) F[k+i*n]/=h[k];
+        for (k=0; k<n; ++k) {
+            for (i=0; i<m; ++i) { F[k+i*n]/=h[k];
+}
+}
 
-        for (k=0; k<n; ++k) s[k]=1.0;
+        for (k=0; k<n; ++k) { s[k]=1.0;
+}
         for (i=0; i<m; ++i)
             {
             a1=a2=0.0;
@@ -805,7 +882,8 @@ static int oblimin(double *F,int n,int m,double *T,double delta,int max_iter,dou
             u[i]=a1; v[i]=a2;
             }
 
-        for (i=0; i<m; ++i) x[i]=v[i]-dn*u[i]*u[i];
+        for (i=0; i<m; ++i) { x[i]=v[i]-dn*u[i]*u[i];
+}
         dd=gg=hh=0.0;
         for (i=0; i<m; ++i)
             { dd+=u[i]; gg+=x[i]; hh+=s[i]*s[i]; }
@@ -815,21 +893,28 @@ static int oblimin(double *F,int n,int m,double *T,double delta,int max_iter,dou
         n_iter=0;
         while (1)
             {
-            for (p=0; p<m; ++p)
+            for (p=0; p<m; ++p) {
             for (q=0; q<m; ++q)
                 {
-                if (p==q) continue;
+                if (p==q) { continue;
+}
                 dpq=dd-u[p]-u[q];
                 gpq=gg-x[p]-x[q];
-                for (i=0; i<n; ++i) spq[i]=s[i]-F[i+p*n]*F[i+p*n]
+                for (i=0; i<n; ++i) { spq[i]=s[i]-F[i+p*n]*F[i+p*n]
                                                -F[i+q*n]*F[i+q*n];
-                ypq=0.0; for (i=0; i<n; ++i) ypq+=F[i+p*n]*F[i+q*n];
-                zpq=0.0; for (i=0; i<n; ++i) zpq+=F[i+p*n]*F[i+p*n]*F[i+q*n]*F[i+q*n];
-                tt=0.0; for (i=0; i<n; ++i) tt+=F[i+p*n]*F[i+p*n]*spq[i];
+}
+                ypq=0.0; for (i=0; i<n; ++i) { ypq+=F[i+p*n]*F[i+q*n];
+}
+                zpq=0.0; for (i=0; i<n; ++i) { zpq+=F[i+p*n]*F[i+p*n]*F[i+q*n]*F[i+q*n];
+}
+                tt=0.0; for (i=0; i<n; ++i) { tt+=F[i+p*n]*F[i+p*n]*spq[i];
+}
                 tt-=dn*u[p]*dpq;
-                zz=0.0; for (i=0; i<n; ++i) zz+=F[i+p*n]*F[i+q*n]*spq[i];
+                zz=0.0; for (i=0; i<n; ++i) { zz+=F[i+p*n]*F[i+q*n]*spq[i];
+}
                 zz-=dn*ypq*dpq;
-                pp=0.0; for (i=0; i<n; ++i) pp+=F[i+p*n]*F[i+p*n]*F[i+p*n]*F[i+q*n];
+                pp=0.0; for (i=0; i<n; ++i) { pp+=F[i+p*n]*F[i+p*n]*F[i+p*n]*F[i+q*n];
+}
                 pp-=dn*u[p]*ypq;
                 rr=zpq-dn*u[p]*u[q];
                 pw=1.5*(cc[p+q*m]-pp/x[p]);
@@ -856,37 +941,46 @@ static int oblimin(double *F,int n,int m,double *T,double delta,int max_iter,dou
                     }
                 u[q]=a1; v[q]=a2;
                 x[q]=v[q]-dn*u[q]*u[q];
-                for (k=0; k<n; ++k)
+                for (k=0; k<n; ++k) {
                     s[k]=spq[k]+F[k+p*n]*F[k+p*n]+F[k+q*n]*F[k+q*n];
+}
                 dd=dpq+u[p]+u[q];
                 gg=gpq+x[p]+x[q];
 
                 for (i=0; i<m; ++i)
                     {
-                    if (i==p) continue;
+                    if (i==p) { continue;
+}
                     cc[i+p*m]=cc[i+p*m]/t1+t2*cc[i+q*m];
                     cc[p+i*m]=cc[i+p*m];
                     }
                 cc[p+p*m]=1.0;
                 }  /* p,q */
+}
             ++n_iter;
-            if (n_iter>max_iter) break;
-            hh=0.0; for (k=0; k<n; ++k) hh+=s[k]*s[k];
+            if (n_iter>max_iter) { break;
+}
+            hh=0.0; for (k=0; k<n; ++k) { hh+=s[k]*s[k];
+}
             hh-=dn*dd*dd;
             f2=hh-gg;
-            if (fabs((f2-f1)/f0)<eps) break;
+            if (fabs((f2-f1)/f0)<eps) { break;
+}
             muste_sprintf(sbuf,"\nIteration %d   %g",n_iter,fabs((f2-f1)/f0));
 
             sur_print(sbuf);
             f1=f2;
 
-            if (sur_kbhit()) break;
+            if (sur_kbhit()) { break;
+}
 
 
             }
 
-        for (k=0; k<n; ++k)
-            for (i=0; i<m; ++i) F[k+i*n]*=h[k];
+        for (k=0; k<n; ++k) {
+            for (i=0; i<m; ++i) { F[k+i*n]*=h[k];
+}
+}
 
         save_factcorr(cc,m,clab,lc);
         corr_saved=1;
@@ -956,8 +1050,10 @@ static double rot_root(double dn,double x)
         int n;
 
         n=dn;
-        if (x>0.0 || (double)n!=dn || n<0 || ((n>>1)<<1)==n) return(pow(x,1/dn));
-        if (x==0.0) return(0.0);
+        if (x>0.0 || (double)n!=dn || n<0 || ((n>>1)<<1)==n) { return(pow(x,1/dn));
+}
+        if (x==0.0) { return(0.0);
+}
         return(-pow(-x,1/dn));
         }
 
@@ -983,8 +1079,9 @@ static int rot_gp(double *A,int m,int k,double *T,int type)
     double a1,f,s,s2,ft,det;
     double f_min;
 
-    if (type==1) pff=ff;
-    else pff=vff;
+    if (type==1) { pff=ff;
+    } else { pff=vff;
+}
 
     ft=0.0; // 29.6.2011/SM
 
@@ -1017,13 +1114,16 @@ static int rot_gp(double *A,int m,int k,double *T,int type)
 for (rep=0; rep<100; ++rep)
   {
 
-  for (i=0; i<k*k; ++i) T[i]=0.5-uniform_dev();
+  for (i=0; i<k*k; ++i) { T[i]=0.5-uniform_dev();
+}
   for (j=0; j<k; ++j)
       {
       s=0.0;
-      for (i=0; i<k; ++i) s+=T[i+k*j]*T[i+k*j];
+      for (i=0; i<k; ++i) { s+=T[i+k*j]*T[i+k*j];
+}
       s=1.0/sqrt(s);
-      for (i=0; i<k; ++i) T[i+k*j]*=s;
+      for (i=0; i<k; ++i) { T[i+k*j]*=s;
+}
       }
 
     a1=1;
@@ -1036,51 +1136,64 @@ for (rep=0; rep<100; ++rep)
         for (j=0; j<k; ++j)
             {
             s=0.0;
-            for (i=0; i<k; ++i)
+            for (i=0; i<k; ++i) {
                 s+=T[i+k*j]*G[i+k*j];
-            for (i=0; i<k; ++i)
+}
+            for (i=0; i<k; ++i) {
                 T1[i+k*j]=s*T[i+k*j];
+}
             }
         mat_sub(Gp,G,T1,k,k);
 // mprint(Gp,k,k);
         s=0.0;
-        for (i=0; i<k*k; ++i) s+=Gp[i]*Gp[i];
+        for (i=0; i<k*k; ++i) { s+=Gp[i]*Gp[i];
+}
         s=sqrt(s);
 // Rprintf("\n%d %g %g %g|",iter,f,log(s)/log(10.0),a1);
 // getch();
-        if (s<1e-5) break;
+        if (s<1e-5) { break;
+}
 
         a1=2*a1;
         for (ii=0; ii<10; ++ii)
             {
 
-            for (i=0; i<k*k; ++i) X[i]=T[i]-a1*Gp[i];
+            for (i=0; i<k*k; ++i) { X[i]=T[i]-a1*Gp[i];
+}
 
             for (j=0; j<k; ++j)
                 {
                 s2=0.0;
-                for (i=0; i<k; ++i) s2+=X[i+k*j]*X[i+k*j];
+                for (i=0; i<k; ++i) { s2+=X[i+k*j]*X[i+k*j];
+}
 
                 s2=1.0/sqrt(s2);
-                for (i=0; i<k; ++i) Tt[i+k*j]=s2*X[i+k*j];
+                for (i=0; i<k; ++i) { Tt[i+k*j]=s2*X[i+k*j];
+}
 
                 }
             ft=pff(A,Tt,m,k);
 
-            if (ft<f-0.5*s*s*a1) break;
+            if (ft<f-0.5*s*s*a1) { break;
+}
             a1/=2.0;
             }
-        for (i=0; i<k*k; ++i) T[i]=Tt[i];
+        for (i=0; i<k*k; ++i) { T[i]=Tt[i];
+}
         }
 
-  if (ft<f_min) { for (i=0; i<k*k; ++i) T_min[i]=T[i]; f_min=ft; }
+  if (ft<f_min) { for (i=0; i<k*k; ++i) { T_min[i]=T[i]; 
+}f_min=ft; }
   } // rep
 
-    for (i=0; i<k*k; ++i) T[i]=T_min[i];
-    for (i=0; i<k*k; ++i) T1[i]=T[i];
+    for (i=0; i<k*k; ++i) { T[i]=T_min[i];
+}
+    for (i=0; i<k*k; ++i) { T1[i]=T[i];
+}
     mat_inv(T2,T1,k,&det);
     mat_2mmt(L,A,T2,m,k,k);
-    for (i=0; i<m*k; ++i) A[i]=L[i];
+    for (i=0; i<m*k; ++i) { A[i]=L[i];
+}
     return(1);
     }
 
@@ -1096,9 +1209,10 @@ extern int muste_save_stack_count(int debug);
 extern void	muste_restore_stack_count(void);
 
     bb=b; // globaaliksi!
-    if (type==1) pff=ortho_ff;
-    else if (type==2) pff=quartimax_ff;
-    else pff=entropy_ff;
+    if (type==1) { pff=ortho_ff;
+    } else if (type==2) { pff=quartimax_ff;
+    } else { pff=entropy_ff;
+}
 
     ft=0.0; // 29.6.2011/SM
 
@@ -1130,7 +1244,8 @@ extern void	muste_restore_stack_count(void);
     spec_rnd();  
     for (rep=0; rep<100; ++rep)
         {
-        for (i=0; i<k*k; ++i) T1[i]=0.5-uniform_dev();
+        for (i=0; i<k*k; ++i) { T1[i]=0.5-uniform_dev();
+}
         mat_qr(T1,T,k,k,1e-15);
 //  mprint(T,k,k);
 //  mat_mmt(T1,T,k,k);
@@ -1147,38 +1262,48 @@ extern void	muste_restore_stack_count(void);
             gf(A,G,T,m,k);              
     // mprint(G,k,k);
             mat_2mtm(X,T,G,k,k,k);   // M
-            for (i=0; i<k; ++i)
-                for (j=0; j<i; ++j)
+            for (i=0; i<k; ++i) {
+                for (j=0; j<i; ++j) {
                     X[i+k*j]=X[j+k*i]=(X[i+k*j]+X[j+k*i])/2.0;  // S
+}
+}
             mat_mlt(T1,T,X,k,k,k);
             mat_sub(Gp,G,T1,k,k);
             s=0.0;
-            for (i=0; i<k*k; ++i) s+=Gp[i]*Gp[i];
+            for (i=0; i<k*k; ++i) { s+=Gp[i]*Gp[i];
+}
             s=sqrt(s);
 //     Rprintf("\n%d %g %g %g|",iter,f,log(s)/log(10.0),a1);
 //     getch();
-            if (s<1e-5) break;
+            if (s<1e-5) { break;
+}
             a1=2*a1;
             for (ii=0; ii<10; ++ii)
                 {
-                for (i=0; i<k*k; ++i) X[i]=T[i]-a1*Gp[i];
+                for (i=0; i<k*k; ++i) { X[i]=T[i]-a1*Gp[i];
+}
                 mat_svd(X,T1,T2,k,k,eps,tol);
                 mat_2mmt(Tt,X,T2,k,k,k);
                 ft=pff(A,Tt,m,k);
-                if (ft<f-0.5*s*s*a1) break;
+                if (ft<f-0.5*s*s*a1) { break;
+}
                 a1/=2.0;
                 }
-            for (i=0; i<k*k; ++i) T[i]=Tt[i];
+            for (i=0; i<k*k; ++i) { T[i]=Tt[i];
+}
             }         
-         if (ft<f_min) { for (i=0; i<k*k; ++i) T_min[i]=T[i]; f_min=ft; }
+         if (ft<f_min) { for (i=0; i<k*k; ++i) { T_min[i]=T[i]; 
+}f_min=ft; }
          muste_restore_stack_count(); // RS 19.11.2012
          }
-    for (i=0; i<k*k; ++i) T[i]=T_min[i];
+    for (i=0; i<k*k; ++i) { T[i]=T_min[i];
+}
 //  for (i=0; i<k*k; ++i) T1[i]=T[i];
 //  mat_inv(T2,T1,k,&det);
 //  mat_2mmt(L,A,T2,m,k,k);
     mat_mlt(L,A,T,m,k,k);
-    for (i=0; i<m*k; ++i) A[i]=L[i];
+    for (i=0; i<m*k; ++i) { A[i]=L[i];
+}
 
     return(1);
     }
@@ -1196,18 +1321,22 @@ static double ortho_ff(double *A,double *T,int m,int k)  // linear right constan
         for (i=0; i<m; ++i)
             {
             aa=FS[i];
-            for (j=0; j<k; ++j) s+=aa*linear_right_constant(L[i+m*j]);
+            for (j=0; j<k; ++j) { s+=aa*linear_right_constant(L[i+m*j]);
+}
             }
         }
-    else
-        for (i=0; i<m*k; ++i) s+=linear_right_constant(L[i]);
+    else {
+        for (i=0; i<m*k; ++i) { s+=linear_right_constant(L[i]);
+}
+}
     return(s);
     }
 
 static double linear_right_constant(double u)
     {
 // Rprintf("\nbb=%g|",bb); getch();
-    if (fabs(u)<bb) return((u/bb)*(u/bb));
+    if (fabs(u)<bb) { return((u/bb)*(u/bb));
+}
     return(1.0);
     }
 
@@ -1241,8 +1370,9 @@ static double entropy_ff(double *A,double *T,int m,int k)
                 }
             }
         }
-    else
+    else {
         for (i=0; i<m*k; ++i) { aa=L[i]*L[i]; s-=aa*log(aa); }
+}
     return(s);
     }
 
@@ -1253,7 +1383,8 @@ static double ff(double *A,double *T,int m,int k)  // linear CLF
     double s,aa;
 //    extern double linear_clf();
 
-    for (i=0; i<k*k; ++i) T1[i]=T[i];
+    for (i=0; i<k*k; ++i) { T1[i]=T[i];
+}
     mat_inv(T2,T1,k,&det);
     mat_2mmt(L,A,T2,m,k,k);
     s=0.0;
@@ -1262,11 +1393,14 @@ static double ff(double *A,double *T,int m,int k)  // linear CLF
         for (i=0; i<m; ++i)
             {
             aa=FS[i];
-            for (j=0; j<k; ++j) s+=aa*linear_clf(fabs(L[i+m*j]));
+            for (j=0; j<k; ++j) { s+=aa*linear_clf(fabs(L[i+m*j]));
+}
             }
         }
-    else
-        for (i=0; i<m*k; ++i) s+=linear_clf(fabs(L[i]));
+    else {
+        for (i=0; i<m*k; ++i) { s+=linear_clf(fabs(L[i]));
+}
+}
     return(s);
     }
 
@@ -1278,7 +1412,8 @@ static double linear_clf(double u)
 // eps3=eps/2   eps3=0.005
     double eps3=0.005;
 
-    if (u>eps) return(u);
+    if (u>eps) { return(u);
+}
     return(eps2+eps3*u*u);
     }
 
@@ -1288,15 +1423,20 @@ static double vff(double *A,double *T,int m,int k)  // quartimin
     double det;
     double s;
 
-    for (i=0; i<k*k; ++i) T1[i]=T[i];
+    for (i=0; i<k*k; ++i) { T1[i]=T[i];
+}
     mat_inv(T2,T1,k,&det);
     mat_2mmt(L,A,T2,m,k,k);              // L=L2
-    for (i=0; i<m*k; ++i) L[i]=L[i]*L[i];
-    for (i=0; i<k*k; ++i) T1[i]=1.0;
-    for (i=0; i<k; ++i) T1[i*(k+1)]=0.0;   // T1=N
+    for (i=0; i<m*k; ++i) { L[i]=L[i]*L[i];
+}
+    for (i=0; i<k*k; ++i) { T1[i]=1.0;
+}
+    for (i=0; i<k; ++i) { T1[i*(k+1)]=0.0;   // T1=N
+}
     mat_mlt(L1,L,T1,m,k,k);
     s=0.0;
-    for (i=0; i<m*k; ++i) s+=L[i]*L1[i];
+    for (i=0; i<m*k; ++i) { s+=L[i]*L1[i];
+}
     return(s);
     }
 
@@ -1307,16 +1447,18 @@ static int gf(double *A,double *G,double *T,int m,int k)
     double f1,f2;
 
     ep=0.0001;
-    for (i=0; i<k; ++i)
+    for (i=0; i<k; ++i) {
         for (j=0; j<k; ++j)
             {
-            for (h=0; h<k*k; ++h) TdT[h]=T[h];
+            for (h=0; h<k*k; ++h) { TdT[h]=T[h];
+}
             TdT[i+k*j]+=ep;
             f1=pff(A,TdT,m,k);
             TdT[i+k*j]-=2*ep;
             f2=pff(A,TdT,m,k);
             G[i+k*j]=(f1-f2)/(2.0*ep);
             }
+}
 
     return(1);
     }

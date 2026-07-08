@@ -46,14 +46,19 @@ void muste_smooth(char *argv)
             WAIT; return;
             }
         i=data_open(word[1],&d);
-        xvar=varfind(&d,word[2]); if (xvar<0) return;
-        svar=varfind(&d,word[3]); if (svar<0) return;
+        xvar=varfind(&d,word[2]); if (xvar<0) { return;
+}
+        svar=varfind(&d,word[3]); if (svar<0) { return;
+}
 
         i=sp_init(r1+r-1);
 
-        i=conditions(&d); if (i<0) return;
-        i=lue_datat(); if (i<0) return;
-        if (g<5) pts=n/10.0; else pts=atof(word[4]);
+        i=conditions(&d); if (i<0) { return;
+}
+        i=lue_datat(); if (i<0) { return;
+}
+        if (g<5) { pts=n/10.0; } else { pts=atof(word[4]);
+}
         smooth(x,n,pts);
         talletus();
         data_close(&d);
@@ -70,11 +75,14 @@ static int lue_datat()
         sur_print(sbuf);
         for (j=d.l1; j<=d.l2; ++j)
             {
-            if (unsuitable(&d,j)) continue;
+            if (unsuitable(&d,j)) { continue;
+}
             data_load(&d,j,xvar,&a);
-            if (a==MISSING8) continue;
+            if (a==MISSING8) { continue;
+}
             x[n++]=a;
-            if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); disp0=1-disp0; }
+            if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) { sur_getch(); 
+}disp0=1-disp0; }
             if (disp0) { muste_sprintf(sbuf," %d",j); sur_print(sbuf); }
 
             if (n>MAXN)
@@ -103,12 +111,15 @@ static int talletus()
         sur_print(sbuf);
         for (j=d.l1; j<=d.l2; ++j)
             {
-            if (unsuitable(&d,j)) continue;
+            if (unsuitable(&d,j)) { continue;
+}
             data_load(&d,j,xvar,&a);
-            if (a==MISSING8) continue;
+            if (a==MISSING8) { continue;
+}
             a=x[n++];
             data_save(&d,j,svar,a);
-            if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); disp0=1-disp0; }
+            if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) { sur_getch(); 
+}disp0=1-disp0; }
             if (disp0) { muste_sprintf(sbuf," %d",j); sur_print(sbuf); }
             }
         return(1);
@@ -124,11 +135,15 @@ static int smooth(double *y,unsigned int n,double pts)
         muste_sprintf(sbuf,"\nSmoothing %u observations with parameter %g ...",n,pts);
         sur_print(sbuf);
         
-        while (m<nmin) m*=2;
+        while (m<nmin) { m*=2;
+}
         cnst=pts*pts/m/m; y1=y[0]; yn=y[n-1]; rn1=1.0/(n-1);
-        for (j=0; j<n; ++j) y[j]-=rn1*(y1*(n-j-1)+yn*j);
-        if (n+1<=m)
-            for (j=n; j<m; ++j) y[j]=0.0;
+        for (j=0; j<n; ++j) { y[j]-=rn1*(y1*(n-j-1)+yn*j);
+}
+        if (n+1<=m) {
+            for (j=n; j<m; ++j) { y[j]=0.0;
+}
+}
         mo2=m/2;
         sur_print("\nFourier transformation...");
         realft(y,mo2,1); y[0]/=mo2; fac=1.0;
@@ -138,7 +153,8 @@ static int smooth(double *y,unsigned int n,double pts)
             if (fac!=0.0)
                 {
                 fac=(1-cnst*j*j)/mo2;
-                if (fac<0.0) fac=0.0;
+                if (fac<0.0) { fac=0.0;
+}
                 y[k-1]*=fac; y[k]*=fac;
                 }
             else
@@ -147,12 +163,14 @@ static int smooth(double *y,unsigned int n,double pts)
                 }
             }
         fac=(1-0.25*pts*pts)/mo2;
-        if (fac<0.0) fac=0.0;
+        if (fac<0.0) { fac=0.0;
+}
         y[1]=fac*y[1];
         sur_print("\nInverse Fourier transformation...");
         realft(y,mo2,-1);
-        for (j=0; j<n; ++j)
+        for (j=0; j<n; ++j) {
             y[j]+=rn1*(y1*(n-j-1)+yn*j);
+}
         return(1);
         }
 

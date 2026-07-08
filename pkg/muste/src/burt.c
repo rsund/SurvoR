@@ -85,15 +85,21 @@ void muste_burt(char *argv)
     int i;
     s_init(argv);
     if (g<3) { muste_kv_usage_info(); return; }
-    i=spec_init(r1+r-1); if (i<0) return;
-    i=check_params(); if (i<0) return;
+    i=spec_init(r1+r-1); if (i<0) { return;
+}
+    i=check_params(); if (i<0) { return;
+}
     switch (source) {
-        case TABLE: i=proceed_with_table(); if (i<0) return; break;
-         case DATA: i=proceed_with_data(); if (i<0) return; break;
+        case TABLE: i=proceed_with_table(); if (i<0) { return; 
+}break;
+         case DATA: i=proceed_with_data(); if (i<0) { return; 
+}break;
            default: muste_kv_usage_info(); return;
     }
-    i=make_labels(); if (i<0) return;
-    i=save_matrices(); if (i<0) return;
+    i=make_labels(); if (i<0) { return;
+}
+    i=save_matrices(); if (i<0) { return;
+}
     s_end(argv);
 }
 
@@ -129,8 +135,10 @@ static int proceed_with_table(void)
 {
     int i;
 
-    i=seek_table(); if (i<0) return -1;
-    i=read_table(); if (i<0) return -1;
+    i=seek_table(); if (i<0) { return -1;
+}
+    i=read_table(); if (i<0) { return -1;
+}
     i=spfind("TABDIM");
     if (i>=0) {
         if (atoi(spb[i])) {
@@ -143,9 +151,12 @@ static int proceed_with_table(void)
         return -1;
     }
     muste_kv_s_disp("\nCreating Burt's table from TABLE %s...", word[2]);
-    i=read_elements(); if (i<0) return -1;
-    i=binary_table(); if (i<0) return -1;
-    i=table_to_Z_matrix(); if (i<0) return -1;
+    i=read_elements(); if (i<0) { return -1;
+}
+    i=binary_table(); if (i<0) { return -1;
+}
+    i=table_to_Z_matrix(); if (i<0) { return -1;
+}
     return 1;
 }
 
@@ -159,8 +170,10 @@ static int proceed_with_data(void)
     if (i>=0) {
         vmax=max(vmax,atoi(spb[i]));
     }
-    i=read_data(); if (i<0) return -1;
-    i=data_to_Z_matrix(); if (i<0) return -1;
+    i=read_data(); if (i<0) { return -1;
+}
+    i=data_to_Z_matrix(); if (i<0) { return -1;
+}
     return 1;
 }
 
@@ -188,8 +201,10 @@ static int seek_table(void)
         muste_kv_s_err("TABLE %s is not a frequency table!", word[2]);
         return -1;
     }
-    L1=edline2(wrd[2],1,1); if (!L1) return -1;
-    L2=edline2(wrd[3],1,1); if (!L2) return -1;
+    L1=edline2(wrd[2],1,1); if (!L1) { return -1;
+}
+    L2=edline2(wrd[3],1,1); if (!L2) { return -1;
+}
     return 1;
 }
 
@@ -204,7 +219,8 @@ static int read_table(void)
     /* Columns: */
     while (L<=L2) {
         edread(sbuf,L); L++;
-        if (strchr(sbuf+1,'*')!=NULL) break; /* line with '****' */
+        if (strchr(sbuf+1,'*')!=NULL) { break; /* line with '****' */
+}
         k=muste_kv_space_split(sbuf+1,wrd,LLENGTH);
         strcat(cnames, wrd[0]); strcat(cnames, " ");
         k--;
@@ -234,7 +250,8 @@ static int read_table(void)
         while (L<=L2) {
             edread(sbuf,L); L++;
             j=muste_kv_space_split(sbuf+1,wrd,LLENGTH);
-            if (j<rdim) continue; /* skip empty lines */
+            if (j<rdim) { continue; /* skip empty lines */
+}
             if (i==0) {
                 rows++;
                 for (n=j; n>j-cols; n--) {
@@ -242,7 +259,8 @@ static int read_table(void)
                     N+=elem;
                 }
             }
-            if (h==rows/k0) break;
+            if (h==rows/k0) { break;
+}
             h++;
             if (j>=(rdim+cols-i)) {
                 strcat(rclass, wrd[abs(rdim+cols-j-i)]);
@@ -289,7 +307,8 @@ static int read_elements(void)
     while (L<=L2) {
         edread(sbuf,L); L++;
         j=muste_kv_space_split(sbuf+1,wrd,LLENGTH);
-        if (j<rdim) continue; /* skip empty lines */
+        if (j<rdim) { continue; /* skip empty lines */
+}
         for (n=j; n>j-cols; n--) {
             elem=atoi(wrd[n-1]);
             T[h+rows*(n-1-(j-cols))]=elem;
@@ -307,9 +326,11 @@ static int binary_table(void)
     if (B==NULL) { no_memory(); return -1; }
 
     muste_kv_space_split(csizes,wrd,LLENGTH); j=0;
-    for (i=0; i<cdim; i++,j++) crsiz[j]=atoi(wrd[i]);
+    for (i=0; i<cdim; i++,j++) { crsiz[j]=atoi(wrd[i]);
+}
     muste_kv_space_split(rsizes,wrd,LLENGTH);
-    for (i=0; i<rdim; i++,j++) crsiz[j]=atoi(wrd[i]);
+    for (i=0; i<rdim; i++,j++) { crsiz[j]=atoi(wrd[i]);
+}
 
     k=1; s0=0; s1=0;
     for (cl=0; cl<dim; cl++) { /* classifier at a time */
@@ -321,7 +342,8 @@ static int binary_table(void)
                 B[row+cols*rows*j] = (i==bit) ? 1 : 0;
             }
             if (++h0==h) { h0=0;
-               if (++bit==m) bit=0;
+               if (++bit==m) { bit=0;
+}
             }
         }
     }
@@ -355,10 +377,13 @@ static int read_data(void)
     double x;
     char *p;
 
-    i=data_read_open(word[2],&dat); if (i<0) return -1;
-    i=mask(&dat); if (i<0) return -1;
+    i=data_read_open(word[2],&dat); if (i<0) { return -1;
+}
+    i=mask(&dat); if (i<0) { return -1;
+}
     scales(&dat); // in place but not in effective use until 30.7.2005!
-    i=conditions(&dat); if (i<0) return -1;
+    i=conditions(&dat); if (i<0) { return -1;
+}
 
     if (dat.m_act==0) {
         muste_kv_s_err("No active variables!");
@@ -371,10 +396,12 @@ static int read_data(void)
 
     classes=0;
     for (i=0; i<dat.m_act; i++) {
-        for (k=0; k<vmax; k++) values[i*vmax+k]=NA;
+        for (k=0; k<vmax; k++) { values[i*vmax+k]=NA;
+}
         nval[i]=0; miss=0;
         strcpy(nam,dat.varname[dat.v[i]]); trim2(nam);
-        j=spfind(nam); if (j<0) continue; /* classification not given */
+        j=spfind(nam); if (j<0) { continue; /* classification not given */
+}
         strcpy(sbuf, spb[j]);
         if (strchr(sbuf,',')!=NULL) {           /* <nam>=1,1,3,5 */
             m=split(sbuf,wrd,vmax);
@@ -386,7 +413,8 @@ static int read_data(void)
             if (!strncmp(wrd[m-1],"MISSING",7)) { /* <nam>=1,3,MISSING */
                 miss=1; m--; /* forget missing class for a moment */
             }
-            for (k=0; k<m; k++) values[i*vmax+k]=atof(wrd[k]);
+            for (k=0; k<m; k++) { values[i*vmax+k]=atof(wrd[k]);
+}
             if (miss) {
                 values[i*vmax+k]=MV;
                 m++; /* restore missing class */
@@ -405,10 +433,13 @@ static int read_data(void)
             }
             n1=atof(wrd[0]); n2=atof(wrd[1]); n3=atof(wrd[2]);
             m=(int)n3/n2-n1+2;    /* n1(n2)n3 */     /* 6.12.2000 (!) */
-            if (n1==1) --m;
-            if (n1==n2) m++;
+            if (n1==1) { --m;
+}
+            if (n1==n2) { m++;
+}
             n1-=n2;
-            for (k=0; k<m; k++,n1+=n2) values[i*vmax+k]=n1;
+            for (k=0; k<m; k++,n1+=n2) { values[i*vmax+k]=n1;
+}
             nval[i]=m;
         }
         classes+=nval[i]-1;
@@ -417,7 +448,8 @@ static int read_data(void)
     muste_kv_s_disp("\nReading observations...");
     N=0;
     for (j=dat.l1; j<=dat.l2; j++) {
-        if (unsuitable(&dat,j)) continue;
+        if (unsuitable(&dat,j)) { continue;
+}
         N++;
         for (i=0; i<dat.m_act; i++) {
             if (values[i*vmax]!=NA && values[i*vmax]!=MV) {
@@ -428,9 +460,11 @@ static int read_data(void)
                 nval[i]++; /* (was initialized above) */
             }
             data_load(&dat,j,dat.v[i],&x);
-            if (x==MISSING8) continue; /* no missings by default */
+            if (x==MISSING8) { continue; /* no missings by default */
+}
             for (k=1; k<vmax; k++) { /* always skip MV */
-                if (values[i*vmax+k]==x) break; /* is already */
+                if (values[i*vmax+k]==x) { break; /* is already */
+}
                 if (values[i*vmax+k]==NA) {
                     values[i*vmax+k]=x;
                     nval[i]++; classes++;
@@ -467,7 +501,8 @@ static int data_to_Z_matrix()
         n=nval[i];
         if (values[i*vmax]==MV) { /* seek minimum for non-classified */
             for (k=1,x=MV; k<n; k++) {
-                if (values[i*vmax+k]<x) x=values[i*vmax+k];
+                if (values[i*vmax+k]<x) { x=values[i*vmax+k];
+}
             }
             values[i*vmax]=x; /* minimum value doubled */
         }
@@ -476,19 +511,23 @@ static int data_to_Z_matrix()
     }
 
     for (j=dat.l1,h=0; j<=dat.l2; j++) {
-        if (unsuitable(&dat,j)) continue;
+        if (unsuitable(&dat,j)) { continue;
+}
         for (i=0,p=0; i<dat.m_act; i++) {
             data_load(&dat,j,dat.v[i],&x);
             n=nval[i]-1; bit=-1; m=n;
-            if (values[i*vmax+n]==MV) m--;
+            if (values[i*vmax+n]==MV) { m--;
+}
             if (x==MISSING8) {
-                if (m<n) bit=n-1; /* missing class */
+                if (m<n) { bit=n-1; /* missing class */
+}
             } else if (x>=values[i*vmax] && x<=values[i*vmax+m]) {
                 for (k=1; k<=m; k++) {
                     if (x<=values[i*vmax+k]) { bit=k-1; break; }
                 }
             }
-            for (m=0; m<n; m++) ZM[h+N*(p+m)] = (m==bit) ? 1.0 : 0.0;
+            for (m=0; m<n; m++) { ZM[h+N*(p+m)] = (m==bit) ? 1.0 : 0.0;
+}
             p+=n;
         }
         h++;
@@ -500,8 +539,10 @@ static int compare(const void *val1, const void *val2)
 {
     const double *v1=(const double *)val1;
     const double *v2=(const double *)val2;
-    if (*v1<*v2) return -1;
-    if (*v1>*v2) return  1;
+    if (*v1<*v2) { return -1;
+}
+    if (*v1>*v2) { return  1;
+}
     return 0;
 }
 
@@ -518,7 +559,8 @@ static int make_labels(void)
         for (i=0; i<classes; i++) {
             strcat(longlabs, wrd[i]); strcat(longlabs, " ");
             j=strlen(wrd[i]);
-            if (j>labmax) labmax=j;
+            if (j>labmax) { labmax=j;
+}
         }
     }
 
@@ -527,27 +569,34 @@ static int make_labels(void)
             n=nval[i];
             strcpy(nam,dat.varname[dat.v[i]]); trim2(nam);
             j=spfind(nam);
-            if (j>=0) strcpy(sbuf, spb[j]);
-            else *sbuf='\0';
+            if (j>=0) { strcpy(sbuf, spb[j]);
+            } else { *sbuf='\0';
+}
             if (strchr(sbuf,',')!=NULL) { /* <nam>=1,2(foo),3(bar) */
                 m=split(sbuf,wrd,vmax);
                 for (k=1; k<m; k++) {
                     p=wrd[k];
                     j=strlen(p)-1;
-                    if (p[j]==')') p[j]='\0';
-                    while (*p++) { if (*p=='(') break; }
-                    if (*p=='(') ++p; else p=wrd[k];
+                    if (p[j]==')') { p[j]='\0';
+}
+                    while (*p++) { if (*p=='(') { break; 
+}}
+                    if (*p=='(') { ++p; } else { p=wrd[k];
+}
                     strcat(longlabs, p); strcat(longlabs, " ");
                     j=strlen(p);
-                    if (j>labmax) labmax=j;
+                    if (j>labmax) { labmax=j;
+}
                 }
             } else { /* <nam>=1(1)5 (j>=0) or <nam> not given (j<0) */
-                if (j>=0) *nam='\0';
+                if (j>=0) { *nam='\0';
+}
                 for (k=1; k<n; k++) {
                     muste_sprintf(sbuf, "%s%.f", nam, values[i*vmax+k]);
                     strcat(longlabs, sbuf); strcat(longlabs, " ");
                     j=strlen(sbuf);
-                    if (j>labmax) labmax=j;
+                    if (j>labmax) { labmax=j;
+}
                 }
             }
         }
@@ -555,7 +604,8 @@ static int make_labels(void)
     }
 
     lablen=LABLEN;
-    i=spfind("LABLEN"); if (i>=0) lablen=atoi(spb[i]);
+    i=spfind("LABLEN"); if (i>=0) { lablen=atoi(spb[i]);
+}
     lablen=max(lablen,labmax);
     lab=(char *)muste_malloc(classes*lablen*sizeof(char)+1);
     if (lab==NULL) { no_memory(); return -1; }
@@ -580,13 +630,16 @@ static int save_matrices(void)
 {
     int i;
 
-    i=burt_table(); if (i<0) return -1;
+    i=burt_table(); if (i<0) { return -1;
+}
     i=spfind("Z");
     if (i>=0) {
         strcpy(z_name, spb[i]);
-        i=Z_matrix(); if (i<0) return -1;
+        i=Z_matrix(); if (i<0) { return -1;
+}
     }
-    i=classifiers(); if (i<0) return -1;
+    i=classifiers(); if (i<0) { return -1;
+}
     muste_free(lab); muste_free(BURT); muste_free(ZM);
     return 1;
 }
@@ -605,7 +658,8 @@ static int burt_table(void)
     muste_sprintf(nam, "Burt's_table_of_%s_%s", word[1], word[2]);
     i=matrix_save(b_name,BURT,classes,classes,
         lab,lab,lablen,lablen,10,nam,0,0);
-    if (i<0) return -1;
+    if (i<0) { return -1;
+}
     return 1;
 }
 
@@ -647,17 +701,21 @@ static int classifiers(void)
     }
     CLASS=(double *)muste_malloc(dim*ccol*sizeof(double));
     if (CLASS==NULL) { no_memory(); return -1; }
-    for (i=0; i<dim; i++) CLASS[i]=(double)crsiz[i];
+    for (i=0; i<dim; i++) { CLASS[i]=(double)crsiz[i];
+}
     strcpy(cnames, "Classes ");
     if (ccol>1) {
-        for (i=1*dim,j=0; i<2*dim; i++,j++) CLASS[i]=(double)cscal[j];
+        for (i=1*dim,j=0; i<2*dim; i++,j++) { CLASS[i]=(double)cscal[j];
+}
         strcat(cnames, "Scale   ");
-        for (i=2*dim,j=0; i<3*dim; i++,j++) CLASS[i]=(double)suppl[j];
+        for (i=2*dim,j=0; i<3*dim; i++,j++) { CLASS[i]=(double)suppl[j];
+}
         strcat(cnames, "Suppl   ");
     }
     muste_sprintf(nam, "Classifiers_of_%s_%s", word[1], word[2]);
     i=matrix_save(c_name,CLASS,dim,ccol,lab,cnames,lablen,8,0,nam,0,0);
-    if (i<0) return -1;
+    if (i<0) { return -1;
+}
     muste_free(CLASS);
     muste_free(nval);
     data_close(&dat);
@@ -680,7 +738,8 @@ static int Z_matrix(void)
     }
     muste_sprintf(nam, "Binary_form_of_%s_%s", word[1], word[2]);
     i=matrix_save(z_name,ZM,N,classes,Nlab,lab,8,lablen,0,nam,0,0);
-    if (i<0) return -1;
+    if (i<0) { return -1;
+}
     muste_free(Nlab);
     return 1;
 }

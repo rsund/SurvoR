@@ -116,41 +116,51 @@ void muste_statmsf(char *argv)
             return;
             }
         results_line=0;
-        i=spec_init(r1+r-1); if (i<0) return;
-        i=spfind("PRIND"); if (i>=0) prind=atoi(spb[i]);
+        i=spec_init(r1+r-1); if (i<0) { return;
+}
+        i=spfind("PRIND"); if (i>=0) { prind=atoi(spb[i]);
+}
         i=spfind("TRESHOLDS");
         if (i>=0) { pvalues(i); return; }
 
         if (g>2)
             {
             results_line=edline2(word[2],1,1);
-            if (results_line==0) return;
+            if (results_line==0) { return;
+}
             }
-        i=data_read_open(word[1],&d); if (i<0) return;
+        i=data_read_open(word[1],&d); if (i<0) { return;
+}
         i=spfind("LIMITS");
         if (i<0)
             {
             n_class=5; limit[0]=0;
-            for (i=1; i<=5; ++i) limit[i]=i;
+            for (i=1; i<=5; ++i) { limit[i]=i;
+}
             }
         else
             {
             strcpy(x,spb[i]);
             n_class=split(x,osa,MAXCLASS);
-            for (i=0; i<n_class; ++i) limit[i]=atof(osa[i]);
+            for (i=0; i<n_class; ++i) { limit[i]=atof(osa[i]);
+}
             --n_class;
             }
-        i=mask(&d); if (i<0) return;
+        i=mask(&d); if (i<0) { return;
+}
         weight_variable=activated(&d,'W');
-        i=m_test_scaletypes(); if (i<0) return;
-        i=conditions(&d); if (i<0) return;  /* permitted only once */
+        i=m_test_scaletypes(); if (i<0) { return;
+}
+        i=conditions(&d); if (i<0) { return;  /* permitted only once */
+}
         m=d.m_act;
         if (m==0)
             {
             sur_print("\nNo active (acceptable) variables!");
             WAIT; return;
             }
-        i=m_space_allocation(); if (i<0) return;
+        i=m_space_allocation(); if (i<0) { return;
+}
 
 //      i=optdim_d(); if (i && i<d.m) err(0);
 //      i=optdim_o(); if (i && (long)i<d.n) err(0);
@@ -172,7 +182,8 @@ static int m_test_scaletypes()
                 {
                 muste_sprintf(sbuf,"\nWeight variable %.8s must have ratio scale!",
                           d.varname[weight_variable]); sur_print(sbuf);
-                WAIT; if (scale_check==SCALE_INTERRUPT) return(-1);
+                WAIT; if (scale_check==SCALE_INTERRUPT) { return(-1);
+}
                 }
             }
         scale_error=0;
@@ -180,8 +191,9 @@ static int m_test_scaletypes()
             {
             if (!scale_ok(&d,d.v[i],SCORE_SCALE))
                 {
-                if (!scale_error)
+                if (!scale_error) {
                     sur_print("\nInvalid scale in variables: ");
+}
                 scale_error=1;
                 muste_sprintf(sbuf,"%.8s ",d.varname[d.v[i]]); sur_print(sbuf);
                 }
@@ -189,7 +201,8 @@ static int m_test_scaletypes()
         if (scale_error)
             {
             sur_print("\nIn MEAN score scale at least is expected!");
-            WAIT; if (scale_check==SCALE_INTERRUPT) return(-1);
+            WAIT; if (scale_check==SCALE_INTERRUPT) { return(-1);
+}
             }
         return(1);
         }
@@ -227,19 +240,22 @@ static int compute_sums()
             {
             f[i]=0L; w[i]=0.0; sum[i]=0.0; sum2[i]=0.0;
             }
-        for (ui=0; ui<m*n_class; ++ui) f2[ui]=0L;
+        for (ui=0; ui<m*n_class; ++ui) { f2[ui]=0L;
+}
 
         sur_print("\n");
         for (l=d.l1; l<=d.l2; ++l)
             {
             double weight;
 
-            if (unsuitable(&d,l)) continue;
-            if (weight_variable==-1) weight=1.0;
-            else
+            if (unsuitable(&d,l)) { continue;
+}
+            if (weight_variable==-1) { weight=1.0;
+            } else
                 {
                 data_load(&d,l,weight_variable,&weight);
-                if (weight==MISSING8) continue;
+                if (weight==MISSING8) { continue;
+}
                 }
             ++n;
       /*********************
@@ -251,14 +267,18 @@ static int compute_sums()
                 {
                 double x;
 
-                if (d.v[i]==weight_variable) continue;
+                if (d.v[i]==weight_variable) { continue;
+}
                 data_load(&d,l,d.v[i],&x);
-                if (x==MISSING8) continue;
-                if (x<=limit[0] || x>limit[n_class]) continue;
+                if (x==MISSING8) { continue;
+}
+                if (x<=limit[0] || x>limit[n_class]) { continue;
+}
                 ++f[i]; w[i]+=weight; sum[i]+=weight*x; sum2[i]+=weight*x*x;
                 for (k=0; k<n_class-1; ++k)
                     {
-                    if (x<=limit[k+1]) break;
+                    if (x<=limit[k+1]) { break;
+}
                     }
                 ++f2[k+i*n_class];
                 }
@@ -269,7 +289,8 @@ static int compute_sums()
 static int print_line(char *line)
         {
         output_line(line,eout,results_line);
-        if (results_line) ++results_line;
+        if (results_line) { ++results_line;
+}
         return(1);
         }
 
@@ -292,28 +313,31 @@ static int m_printout()
         strcpy(line,"                                           Frequencies");
         print_line(line);
         h=muste_sprintf(line," Variable     Mean     Std.dev. N(missing)");
-        for (k=0; k<n_class; ++k) h+=muste_sprintf(line+h,"%4d ",k+1);
+        for (k=0; k<n_class; ++k) { h+=muste_sprintf(line+h,"%4d ",k+1);
+}
         print_line(line);
         for (i=0; i<d.m_act; ++i)
             {
-            if (d.v[i]==weight_variable) continue;
-            if (w[i]==0.0)
+            if (d.v[i]==weight_variable) { continue;
+}
+            if (w[i]==0.0) {
                 muste_sprintf(line," %-8.8s         -          -  %6d",d.varname[d.v[i]],
                          (int)(n-f[i]));
-            else
+            } else
                 {
                 fnconv(sum[i]/w[i],accuracy+2,mean);
-                if (w[i]>1.0)
+                if (w[i]>1.0) {
                    fnconv(sqrt((sum2[i]-sum[i]*sum[i]/w[i])/(w[i]-1)),accuracy+2,stddev);
-                else
+                } else
                    { muste_fieldcopy(stddev,space,accuracy+2); stddev[accuracy+2]=EOS;
                      stddev[accuracy+1]='-';
                    }
 
                 h=muste_sprintf(line," %-8.8s %s  %s  %6d    ",d.varname[d.v[i]],
                              mean,stddev,(int)(n-f[i]));
-                for (k=0; k<n_class; ++k)
+                for (k=0; k<n_class; ++k) {
                     h+=muste_sprintf(line+h,"%4ld ",f2[k+i*n_class]);
+}
                 }
             print_line(line);
             }
@@ -333,30 +357,37 @@ static int pvalues(int ii)
         double a;
 
         strcpy(x,spb[ii]);
-        i=load_X(x); if (i<0) return(-1);
+        i=load_X(x); if (i<0) { return(-1);
+}
 /* Rprintf("\ndim=%d,%d",mX,nX); getch(); */
-        i=data_open(word[1],&d); if (i<0) return(-1);
+        i=data_open(word[1],&d); if (i<0) { return(-1);
+}
         v=(int *)muste_malloc(mX*sizeof(int));
         if (v==NULL) { ei_tilaa(); return(-1); }
         i=nrot();
         mT=mX; nT=2; rlabT=rlabX ;
         i=mat_alloc_lab(&T,mT,nT,NULL,&clabT);
         freq=T+mT;
-        for (i=0; i<mX; ++i) freq[i]=0.0;
+        for (i=0; i<mX; ++i) { freq[i]=0.0;
+}
 
-        i=conditions(&d); if (i<0) return(-1);
+        i=conditions(&d); if (i<0) { return(-1);
+}
 
         n=0L; sur_print("\n");
         for (l=d.l1; l<=d.l2; ++l)
             {
-            if (unsuitable(&d,l)) continue;
+            if (unsuitable(&d,l)) { continue;
+}
             muste_sprintf(sbuf,"%ld ",l); sur_print(sbuf);
             ++n;
             for (i=0; i<mX; ++i)
                 {
                 data_load(&d,l,v[i],&a);
-                if (a==MISSING8) continue;
-                if (a>X[i]) ++freq[i];
+                if (a==MISSING8) { continue;
+}
+                if (a>X[i]) { ++freq[i];
+}
                 }
             }
         if (n==0L)
@@ -384,10 +415,13 @@ static int nrot()
 
         for (i=0; i<mX; ++i)
             {
-            for (h=0; h<8; ++h) nimi[h]=rlabX[i*8+h];
-            h=7; while (h>0 && nimi[h]==' ') nimi[h--]=EOS;
+            for (h=0; h<8; ++h) { nimi[h]=rlabX[i*8+h];
+}
+            h=7; while (h>0 && nimi[h]==' ') { nimi[h--]=EOS;
+}
             h=varfind(&d,nimi);
-            if (h<0) return(-1);
+            if (h<0) { return(-1);
+}
             v[i]=h;
             }
         return(1);

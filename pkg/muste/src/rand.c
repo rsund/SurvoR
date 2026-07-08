@@ -29,8 +29,10 @@ int outseed()
         int i;
         char x[LLENGTH];
 
-        if (!rand_in_use) return(1);
-        i=spfind("OUTSEED"); if (i<0) return(1);
+        if (!rand_in_use) { return(1);
+}
+        i=spfind("OUTSEED"); if (i<0) { return(1);
+}
         strcpy(x,spb[i]); 
         if (!muste_is_path(x)) { strcpy(x,edisk); strcat(x,spb[i]); }
         seedfile=muste_fopen(x,"wb");
@@ -67,10 +69,12 @@ int inseed()
         char x[LLENGTH];
         char *s[2];
 
-        i=spfind("INSEED"); if (i<0) return(0);
+        i=spfind("INSEED"); if (i<0) { return(0);
+}
         strcpy(x,spb[i]); if (!muste_is_path(x)) { strcpy(x,edisk); strcat(x,spb[i]); }
         seedfile=muste_fopen(x,"rb");
-        if (seedfile==NULL) seedfile_err(x);
+        if (seedfile==NULL) { seedfile_err(x);
+}
 
 // 10.4.2001
         muste_fread(x,100,1,seedfile);
@@ -104,7 +108,8 @@ int sur_rand_seed(unsigned int n)
 */
         rand_in_use=1;
         i=inseed();
-        if (i==1) return(1);
+        if (i==1) { return(1);
+}
 
         n2=237*n+6254269;
         i1=n2&mask1;
@@ -143,7 +148,8 @@ int sur_urandl()
         uhi=useed/uq;
         ulo=useed-uq*uhi;
         utest=ua*ulo-ur*uhi;
-        if (utest>0L) useed=utest; else useed=utest+um;
+        if (utest>0L) { useed=utest; } else { useed=utest+um;
+}
         return(useed);
         }
 
@@ -272,8 +278,9 @@ unsigned int genrand_int32(void)
     if (mti >= N) { /* generate N words at one time */
         int kk;
 
-        if (mti == N+1)   /* if init_genrand() has not been called, */
+        if (mti == N+1) {   /* if init_genrand() has not been called, */
             init_genrand(5489UL); /* a default initial seed is used */
+}
 
         for (kk=0;kk<N-M;kk++) {
             y = (mt[kk]&UPPER_MASK)|(mt[kk+1]&LOWER_MASK);
@@ -365,7 +372,8 @@ double sur_rand0(double y,int type)
             return (sur_urand());
           case 3:
             if (!next)
-               { if(sur_srand_seed((unsigned int)x)<0) return(0.0); next=1; } // RS ADD return
+               { if(sur_srand_seed((unsigned int)x)<0) { return(0.0); 
+}next=1; } // RS ADD return
             return (sur_srand());
           case 4:
             if (!next)
@@ -395,7 +403,8 @@ static unsigned long int muste_next = 0;
 
 int muste_rand(void) // RAND_MAX assumed to be 32767
 {
-    if (muste_next==0) muste_srand(time(NULL));
+    if (muste_next==0) { muste_srand(time(NULL));
+}
     muste_next = muste_next * 1103515245 + 12345;
     return (unsigned int)(muste_next/65536) % 32768;
 }
@@ -444,10 +453,12 @@ int spec_rnd()
         if (i<0)
             {
             i=spfind("RND");
-            if (i<0) i=spfind("SEED");
+            if (i<0) { i=spfind("SEED");
+}
             }
         k=1;
-        if (i<0) { strcpy(x,"123456789"); k=-1; } else strcpy(x,spb[i]);
+        if (i<0) { strcpy(x,"123456789"); k=-1; } else { strcpy(x,spb[i]);
+}
         rnd_def(x);
         return(k);
         }
@@ -456,7 +467,8 @@ int spec_rnd_rndseed() // RS ADD 11.8.2012
         {
         int k;
 		k=spec_rnd();
-		if (k<0) seed=0;
+		if (k<0) { seed=0;
+}
         return(k);
         }
 

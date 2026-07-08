@@ -62,12 +62,15 @@ void muste_powers(char *argv)
         strcpy(aineisto,word[1]);
         i=data_open3(aineisto,&d,1,1,1,1);
         if (i<0) { s_end(argv); return; }
-        i=spec_init(r1+r-1); if (i<0) return;
+        i=spec_init(r1+r-1); if (i<0) { return;
+}
         i=conditions(&d); if (i<0) { s_end(argv); return; }
 
-        i=list_of_vars(); if (i<0) return;
+        i=list_of_vars(); if (i<0) { return;
+}
         i=spfind("DEGREE");
-        if (i>=0) degree=atoi(spb[i]);
+        if (i>=0) { degree=atoi(spb[i]);
+}
         if (degree>MAX_POW)
             {
             muste_sprintf(sbuf,"\nMax. degree is %d.",MAX_POW);
@@ -75,15 +78,18 @@ void muste_powers(char *argv)
             }
 
         i=spfind("TYPE");
-        if (i>=0) var_type=*spb[i];
+        if (i>=0) { var_type=*spb[i];
+}
 
-        i=power_combinations(); if (i<0) return;
+        i=power_combinations(); if (i<0) { return;
+}
 
         for (j=1L; j<=d.n; ++j)
             {
             for (i=0; i<nvar; ++i)
                 {
-                if (unsuitable(&d,j)) continue;
+                if (unsuitable(&d,j)) { continue;
+}
                 data_load(&d,j,var_ind[i],&a);
 // Rprintf("\nvar=%d a=%g|",vara); getch();
                 val[i][1]=a; b=a;
@@ -98,8 +104,10 @@ void muste_powers(char *argv)
             for (k=0; k<ncomb; ++k)
                 {
                 a=1.0;
-                for (i=0; i<nvar; ++i)
-                    if (pow_v[k][i]>0) a*=val[i][pow_v[k][i]];
+                for (i=0; i<nvar; ++i) {
+                    if (pow_v[k][i]>0) { a*=val[i][pow_v[k][i]];
+}
+}
 // Rprintf("\na=%g|",a); getch();
                 data_save(&d,j,pow_ind[k],a);
                 }
@@ -116,7 +124,8 @@ static int list_of_vars()
     char *p;
     char nimi1[LLENGTH],nimi2[LLENGTH];
 
-    i=spfind("POW_VARS"); if (i<0) return(-1);
+    i=spfind("POW_VARS"); if (i<0) { return(-1);
+}
     strcpy(sbuf,spb[i]);
     nvar=split(sbuf,s,MAX_VAR);
     for (i=0; i<nvar; ++i)
@@ -131,7 +140,8 @@ static int list_of_vars()
             {
             *p=EOS;
             strcpy(nimi1,x); strcpy(nimi2,p+1);
-            k=strlen(nimi2)-1; if (nimi2[k]==')') nimi2[k]=EOS;
+            k=strlen(nimi2)-1; if (nimi2[k]==')') { nimi2[k]=EOS;
+}
             }
         if (strlen(nimi1)>8) { name_too_long(nimi1); return(-1); }
         if (strlen(nimi2)>8) { name_too_long(nimi2); return(-1); }
@@ -139,7 +149,8 @@ static int list_of_vars()
         strcpy(var_name2[i],nimi2);
 
         k=varfind(&d,var_name[i]);
-        if (k<0) return(-1);
+        if (k<0) { return(-1);
+}
         var_ind[i]=k;
         }
 /******************************
@@ -171,10 +182,12 @@ static int power_combinations()
     m=nvar;
     for (n=2; n<=degree; ++n)
         {
-        for (i=0; i<m-1; ++i) elem1[i]=0; elem1[m-1]=n;
+        for (i=0; i<m-1; ++i) { elem1[i]=0; 
+}elem1[m-1]=n;
         while (1)
             {
-            for (i=0; i<m; ++i) pow_v[ncomb][m-1-i]=elem1[i];
+            for (i=0; i<m; ++i) { pow_v[ncomb][m-1-i]=elem1[i];
+}
             ++ncomb;
             if (ncomb>MAX_TERMS)
                 {
@@ -182,7 +195,8 @@ static int power_combinations()
                 sur_print(sbuf); WAIT; return(-1);
                 }
             i=next_m_distr(n,m,elem1);
-            if (i<0) break;
+            if (i<0) { break;
+}
             }
         }
 
@@ -196,8 +210,9 @@ static int power_combinations()
                 {
                 muste_sprintf(sbuf,"%s%d",var_name2[i],h);
                 strcat(nimi,sbuf);
-                if (h==1) muste_sprintf(sbuf,"%s",var_name2[i]);
-                else muste_sprintf(sbuf,"%s^%d",var_name2[i],h);
+                if (h==1) { muste_sprintf(sbuf,"%s",var_name2[i]);
+                } else { muste_sprintf(sbuf,"%s^%d",var_name2[i],h);
+}
                 strcat(nimi2,sbuf); strcat(nimi2,"*");
                 }
             }
@@ -212,8 +227,9 @@ static int power_combinations()
                 muste_sprintf(sbuf,"%d",pow_v[k][i]);
                 strcat(nimi,sbuf);
                 }
-            if (*nimi=='-' || strlen(nimi)>8)
+            if (*nimi=='-' || strlen(nimi)>8) {
                 muste_sprintf(nimi,"XXX%d",k+1);
+}
             }
 
 // Ylipitkät nimet A1B2C3D4 -> X1234 tai XXX<comb+1>
@@ -221,10 +237,12 @@ static int power_combinations()
         strcpy(pow_name[k],nimi);
 
         pow_ind[k]=varfind2(&d,pow_name[k],0);
-        if (pow_ind[k]<0)
+        if (pow_ind[k]<0) {
             pow_ind[k]=create_newvar(&d,pow_name[k],var_type,0);
+}
 // Rprintf("\nnro=%d|",pow_ind[k]); getch();
-        if (pow_ind[k]<0) return(-1);
+        if (pow_ind[k]<0) { return(-1);
+}
 
         update_varname(&d,pow_ind[k],nimi2);
 
@@ -245,11 +263,14 @@ static int next_m_distr(int n,int m,int *elem1)
         int i,k;
 
         i=m-1;
-        while (elem1[i]==0) --i;
-        if (i==0) return(-1);
+        while (elem1[i]==0) { --i;
+}
+        if (i==0) { return(-1);
+}
         ++elem1[i-1];
         elem1[m-1]=elem1[i]-1;
-        for (k=i; k<m-1; ++k) elem1[k]=0;
+        for (k=i; k<m-1; ++k) { elem1[k]=0;
+}
         return(1);
         }
 

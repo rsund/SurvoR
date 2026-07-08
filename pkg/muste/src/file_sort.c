@@ -78,8 +78,10 @@ static int vertailu(int k0,int k)
         float fa;
         int ia;
 
-        if (nf[k0]==0) return(1);
-        if (nf[k]==0) return(0);
+        if (nf[k0]==0) { return(1);
+}
+        if (nf[k]==0) { return(0);
+}
 
         for (t=0; t<nsk; ++t)
             {
@@ -90,40 +92,52 @@ static int vertailu(int k0,int k)
                 h=strncmp(key+k0*slen+sp[t],key+k*slen+sp[t],len); break;
               case '8':
                 da=*(double *)(key+k0*slen+sp[t])-*(double *)(key+k*slen+sp[t]);
-                if (neg[t]) da=-da;
+                if (neg[t]) { da=-da;
+}
                 h=-1;
-                if (da==0.0) h=0;
-                else if (da>0.0) h=1; break;
+                if (da==0.0) { h=0;
+                } else if (da>0.0) { h=1; 
+}break;
               case '4':
                 fa=*(float *)(key+k0*slen+sp[t])-*(float *)(key+k*slen+sp[t]);
-                if (neg[t]) fa=-fa;
+                if (neg[t]) { fa=-fa;
+}
                 h=-1;
-                if (fa==0.0) h=0;
-                else if (fa>0.0) h=1; break;
+                if (fa==0.0) { h=0;
+                } else if (fa>0.0) { h=1; 
+}break;
               case '2':
                 ia=*(short *)(key+k0*slen+sp[t])-*(short *)(key+k*slen+sp[t]);
-                if (neg[t]) ia=-ia;
+                if (neg[t]) { ia=-ia;
+}
                 h=-1;
-                if (ia==0) h=0;
-                else if (ia>0) h=1; break;
+                if (ia==0) { h=0;
+                } else if (ia>0) { h=1; 
+}break;
               case '1':
                 ia=*(unsigned char *)(key+k0*slen+sp[t])-*(unsigned char *)(key+k*slen+sp[t]);
-                if (neg[t]) ia=-ia;
+                if (neg[t]) { ia=-ia;
+}
                 h=-1;
-                if (ia==0) h=0;
-                else if (ia>0) h=1; break;
+                if (ia==0) { h=0;
+                } else if (ia>0) { h=1; 
+}break;
               case 'L':
                 la=*(long *)(key+k0*slen+sp[t])-*(long *)(key+k*slen+sp[t]);
-                if (neg[t]) la=-la;
+                if (neg[t]) { la=-la;
+}
                 h=-1;
-                if (la==0L) h=0;
-                else if (la>0L) h=1; break;
+                if (la==0L) { h=0;
+                } else if (la>0L) { h=1; 
+}break;
               default: muste_sprintf(sbuf,"\n %c puuttuu!!! %d",stype[t],t);
                        sur_print(sbuf); sur_getch();
 
                 }
-            if (h<0) return(0);
-            if (h>0) return(1);
+            if (h<0) { return(0);
+}
+            if (h>0) { return(1);
+}
             }           
     sur_print("\n???");  sur_getch(); // RS CHA Rprintf -> sur_print
     	return(0); 
@@ -185,7 +199,9 @@ static int lomita(int file1,int file2,int kierros,int nro)
                 {
                 muste_sprintf(sbuf,"\nCannot open temporary file %s",nimi); sur_print(sbuf);
                 WAIT;
-                if (i>0) for (k=0; k<=i; k++) muste_fclose(osaf[k]); // RS ADD
+                if (i>0) { for (k=0; k<=i; k++) { muste_fclose(osaf[k]); // RS ADD
+}
+}
                 return(-1);
                 }
             p=(char *)&l;
@@ -218,9 +234,11 @@ static int lomita(int file1,int file2,int kierros,int nro)
                 for (i=1; i<nfi; ++i)
                     {                  
                     k=vertailu(ix,i);
-                    if (k) ix=i;
+                    if (k) { ix=i;
+}
                     }      
-                if (nf[ix]==0) break;
+                if (nf[ix]==0) { break;
+}
                 p=key+ix*slen;
                 for (i=0; i<slen; ++i) { putc((int)*p,sortf); ++p; }
                 if (nf[ix]>0)
@@ -253,8 +271,10 @@ static int lomitus()
         if (i>=0)
             {
             filemax=atoi(spb[i]);
-            if (filemax<2) filemax=2;
-            if (filemax>FILEMAX) filemax=FILEMAX;
+            if (filemax<2) { filemax=2;
+}
+            if (filemax>FILEMAX) { filemax=FILEMAX;
+}
             }
         kierros=0;
         nfiles=n_osat;
@@ -274,13 +294,16 @@ static int lomitus()
             while (file1<nfiles)
                 {
                 file2=file1+filemax-1;
-                if (file2>=nfiles) file2=nfiles-1;
+                if (file2>=nfiles) { file2=nfiles-1;
+}
                 i=lomita(file1,file2,kierros,nfiles2);
-                if (i<0) return(-1);
+                if (i<0) { return(-1);
+}
                 ++nfiles2;
                 file1=file2+1;
                 }
-            if (nfiles2==1) break;
+            if (nfiles2==1) { break;
+}
             nfiles=nfiles2;
             }
         return(kierros);  /* jotta tiedetÑÑn nimi */
@@ -349,7 +372,8 @@ static int load_codes(char *codefile,char *code)
             muste_sprintf(sbuf,"\nCode conversion file %s not found!",x); sur_print(sbuf);
             WAIT; return(-1);
             }
-        for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
+        for (i=0; i<256; ++i) { code[i]=(unsigned char)getc(codes);
+}
         muste_fclose2(codes);
         return(1);
         }
@@ -359,7 +383,8 @@ static void conv(unsigned char *sana)
         {
         int i;
 
-        for (i=0; i<strlen((char *)sana); ++i) sana[i]=code[(int)sana[i]]; // RS ADD (char *)
+        for (i=0; i<strlen((char *)sana); ++i) { sana[i]=code[(int)sana[i]]; // RS ADD (char *)
+}
         }
 
 static void ei_tilaa(char *s)
@@ -402,7 +427,8 @@ static int talletus(char *nimi,int kierros)
         muste_append_path(pathname,".SVO"); // RS CHA
 // RS REM        if (strchr(pathname+strlen(pathname)-4,'.')==NULL) strcat(pathname,".SVO");
 
-        i=mask(&d1); if (i<0) return(-1); // RS 6.9.2013
+        i=mask(&d1); if (i<0) { return(-1); // RS 6.9.2013
+}
         fi_rewind(&(d1.d2));
         alku=(long)(d1.d2.data);
  // Rprintf("\nalku: %d, paikka: %d",(int)alku,(int)muste_ftell(d1.d2.survo_data));        
@@ -417,7 +443,8 @@ static int talletus(char *nimi,int kierros)
                 j=hae_apu("FILE_SORT_MASK",sbuf);
                 if (j) {k=0; fma=atoi(sbuf); }
                 }
-            else fma=atoi(spb[k]);
+            else { fma=atoi(spb[k]);
+}
             
             
             if (k<0) // RS 4.11.2013
@@ -426,7 +453,8 @@ static int talletus(char *nimi,int kierros)
                 sur_print("\n(Allow this using FILE_SORT_MASK=1 specification or system parameter.)");
                 sur_print("\nUse ALL variables (Y/N)?");
                 i=sur_getch();
-                if (i=='Y' || i=='y') fma=0;   
+                if (i=='Y' || i=='y') { fma=0;   
+}
                 }
             
             if (fma>0) // RS 21.1.2014
@@ -437,7 +465,8 @@ static int talletus(char *nimi,int kierros)
 				edread(x,r1+r-1);
 			
 				edwrite(space,r1+r-1,1);
-				if (fma) muste_snprintf(sbuf,LLENGTH," ## FILE COPY %s,%s / IND=ORDER,0 %s",word[2],pathname,x+22);
+				if (fma) { muste_snprintf(sbuf,LLENGTH," ## FILE COPY %s,%s / IND=ORDER,0 %s",word[2],pathname,x+22);
+}
 //				else snprintf(sbuf,LLENGTH," ## FILE COPY %s,%s / VARS=ALL IND=ORDER,0 / %s",word[2],pathname,x+22); // RS 4.11.2013
 				edwrite(sbuf,r1+r-1,1);
 				strcpy(sbuf,pathname);	
@@ -453,7 +482,8 @@ static int talletus(char *nimi,int kierros)
 				tutpos=fstutpos; // RS 13.10.2013		
 					
 				i=data_open3(word[2],&d1,1,1,1,0); if (i<0) { return(-1); } 
-				i=mask(&d1); if (i<0) return(-1);                  		
+				i=mask(&d1); if (i<0) { return(-1);                  		
+}
 				if (strcmp(word[g-3],"TO")==0) // RS 6.9.2013
 					{
 					if (strcmp(word[g-2],"NEW")==0)
@@ -502,8 +532,8 @@ static int talletus(char *nimi,int kierros)
 
         if (n_osat==0) { muste_fclose2(uusi); return(1); } /* 19.4.1997 */
 
-        if (n_osat==1) nhav=nsort;
-        else
+        if (n_osat==1) { nhav=nsort;
+        } else
             {
             muste_sprintf(nimi2,"%sSORT%d0.TMP",etmpd,kierros);
             sortf=muste_fopen2(nimi2,"rb");
@@ -546,7 +576,8 @@ static int talletus(char *nimi,int kierros)
             else
                {
                i=create_newvar(&d2,s_keyvar,'S',slen-4);
-               if (i<0) return(-1);  // RS CHA exit(0); -> return(-1);
+               if (i<0) { return(-1);  // RS CHA exit(0); -> return(-1);
+}
                s_keyvar_nr=i;
                }
 
@@ -556,8 +587,9 @@ static int talletus(char *nimi,int kierros)
             s_len=d2.d2.varlen[s_keyvar_nr];
 
             *sbuf=EOS; k=0;
-            for (i=0; i<nsk-1; ++i)
+            for (i=0; i<nsk-1; ++i) {
                 k+=muste_sprintf(sbuf+k,"%s&",word[4+i]);
+}
             sbuf[k-1]=EOS; // viim. & pois
             update_varname(&d2,s_keyvar_nr,sbuf);
 
@@ -571,7 +603,8 @@ static int talletus(char *nimi,int kierros)
             sur_print("\nThe data will be sorted in any case.");
             WAIT;
             }
-        if (samplesize) { if (samplesize<nhav) nhav=samplesize; else samplesize=nhav; }
+        if (samplesize) { if (samplesize<nhav) { nhav=samplesize; } else { samplesize=nhav; 
+}}
 
         if (varstalletus)
             {
@@ -609,16 +642,18 @@ static int talletus(char *nimi,int kierros)
                 {
                 nro=*(long *)(key+ikey[(unsigned int)j]+sp[nsk-1]);
 //Rprintf("\nkey=%.4s|",key+ikey[(unsigned int)j]); // getch();
-                if (*s_keyvar)
+                if (*s_keyvar) {
                     muste_fieldcopy(s_keystring,key+ikey[(unsigned int)j],slen-4);
+}
                 }
             else
                 {
                 p=x;
                 lue_hav(sortf,p);
                 nro=*(long *)(x+sp[nsk-1]);
-                if (*s_keyvar)
+                if (*s_keyvar) {
                     muste_fieldcopy(s_keystring,x,slen-4);
+}
                 }
 /***********************************
             if (nhav<1000L)
@@ -688,9 +723,11 @@ static int talletus(char *nimi,int kierros)
                 if (*s_keyvar)
                     {
                     p=d1.d2.obs+s_pos;
-                    for (i=0; i<s_len; ++i) *p++=' ';
+                    for (i=0; i<s_len; ++i) { *p++=' ';
+}
                     p=d1.d2.obs+s_pos; q=s_keystring;
-                    for (i=0; i<slen-4; ++i) *p++=*q++;
+                    for (i=0; i<slen-4; ++i) { *p++=*q++;
+}
                     }
                                
                 for (i=0; i<d1.d2.len; ++i)
@@ -730,7 +767,8 @@ static void shell_sort(unsigned int j1,unsigned int j2,int t)
         int iso;
 
         n=j2-j1+1;
-        iso=0; if (n>100) iso=1;
+        iso=0; if (n>100) { iso=1;
+}
 
         if (iso && prind)
             {
@@ -759,7 +797,8 @@ static void shell_sort(unsigned int j1,unsigned int j2,int t)
                             ind='0';
                             }
                         }
-                    if (ind=='1') break;
+                    if (ind=='1') { break;
+}
                     }
                 }
             break;
@@ -783,7 +822,8 @@ static void shell_sort(unsigned int j1,unsigned int j2,int t)
                             ind='0';
                             }
                         }
-                    if (ind=='1') break;
+                    if (ind=='1') { break;
+}
                     }
                 }
             break;
@@ -807,7 +847,8 @@ static void shell_sort(unsigned int j1,unsigned int j2,int t)
                             ind='0';
                             }
                         }
-                    if (ind=='1') break;
+                    if (ind=='1') { break;
+}
                     }
                 }
             break;
@@ -831,7 +872,8 @@ static void shell_sort(unsigned int j1,unsigned int j2,int t)
                             ind='0';
                             }
                         }
-                    if (ind=='1') break;
+                    if (ind=='1') { break;
+}
                     }
                 }
             break;
@@ -855,7 +897,8 @@ static void shell_sort(unsigned int j1,unsigned int j2,int t)
                             ind='0';
                             }
                         }
-                    if (ind=='1') break;
+                    if (ind=='1') { break;
+}
                     }
                 }
             break;
@@ -879,7 +922,8 @@ static void shell_sort(unsigned int j1,unsigned int j2,int t)
                             ind='0';
                             }
                         }
-                    if (ind=='1') break;
+                    if (ind=='1') { break;
+}
                     }
                 }
             break;
@@ -901,11 +945,13 @@ static void sort1(unsigned int j1,unsigned int j2,int t)
         while (k1<j2)
             {
             k2=k1+1;
-            while (k2<=j2 && memcmp(key+ikey[k1]+sp[t],key+ikey[k2]+sp[t],len)==0)
+            while (k2<=j2 && memcmp(key+ikey[k1]+sp[t],key+ikey[k2]+sp[t],len)==0) {
                 ++k2;
+}
             --k2;
 
-            if (k2>k1) sort1(k1,k2,t+1);
+            if (k2>k1) { sort1(k1,k2,t+1);
+}
             k1=k2+1;
             }
 
@@ -916,7 +962,8 @@ static void lajittelu()
         {
 // RS REM        unsigned int k;
 
-        if (prind) sur_print("\nInternal sorting ...");
+        if (prind) { sur_print("\nInternal sorting ...");
+}
         sort1(0,nsort-1,0);
         }
 
@@ -977,7 +1024,8 @@ static int lue_avaimet(long lj1,long lj2)
         jj=0; nsort=0;
         for (j=lj1; j<=lj2; ++j)
             {
-            if (unsuitable(&d1,j)) continue;
+            if (unsuitable(&d1,j)) { continue;
+}
 //          muste_sprintf(sbuf," %ld",j); sur_print(sbuf);
             for (i=0; i<nsk-1; ++i)
                 {
@@ -986,12 +1034,15 @@ static int lue_avaimet(long lj1,long lj2)
                 switch (stype[i])
                     {
                   case 'S': conv(x); break;
-                  case '4': fp=(float *)x; if (*fp==0.0) *fp=0.0; break;
-                  case '8': dp=(double *)x; if (*dp==0.0) *dp=0.0; break;
+                  case '4': fp=(float *)x; if (*fp==0.0) { *fp=0.0; 
+}break;
+                  case '8': dp=(double *)x; if (*dp==0.0) { *dp=0.0; 
+}break;
                   default: break;
                     }
-                for (h=0; h<su[i]-sl[i]+1; ++h)
+                for (h=0; h<su[i]-sl[i]+1; ++h) {
                     key[jj+sp[i]+h]=x[sl[i]+h];
+}
                 }
 // Rprintf("\n%.*s",slen-2,key+jj); 
 
@@ -1026,7 +1077,8 @@ static int avaimet()
             q=strchr(p,'[');
             if (q==NULL)
                 {
-                sk[nsk]=varfind(&d1,p); if (sk[nsk]<0) return(-1);
+                sk[nsk]=varfind(&d1,p); if (sk[nsk]<0) { return(-1);
+}
                 sl[nsk]=0; su[nsk]=d1.varlen[sk[nsk]]-1;
                 }
             else
@@ -1047,14 +1099,16 @@ static int avaimet()
                     WAIT; return(-1);
                     }
                 *q1=EOS; su[nsk]=atoi(q+1)-1;
-                sk[nsk]=varfind(&d1,p); if (sk[nsk]<0) return(-1);
+                sk[nsk]=varfind(&d1,p); if (sk[nsk]<0) { return(-1);
+}
                 }
 /*
    Rprintf("\ni=%d sk=%d sl=%d su=%d neg=%d",nsk+1,sk[nsk],sl[nsk],su[nsk],neg[nsk]); getch();
 */
             sp[nsk]=slen; slen+=su[nsk]-sl[nsk]+1;
             stype[nsk]=d1.vartype[sk[nsk]][0];
-            if (stype[nsk]!='S') sort_key_is_string=0;
+            if (stype[nsk]!='S') { sort_key_is_string=0;
+}
             ++i; ++nsk;
             }  /* while */
         sk[nsk]=-1; /* alkup.jÑrjestysnro. */
@@ -1096,10 +1150,12 @@ d1.d2.survo_data=NULL;
 d2.d2.survo_data=NULL;
 fstutpos=tutpos; // RS 13.10.2013
 
-        if (argc==1) return;
+        if (argc==1) { return;
+}
         s_init(argv[1]);
 
-        i=spec_init(r1+r-1); if (i<0) return;
+        i=spec_init(r1+r-1); if (i<0) { return;
+}
 
         if (g<7)
             {
@@ -1124,28 +1180,36 @@ fstutpos=tutpos; // RS 13.10.2013
             sur_print(sbuf); WAIT; return;
             }
 
-        i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
-        if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);
+        i=hae_apu("prind",sbuf); if (i) { prind=atoi(sbuf);
+}
+        if ((i=spfind("PRIND"))>=0) { prind=atoi(spb[i]);
+}
         i=conditions(&d1); if (i<0) { s_end(argv[1]); return; }
 
         strcpy(codefile,"SORTCODE.BIN");
         i=spfind("FILTER");
-        if (i>=0) strcpy(codefile,spb[i]);
+        if (i>=0) { strcpy(codefile,spb[i]);
+}
         i=spfind("NSORT");
-        if (i>=0) samplesize=atol(spb[i]);
+        if (i>=0) { samplesize=atol(spb[i]);
+}
         workspace=MAXBLOCK; i=spfind("WORKSPACE");
         if (i>=0)
             {
             workspace=atoi(spb[i]);
-            if (workspace<1000) workspace=MAXBLOCK;
+            if (workspace<1000) { workspace=MAXBLOCK;
+}
             }
 
         save=0;
         i=spfind("SAVE");  /* SAVE=1 creates sorted file also for N=0 */
-        if (i>=0) save=atoi(spb[i]);
+        if (i>=0) { save=atoi(spb[i]);
+}
  
-        i=load_codes(codefile,code); if (i<0) return;    
-        i=avaimet(); if (i<0) return;
+        i=load_codes(codefile,code); if (i<0) { return;    
+}
+        i=avaimet(); if (i<0) { return;
+}
         
         n=d1.l2-d1.l1+1;
         if (muste_strcmpi(word[2],word[4+nsk])==0)
@@ -1154,9 +1218,11 @@ fstutpos=tutpos; // RS 13.10.2013
             sur_print("\nby the sorted file!");
             WAIT; return;
             }
-        i=varaa_tilat(); if (i<0) return;
+        i=varaa_tilat(); if (i<0) { return;
+}
 
-        if (!prind) sur_print("\nInternal sorting...");
+        if (!prind) { sur_print("\nInternal sorting...");
+}
         lj1=d1.l1;   
 
 //Rprintf("\nkn_osat: %d",n_osat);
@@ -1164,16 +1230,19 @@ fstutpos=tutpos; // RS 13.10.2013
 
         for (k=0; k<n_osat; ++k)
             {
-            lj2=(int)(lj1+koko-1); if (lj2>d1.l2) lj2=d1.l2;
+            lj2=(int)(lj1+koko-1); if (lj2>d1.l2) { lj2=d1.l2;
+}
 // RS REM            i=
             lue_avaimet(lj1,lj2);
 // RS REM            if (i<0) return;
 // RS REM                {
-            if (nsort>1) lajittelu();
+            if (nsort>1) { lajittelu();
+}
             if (n_osat>1)
                 {
                 i=osatalletus(nsort,k);
-                if (i<0) return;
+                if (i<0) { return;
+}
                 }
 // RS REM            	}
             lj1+=koko;
@@ -1183,12 +1252,15 @@ fstutpos=tutpos; // RS 13.10.2013
         if (n_osat>1)
             {
             i=lomitus();
-            if (i<0) return;
+            if (i<0) { return;
+}
             } 
 
-        i=talletus(word[4+nsk],i); if (i<0) return;               
+        i=talletus(word[4+nsk],i); if (i<0) { return;               
+}
         data_close(&d1);
-        i=data_open2(word[4+nsk],&d1,0,1,1); if (i<0) return;
+        i=data_open2(word[4+nsk],&d1,0,1,1); if (i<0) { return;
+}
     /*  i=fi_open3(word[4+nsk],&(d1.d2),0,1,1,1); if (i<0) return; */
         fi_rewind(&d1.d2);
         fi_puts(&d1.d2,(char *)&nhav,4,22L); // RS 28.1.2013 (char *)

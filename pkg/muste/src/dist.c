@@ -150,28 +150,40 @@ void muste_dist(char *argv)
 
         l_virhe=0;
 
-        i=data_read_open(word[1],&d); if (i<0) return;
+        i=data_read_open(word[1],&d); if (i<0) { return;
+}
 //      i=sp_init(r1+r-1,4); if (i<0) return;
-        i=spec_init(r1+r-1); if (i<0) return; // 16.8.2011/SM
+        i=spec_init(r1+r-1); if (i<0) { return; // 16.8.2011/SM
+}
 
 //      if (spec_check) i=spec_word_dist(spec_check); // 11.7.2004
 
-        i=read_spec(); if (i<0) return;
+        i=read_spec(); if (i<0) { return;
+}
 
-        i=mask(&d); if (i<0) return;
+        i=mask(&d); if (i<0) { return;
+}
         if (muste_strcmpi(word[2],"CENTERS")==0)
             {
             n_center=1; /* tilap?isesti */
             sum_of_distances_from_centers(); s_end(argv); return;
             }
-        i=conditions(&d); if (i<0) return;  /* permitted only once */
-        i=space_allocation1(); if (i<0) return;
-        i=load_cases(); if (i<0) return;
-        i=read_weights(); if (i<0) return;
-        i=space_allocation2(); if (i<0) return;
-        i=moments(); if (i<0) return;
-        i=scale(); if (i<0) return;
-        i=compute(); if (i<0) return;
+        i=conditions(&d); if (i<0) { return;  /* permitted only once */
+}
+        i=space_allocation1(); if (i<0) { return;
+}
+        i=load_cases(); if (i<0) { return;
+}
+        i=read_weights(); if (i<0) { return;
+}
+        i=space_allocation2(); if (i<0) { return;
+}
+        i=moments(); if (i<0) { return;
+}
+        i=scale(); if (i<0) { return;
+}
+        i=compute(); if (i<0) { return;
+}
         mat_talletus();
 
         }
@@ -192,7 +204,8 @@ static int read_spec()
         char x[LLENGTH];
         char *p;
 
-        i=spfind("PRIND"); if (i>=0) prind=atoi(spb[i]);
+        i=spfind("PRIND"); if (i>=0) { prind=atoi(spb[i]);
+}
         measure=EUCLID;
         cov_ind=0;
         scaling=0;
@@ -215,8 +228,9 @@ static int read_spec()
                     muste_sprintf(sbuf,"\nThe index (k) missing in %s(k)",measure_name);
                     sur_print(sbuf); WAIT; return(-1);
                     }
-                else
+                else {
                     power2=atof(p+1);
+}
                 if (power2==1.0)
                     {
                     measure=CITY;
@@ -242,10 +256,12 @@ static int read_spec()
         if (i>=0)
             {
             strcpy(x,spb[i]); muste_strupr(x);
-            if (strncmp(x,"Y",1)==0) scaling=1;
-            else if (strncmp(x,"N",1)==0) scaling=0;
-            else scaling=atoi(x);
-            if (measure==MAHAL) scaling=1;
+            if (strncmp(x,"Y",1)==0) { scaling=1;
+            } else if (strncmp(x,"N",1)==0) { scaling=0;
+            } else { scaling=atoi(x);
+}
+            if (measure==MAHAL) { scaling=1;
+}
             }
         return(1);
         }
@@ -280,7 +296,8 @@ static int space_allocation2()
             if (cov==NULL) { not_enough_memory(); return(-1); }
             }
 
-        if (n_center) return(1);
+        if (n_center) { return(1);
+}
 
         distm=(double *)muste_malloc(n*n*sizeof(double));
         if (distm==NULL) { not_enough_memory(); return(-1); }
@@ -298,8 +315,10 @@ static int read_weights()
             {
             strcpy(wname,spb[i]);
             i=matrix_load(wname,&weight,&wm,&wn,NULL,NULL,&wlr,&wlc,&wtype,wexpr);
-            if (i<0) return(-1);
-            if ((wm==1 && wn==m) || (wm==m && wn==1)) return(1);
+            if (i<0) { return(-1);
+}
+            if ((wm==1 && wn==m) || (wm==m && wn==1)) { return(1);
+}
             muste_sprintf(sbuf,"\nThe weights (%s) should be given as a vector of %d elements!",
                                    wname,m);
             sur_print(sbuf); WAIT; return(-1);
@@ -308,7 +327,8 @@ static int read_weights()
             {
             weight=(double *)muste_malloc(m*sizeof(double));
             if (weight==NULL) { not_enough_memory(); return(-1); }
-            for (i=0; i<m; ++i) weight[i]=1.0;
+            for (i=0; i<m; ++i) { weight[i]=1.0;
+}
             }
         return(1);
         }
@@ -321,18 +341,22 @@ static int load_cases()
         int miss;
 
         label_var=activated(&d,'L');
-        if (label_var<0) label_var=0;
-        if (d.vartype[label_var][0]!='S') label_var=-1;
+        if (label_var<0) { label_var=0;
+}
+        if (d.vartype[label_var][0]!='S') { label_var=-1;
+}
 
         k=0;
         if (label_var>=0)
             {
             for (i=0; i<d.m_act; ++i)
                 {
-                if (d.v[i]==label_var) k=1;
+                if (d.v[i]==label_var) { k=1;
+}
                 d.v[i]=d.v[i+k];
                 }
-            if (k) --d.m_act;     /* if (k) 8.5.1995 */
+            if (k) { --d.m_act;     /* if (k) 8.5.1995 */
+}
             }
 
         if (n_center)
@@ -362,9 +386,11 @@ for (i=0; i<m; ++i) Rprintf("%d ",d.v[i]); getch();
             bindir=(int *)muste_malloc(m*sizeof(int));
             if (bindir==NULL) { not_enough_memory(); return(-1); }
             i=etsi_coeff();
-            if (i<0) return(-1);
+            if (i<0) { return(-1);
+}
             i=binlimits();
-            if (i<0) return(-1);
+            if (i<0) { return(-1);
+}
             }
 
 
@@ -384,14 +410,16 @@ for (i=0; i<m; ++i) Rprintf("%d ",d.v[i]); getch();
         n=0; sur_print("\n");
         for (j=d.l1; j<=d.l2; ++j)
             {
-            if (!n_center && unsuitable(&d,j)) continue;
+            if (!n_center && unsuitable(&d,j)) { continue;
+}
             miss=0;
             for (i=0; i<m; ++i)
                 {
                 data_load(&d,j,d.v[i],&xx[i]);
                 if (xx[i]==MISSING8) { miss=1; break; }
                 }
-            if (miss) continue;
+            if (miss) { continue;
+}
             ++n;
             if (prind)
                 {
@@ -401,8 +429,10 @@ for (i=0; i<m; ++i) Rprintf("%d ",d.v[i]); getch();
                 {
                 for (i=0; i<m; ++i)
                     {
-                    if (xx[i]<=binlimit[i]) xx[i]=0.0; else xx[i]=1.0;
-                    if (bindir[i]) xx[i]=1.0-xx[i];
+                    if (xx[i]<=binlimit[i]) { xx[i]=0.0; } else { xx[i]=1.0;
+}
+                    if (bindir[i]) { xx[i]=1.0-xx[i];
+}
                     }
                 }
             if (label_var>=0)
@@ -413,9 +443,11 @@ for (i=0; i<m; ++i) Rprintf("%d ",d.v[i]); getch();
             else
                 {
                 muste_sprintf(sbuf,"%d",j); /* ennen n */
-                for (i=strlen(sbuf); i<8; ++i) sbuf[i]=' ';
+                for (i=strlen(sbuf); i<8; ++i) { sbuf[i]=' ';
+}
                 }
-            for (i=0; i<8; ++i) putc((int)sbuf[i],data);
+            for (i=0; i<8; ++i) { putc((int)sbuf[i],data);
+}
 
 
             fwrite(xx,sizeof(double),m,data);
@@ -437,7 +469,8 @@ for (i=0; i<m; ++i) Rprintf("%d ",d.v[i]); getch();
             sur_print(sbuf); WAIT; return(-1);
             }
 
-        i=open_data("rb"); if (i<0) return(-1);
+        i=open_data("rb"); if (i<0) { return(-1);
+}
         previous_j=-1;
         return(1);
         }
@@ -449,7 +482,8 @@ static int poista(int var)
         k=0;
         for (i=0; i<d.m_act; ++i)
             {
-            if (d.v[i]==var) ++k;
+            if (d.v[i]==var) { ++k;
+}
             d.v[i]=d.v[i+k];
             }
         d.m_act-=k;
@@ -460,10 +494,11 @@ static int etsi_coeff()
         int i;
 
         i=spfind("COEFF");
-        if (i<0)
+        if (i<0) {
             strcpy(coeff,"1-(a+d)/(a+b+c+d)");
-        else
+        } else {
             strcpy(coeff,spb[i]);
+}
         return(1);
         }
 
@@ -482,19 +517,22 @@ static int binlimits()
                 strcpy(x,spb[k]);
                 k=split(x,osa,2);
                 bin_c=atof(osa[0]); bin_dir=0;
-                if (k==2) bin_dir=1;
+                if (k==2) { bin_dir=1;
+}
                 }
         for (i=0; i<m; ++i)
             {
             *nimi=EOS; strncat(nimi,d.varname[d.v[i]],8);
-            k=strlen(nimi)-1; while (k>=0 && nimi[k]==' ') nimi[k--]=EOS;
+            k=strlen(nimi)-1; while (k>=0 && nimi[k]==' ') { nimi[k--]=EOS;
+}
             k=spfind(nimi);
             if (k>=0)
                 {
                 strcpy(x,spb[k]);
                 k=split(x,osa,2);
                 binlimit[i]=atof(osa[0]); bindir[i]=0;
-                if (k==2) bindir[i]=1;
+                if (k==2) { bindir[i]=1;
+}
                 }
             else
                 {
@@ -525,7 +563,9 @@ static int moments()
         for (i=0; i<m; ++i)
             {
             mean[i]=stddev[i]=0.0;
-            if (cov_ind) for (k=0; k<m; ++k) cov[i+m*k]=0.0;
+            if (cov_ind) { for (k=0; k<m; ++k) { cov[i+m*k]=0.0;
+}
+}
             }
         for (j=0; j<n; ++j)
             {
@@ -538,9 +578,11 @@ for (i=0; i<m; ++i) Rprintf(" %g",xx[i]); getch();
                 {
                 a=xx[i];
                 mean[i]+=a; stddev[i]+=a*a;
-                if (!cov_ind) continue;
-                for (k=0; k<=i; ++k)
+                if (!cov_ind) { continue;
+}
+                for (k=0; k<=i; ++k) {
                     cov[i+m*k]+=a*xx[k];
+}
                 }
             }
         const_ind=0;
@@ -550,7 +592,8 @@ for (i=0; i<m; ++i) Rprintf(" %g",xx[i]); getch();
             stddev[i]=sqrt((stddev[i]-a*a/(double)(n))/(double)(n-1));
             if (stddev[i]<1e-20) { const_ind=1; const_var=i; }
             mean[i]/=(double)n;
-            if (!cov_ind) continue;
+            if (!cov_ind) { continue;
+}
             for (k=0; k<=i; ++k)
                 {
                 cov[i+m*k]=(cov[i+m*k]-a*mean[k])/(double)(n-1);
@@ -589,15 +632,18 @@ for (i=0; i<m; ++i) Rprintf("%g ",mean[i]);
 printf("\n");
 for (i=0; i<m; ++i) Rprintf("%g ",stddev[i]); getch();
 */
-        if (!scaling) return(1);
+        if (!scaling) { return(1);
+}
         muste_fclose(data);
-        i=open_data("r+b"); if (i<0) return(-1);
+        i=open_data("r+b"); if (i<0) { return(-1);
+}
         for (j=0; j<n; ++j)
             {
             previous_j=-2;
             tmp_read(j,label,xx);
-            for (i=0; i<m; ++i)
+            for (i=0; i<m; ++i) {
                 xx[i]=(xx[i]-mean[i])/stddev[i];
+}
             tmp_save(j,label,xx);
             }
         return(1);
@@ -613,7 +659,9 @@ static int compute()
         if (measure==MAHAL)
             {
             muste_fixme("\nFIXME: If problems with MAHAL check compute() in dist.c!"); // RS FIXME
-            for (i=0; i<m; ++i) for (k=0; k<m; ++k) distm[i+m*k]=cov[i+m*k];
+            for (i=0; i<m; ++i) { for (k=0; k<m; ++k) { distm[i+m*k]=cov[i+m*k];
+}
+}
             i=mat_inv(cov,distm,m,&a);
             if (i!=1)
                 {
@@ -624,7 +672,9 @@ static int compute()
                 }
              }
 
-        for (i=0; i<n; ++i) for (k=0; k<n; ++k) distm[i+n*k]=0.0;
+        for (i=0; i<n; ++i) { for (k=0; k<n; ++k) { distm[i+n*k]=0.0;
+}
+}
 
 /* mprint(cov,m,m); */
 
@@ -642,11 +692,13 @@ static int compute()
 
             for (h=0; h<=j; ++h)
                 {
-                if (h==j && measure!=BINARY) continue;
+                if (h==j && measure!=BINARY) { continue;
+}
                          /* 1.4.1995     */
                 tmp_read(h,label,xx2);
                 a=meas(xx,xx2);
-                if (l_virhe==1) return(-1);
+                if (l_virhe==1) { return(-1);
+}
                 distm[j+n*h]=distm[h+n*j]=a;
                 }
             }
@@ -685,7 +737,8 @@ static int tmp_read(int j,char *label,double *xx)
 
 /*      if (previous_j!=j-1)   */
             muste_fseek(data,(int)j*tmpsize,SEEK_SET);
-        for (i=0; i<8; ++i) label[i]=(char)getc(data); label[8]=EOS;
+        for (i=0; i<8; ++i) { label[i]=(char)getc(data); 
+}label[8]=EOS;
         muste_fread(xx,sizeof(double),m,data);
         previous_j=j;
 /* Rprintf("\n%2d %8.8s",j,label);
@@ -698,7 +751,8 @@ static int tmp_save(int j,char *label,double *xx)
         int i;
 
         muste_fseek(data,(int)j*tmpsize,SEEK_SET);
-        for (i=0; i<8; ++i) putc((int)label[i],data);
+        for (i=0; i<8; ++i) { putc((int)label[i],data);
+}
         fwrite(xx,sizeof(double),m,data);
         previous_j=-2;
         return(1);
@@ -735,9 +789,11 @@ static int mahal(double *pd,double *x,double *y)
         for (i=0; i<m; ++i)
             {
             a=x[i]-y[i];
-            for (k=0; k<=i; ++k)
-                if (k==i) *pd+=a*a*cov[(m+1)*i];
-                else *pd+=2*a*(x[k]-y[k])*cov[i+m*k];
+            for (k=0; k<=i; ++k) {
+                if (k==i) { *pd+=a*a*cov[(m+1)*i];
+                } else { *pd+=2*a*(x[k]-y[k])*cov[i+m*k];
+}
+}
             }
         *pd=sqrt(*pd);
 /* Rprintf("\nd=%g",*pd); getch(); */
@@ -844,8 +900,9 @@ static int correl(double *pd,double *x,double *y)
             ax=x[i]-mx; ay=y[i]-my;
             *pd+=weight[i]*ax*ay; sx+=weight[i]*ax*ax; sy+=weight[i]*ay*ay;
             }
-        if (fabs(sx)<1e-20 || fabs(sy)<1e-20) *pd=1.0;
-        else *pd=1-(*pd)/sqrt(sx*sy);
+        if (fabs(sx)<1e-20 || fabs(sy)<1e-20) { *pd=1.0;
+        } else { *pd=1-(*pd)/sqrt(sx*sy);
+}
         return(1);
         }
 
@@ -888,13 +945,15 @@ static int mat_talletus()
         char label[9];
     //  char name[LNAME];
 
-        for (i=0; i<8*n; ++i) lab[i]=' ';
+        for (i=0; i<8*n; ++i) { lab[i]=' ';
+}
         for (i=0; i<n; ++i)
             {
             tmp_read(i,label,xx);
             for (h=0; h<8; ++h)
                 {
-                if (label[h]==EOS) break; /* ei tarpeen */
+                if (label[h]==EOS) { break; /* ei tarpeen */
+}
                 lab[8*i+h]=label[h];
                 }
             }
@@ -1003,19 +1062,27 @@ static int sum_of_distances_from_centers()
     {
     int i;
 
-    i=load_cases(); if (i<0) return(-1);
+    i=load_cases(); if (i<0) { return(-1);
+}
     if (d.n!=(int)n)
         {
         sur_print("\nAll records must be active! (No IND,CASES,etc. accepted)");
         WAIT; return(-1);
         }
-    i=read_weights(); if (i<0) return(-1);
-    i=space_allocation2(); if (i<0) return(-1);
-    i=moments(); if (i<0) return(-1);
-    i=scale(); if (i<0) return(-1);
-    i=read_centers(); if (i<0) return(-1);
-    i=data_to_write(word[1],&d); if (i<0) return(-1);
-    i=comp_sum(); if (i<0) return(-1);
+    i=read_weights(); if (i<0) { return(-1);
+}
+    i=space_allocation2(); if (i<0) { return(-1);
+}
+    i=moments(); if (i<0) { return(-1);
+}
+    i=scale(); if (i<0) { return(-1);
+}
+    i=read_centers(); if (i<0) { return(-1);
+}
+    i=data_to_write(word[1],&d); if (i<0) { return(-1);
+}
+    i=comp_sum(); if (i<0) { return(-1);
+}
 
     print_results();
     return(1);
@@ -1047,7 +1114,8 @@ static int read_centers()
         {
         obs_nr[i]=j=atoi(s[i])-1;
         tmp_read(j,label,xx);
-        for (h=0; h<m; ++h) cent[i*m+h]=xx[h];
+        for (h=0; h<m; ++h) { cent[i*m+h]=xx[h];
+}
         strcpy(lab2+8*i,label);
         }
 /*
@@ -1067,7 +1135,8 @@ static int comp_sum()
     char label[9];
 
 	i_min=0;
-    for (i=0; i<n_center; ++i) gfreq[i]=0;
+    for (i=0; i<n_center; ++i) { gfreq[i]=0;
+}
     total_sum=0.0;
     for (j=0; j<n; ++j)
         {
@@ -1076,12 +1145,14 @@ static int comp_sum()
         for (i=0; i<n_center; ++i)
             {
             a=meas(xx,cent+i*m);
-            if (l_virhe==1) return(-1);
+            if (l_virhe==1) { return(-1);
+}
             if (a<min) { min=a; i_min=i; }
             }
         data_save(&d,(int)(j+1),gvar,(double)(i_min+1));
-        if (dvar>=0)
+        if (dvar>=0) {
             data_save(&d,(int)(j+1),dvar,min);
+}
         total_sum+=min; ++gfreq[i_min];
         }
     return(1);
@@ -1091,10 +1162,13 @@ static int print_results()
     {
     int i;
 
-    if ((i=spfind("RESULTS"))>=0) results=atoi(spb[i]);
+    if ((i=spfind("RESULTS"))>=0) { results=atoi(spb[i]);
+}
     tulosrivi=0;
-    if (g>3) tulosrivi=edline2(word[3],1,1);
-    i=output_open(eout); if (i<0) return(-1);
+    if (g>3) { tulosrivi=edline2(word[3],1,1);
+}
+    i=output_open(eout); if (i<0) { return(-1);
+}
     muste_sprintf(sbuf,"Sum of distances from %d centers is D_total=%g ( N=%d )",
                   n_center,total_sum,n);
     eoutput(sbuf);
@@ -1116,7 +1190,8 @@ static int print_results()
 static int eoutput(char *rivi)
         {
         output_line(rivi,eout,tulosrivi);
-        if (tulosrivi) ++tulosrivi;
+        if (tulosrivi) { ++tulosrivi;
+}
         return(1);
         }
 
@@ -1148,18 +1223,21 @@ static int laske(char *lauseke,double *y)
             {
             *x='0'; strcpy(x+1,lauseke);
             }
-        else strcpy(x,lauseke);
+        else { strcpy(x,lauseke);
+}
         len=0;
         p=x;
         t=0;
         while (*p)
             {
-            if (l_virhe) return(-1);
+            if (l_virhe) { return(-1);
+}
             switch (*p)
                 {
               case '+':
                 if (len==0) { ++p; break; }
-                if (len>0) opnd[t]=luku(sana,len); len=0;
+                if (len>0) { opnd[t]=luku(sana,len); 
+}len=0;
                 op[t]='+'; v[t++]=1;
                 supista(&t,opnd,op,v);
                 ++p;
@@ -1167,7 +1245,8 @@ static int laske(char *lauseke,double *y)
 
               case '-':
                 if (len==0) { sana[len++]=*p; ++p; break; }
-                if (len>0) opnd[t]=luku(sana,len); len=0;
+                if (len>0) { opnd[t]=luku(sana,len); 
+}len=0;
                 op[t]='-'; v[t++]=1;
                 supista(&t,opnd,op,v);
                 ++p;
@@ -1175,7 +1254,8 @@ static int laske(char *lauseke,double *y)
 
               case '*':
                 if (len==0) { syntax_error(lauseke); return(-1); }
-                if (len>0) opnd[t]=luku(sana,len); len=0;
+                if (len>0) { opnd[t]=luku(sana,len); 
+}len=0;
                 op[t]='*'; v[t++]=2;
                 supista(&t,opnd,op,v);
                 ++p;
@@ -1183,14 +1263,16 @@ static int laske(char *lauseke,double *y)
 
               case '/':
                 if (len==0) { syntax_error(lauseke); return(-1); }
-                if (len>0) opnd[t]=luku(sana,len); len=0;
+                if (len>0) { opnd[t]=luku(sana,len); 
+}len=0;
                 op[t]='/'; v[t++]=2;
                 supista(&t,opnd,op,v);
                 ++p;
                 break;
               case '^':
                 if (len==0) { syntax_error(lauseke); return(-1); }
-                if (len>0) opnd[t]=luku(sana,len); len=0;
+                if (len>0) { opnd[t]=luku(sana,len); 
+}len=0;
                 op[t]='^'; v[t++]=3;
                 supista(&t,opnd,op,v);
                 ++p;
@@ -1216,7 +1298,8 @@ static int laske(char *lauseke,double *y)
                 *p=EOS; ++p;
 //   Rprintf("\nq=%s",q); getch();
                 i=laske(q,&opnd[t]);
-                if (i<0 || l_virhe) return(-1);
+                if (i<0 || l_virhe) { return(-1);
+}
 // RS REM                if (i==2) { Rprintf("\nret2"); getch(); }
 
 /*   Rprintf("\ntulos1=%f",opnd[t]); getch();  */
@@ -1224,11 +1307,13 @@ static int laske(char *lauseke,double *y)
                 sana[len]=EOS;
 
                 /* Yhden muuttujan funktiot */
-                if (*sana=='-')
+                if (*sana=='-') {
                     opnd[t]=-funktio(sana+1,opnd[t]);
-                else
+                } else {
                     opnd[t]=funktio(sana,opnd[t]);
-                if (l_virhe) return(-1);
+}
+                if (l_virhe) { return(-1);
+}
                 len=-1;
                 break;
 
@@ -1239,7 +1324,8 @@ static int laske(char *lauseke,double *y)
                 if (strchr("+-.0123456789",sana[0])!=NULL)
                     {
                     sana[len++]=*p; ++p;
-                    if (*p!='+' && *p!='-') break;
+                    if (*p!='+' && *p!='-') { break;
+}
                     }
               default:
                 /* tarkistukset puuttuvat */
@@ -1265,11 +1351,14 @@ static double luku(char *sana,int len)
         int i;
 
         sana[len]=EOS;
-        p=sana; if (*p=='-') ++p;
+        p=sana; if (*p=='-') { ++p;
+}
         if (strchr("1234567890.",*p)==NULL)
             {
-            i=laske2(p,&tulos); if (i<0) return((double)1.0);
-            if (*sana=='-') return(-tulos);
+            i=laske2(p,&tulos); if (i<0) { return((double)1.0);
+}
+            if (*sana=='-') { return(-tulos);
+}
             return(tulos);
             }
         return(atof(sana));
@@ -1278,7 +1367,8 @@ static double luku(char *sana,int len)
 static double oper(double x1,double x2,char laji)
         {
 
-        if (x1==MISSING8 || x2==MISSING8) return(MISSING8);
+        if (x1==MISSING8 || x2==MISSING8) { return(MISSING8);
+}
         switch (laji)
             {
           case '+':
@@ -1303,7 +1393,8 @@ static double power(double x,double y)
         if (y>=0 && y==floor(y) && y<10)
                 {
                 f=1;
-                for (i=0; i<(int)y; ++i) f*=x;
+                for (i=0; i<(int)y; ++i) { f*=x;
+}
                 return(f);
                 }
         return (pow(x,y));
@@ -1315,7 +1406,8 @@ static int supista(int *t,double opnd[],char op[],int v[])
 
         while (*t>1)
             {
-            if (v[*t-1]>v[*t-2]) return(1);
+            if (v[*t-1]>v[*t-2]) { return(1);
+}
             opnd[*t-2]=oper(opnd[*t-2],opnd[*t-1],op[*t-2]);
             op[*t-2]=op[*t-1]; v[*t-2]=v[*t-1];
             --(*t);
@@ -1329,21 +1421,34 @@ static double funktio(char *s,double x)
    //   double y;
         char S[32];
 
-        if (*s==EOS) return(x);
-        if (x==MISSING8) return(x);
+        if (*s==EOS) { return(x);
+}
+        if (x==MISSING8) { return(x);
+}
         muste_fieldcopy(S,s,31); S[31]=EOS; muste_strupr(S);
 
-        if (strncmp(S,"SQR",3)==0) return(muste_sqrt(x));
-        if (strcmp(S,"LOG")==0) return(muste_log(x));
-        if (strcmp(S,"EXP")==0) return(muste_exp(x));
-        if (strcmp(S,"SIN")==0) return(muste_sin(x));
-        if (strcmp(S,"COS")==0) return(muste_cos(x));
-        if (strcmp(S,"TAN")==0) return(tan(x));
-        if (strcmp(S,"ATN")==0 || strcmp(S,"ARCTAN")==0) return(muste_atan(x));
-        if (strcmp(S,"ARCSIN")==0) return(muste_asin(x));
-        if (strcmp(S,"ARCCOS")==0) return(muste_acos(x));
-        if (strcmp(S,"ABS")==0) return(muste_fabs(x));
-        if (strcmp(S,"INT")==0) return(muste_floor(x));
+        if (strncmp(S,"SQR",3)==0) { return(muste_sqrt(x));
+}
+        if (strcmp(S,"LOG")==0) { return(muste_log(x));
+}
+        if (strcmp(S,"EXP")==0) { return(muste_exp(x));
+}
+        if (strcmp(S,"SIN")==0) { return(muste_sin(x));
+}
+        if (strcmp(S,"COS")==0) { return(muste_cos(x));
+}
+        if (strcmp(S,"TAN")==0) { return(tan(x));
+}
+        if (strcmp(S,"ATN")==0 || strcmp(S,"ARCTAN")==0) { return(muste_atan(x));
+}
+        if (strcmp(S,"ARCSIN")==0) { return(muste_asin(x));
+}
+        if (strcmp(S,"ARCCOS")==0) { return(muste_acos(x));
+}
+        if (strcmp(S,"ABS")==0) { return(muste_fabs(x));
+}
+        if (strcmp(S,"INT")==0) { return(muste_floor(x));
+}
 
 // RS ADD
             if (*s=='R' && strncmp(s,"R>",2)==0)

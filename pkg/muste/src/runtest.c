@@ -110,10 +110,12 @@ rem_pr("tests randomness of a sequence of 0's and 1's.");
         if (g>3)
             {
             results_line=edline2(word[3],1,1);
-            if (results_line==0) return;
+            if (results_line==0) { return;
+}
             }
 
-        i=spec_init(r1+r-1); if (i<0) return;
+        i=spec_init(r1+r-1); if (i<0) { return;
+}
 
     seq=NULL;
     perm=NULL;
@@ -127,26 +129,32 @@ rem_pr("tests randomness of a sequence of 0's and 1's.");
 
         *chi2_check=EOS;
         i=spfind("CHI2_CHECK");
-        if (i>=0) strcpy(chi2_check,spb[i]);
+        if (i>=0) { strcpy(chi2_check,spb[i]);
+}
 
         minf=5.0;
         i=spfind("MINF");
-        if (i>=0) minf=atof(spb[i]);
+        if (i>=0) { minf=atof(spb[i]);
+}
 
-        i=data_read_open(word[1],&d); if (i<0) return;
-        tvar=varfind(&d,word[2]); if (tvar<0) return;
+        i=data_read_open(word[1],&d); if (i<0) { return;
+}
+        tvar=varfind(&d,word[2]); if (tvar<0) { return;
+}
 
         i=spfind("RUNS"); // 24.12.2009
         if (i>=0 && atoi(spb[i]))
             { count_run_lengths(); s_end(argv); return; }
 
-        i=lue_data(); if (i<0) return;
+        i=lue_data(); if (i<0) { return;
+}
         if (n<10)
             {
             muste_sprintf(sbuf,"Too few (%d) observations!",n);
             sur_print(sbuf); WAIT; return;
             }
-        for (i=0; i<n; ++i) perm[i]=i;
+        for (i=0; i<n; ++i) { perm[i]=i;
+}
 
         basic_stat();
         if (n0==0 || n1==0)
@@ -161,15 +169,18 @@ rem_pr("tests randomness of a sequence of 0's and 1's.");
 
         strcpy(x,etmpd); strcat(x,"RUNTEST.TMP");
         ftemp=muste_fopen(x,"wt");
-        for (i=0; i<r0_n; ++i) fprintf(ftemp,"%d\n",r0_len[i]);
+        for (i=0; i<r0_n; ++i) { fprintf(ftemp,"%d\n",r0_len[i]);
+}
         fprintf(ftemp,"***\n");
-        for (i=0; i<r1_n; ++i) fprintf(ftemp,"%d\n",r1_len[i]);
+        for (i=0; i<r1_n; ++i) { fprintf(ftemp,"%d\n",r1_len[i]);
+}
 
         i=spfind("RUN1");
-        if (i>=0 && atoi(spb[i])>0)
+        if (i>=0 && atoi(spb[i])>0) {
             run1_test();
-        else
+        } else {
             ww_test();
+}
         o_brien(0);
         pair_stat();
         fit_geom();
@@ -179,23 +190,28 @@ rem_pr("tests randomness of a sequence of 0's and 1's.");
 
         rcond=0;
         i=spfind("RCOND");
-        if (i>=0) rcond=atoi(spb[i]);
+        if (i>=0) { rcond=atoi(spb[i]);
+}
 
         permu=0;
         i=spfind("PERM");
-        if (i>=0) permu=atoi(spb[i]);
+        if (i>=0) { permu=atoi(spb[i]);
+}
 
         varsum=0;
         i=spfind("VARSUM");
-        if (i>=0) varsum=atoi(spb[i]);
+        if (i>=0) { varsum=atoi(spb[i]);
+}
 
         maxcount=1000000L;
         i=spfind("SIMUMAX");
-        if (i>=0) maxcount=atol(spb[i]);
+        if (i>=0) { maxcount=atol(spb[i]);
+}
 
         conf_level=0.95;
         i=spfind("CONF");
-        if (i>=0) conf_level=atof(spb[i]);
+        if (i>=0) { conf_level=atof(spb[i]);
+}
         if (conf_level<0.8 || conf_level>=1.0)
             {
             sur_print("\nError in CONF=p! Confidence level p must be 0.8<p<1");
@@ -207,7 +223,8 @@ rem_pr("tests randomness of a sequence of 0's and 1's.");
 
         if (maxcount)
             {
-            i=simulation(); if (i<0) return;
+            i=simulation(); if (i<0) { return;
+}
             }
 
         g_print=&print_line;
@@ -224,12 +241,14 @@ static int lue_data()
     double a;
 
     n=0;
-    i=conditions(&d); if (i<0) return(-1);
+    i=conditions(&d); if (i<0) { return(-1);
+}
     strcpy(nimi,etmpd); strcat(nimi,"RUNTEST.TMP");
     ftemp=muste_fopen(nimi,"wt");
     for (j=d.l1; j<=d.l2; ++j)
         {
-        if (unsuitable(&d,j)) continue;
+        if (unsuitable(&d,j)) { continue;
+}
         data_load(&d,j,tvar,&a);
         fprintf(ftemp,"%d\n",(int)a);
         ++n;
@@ -242,7 +261,8 @@ static int lue_data()
         WAIT; return(-1);
         }
 
-    i=varaa_tilat(); if (i<0) return(-1);
+    i=varaa_tilat(); if (i<0) { return(-1);
+}
 
     ftemp=muste_fopen(nimi,"rt");
     for (i=0; i<n; ++i)
@@ -282,8 +302,9 @@ static int basic_stat()
 
     for (i=0; i<n; ++i)
         {
-        if (seq[i]==0) ++n0;
-        else seq[i]=1; // ei-nollat -> 1
+        if (seq[i]==0) { ++n0;
+        } else { seq[i]=1; // ei-nollat -> 1
+}
         }
 
     n1=n-n0;
@@ -305,8 +326,9 @@ static int run_stat()
 
     run0=run1=r1_n=r0_n=0;
     run=seq[perm[0]];
-    if (run==0) run0=1;
-    else run1=1;
+    if (run==0) { run0=1;
+    } else { run1=1;
+}
     runlen=1;
 
     for (i=1; i<n; ++i)
@@ -324,8 +346,9 @@ static int run_stat()
             }
         }
     k=seq[perm[n-1]];
-    if (k==0) r0_len[r0_n++]=runlen;
-    else      r1_len[r1_n++]=runlen;
+    if (k==0) { r0_len[r0_n++]=runlen;
+    } else {      r1_len[r1_n++]=runlen;
+}
 
 /***************************************
 printf("\nrun0=%d run1=%d|",run0,run1);
@@ -344,9 +367,11 @@ static int comp_freq0s()
     int i;
 
     geom00=0;
-    for (i=0; i<r1_n; ++i) geom00+=r1_len[i]-1;
+    for (i=0; i<r1_n; ++i) { geom00+=r1_len[i]-1;
+}
     geom01=0;
-    for (i=0; i<r0_n; ++i) geom01+=r0_len[i]-1;
+    for (i=0; i<r0_n; ++i) { geom01+=r0_len[i]-1;
+}
     return(1);
     }
 
@@ -355,9 +380,11 @@ static int pair_stat()
     int i;
 //  double e;
 
-    for (i=0; i<8; ++i) f2[i]=0;
-    for (i=2; i<n; ++i)
+    for (i=0; i<8; ++i) { f2[i]=0;
+}
+    for (i=2; i<n; ++i) {
         ++f2[4*seq[i]+seq[i-1]+2*seq[i-2]];
+}
 
 //  Rprintf("\nfreq:");
 //  for (i=0; i<8; ++i) Rprintf(" %g",f2[i]); getch();
@@ -378,27 +405,31 @@ static int chi2_comp(double *f,double *fm,double *fn,int m,int n,double *pc2)
     double a,b;
 
     nn=0.0;
-    for (i=0; i<m*n; ++i) nn+=f[i];
+    for (i=0; i<m*n; ++i) { nn+=f[i];
+}
     for (i=0; i<m; ++i)
         {
         a=0.0;
-        for (j=0; j<n; ++j) a+=f[i+m*j];
+        for (j=0; j<n; ++j) { a+=f[i+m*j];
+}
         fm[i]=a;
         }
     for (j=0; j<n; ++j)
         {
         a=0.0;
-        for (i=0; i<m; ++i) a+=f[i+m*j];
+        for (i=0; i<m; ++i) { a+=f[i+m*j];
+}
         fn[j]=a;
         }
 
     *pc2=0.0;
-    for (i=0; i<m; ++i) for (j=0; j<n; ++j)
+    for (i=0; i<m; ++i) { for (j=0; j<n; ++j)
         {
         a=f[i+m*j];
         b=fm[i]*fn[j]/nn;
         *pc2+=(a-b)*(a-b)/b;
         }
+}
     return(1);
     }
 
@@ -426,10 +457,12 @@ static int ww_test()
     for (i=3; i<=nr; ++i)
         {
         k=i/2; pariton=1-pariton;
-        if (!pariton)
+        if (!pariton) {
           a*=((double)n0/(double)(k-1)-1.0)*((double)n1/(double)(k-1)-1.0);
-        if (pariton) pr=((double)(n0+n1)/(double)k-2.0)*a;
-        else pr=2*a;
+}
+        if (pariton) { pr=((double)(n0+n1)/(double)k-2.0)*a;
+        } else { pr=2*a;
+}
         dp_run1+=pr;
 // Rprintf("\ni=%d pr=%g sum=%g",i,pr,dp_run1); getch();
         }
@@ -462,13 +495,19 @@ static double bin_coeff(int n,int m)
     int iu,iv;
 
     iv=v=n; iu=u=m;
-    if ((double)iu!=u) return(0.0);
-    if ((double)iv!=v) return(0.0);
-    if (u>v/2) u=v-u;
-    if (u<0 || v<0) return(0.0);
-    if (u==0.0) return(1.0);
+    if ((double)iu!=u) { return(0.0);
+}
+    if ((double)iv!=v) { return(0.0);
+}
+    if (u>v/2) { u=v-u;
+}
+    if (u<0 || v<0) { return(0.0);
+}
+    if (u==0.0) { return(1.0);
+}
     y=1.0;
-    for (; u>0; --u, --v) y*=(v/u);
+    for (; u>0; --u, --v) { y*=(v/u);
+}
     return(y);
     }
 
@@ -503,7 +542,8 @@ static int count_run_lengths()
     for (i=1; i<=MAX_RUN_LENGTH; ++i) { runs0[i]=runs1[i]=0L; }
 
     data_load(&d,1L,tvar,&a);
-    if ((int)a==0) run_type=0; else run_type=1;
+    if ((int)a==0) { run_type=0; } else { run_type=1;
+}
     len=1;
     for (j=d.l1+1; j<=d.l2; ++j)
         {
@@ -520,7 +560,8 @@ static int count_run_lengths()
             }
         else
             {
-            if (run_type==0) ++runs0[len]; else ++runs1[len];
+            if (run_type==0) { ++runs0[len]; } else { ++runs1[len];
+}
             run_type=1-run_type; len=1;
             }
         }
@@ -528,7 +569,8 @@ static int count_run_lengths()
     k=MAX_RUN_LENGTH;
     while (k>0)
         {
-        if (runs0[k]!=0L || runs1[k]!=0L) break;
+        if (runs0[k]!=0L || runs1[k]!=0L) { break;
+}
         --k;
         }
 
@@ -573,15 +615,17 @@ static int o_brien(int k)
 
     if (k==1) { x2=a0*var0+a1*var1; return(1); }
 
-    if (n0-run0-1>0)
+    if (n0-run0-1>0) {
         a0=(double)(run0-1)*(run0+1)*(run0+2)*(run0+3)/
            (double)(2*(double)run0*(n0+1)*(n0-run0-1));
-    else a0=1.0;
+    } else { a0=1.0;
+}
 
-    if (n1-run1-1>0)
+    if (n1-run1-1>0) {
         a1=(double)(run1-1)*(run1+1)*(run1+2)*(run1+3)/
            (double)(2*(double)run1*(n1+1)*(n1-run1-1));
-    else a1=1.0;
+    } else { a1=1.0;
+}
 
     if (varsum) { a0=a1=1.0; }
 
@@ -592,7 +636,8 @@ static int o_brien(int k)
     b0=a0*n0*(n0-run0)/(double)(run0*(run0+1));
     b1=a1*n1*(n1-run1)/(double)(run1*(run1+1));
     df=b0+b1;
-    if (df<=0.0) df=1.0;
+    if (df<=0.0) { df=1.0;
+}
 // Rprintf("\ndf=%g|",df); getch();
 
     dp=1-muste_cdf_chi2(x2,df,1e-15);
@@ -609,13 +654,15 @@ static int o_brien_arvonta()  // r0,r1 kiinnitetty
     double s,s2,a;
     double dn,var0,var1;
 
-    for (i=0; i<n0; ++i) perm[i]=0;
+    for (i=0; i<n0; ++i) { perm[i]=0;
+}
     for (i=0; i<run0-1; ++i)
         {
         while (1)
             {
             k=(n0-1)*uniform_dev();
-            if (perm[k]) continue;
+            if (perm[k]) { continue;
+}
             perm[k]=1; break;
             }
         }
@@ -626,13 +673,15 @@ static int o_brien_arvonta()  // r0,r1 kiinnitetty
         ++h;
         }
 
-    for (i=0; i<n1; ++i) perm[i]=0;
+    for (i=0; i<n1; ++i) { perm[i]=0;
+}
     for (i=0; i<run1-1; ++i)
         {
         while (1)
             {
             k=(n1-1)*uniform_dev();
-            if (perm[k]) continue;
+            if (perm[k]) { continue;
+}
             perm[k]=1; break;
             }
         }
@@ -698,14 +747,17 @@ static int fit_geom()
     dp_geom=-1.0;
 
     df_geom-=1.0;
-    if (df_geom>0) dp_geom=1.0-muste_cdf_chi2(chi2_geom,(double)df_geom,1e-15);
+    if (df_geom>0) { dp_geom=1.0-muste_cdf_chi2(chi2_geom,(double)df_geom,1e-15);
+}
 
     dp_geom0=-1.0;
     --df00;
-    if (df00>0) dp_geom0=1.0-muste_cdf_chi2(chi00,(double)df00,1e-15);
+    if (df00>0) { dp_geom0=1.0-muste_cdf_chi2(chi00,(double)df00,1e-15);
+}
     dp_geom1=-1.0;
     --df01;
-    if (df01>0) dp_geom1=1.0-muste_cdf_chi2(chi01,(double)df01,1e-15);
+    if (df01>0) { dp_geom1=1.0-muste_cdf_chi2(chi01,(double)df01,1e-15);
+}
 
 
     if (*chi2_check)
@@ -727,13 +779,15 @@ static int comp_freq(int n,int *len)
     {
     int i,j,k;
 
-    for (i=0; i<n; ++i) freq[i]=0;
+    for (i=0; i<n; ++i) { freq[i]=0;
+}
     k=0;
     for (i=0; i<n; ++i)
         {
         j=len[i];
         ++freq[j];
-        if (j>k) k=j;
+        if (j>k) { k=j;
+}
         }
 // Rprintf("\nfreq:");
 // for (i=0; i<=k; ++i) Rprintf(" %d",freq[i]); getch();
@@ -767,7 +821,8 @@ static int comp_chi2(int nr,int n,int n1,int k,int freq0,double *pchi2,int *pdf)
         esum+=e; freqsum+=freq0;
         e*=p;
         }
-    else e=nr0*(1-p);
+    else { e=nr0*(1-p);
+}
     for (i=0; i<=k; ++i)
         {
         ++*pdf;
@@ -814,24 +869,29 @@ i=getch(); if (i=='.') exit(0);
                     {
                     permutoi();
                     run_stat();
-                    if (!rcond) break;
-                    if (run0==run01 && run1==run11) break;
+                    if (!rcond) { break;
+}
+                    if (run0==run01 && run1==run11) { break;
+}
                     }
                 o_brien(1);
                 }
-            else
+            else {
                 o_brien_arvonta();
+}
 
 // Rprintf("\n%g %g",x2,x21); getch();
 
             ++u; ++e;
-            if (x2>x21) ++u1;
+            if (x2>x21) { ++u1;
+}
             if (e==e1)
                 {
                 e=0;
                 runtest_disp();
                 headline("");
-                if (u>=maxcount) break;
+                if (u>=maxcount) { break;
+}
                 if (sur_kbhit())
                     {
                     sur_getch(); break;
@@ -853,7 +913,8 @@ static int disp0()
         {
 
 
-        if (r>r3-10) r=1;
+        if (r>r3-10) { r=1;
+}
         LOCATE(r+2,9);
         muste_sprintf(sbuf,"Run tests for %s in data %s:",word[2],word[1]);
         (*g_print)(sbuf);
@@ -865,10 +926,11 @@ static int disp0()
 
 
         LOCATE(r+4,9);
-        if (n<=1000)
+        if (n<=1000) {
             muste_sprintf(sbuf,"Wald-Wolfowitz test: P=%g",dp_run1);
-        else
+        } else {
             muste_sprintf(sbuf,"Wald-Wolfowitz test: P=%g (normal approx.)",dp_run1);
+}
         (*g_print)(sbuf);
 
         LOCATE(r+5,9);
@@ -877,19 +939,21 @@ static int disp0()
         (*g_print)(sbuf);
 
         LOCATE(r+6,9);
-        if (dp_geom0<0.0)
+        if (dp_geom0<0.0) {
         muste_sprintf(sbuf,"     for 0-runs separately: -");
-        else
+        } else {
         muste_sprintf(sbuf,"     for 0-runs separately: X20=%g df=%d P=%g",
                       chi00,df00,dp_geom0);
+}
         (*g_print)(sbuf);
 
         LOCATE(r+7,9);
-        if (dp_geom1<0.0)
+        if (dp_geom1<0.0) {
         muste_sprintf(sbuf,"     for 1-runs separately: -");
-        else
+        } else {
         muste_sprintf(sbuf,"     for 1-runs separately: X21=%g df=%d P=%g",
                       chi01,df01,dp_geom1);
+}
         (*g_print)(sbuf);
 
         LOCATE(r+8,9);
@@ -935,8 +999,10 @@ static int runtest_disp()
         LOCATE(r+10,9); PR_EUDL;
         p1=(double)u1/(double)u;
         se=sqrt(p1*(1.0-p1)/(double)u);
-        lower=p1-conf_coeff*se; if (lower<0.0) lower=0.0;
-        upper=p1+conf_coeff*se; if (upper>1.0) upper=1.0;
+        lower=p1-conf_coeff*se; if (lower<0.0) { lower=0.0;
+}
+        upper=p1+conf_coeff*se; if (upper>1.0) { upper=1.0;
+}
         muste_sprintf(sbuf,"%10d %.8f %.8f lower limit (O'Brien-Dyck test)",
                        u,p1,lower);
         (*g_print)(sbuf);
@@ -951,7 +1017,8 @@ static int printout()
         g_print=print_line;
         output_open(eout);
         disp0();
-        if (maxcount) runtest_disp();
+        if (maxcount) { runtest_disp();
+}
         output_close(eout);
         return(1);
         }
@@ -959,7 +1026,8 @@ static int printout()
 static int print_line(char *line)
         {
         output_line(line,eout,results_line);
-        if (results_line) ++results_line;
+        if (results_line) { ++results_line;
+}
         return(1);
         }
 

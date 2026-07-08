@@ -105,7 +105,8 @@ int sur_locate(int row,int col)
 
 void cursor(unsigned int r,unsigned int c)
         {
-        if (c>c3) c=c3;
+        if (c>c3) { c=c3;
+}
         sur_locate(r+1,c+8);
         }
 
@@ -145,10 +146,12 @@ int sur_set_cursor(int dwSize, int bVisible)
 	extern void muste_set_R_string(char *dest,char *sour);
 	
 	i=hae_apu("cursor_color",plotkomento); // RS 26.11.2012
-	if (i) i=splitq(plotkomento,ss,2);
+	if (i) { i=splitq(plotkomento,ss,2);
+}
 	if (i<2) { ss[0]=muste_default_cursor_color; ss[1]=muste_default_insert_color; }
 	muste_set_R_string(".muste$insertcursorcolor",ss[1]);
-    if (!bVisible) dwSize=0;
+    if (!bVisible) { dwSize=0;
+}
     if (dwSize>100)
        { 
          dwSize-=100;
@@ -167,7 +170,8 @@ int sur_set_cursor(int dwSize, int bVisible)
 void cursor_on()
         {
         extern int insert_mode;
-        if (insert_mode) CURSOR_INS; else CURSOR_ON;
+        if (insert_mode) { CURSOR_INS; } else { CURSOR_ON;
+}
         }
 
 
@@ -175,8 +179,9 @@ int sur_mem_cursor(int mode) /* 1=save 2=restore */
         {
         static int row,col;
 
-        if (mode==1) sur_cursor_position(&row,&col);
-        else sur_locate(row,col);
+        if (mode==1) { sur_cursor_position(&row,&col);
+        } else { sur_locate(row,col);
+}
         return(1);
         }
 
@@ -187,11 +192,16 @@ int sur_set_console_title(char *title)
     muste_snprintf(komento,LLENGTH,"tkwm.title(.muste$ikkuna, \"%s\")",title);
     for (i=26; i<strlen(komento); i++) // RS 30.5.2014
     	{
-    	if (komento[i]=='\\') komento[i]='/';
-    	if (komento[i]=='[') komento[i]='(';
-    	if (komento[i]==']') komento[i]=')';
-    	if (komento[i]=='$') komento[i]='_';
-    	if (komento[i]=='"') komento[i]='\'';
+    	if (komento[i]=='\\') { komento[i]='/';
+}
+    	if (komento[i]=='[') { komento[i]='(';
+}
+    	if (komento[i]==']') { komento[i]=')';
+}
+    	if (komento[i]=='$') { komento[i]='_';
+}
+    	if (komento[i]=='"') { komento[i]='\'';
+}
     	}    	    
     muste_evalr(komento);
 	return 1;
@@ -337,7 +347,8 @@ void muste_init_plotwindows()
  	muste_sprintf(komento,".muste$canvasfonts[[%d]] <- 0.0",MAXPLOTWINDOWS);
     muste_evalr(komento); 
 
-	for (i=0; i<MAXPLOTWINDOWS; i++) muste_canvasfonts[i]=0;    
+	for (i=0; i<MAXPLOTWINDOWS; i++) { muste_canvasfonts[i]=0;    
+}
 	}
 
 void sur_pos_window(char *wname,int x,int y)
@@ -403,8 +414,9 @@ int muste_plottcl(int id, char *komento, int win)
     	muste_old_plotid=id;
 		}
 	
-	if (win) muste_sprintf(plotkomento,"%s %s",muste_plotwindow,komento);
-	else muste_sprintf(plotkomento,"%s %s",muste_plotcanvas,komento);
+	if (win) { muste_sprintf(plotkomento,"%s %s",muste_plotwindow,komento);
+	} else { muste_sprintf(plotkomento,"%s %s",muste_plotcanvas,komento);
+}
 //Rprintf("\n%s",plotkomento);
 
     Muste_EvalTcl(plotkomento,FALSE);
@@ -417,7 +429,8 @@ int muste_window_style(int id,int style)
 	int tyyli;
 	
 	tyyli=0;
-	if (style==0) tyyli=1;
+	if (style==0) { tyyli=1;
+}
 	
 	muste_sprintf(komento,"tkwm.overrideredirect(.muste$plotwin[[%d]],%d)",id,tyyli);	
     muste_evalr(komento);
@@ -626,12 +639,15 @@ int muste_text_plot(int id,double x1,double y1,char *x)
 //       		else if (x[i]=='$') y[j]='S'; // RS Conversion
 //       		else y[j++]=x[i];
 //       		if (x[i]==34 || x[i]==36 || x[i]==91 || x[i]==92 ) y[j++]=92;
-			if (x[i]==34 || x[i]==39 || x[i]==92) y[j++]=92;
+			if (x[i]==34 || x[i]==39 || x[i]==92) { y[j++]=92;
+}
       		y[j++]=x[i];
       		}
-      	else y[j++]=' ';
+      	else { y[j++]=' ';
+}
     }
-    if (y[j-1]=='"') y[j++]=' ';
+    if (y[j-1]=='"') { y[j++]=' ';
+}
     y[j]=EOS;
 
 //Rprintf("\ntext: |%s|",y);
@@ -893,7 +909,8 @@ void survo_ajax_screenbuffer() // RS 1.12.2015
     char *str;
     char apubuf[500];
 
-    if (survo_webedit==0) return;    
+    if (survo_webedit==0) { return;    
+}
     /* r3 = # number of edit lines on the screen */
     /* c3 = # of columns on the screen */
     /* a=char size=1 */
@@ -901,7 +918,8 @@ void survo_ajax_screenbuffer() // RS 1.12.2015
     /* c=delimiters= shadow|str| = 2 */
     /* max length = r3*c3*(a+b+c) */
     str=(char *)muste_malloc(r3*c3*5+10);
-    if (str==NULL) return;
+    if (str==NULL) { return;
+}
     str[0]='\0';
     for (i=1; i<=r3+2; i++)
         {
@@ -911,7 +929,8 @@ void survo_ajax_screenbuffer() // RS 1.12.2015
         for (j=0; j<c3; j++)
             {
             apubuf[j]=survo_screenbuffer[j][i][0];
-            if (apubuf[j]=='\0') apubuf[j]=' ';
+            if (apubuf[j]=='\0') { apubuf[j]=' ';
+}
             }
 
 apubuf[j]='\t';
@@ -950,7 +969,8 @@ void survo_open_ajaxbuffer(int dispcall)
   
   dispcall=muste_get_R_int(".muste$redraw");
   survo_webedit=muste_get_R_int(".muste$webedit");
-  if (survo_webedit==0) return;
+  if (survo_webedit==0) { return;
+}
   
 //    survo_ajaxbuffer=(char *)muste_malloc((r3+2)*c3*20+10);
 //    if (survo_ajaxbuffer==NULL) return;    
@@ -970,7 +990,8 @@ void survo_close_ajaxbuffer()
     {
     char apubuf[10];
   
-    if (survo_webedit==0) return;
+    if (survo_webedit==0) { return;
+}
     muste_sprintf(apubuf,"%d",survo_ajaxbuffer_count);
     strcat(survo_ajaxbuffer,apubuf);
         
@@ -990,10 +1011,12 @@ int write_string(char *x, int len, int shadow, int row, int col)
     int i,j,k,pit,ylen,ypit,yext,yexto,transhadow;
 	char *y,*yind,*yoldind;
 	
-	if (display_off) return(1);
+	if (display_off) { return(1);
+}
 
 	
-	if (len<1) return(-1); // RS ADD 6.11.2012 
+	if (len<1) { return(-1); // RS ADD 6.11.2012 
+}
 
 	if (survo_webedit==1) {
 	for (i=0; i<len; i++) // RS 1.12.2015
@@ -1002,7 +1025,8 @@ int write_string(char *x, int len, int shadow, int row, int col)
 	    survo_screenbuffer[col+i][row][1]=(char)shadow;
 	    }
 
-    for (i=0; i<len; i++) lenbuf[i]=x[i];
+    for (i=0; i<len; i++) { lenbuf[i]=x[i];
+}
     lenbuf[i]='\0';
     muste_iconv(lenbuf,"UTF-8","CP850");
     muste_sprintf(apubuf,"%d\t%s\t%d\t%d\t",(unsigned char)shadow,lenbuf,col-1,row-1); // RS 10.12.2015
@@ -1012,7 +1036,8 @@ int write_string(char *x, int len, int shadow, int row, int col)
 
 /*	Varsinainen tulostus! */
     y=(char *)malloc(3*len+2); 
-    if (y==NULL) return(-1);
+    if (y==NULL) { return(-1);
+}
 	
 
 	i=0; j=0; pit=0; k=col-1;
@@ -1130,7 +1155,8 @@ int sur_erase(unsigned char color)
         int i,row,col;
         char x[LLENGTH]; // RS CHA 256->LLENGTH
 
-        for (i=0; i<LLENGTH; ++i) x[i]=' ';
+        for (i=0; i<LLENGTH; ++i) { x[i]=' ';
+}
         sur_cursor_position(&row,&col);
         write_string(x,c3+8+1-col,color,row,col);  
 //        write_string(x,c3,color,r3+2,1);  
@@ -1164,10 +1190,12 @@ int sur_scroll_down(int lines,int row1,int col1,int row2,int col2,int attr)
 /* Scroll direction: 6=up 7=down */
 int sur_scroll(int r1,int r2,int n,int suunta)
         {
-        if (display_off) return(1);
+        if (display_off) { return(1);
+}
 
         if (suunta==7) { n=-n; sur_scroll_down(n,r1+1,0,r2,c3+8,119); }
-        else sur_scroll_up(n,r1+2,0,r2+1,c3+8,119);
+        else { sur_scroll_up(n,r1+2,0,r2+1,c3+8,119);
+}
         return(1);
         }
 
@@ -1179,9 +1207,11 @@ int sur_cls(unsigned char color)
 
         if (!display_off)
             {
-            for (i=0; i<256; ++i) x[i]=' ';
-            for (i=1; i<=r3+2+r_soft; ++i)
+            for (i=0; i<256; ++i) { x[i]=' ';
+}
+            for (i=1; i<=r3+2+r_soft; ++i) {
                 write_string(x,c3+8,color,i,1);
+}
             }
         sur_locate(1,1);
         return(1);
@@ -1301,7 +1331,8 @@ int sur_load_clipboard(char **clip)
     CloseClipboard();
 */  
     *clip=muste_get_clipboard();
-    if (*clip==NULL) return(-1); // RS 4.12.2013
+    if (*clip==NULL) { return(-1); // RS 4.12.2013
+}
     return(1);
     }
 

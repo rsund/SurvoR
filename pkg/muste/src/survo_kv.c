@@ -57,7 +57,8 @@ int muste_kv_space_split(char *row, char **wrd, int max)
         if (row[i]==' ') {
             if (prev) {
                 row[i]='\0';
-                if (++k>=max) return max;
+                if (++k>=max) { return max;
+}
                 prev=0;
             }
         } else {
@@ -67,7 +68,8 @@ int muste_kv_space_split(char *row, char **wrd, int max)
             }
         }
     }
-    if (prev) k++;
+    if (prev) { k++;
+}
     return k;
 }
 
@@ -98,5 +100,6 @@ int muste_kv_edline(char *label, int j, int error)
     if (word_int || lab || cur1 || end1 || plus || minus3) {
         i=edline2(label,j,error);
         return i;
-    } else return 0;
+    } else { return 0;
+}
 }

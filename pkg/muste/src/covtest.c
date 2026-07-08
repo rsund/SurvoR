@@ -78,15 +78,21 @@ void muste_covtest(char *argv)
         if (g>1)
             {
             tulosrivi=edline2(word[1],1,1);
-            if (tulosrivi==0) return;
+            if (tulosrivi==0) { return;
+}
             }
-        i=spec_init(r1+r-1); if (i<0) return;
-        if ((i=spfind("RESULTS"))>=0) results=atoi(spb[i]);
-        i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
-        if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);
+        i=spec_init(r1+r-1); if (i<0) { return;
+}
+        if ((i=spfind("RESULTS"))>=0) { results=atoi(spb[i]);
+}
+        i=hae_apu("prind",sbuf); if (i) { prind=atoi(sbuf);
+}
+        if ((i=spfind("PRIND"))>=0) { prind=atoi(spb[i]);
+}
 
         simumax=10000;
-        if ((i=spfind("SIMUMAX"))>=0) simumax=atol(spb[i]);
+        if ((i=spfind("SIMUMAX"))>=0) { simumax=atol(spb[i]);
+}
 
         spec_rnd();
 
@@ -122,8 +128,10 @@ void muste_covtest(char *argv)
         for (k=0; k<ns; ++k)
             {
             strcpy(aineisto,otos[k]);
-            i=data_read_open(aineisto,&d); if (i<0) return;
-            i=mask(&d); if (i<0) return;
+            i=data_read_open(aineisto,&d); if (i<0) { return;
+}
+            i=mask(&d); if (i<0) { return;
+}
             if (d.m_act==0)
                 {
                 sur_print("\nNo active variables!");
@@ -137,7 +145,8 @@ void muste_covtest(char *argv)
                 if (x==NULL) { not_enough_memory(); return; }
                 v=(int *)muste_malloc(m*sizeof(int));
                 if (v==NULL) { not_enough_memory(); return; }
-                for (i=0; i<m; ++i) v[i]=d.v[i];
+                for (i=0; i<m; ++i) { v[i]=d.v[i];
+}
                 }
 
             if (k!=0)
@@ -178,18 +187,22 @@ void muste_covtest(char *argv)
             }
 
         l=0;
-        for (k=0; k<ns; ++k)
-            for (li=0L; li<n[k]; ++li) ind[l++]=k;
+        for (k=0; k<ns; ++k) {
+            for (li=0L; li<n[k]; ++li) { ind[l++]=k;
+}
+}
 
         laske_summat();
         l=0;
-        for (k=0; k<ns; ++k)
+        for (k=0; k<ns; ++k) {
             for (li=0; li<n[k]; ++li)
                 {
-                for (h=0; h<m; ++h)
+                for (h=0; h<m; ++h) {
                     xx[l+h]-=s[k][h]/n[k];
+}
                 l+=m;
                 }
+}
 
         t0=testi();
         os1=(double)(nt-ns)*m/2*log((double)(nt-ns));
@@ -231,7 +244,8 @@ df=p/2*(p+1)*(k-1)
         nn1=0L; kk=0;
         for (nn=1; nn<=simumax; ++nn)
             {
-            for (l=0; l<nt; ++l) ind[l]=0;
+            for (l=0; l<nt; ++l) { ind[l]=0;
+}
             for (k=1; k<ns; ++k)
                 {
                 for (l=0L; l<n[k]; ++l)
@@ -239,14 +253,16 @@ df=p/2*(p+1)*(k-1)
                     while (1)
                         {
                         l2=nt*uniform_dev();
-                        if (ind[l2]!=(short)0) continue;
+                        if (ind[l2]!=(short)0) { continue;
+}
                         ind[l2]=k; break;
                         }
                     }
                 }
 
             t1=testi();
-            if (t1<t0) ++nn1;
+            if (t1<t0) { ++nn1;
+}
 
             ++kk;
 /*************************
@@ -292,19 +308,23 @@ static int talleta(int k)
         n[k]=0L;
         for (l=d.l1; l<=d.l2; ++l)
             {
-            if (unsuitable(&d,l)) continue;
+            if (unsuitable(&d,l)) { continue;
+}
             for (i=0; i<m; ++i)
                 {
                 data_load(&d,l,v[i],&x[i]);
-                if (x[i]==MISSING8) break;
+                if (x[i]==MISSING8) { break;
+}
 
                 }
-            if (i<m) continue;
+            if (i<m) { continue;
+}
             for (i=0; i<m; ++i)
                 {
                 p=(char *)&x[i];
-                for (h=0; h<sizeof(double); ++h)
+                for (h=0; h<sizeof(double); ++h) {
                     fputc((int)p[h],tempfile);
+}
                 }
             ++n[k];
             }
@@ -328,8 +348,10 @@ static int laske_summat()
         rewind(tempfile);
         for (k=0; k<ns+1; ++k)
             {
-            for (i=0; i<m; ++i) s[k][i]=0.0;
-            for (i=0; i<m*m; ++i) s2[k][i]=0.0;
+            for (i=0; i<m; ++i) { s[k][i]=0.0;
+}
+            for (i=0; i<m*m; ++i) { s2[k][i]=0.0;
+}
             }
 
         for (l=0; l<nt; ++l)
@@ -339,7 +361,8 @@ static int laske_summat()
             for (i=0; i<m; ++i)
                 {
                 s[k][i]+=xx[i+r];
-                for (j=0; j<=i; ++j) s2[k][i+m*j]+=xx[i+r]*xx[j+r];
+                for (j=0; j<=i; ++j) { s2[k][i+m*j]+=xx[i+r]*xx[j+r];
+}
                 }
             }
         return(1);
@@ -351,28 +374,31 @@ static double testi()
         double t,ldet;
 
         laske_summat();
-        for (i=0; i<m*m; ++i) s2[ns][i]=0.0;
+        for (i=0; i<m*m; ++i) { s2[ns][i]=0.0;
+}
 
         t=0.0;
         for (k=0; k<ns; ++k)
             {
-            for (i=0; i<m; ++i)
+            for (i=0; i<m; ++i) {
                 for (j=0; j<=i; ++j)
                     {
                     s2[k][i+m*j]-=s[k][i]*s[k][j]/n[k];
                     s2[k][j+m*i]=s2[k][i+m*j];
                     s2[ns][i+m*j]+=s2[k][i+m*j];
                     }
+}
             mat_logdet(s2[k],m,&ldet);
 // Rprintf("det=%g\n",exp(ldet)); getch();
             t+=(n[k]-1)*ldet;
             }
 
-        for (i=0; i<m; ++i)
+        for (i=0; i<m; ++i) {
             for (j=0; j<=i; ++j)
                 {
                 s2[ns][j+m*i]=s2[ns][i+m*j];
                 }
+}
         mat_logdet(s2[ns],m,&ldet);
 // Rprintf("det=%g\n",exp(ldet)); getch();
         t-=(nt-ns)*ldet;
@@ -412,7 +438,8 @@ static int not_enough_memory()
 static int eoutput(char *rivi)
         {
         output_line(rivi,eout,tulosrivi);
-        if (tulosrivi) ++tulosrivi;
+        if (tulosrivi) { ++tulosrivi;
+}
         return(1);
         }
 

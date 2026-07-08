@@ -150,7 +150,8 @@ void muste_tabtest(char *argv)
 
 //      if (argc==1) return;
         s_init(argv);
-        i=spec_init(r1+r-1); if (i<0) return;
+        i=spec_init(r1+r-1); if (i<0) { return;
+}
         r_original=r;
         results_line=0;
         if (g<2)
@@ -218,11 +219,13 @@ return;
         if (g>2)
             {
             results_line=edline2(word[2],1,1);
-            if (results_line==0) return;
+            if (results_line==0) { return;
+}
             }
         ptext=text;
         i=read_ftable(word[1],&f,&dim,&ncvar,nc,varname,cname,type,&ndec);
-        if (i<0) return;
+        if (i<0) { return;
+}
         if (dim!=2)
             {
             sur_print("\nTABTEST can handle two-way tables only!");
@@ -234,7 +237,8 @@ return;
         if (i>=0 && muste_strcmpi(spb[i],"FIT")==0)
             {
             i=goodness_of_fit_test(f,m,n);
-            if (i>0) s_end(argv);
+            if (i>0) { s_end(argv);
+}
             return;
             }
 
@@ -242,7 +246,8 @@ return;
         if (i>=0)
             {
             i=table_to_matrix(spb[i],f,m,n,varname,cname);
-            if (i<0) return;
+            if (i<0) { return;
+}
             }
         ltotal=0L;
         for (i=0; i<m*n; ++i)
@@ -268,10 +273,10 @@ return;
         if (i>=0)
             {
             strcpy(s,spb[i]); muste_strupr(s);
-            if (strncmp(s,"PR",2)==0) test=PROB;
-            else if (strncmp(s,"X2",2)==0 || strncmp(s,"X^2",3)==0) test=X2;
-            else if (strncmp(s,"G2",2)==0 || strncmp(s,"G^2",3)==0) test=G2;
-            else
+            if (strncmp(s,"PR",2)==0) { test=PROB;
+            } else if (strncmp(s,"X2",2)==0 || strncmp(s,"X^2",3)==0) { test=X2;
+            } else if (strncmp(s,"G2",2)==0 || strncmp(s,"G^2",3)==0) { test=G2;
+            } else
                 {
                 sur_print("\nError in TEST specification!");
                 sur_print("\nAlternatives TEST=PROB, TEST=X2, TEST=G2");
@@ -281,7 +286,8 @@ return;
 
         conf_level=0.95;
         i=spfind("CONF");
-        if (i>=0) conf_level=atof(spb[i]);
+        if (i>=0) { conf_level=atof(spb[i]);
+}
         if (conf_level<0.8 || conf_level>=1.0)
             {
             sur_print("\nError in CONF=p! Confidence level p must be 0.8<p<1");
@@ -291,11 +297,13 @@ return;
 
         c_margins();
 
-        i=find_fix(); if (i<0) return;
+        i=find_fix(); if (i<0) { return;
+}
         c_logn();
         c_chi2(&chi2,f); chi2-=eps;
         c_g2(&g2,f); g2-=eps;
-        if (fix==FISHER) test=PROB;
+        if (fix==FISHER) { test=PROB;
+}
         if (test==PROB)
             {
             switch (fix)
@@ -310,14 +318,17 @@ return;
             prob-=eps;
             }
 
-        if (fix!=FIX_RC && fix!=FISHER) cumul_freq();
+        if (fix!=FIX_RC && fix!=FISHER) { cumul_freq();
+}
         g_print=&sur_print;
 
         maxcount=10000000L;
         i=spfind("SIMUMAX");
-        if (i>=0) maxcount=atol(spb[i]);
+        if (i>=0) { maxcount=atol(spb[i]);
+}
         disp0();
-        i=simulation(); if (i<0) return;
+        i=simulation(); if (i<0) { return;
+}
         g_print=&print_line;
         printout();
         r=r_original;
@@ -334,14 +345,16 @@ static int c_chi2(double *pchi2,FREQ *f)
             c_margins();
             }
         a=0.0; k=0;
-        for (j=0; j<n; ++j)
+        for (j=0; j<n; ++j) {
             for (i=0; i<m; ++i)
                 {
                 e=(double)f_r[i]*(double)f_c[j]/(double)total;
                 b=f[k]-e;
                 ++k;
-                if (e>0.0) a+=b*b/e;
+                if (e>0.0) { a+=b*b/e;
+}
                 }
+}
         *pchi2=a;
         return(1);
         }
@@ -351,15 +364,17 @@ static int c_g2(double *pg2,FREQ *f)
         int i,j,k;
         double a;
 
-        if (fix!=FIX_RC)
+        if (fix!=FIX_RC) {
             c_margins();
+}
         a=0.0; k=0;
-        for (j=0; j<n; ++j)
+        for (j=0; j<n; ++j) {
             for (i=0; i<m; ++i)
                 {
                 a+=f[k]*(lnn[f_r[i]]+lnn[f_c[j]]-lnn[total]-lnn[f[k]]);
                 ++k;
                 }
+}
         *pg2=-2*a;
         return(1);
         }
@@ -370,7 +385,8 @@ static int c_prob(double *pprob,FREQ *f)
         double a;
 
         a=0.0; k=m*n;
-        for (i=0; i<k; ++i) a+=logn[f[i]];
+        for (i=0; i<k; ++i) { a+=logn[f[i]];
+}
         *pprob=a;
         return(1);
         }
@@ -382,12 +398,13 @@ static int c_cprob(double *pprob,FREQ *f)
 
         c_margins();
         a=0.0; k=0;
-        for (j=0; j<n; ++j)
+        for (j=0; j<n; ++j) {
             for (i=0; i<m; ++i)
                 {
                 a+=logn[f[k]]-f[k]*lnn[f_r[i]];
                 ++k;
                 }
+}
 /*      for (j=0; j<n; ++j) a-=logn[f_c[j]];   vakio! */
         *pprob=a;
         return(1);
@@ -400,12 +417,13 @@ static int c_rprob(double *pprob,FREQ *f)
 
         c_margins();
         a=0.0; k=0;
-        for (j=0; j<n; ++j)
+        for (j=0; j<n; ++j) {
             for (i=0; i<m; ++i)
                 {
                 a+=logn[f[k]]-f[k]*lnn[f_c[j]];
                 ++k;
                 }
+}
 /*      for (i=0; i<m; ++i) a-=logn[f_r[i]];  vakio! */
         *pprob=a;
         return(1);
@@ -418,12 +436,13 @@ static int c_nprob(double *pprob,FREQ *f)
 
         c_margins();
         a=0.0; k=0;
-        for (j=0; j<n; ++j)
+        for (j=0; j<n; ++j) {
             for (i=0; i<m; ++i)
                 {
                 a+=logn[f[k]]-f[k]*(lnn[f_r[i]]+lnn[f_c[j]]);
                 ++k;
                 }
+}
         *pprob=a;
         return(1);
         }
@@ -445,12 +464,13 @@ static int c_fprob(double *pprob,FREQ *f)
         --f[h]; /* --f_r[fi]; --f_c[fj]; */
 
         a=0.0; k=0;
-        for (j=0; j<n; ++j)
+        for (j=0; j<n; ++j) {
             for (i=0; i<m; ++i)
                 {
                 a+=logn[f[k]]-f[k]*(lnn[f_r[i]]+lnn[f_c[j]]);
                 ++k;
                 }
+}
         a-=lnn[f_r[fi]]+lnn[f_c[fj]];
 /*      a-=logn[total-1]-(total-1.0)*(lnn[2]+lnn[total-1]);  total=total0 ! */
         ++f[h]; /* ++f_r[fi]; ++f_c[fj]; */
@@ -462,16 +482,19 @@ static int c_margins()
         {
         int i,j,k;
 
-        for (i=0; i<m; ++i) f_r[i]=0;
-        for (j=0; j<n; ++j) f_c[j]=0;
+        for (i=0; i<m; ++i) { f_r[i]=0;
+}
+        for (j=0; j<n; ++j) { f_c[j]=0;
+}
         k=0;
-        for (j=0; j<n; ++j)
+        for (j=0; j<n; ++j) {
             for (i=0; i<m; ++i)
                 {
                 f_c[j]+=f[k];
                 f_r[i]+=f[k];
                 ++k;
                 }
+}
         return(1);
         }
 
@@ -503,15 +526,16 @@ static int find_fix()
 
         fix=FISHER;
         i=spfind("FIX");
-        if (i<0) return(1);
+        if (i<0) { return(1);
+}
         strcpy(x,spb[i]);
         muste_strupr(x);
-        if (strncmp(x,"FI",2)==0) fix=FISHER;
-        else if (strcmp(x,"RC")==0 || strcmp(x,"CR")==0) fix=FIX_RC;
-        else if (strcmp(x,"R")==0) fix=FIX_R;
-        else if (strcmp(x,"C")==0) fix=FIX_C;
-        else if (strcmp(x,"N")==0) fix=FIX_N;
-        else if (*x=='F')
+        if (strncmp(x,"FI",2)==0) { fix=FISHER;
+        } else if (strcmp(x,"RC")==0 || strcmp(x,"CR")==0) { fix=FIX_RC;
+        } else if (strcmp(x,"R")==0) { fix=FIX_R;
+        } else if (strcmp(x,"C")==0) { fix=FIX_C;
+        } else if (strcmp(x,"N")==0) { fix=FIX_N;
+        } else if (*x=='F')
             {
             fix=FIX_F;
             p=strchr(x,'(');
@@ -560,7 +584,8 @@ static int simulation()
         int x2_file;
         char nimi[LNAME];
 
-        i=rand_init(); if (i<0) return(-1);
+        i=rand_init(); if (i<0) { return(-1);
+}
         make_samples();
 
         x2_file=0;
@@ -581,7 +606,8 @@ static int simulation()
 
         dn=10000L;
         i=spfind("GAP");
-        if (i>=0) dn=atol(spb[i]);
+        if (i>=0) { dn=atol(spb[i]);
+}
 
         count=0L; pcount=0L; dcount=0L; ecount=0L;
 
@@ -597,17 +623,20 @@ static int simulation()
                 if (test==PROB)
                     {
                     c_prob(&kprob,f);
-                    if (kprob>=prob) ++pcount;
+                    if (kprob>=prob) { ++pcount;
+}
                     }
                 else if (test==X2)
                     {
                     c_chi2(&kchi2,f);
-                    if (kchi2>=chi2) ++pcount;
+                    if (kchi2>=chi2) { ++pcount;
+}
                     }
                 else
                     {
                     c_g2(&kg2,f);
-                    if (kg2>=g2) ++pcount;
+                    if (kg2>=g2) { ++pcount;
+}
                     }
                 break;
               case FIX_C:
@@ -629,12 +658,14 @@ static int simulation()
                 else if (test==X2)
                     {
                     c_chi2(&kchi2,f);
-                    if (kchi2>=chi2) ++pcount;
+                    if (kchi2>=chi2) { ++pcount;
+}
                     }
                 else
                     {
                     c_g2(&kg2,f);
-                    if (kg2>=g2) ++pcount;
+                    if (kg2>=g2) { ++pcount;
+}
                     }
                 break;
               case FIX_R:
@@ -656,12 +687,14 @@ static int simulation()
                 else if (test==X2)
                     {
                     c_chi2(&kchi2,f);
-                    if (kchi2>=chi2) ++pcount;
+                    if (kchi2>=chi2) { ++pcount;
+}
                     }
                 else
                     {
                     c_g2(&kg2,f);
-                    if (kg2>=g2) ++pcount;
+                    if (kg2>=g2) { ++pcount;
+}
                     }
                 break;
               case FIX_N:
@@ -684,19 +717,23 @@ static int simulation()
                 else if (test==X2)
                     {
                     c_chi2(&kchi2,f);
-                    if (kchi2>=chi2) ++pcount;
+                    if (kchi2>=chi2) { ++pcount;
+}
                     }
                 else
                     {
                     c_g2(&kg2,f);
-                    if (kg2>=g2) ++pcount;
+                    if (kg2>=g2) { ++pcount;
+}
                     }
                 break;
               case FIX_F:
-                i=f_simul(); if (i<0) return(1);
+                i=f_simul(); if (i<0) { return(1);
+}
                 if (test==PROB)
                     {
-                    i=c_fprob(&kprob,f); if (i<0) return(1);
+                    i=c_fprob(&kprob,f); if (i<0) { return(1);
+}
                     if (kprob>=prob)
                         {
                         ++pcount;
@@ -710,12 +747,14 @@ static int simulation()
                 else if (test==X2)
                     {
                     c_chi2(&kchi2,f);
-                    if (kchi2>=chi2) ++pcount;
+                    if (kchi2>=chi2) { ++pcount;
+}
                     }
                 else
                     {
                     c_g2(&kg2,f);
-                    if (kg2>=g2) ++pcount;
+                    if (kg2>=g2) { ++pcount;
+}
                     }
                 break;
                 }
@@ -723,12 +762,14 @@ static int simulation()
             if (dcount>=dn)
                 {
                 tab_disp();
-                if (count>=maxcount) break;
+                if (count>=maxcount) { break;
+}
                 if (sur_kbhit()) { sur_getch(); break; }         
                 dcount=0;  // 21.10.2010
                 }
             }
-        if (x2_file) muste_fclose(tied);
+        if (x2_file) { muste_fclose(tied);
+}
         return(1);
         }
 
@@ -759,7 +800,8 @@ static int rand_init()
             }
         (*rand_seed1)(seed);
 //        for (i=0; i<10; ++i) a=(*rand1)();
-        for (i=0; i<10; ++i) (*rand1)(); // RS 4.2.2013
+        for (i=0; i<10; ++i) { (*rand1)(); // RS 4.2.2013
+}
         return(1);
         }
 
@@ -773,7 +815,8 @@ static int disp0()
         {
         int k;
 
-        if (r>r3-6) r=1;
+        if (r>r3-6) { r=1;
+}
         LOCATE(r+2,9);
         k=muste_sprintf(sbuf,"Testing a %d*%d table by simulation:",m,n);
         muste_sprintf(sbuf+k,"  X^2=%g P=%6f",
@@ -804,8 +847,10 @@ static int tab_disp()
         LOCATE(r+6,9); PR_EUDL;
         p1=(double)pcount/(double)count;
         se=sqrt(p1*(1.0-p1)/(double)count);
-        lower=p1-conf_coeff*se; if (lower<0.0) lower=0.0;
-        upper=p1+conf_coeff*se; if (upper>1.0) upper=1.0;
+        lower=p1-conf_coeff*se; if (lower<0.0) { lower=0.0;
+}
+        upper=p1+conf_coeff*se; if (upper>1.0) { upper=1.0;
+}
         muste_sprintf(sbuf,"%10d %.8f %.8f lower limit",
                        count,p1,lower);
         (*g_print)(sbuf);
@@ -822,7 +867,7 @@ static int make_samples()
         int i,j,k,h;
 
         k=0;
-        for (j=0; j<n; ++j)
+        for (j=0; j<n; ++j) {
             for (i=0; i<m; ++i)
                 {
                 for (h=0; h<f[i+m*j]; ++h)
@@ -831,6 +876,7 @@ static int make_samples()
                     ++k;
                     }
                 }
+}
         return(1);
         }
 
@@ -857,7 +903,8 @@ static int simul(FREQ total,int n,int *s,double *cum)
             a=(*rand1)();
             for (i=0; i<n; ++i)
                 {
-                if (a<=cum[i]) break;
+                if (a<=cum[i]) { break;
+}
                 }
             if (i==n) { sur_print("\n???"); sur_getch(); }
             s[k]=i;
@@ -875,24 +922,30 @@ static int f_simul()
 while (1)
 {
         if (sur_kbhit()) { sur_getch(); return(-1); }
-        for (i=0; i<m; ++i) for(j=0; j<n; ++j) f[i+m*j]=0;
+        for (i=0; i<m; ++i) { for(j=0; j<n; ++j) { f[i+m*j]=0;
+}
+}
         total=0;
         while (f[h]<fij)
             {
-            ++total; if (total>total0) break;
+            ++total; if (total>total0) { break;
+}
             a=(*rand1)();
             for (i=0; i<m; ++i)
                 {
-                if (a<=cum_r[i]) break;
+                if (a<=cum_r[i]) { break;
+}
                 }
             a=(*rand1)();
             for (j=0; j<n; ++j)
                 {
-                if (a<=cum_c[j]) break;
+                if (a<=cum_c[j]) { break;
+}
                 }
             ++f[i+m*j];
             }
-if (total==total0) break;
+if (total==total0) { break;
+}
 }
         return(1);
         }
@@ -901,8 +954,10 @@ static int taulukoi(int *s1,int *s2,FREQ *f)
         {
         int i,k;
 
-        for (i=0; i<m*n; ++i) f[i]=0;
-        for (k=0; k<total; ++k) ++f[s1[k]+m*s2[k]];
+        for (i=0; i<m*n; ++i) { f[i]=0;
+}
+        for (k=0; k<total; ++k) { ++f[s1[k]+m*s2[k]];
+}
         return(1);
         }
 
@@ -936,7 +991,8 @@ static int read_ftable(char *name,FREQ **f,int *pdim,int *pncvar,int *nc,
         edread(x,j);
         i=split(x+1,px,5);
 
-        if (i>2 && strcmp(px[2],"/")==0) i=2;
+        if (i>2 && strcmp(px[2],"/")==0) { i=2;
+}
 
         if (i==2)
             {
@@ -946,15 +1002,18 @@ static int read_ftable(char *name,FREQ **f,int *pdim,int *pncvar,int *nc,
                 {
                 ++i;
                 edread(x,i);
-                if (i==j+1) n=split(x+1,px,EP4);
-                if (strncmp(x+1,space,c2)==0) break;
+                if (i==j+1) { n=split(x+1,px,EP4);
+}
+                if (strncmp(x+1,space,c2)==0) { break;
+}
                 ++k;
                 }
             ncell=k*n;
-            if (*f==NULL)
+            if (*f==NULL) {
                 *f=(FREQ *)muste_malloc(ncell*sizeof(FREQ));
-            else
+            } else {
                 *f=(FREQ *)muste_realloc(*f,ncell*sizeof(FREQ));
+}
             if (*f==NULL)
                 { not_enough_memory(); return(-1); }
 
@@ -962,8 +1021,8 @@ static int read_ftable(char *name,FREQ **f,int *pdim,int *pncvar,int *nc,
                 {
                 edread(x,j+1+i);
                 h=split(x+1,px,EP4);
-                if (i==0) n=h;
-                else
+                if (i==0) { n=h;
+                } else
                     {
                     if (h!=n)
                         {
@@ -971,7 +1030,8 @@ static int read_ftable(char *name,FREQ **f,int *pdim,int *pncvar,int *nc,
                         sur_print(sbuf); WAIT; return(-1);
                         }
                     }
-                for (h=0; h<n; ++h) (*f)[i+k*h]=atoi(px[h]);
+                for (h=0; h<n; ++h) { (*f)[i+k*h]=atoi(px[h]);
+}
                 }
             nc[1]=k; nc[0]=n;
             varname[0]="C"; varname[1]="R";
@@ -993,20 +1053,24 @@ static int read_ftable(char *name,FREQ **f,int *pdim,int *pncvar,int *nc,
             }
         if (i<5)
             {
-            edread(x,j); i=strlen(x); while (x[i-1]==' ') x[--i]=EOS;
+            edread(x,j); i=strlen(x); while (x[i-1]==' ') { x[--i]=EOS;
+}
             muste_sprintf(sbuf,"\nInvalid definition: %s",x+1); sur_print(sbuf);
             muste_sprintf(sbuf,"\non line %d",j); sur_print(sbuf);
             sur_print("\nCorrect form: TABLE <name>,L1,L2,<type_of_table>");
             WAIT; return(-1);
             }
-        j1=edline2(px[2],1,1); if (j1==0) return(-1);
-        j2=edline2(px[3],j1,1); if (j2==0) return(-1);
+        j1=edline2(px[2],1,1); if (j1==0) { return(-1);
+}
+        j2=edline2(px[3],j1,1); if (j2==0) { return(-1);
+}
         muste_fieldcopy(type,px[4],15); type[15]=EOS;
         ncell=0;
         for (j=j1; j<=j2; ++j)
             {
             edread(x,j);
-            p=strchr(x+1,'*'); if (p!=NULL) break;
+            p=strchr(x+1,'*'); if (p!=NULL) { break;
+}
             }
         if (j>j2)
             {
@@ -1019,8 +1083,10 @@ static int read_ftable(char *name,FREQ **f,int *pdim,int *pncvar,int *nc,
             {
             edread(x,j);
             i=split(x+apos,px,EP4);
-            if (i==0) continue;
-            if (k==0) k=i;
+            if (i==0) { continue;
+}
+            if (k==0) { k=i;
+}
             if (i!=k)
                 {
                 muste_sprintf(sbuf,"\nNumber of elements on line %d conflicts previous lines!",
@@ -1029,10 +1095,11 @@ static int read_ftable(char *name,FREQ **f,int *pdim,int *pncvar,int *nc,
                 }
             ncell+=k;
             }
-        if (*f==NULL)
+        if (*f==NULL) {
             *f=(FREQ *)muste_malloc(ncell*sizeof(FREQ));
-        else
+        } else {
             *f=(FREQ *)muste_realloc(*f,ncell*sizeof(FREQ));
+}
         if (*f==NULL)
             { not_enough_memory(); return(-1); }
 
@@ -1054,7 +1121,8 @@ static int read_ftable(char *name,FREQ **f,int *pdim,int *pncvar,int *nc,
                 }
             nc[ivar]=h;
             varname[ivar]=ptext;
-            i=store_label(px[0]); if (i<0) return(-1);
+            i=store_label(px[0]); if (i<0) { return(-1);
+}
             for (h=0; h<nc[ivar]; ++h)
                 {
                 if (nlabel>=MAXT)
@@ -1087,22 +1155,28 @@ static int read_ftable(char *name,FREQ **f,int *pdim,int *pncvar,int *nc,
                 {
                 edread(x,j);
                 h=posr[i];
-                while (x[h]==' ' && h<posr[i+1]) ++h;
-                if (h==posr[i+1]) continue;
-                h2=h; while (x[h2]!=' ' && h2<posr[i+1]) ++h2;
+                while (x[h]==' ' && h<posr[i+1]) { ++h;
+}
+                if (h==posr[i+1]) { continue;
+}
+                h2=h; while (x[h2]!=' ' && h2<posr[i+1]) { ++h2;
+}
                 x[h2]=EOS;
                 for (h2=0; h2<nc[ivar]; ++h2)
                     {
-                    if (strcmp(x+h,cname[nlab+h2])==0) break;
+                    if (strcmp(x+h,cname[nlab+h2])==0) { break;
+}
                     }
-                if (h2<nc[ivar]) continue;
+                if (h2<nc[ivar]) { continue;
+}
                 ++nc[ivar];
                 if (nlabel>=MAXT)
                     {
                     sur_print("\nToo many labels!"); WAIT; return(-1);
                     }
                 cname[nlabel++]=ptext;
-                h2=store_label(x+h); if (h2<0) return(-1);
+                h2=store_label(x+h); if (h2<0) { return(-1);
+}
                 }
             ncell2*=nc[ivar];
             ++ivar;
@@ -1127,21 +1201,24 @@ static int read_ftable(char *name,FREQ **f,int *pdim,int *pncvar,int *nc,
             {
             edread(x,j);
             i=split(x+apos,px,k);
-            if (i==0) continue;
+            if (i==0) { continue;
+}
             cell=h;
             for (i=0; i<k; ++i)
                 {
                 len=strlen(px[i])-1;
                 if (px[i][len]=='-') { cvalue=MISSING_VALUE; ++missing_values; }
-                else if (strcmp(px[i],"*0")==0) cvalue=STRUCTURAL_ZERO;
-                else cvalue=atof(px[i]);    /* depends on FREQ */
+                else if (strcmp(px[i],"*0")==0) { cvalue=STRUCTURAL_ZERO;
+                } else { cvalue=atof(px[i]);    /* depends on FREQ */
+}
                 (*f)[cell]=cvalue;
                 cell+=step;
                 p=strchr(px[i],'.');
                 if (p!=NULL)
                     {
                     h2=len-(p-px[i]);
-                    if (h2>*pndec) *pndec=h2;
+                    if (h2>*pndec) { *pndec=h2;
+}
                     }
                 }
             ++h;
@@ -1157,7 +1234,8 @@ static int store_label(char *s)
             {
             sur_print("\nNot enough space for labels!"); WAIT; return(-1);
             }
-        p=s; while (*p) *ptext++=*p++; *ptext++=EOS;
+        p=s; while (*p) { *ptext++=*p++; 
+}*ptext++=EOS;
         return(1);
         }
 
@@ -1198,7 +1276,8 @@ static int check_varname_initials(int dim,char **varname)
 static int print_line(char *line)
         {
         output_line(line,eout,results_line);
-        if (results_line) ++results_line;
+        if (results_line) { ++results_line;
+}
         return(1);
         }
 
@@ -1256,10 +1335,12 @@ static int lab_copy(int m,char **cname,char *lab)
             for (j=0; j<8; ++j)
                 {
                 ch=cname[i][j];
-                if (ch==EOS) break;
+                if (ch==EOS) { break;
+}
                 lab[k++]=ch;
                 }
-            for (; j<8; ++j) lab[k++]=' ';
+            for (; j<8; ++j) { lab[k++]=' ';
+}
             }
         return(1);
         }
@@ -1308,12 +1389,15 @@ static int goodness_of_fit_test(FREQ *f,int m,int n)
     ecum=(double *)muste_malloc(m*sizeof(double));
     o=(int *)muste_malloc(m*sizeof(int));
     n2=0; for (i=0; i<m; ++i) { o[i]=f[i]; n2+=o[i]; }
-    n1=0; for (i=0; i<m; ++i) n1+=f[i+m];
+    n1=0; for (i=0; i<m; ++i) { n1+=f[i+m];
+}
     a=(double)n2/(double)n1;
 
-    for (i=0; i<m; ++i) e[i]=a*f[i+m];
+    for (i=0; i<m; ++i) { e[i]=a*f[i+m];
+}
     a=0.0; for (i=0; i<m; ++i) { a+=e[i]; ecum[i]=a; }
-    for (i=0; i<m; ++i) ecum[i]/=ecum[m-1];
+    for (i=0; i<m; ++i) { ecum[i]/=ecum[m-1];
+}
 
     g_print=&sur_print;
 
@@ -1322,12 +1406,15 @@ static int goodness_of_fit_test(FREQ *f,int m,int n)
 
     maxcount=1000000L;
     i=spfind("SIMUMAX");
-    if (i>=0) maxcount=atol(spb[i]);
-    i=rand_init(); if (i<0) return(-1);
+    if (i>=0) { maxcount=atol(spb[i]);
+}
+    i=rand_init(); if (i<0) { return(-1);
+}
 
     conf_level=0.95;
     i=spfind("CONF");
-    if (i>=0) conf_level=atof(spb[i]);
+    if (i>=0) { conf_level=atof(spb[i]);
+}
     if (conf_level<0.8 || conf_level>=1.0)
         {
         sur_print("\nError in CONF=p! Confidence level p must be 0.8<p<1");
@@ -1339,28 +1426,33 @@ static int goodness_of_fit_test(FREQ *f,int m,int n)
 
     dn=10000L;
     i=spfind("GAP");
-    if (i>=0) dn=atol(spb[i]);
+    if (i>=0) { dn=atol(spb[i]);
+}
     count=0L; pcount=0L; dcount=0L; ecount=0L;
 
     while (1)
         {
         ++count; ++dcount;
-        for (i=0; i<m; ++i) o[i]=0;
+        for (i=0; i<m; ++i) { o[i]=0;
+}
         for (j=0; j<n2; ++j)
             {
             a=(*rand1)();
             i=0;
-            while (a>ecum[i]) ++i;
+            while (a>ecum[i]) { ++i;
+}
             ++o[i];
             }
 // Rprintf("\no: "); for (i=0; i<m; ++i) Rprintf("%d ",o[i]);
 // a=chi_square(m); Rprintf("\na=%g",a);
-        if (chi_square(m)>=x2) ++pcount;
+        if (chi_square(m)>=x2) { ++pcount;
+}
 
         if (dcount>=dn)
             {
             tab_disp();
-            if (count>=maxcount) break;
+            if (count>=maxcount) { break;
+}
             if (sur_kbhit()) { sur_getch(); break; }           
             WAIT;
             dcount=0;
@@ -1380,7 +1472,8 @@ static int goodness_of_fit_test(FREQ *f,int m,int n)
 
 static int disp0fit(int m,int n,double chi2)
         {
-        if (r>r3-6) r=1;
+        if (r>r3-6) { r=1;
+}
         LOCATE(r+2,9);
         muste_sprintf(sbuf,"Goodness of fit test of %d*%d table %s",m,n,word[1]);
         (*g_print)(sbuf);

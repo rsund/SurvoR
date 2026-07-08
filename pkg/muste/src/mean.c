@@ -41,7 +41,8 @@ static int space_allocation()
 static void print_line(char *line)
         {
         output_line(line,eout,results_line);
-        if (results_line) ++results_line;
+        if (results_line) { ++results_line;
+}
         }
 
 static void printout()
@@ -63,11 +64,12 @@ static void printout()
         print_line(line);
         for (i=0; i<d.m_act; ++i)
             {
-            if (d.v[i]==weight_variable) continue;
-            if (w[i]==0.0)
+            if (d.v[i]==weight_variable) { continue;
+}
+            if (w[i]==0.0) {
                 muste_sprintf(line," %-8.8s            -  %6ld",d.varname[d.v[i]],
                          n-f[i]);
-            else
+            } else
                 {
                 fnconv(sum[i]/w[i],accuracy+2,mean);
                 muste_sprintf(line," %-8.8s %s  %6ld",d.varname[d.v[i]],
@@ -92,12 +94,14 @@ static void compute_sums()
             {
             double weight;
 
-            if (unsuitable(&d,l)) continue;
-            if (weight_variable==-1) weight=1.0;
-            else
+            if (unsuitable(&d,l)) { continue;
+}
+            if (weight_variable==-1) { weight=1.0;
+            } else
                 {
                 data_load(&d,l,weight_variable,&weight);
-                if (weight==MISSING8) continue;
+                if (weight==MISSING8) { continue;
+}
                 }
             ++n;
             muste_sprintf(sbuf,"%ld ",l); sur_print(sbuf);
@@ -105,9 +109,11 @@ static void compute_sums()
                 {
                 double x;
 
-                if (d.v[i]==weight_variable) continue;
+                if (d.v[i]==weight_variable) { continue;
+}
                 data_load(&d,l,d.v[i],&x);
-                if (x==MISSING8) continue;
+                if (x==MISSING8) { continue;
+}
                 ++f[i]; w[i]+=weight; sum[i]+=weight*x;
                 }
             }
@@ -124,7 +130,8 @@ static int test_scaletypes()
                 {
                 muste_sprintf(sbuf,"\nWeight variable %.8s must have ratio scale!",
                           d.varname[weight_variable]); sur_print(sbuf);
-                WAIT; if (scale_check==SCALE_INTERRUPT) return(-1);
+                WAIT; if (scale_check==SCALE_INTERRUPT) { return(-1);
+}
                 }
             }
         scale_error=0;
@@ -132,8 +139,9 @@ static int test_scaletypes()
             {
             if (!scale_ok(&d,d.v[i],SCORE_SCALE))
                 {
-                if (!scale_error)
+                if (!scale_error) {
                     sur_print("\nInvalid scale in variables: ");
+}
                 scale_error=1;
                 muste_sprintf(sbuf,"%.8s ",d.varname[d.v[i]]); sur_print(sbuf);
                 }
@@ -141,7 +149,8 @@ static int test_scaletypes()
         if (scale_error)
             {
             sur_print("\nIn MEAN score scale at least is expected!");
-            WAIT; if (scale_check==SCALE_INTERRUPT) return(-1);
+            WAIT; if (scale_check==SCALE_INTERRUPT) { return(-1);
+}
             }
         return(1);
         }

@@ -78,10 +78,12 @@ void muste_nterm(int argc, char *argv[])
   i=init_sequence();
   if (i<0) { s_end(argv[1]); return; }
   i=init_regressors();
-  if (i<0) return;
+  if (i<0) { return;
+}
 
   i=linear_regression(seq_n,10);
-  if (i<0) return;
+  if (i<0) { return;
+}
 
   data_close(&data);
 
@@ -139,9 +141,11 @@ seq_n=0; rivi=rivi1=r1+r-1;
       break;
     }
     
-    j=0; if (rivi==rivi1) j=1;
+    j=0; if (rivi==rivi1) { j=1;
+}
     for (h=j; h<i; ++h) {    
-      if (strcmp(sana[h],"/")==0) break;     
+      if (strcmp(sana[h],"/")==0) { break;     
+}
       if ((*sana[h] < 48) || (*sana[h] > 57)) {
         muste_sprintf(sbuf,"\n\nSyntax error in line %d!",rivi);
         sur_print(sbuf);
@@ -312,7 +316,8 @@ static void construct_poly(double *B,int k,int n) {
       }
     }
   }
-  if (k>0) construct_spec(B,j);
+  if (k>0) { construct_spec(B,j);
+}
 }
 
 
@@ -385,12 +390,14 @@ static void construct_formula(double *B,int k,int n) {
 static void polyrow(double *X, int m, int n, int j, int k, int p) {
   int i,l;
   l=j+k*m;
-  for (i=0;i<(n-k);i++) *(X+l+m*i)=pow((p),i);
+  for (i=0;i<(n-k);i++) { *(X+l+m*i)=pow((p),i);
+}
 }
 
 static void polyfill(double *X, int m, int n, int k) {
   int j;
-  for (j=0;j<m;j++) polyrow(X,m,n,j,k,j+1);
+  for (j=0;j<m;j++) { polyrow(X,m,n,j,k,j+1);
+}
 }
 
 
@@ -401,8 +408,9 @@ static void fixmat(double *B, int m) {
   for (i=0; i<m; i++) {
     apuf=(int)floor(*(B+i));
     apuc=(int)ceil(*(B+i));
-    if (pow((*(B+i)-apuf),2) < FIXTOLERANCE ) *(B+i)=apuf;
-    else if (pow((*(B+i)-apuc),2) < FIXTOLERANCE ) *(B+i)=apuc;
+    if (pow((*(B+i)-apuf),2) < FIXTOLERANCE ) { *(B+i)=apuf;
+    } else if (pow((*(B+i)-apuc),2) < FIXTOLERANCE ) { *(B+i)=apuc;
+}
 
   }
 }
@@ -419,29 +427,37 @@ static int linear_regression(int m, int n) {
 // RS REM  struct murtoluku tulosml;
 
   oma=regressor[0];
-  if (n>=m) n=m-1;
+  if (n>=m) { n=m-1;
+}
   nterm_type=UNIDENTIFIED;
   strcpy(nterm_output_buffer,comment_1);
 
 
   Y=matrixmalloc(m,1);
-  if (Y==NULL) return(-1);
+  if (Y==NULL) { return(-1);
+}
   for (i=0;i<m;i++) {
     *(Y+i)=sequence[i];
   }
 
   X=matrixmalloc(m,n);
-  if (X==NULL) return(-1);
+  if (X==NULL) { return(-1);
+}
   S=matrixmalloc(m,n);
-  if (S==NULL) return(-1);
+  if (S==NULL) { return(-1);
+}
   U=matrixmalloc(n,n);
-  if (U==NULL) return(-1);  
+  if (U==NULL) { return(-1);  
+}
   T=matrixmalloc(m,n);
-  if (T==NULL) return(-1);  
+  if (T==NULL) { return(-1);  
+}
   B=matrixmalloc(m,1);
-  if (B==NULL) return(-1);
+  if (B==NULL) { return(-1);
+}
   R=matrixmalloc(m,1);
-  if (R==NULL) return(-1);
+  if (R==NULL) { return(-1);
+}
 
   m-=1;n-=1;
   i=0;
@@ -453,7 +469,8 @@ static int linear_regression(int m, int n) {
   k=0;
   polyfill(X,m,n,k);
   tulos=linreg(X,Y,S,U,T,B,R,m,n);
-  if (tulos<0) return(-1);
+  if (tulos<0) { return(-1);
+}
 
   if (!tulos) {
 
@@ -476,7 +493,8 @@ static int linear_regression(int m, int n) {
 */
 
       tulos=linreg(X,Y,S,U,T,B,R,m,n);
-      if (tulos<0) return(-1);
+      if (tulos<0) { return(-1);
+}
 
     } while (tulos!=TRUE && j<data.m_act);
   }
@@ -487,7 +505,8 @@ static int linear_regression(int m, int n) {
 
   if (tulos) {
 
-    if (k>0) *(X+0)=*(oma+m);
+    if (k>0) { *(X+0)=*(oma+m);
+}
 
     polyrow(X,1,n,0,k,m+1);
 
@@ -496,12 +515,14 @@ static int linear_regression(int m, int n) {
 */
     if ( pow( *(Y+m)-solve_term(X,B,1,n,0) ,2) < MINTOLERANCE ) {
 
-      if (k>0) *(X+0)=*(oma+m+1);
+      if (k>0) { *(X+0)=*(oma+m+1);
+}
       polyrow(X,1,n,0,k,m+2);
       tulosterm=solve_term(X,B,1,n,0);
 
       tulosl=(int)floor(tulosterm);
-      if (fabs(tulosterm-tulosl)>.5) tulosl=(int)ceil(tulosterm);
+      if (fabs(tulosterm-tulosl)>.5) { tulosl=(int)ceil(tulosterm);
+}
 
       muste_ltoa(tulosl,nterm_output_buffer,10);
       nterm_type=POLYNOMIAL;
@@ -531,7 +552,8 @@ static int linear_regression(int m, int n) {
 */
 
 
-    for (i=0;i<m;i++) *(X+i)=1;
+    for (i=0;i<m;i++) { *(X+i)=1;
+}
 
     for (j=1;j<=n;j++) {
       for (i=0;i<m;i++) {
@@ -544,7 +566,8 @@ static int linear_regression(int m, int n) {
 */
 
     tulos=linreg(X,Y,S,U,T,B,R,m,a);
-    if (tulos<0) return(-1);
+    if (tulos<0) { return(-1);
+}
 
 /*
     showmatrix(B,a,1);
@@ -565,7 +588,8 @@ printf("\ntark:%f\n",pow(tulosterm-*(Y+m+1),2));WAIT;
          tulosterm+=(*(Y+m-k))*(*(B+1+k));
         }
         tulosl=(int)floor(tulosterm);
-        if (fabs(tulosterm-tulosl)>.5) tulosl=(int)ceil(tulosterm);
+        if (fabs(tulosterm-tulosl)>.5) { tulosl=(int)ceil(tulosterm);
+}
 
         muste_ltoa(tulosl,nterm_output_buffer,10);
 
@@ -623,7 +647,8 @@ static int residual(double *R, double *B, double *Y, double *X,int m, int n) {
     r+=h*h;
   }
 
-  if (r<MINTOLERANCE) tulos=TRUE;
+  if (r<MINTOLERANCE) { tulos=TRUE;
+}
 
 
 /*
@@ -643,14 +668,16 @@ static double* matrixmalloc(int m, int n) {
     sur_print("\nOut of memory!");
     WAIT; return(NULL);
   }
-  for (i=0; i<n*m; i++) *(t+i)=0;
+  for (i=0; i<n*m; i++) { *(t+i)=0;
+}
   return t;
 }
 
 
 static void mat_store(double *X, double *Y,int m, int n) {
   int i;
-  for (i=0; i<n*m; i++) *(Y+i)=*(X+i);
+  for (i=0; i<n*m; i++) { *(Y+i)=*(X+i);
+}
 }
 
 

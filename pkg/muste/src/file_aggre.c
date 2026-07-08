@@ -81,7 +81,8 @@ static int talletus()
         for (j=1L; j<=aggn; ++j)
             {
             if (prind) { muste_sprintf(sbuf," %d",(int)j); sur_print(sbuf); }
-            if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); prind=1-prind; }
+            if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) { sur_getch(); 
+}prind=1-prind; }
             fi_miss_obs(&d2.d2,j);
 
             if (aggtype=='S')
@@ -96,15 +97,18 @@ static int talletus()
                 fi_save(&d2.d2,(long)j,aggvar,&x);
                 }
 
-            i=lue(j-1L,&weight,xx); if (i<0) return(-1);
-            if (freqvar>=0)
+            i=lue(j-1L,&weight,xx); if (i<0) { return(-1);
+}
+            if (freqvar>=0) {
                 fi_save(&d2.d2,j,freqvar,&weight);
+}
             for (i=0; i<m; ++i)
                 {
                 x=xx[i];
-                if (aggmode==1) x/=weight;
-                if (d2.vartype[v[i]][0]!='S') fi_save(&d2.d2,(long)j,v[i],&x);
-                else
+                if (aggmode==1) { x/=weight;
+}
+                if (d2.vartype[v[i]][0]!='S') { fi_save(&d2.d2,(long)j,v[i],&x);
+                } else
                     {
                     fnconv(x,d2.varlen[v[i]],label);
                     fi_save(&d2.d2,(long)j,v[i],label);
@@ -196,29 +200,35 @@ static int aggregate()
             sur_print(sbuf); WAIT; return(-1);
             }
 
-        i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
-        i=spfind("PRIND"); if (i>=0) prind=atoi(spb[i]);
+        i=hae_apu("prind",sbuf); if (i) { prind=atoi(sbuf);
+}
+        i=spfind("PRIND"); if (i>=0) { prind=atoi(spb[i]);
+}
 
         sur_print("\nScanning observations...");
         aggn=0;
         for (j=d.l1; j<=d.l2; ++j)
             {
-            if (unsuitable(&d,j)) continue;
+            if (unsuitable(&d,j)) { continue;
+}
             if (wvar>=0)
                 {
                 data_load(&d,j,wvar,&weight);
                 if (weight==MISSING8) { ++miss; continue; }
                 }
-            else weight=1.0;
+            else { weight=1.0;
+}
             for (i=0; i<m; ++i)
                 {
                 data_load(&d,j,v[i],&xx[i]);
-                if (xx[i]==MISSING8) break;
+                if (xx[i]==MISSING8) { break;
+}
                 }
             if (i<m) { ++miss; continue; }
 
             if (prind) { muste_sprintf(sbuf," %ld",j); sur_print(sbuf); }
-            if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); prind=1-prind; }
+            if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) { sur_getch(); 
+}prind=1-prind; }
 
             if (aggtype)
                 {
@@ -228,7 +238,8 @@ static int aggregate()
                     for (ig=0L; ig<aggn; ++ig)
                         {
                         vert=strncmp(aggs,aspace+ig*(long)aggrec,agglen);
-                        if (vert==0) break;
+                        if (vert==0) { break;
+}
                         }
                     }
                 else
@@ -237,35 +248,42 @@ static int aggregate()
                     for (ig=0L; ig<aggn; ++ig)
                         {
                         hp=aspace+ig*(long)aggrec;
-                        if (aggv==*(double *)hp) break;
+                        if (aggv==*(double *)hp) { break;
+}
                         }
                     }
 
                 if (ig<aggn)  /* vanha tapaus */
                     {
-                    i=lue(ig,&w2,xx2); if (i<0) return(-1);
+                    i=lue(ig,&w2,xx2); if (i<0) { return(-1);
+}
                     for (i=0; i<m; ++i)
                         {
                         xx[i]=xx2[i]+weight*xx[i];
                         }
                     weight+=w2;
-                    i=talleta(ig,weight,xx); if (i<0) return(-1);
+                    i=talleta(ig,weight,xx); if (i<0) { return(-1);
+}
                     }
                 else  /* uusi tapaus */
                     {
                     if ((aggn+1L)*(long)aggrec>aggmax)
                         {
                         i=uusi_tila();
-                        if (i<0) return(-1);
+                        if (i<0) { return(-1);
+}
                         }
                     hp=aspace+aggn*(long)aggrec;
-                    if (aggtype=='S') muste_fieldcopy(hp,aggs,agglen);
-                    else *(double *)hp=aggv;
-                    if (weight!=1.0) for (i=0; i<m; ++i)
+                    if (aggtype=='S') { muste_fieldcopy(hp,aggs,agglen);
+                    } else { *(double *)hp=aggv;
+}
+                    if (weight!=1.0) { for (i=0; i<m; ++i)
                                          {
                                          xx[i]*=weight;    /* 16.8.91 */
                                          }
-                    i=talleta(aggn,weight,xx); if (i<0) return(-1);
+}
+                    i=talleta(aggn,weight,xx); if (i<0) { return(-1);
+}
                     ++aggn;
                     }
                 }
@@ -340,8 +358,10 @@ static int aggvars()
         int i;
 
         m=0;
-        for (i=0; i<d.m_act; ++i)
-            if (d.v[i]!=aggvar && d.vartype[d.v[i]][1]=='A') v[m++]=d.v[i];
+        for (i=0; i<d.m_act; ++i) {
+            if (d.v[i]!=aggvar && d.vartype[d.v[i]][1]=='A') { v[m++]=d.v[i];
+}
+}
               /* 11.9.91 */
         if (m==0)
             {
@@ -382,7 +402,8 @@ aspace=NULL;
 xx=NULL;
 xx2=NULL;
 
-        if (argc==1) return;
+        if (argc==1) { return;
+}
         s_init(argv[1]);
         if (g<4)
             {
@@ -391,15 +412,19 @@ xx2=NULL;
             WAIT; return;
             }
 
-        i=data_read_open(word[2],&d); if (i<0) return;
+        i=data_read_open(word[2],&d); if (i<0) { return;
+}
         if (d.type!=2)
             {
             muste_sprintf(sbuf,"\n%s must be a SURVO 84 data file!",word[2]);
             sur_print(sbuf); WAIT; return;
             }
-        i=sp_init(r1+r-1); if (i<0) return;
-        i=mask(&d); if (i<0) return;
-        i=conditions(&d); if (i<0) return;
+        i=sp_init(r1+r-1); if (i<0) { return;
+}
+        i=mask(&d); if (i<0) { return;
+}
+        i=conditions(&d); if (i<0) { return;
+}
 
         if (muste_strcmpi(word[2],word[3])==0)
             {
@@ -419,7 +444,8 @@ xx2=NULL;
         i=split(x,osa,2);
         if (i==0) { sur_print("\nError in AGGRE specification!"); WAIT; return; }
         aggvar=varfind2(&d,osa[0],0);
-        if (aggvar>=0) aggtype=d.vartype[aggvar][0]; else aggtype=EOS;
+        if (aggvar>=0) { aggtype=d.vartype[aggvar][0]; } else { aggtype=EOS;
+}
         if (aggvar<0)
             {
             aggperiod=atoi(osa[0]);
@@ -432,9 +458,9 @@ xx2=NULL;
         aggmode=0;  /* "SUM" */
         if (i>1)
             {
-            if (muste_strcmpi(osa[1],"MEAN")==0) aggmode=1;
-            else if (muste_strcmpi(osa[1],"SUM")==0) aggmode=0;
-            else
+            if (muste_strcmpi(osa[1],"MEAN")==0) { aggmode=1;
+            } else if (muste_strcmpi(osa[1],"SUM")==0) { aggmode=0;
+            } else
                 {
                 muste_sprintf(sbuf,"\nUnknown aggregation mode %s",osa[1]);
                 sur_print(sbuf); WAIT; return;
@@ -445,12 +471,14 @@ xx2=NULL;
         if (aggvar>=0)
             {
             agglen=d.varlen[aggvar];
-        if (aggtype!='S') agglen=8;
+        if (aggtype!='S') { agglen=8;
+}
 
 /*          if (agglen>8) agglen=8;       */
             }
 
-        i=avaus(word[3]); if (i<0) return;
+        i=avaus(word[3]); if (i<0) { return;
+}
 
         i=data_open2(word[3],&d2,1,0,0);
         n=0L;
@@ -465,16 +493,20 @@ xx2=NULL;
             if (freqvar<0)
                 {
                 freqvar=create_newvar(&d2,spb[i],'8',8);
-                if (freqvar<0) return;
+                if (freqvar<0) { return;
+}
                 }
             }
         v=(int *)muste_malloc(d.m*sizeof(int));
         if (v==NULL) { not_enough_memory(); return; }
 
-        m=aggvars(); if (m==0) return;
+        m=aggvars(); if (m==0) { return;
+}
         aggrec=agglen;
-        i=varaa_tilat(); if (i<0) return;
-        i=aggregate(); if (i<0) return;
+        i=varaa_tilat(); if (i<0) { return;
+}
+        i=aggregate(); if (i<0) { return;
+}
         i=talletus();
         data_close(&d);
         data_close(&d2);

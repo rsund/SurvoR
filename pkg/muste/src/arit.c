@@ -127,12 +127,14 @@ int op_ext_func()
         i=0; j=r1+r;
         while (*func_name[i]!=EOS)
             {
-            if (j==r2) break;
+            if (j==r2) { break;
+}
             edwrite(space,j,1);
             strcpy(sbuf,func_name[i++]); strcat(sbuf,".X(1)=");
             edwrite(sbuf,j++,1);
             }
-        if (j==r2) return(1);
+        if (j==r2) { return(1);
+}
         edwrite(space,j,1);
         disp();
         return(1);
@@ -274,7 +276,8 @@ static int varaa_earg()
         WAIT;
         return(-1);
     }
-    for (i=0; i<MAXEARG; i++) earg[i]=0.0;
+    for (i=0; i<MAXEARG; i++) { earg[i]=0.0;
+}
     /* earg_varattu=1; */
     return(1);
 }
@@ -292,11 +295,13 @@ int replace_function_name(char *sana,int *plen) /* 13.2.2005 esim. M()=MAT_RG.M(
     strncat(sana2,sana,(unsigned int)*plen);
     strcat(sana2,"()");
     i=spfind(sana2);
-    if (i<0) return(1);
+    if (i<0) { return(1);
+}
     /*Rprintf("\nfunc=%s|",spb[i]); getch(); */
     strcpy(x,spb[i]);
     p=strchr(x,'(');
-    if (p!=NULL) *p=EOS;
+    if (p!=NULL) { *p=EOS;
+}
     len=strlen(x);
     strcpy(sana2,spb[i]);
     strcat(sana2,sana+*plen);
@@ -386,7 +391,10 @@ static int laske2(char *muuttuja,double *y)
 
     i=spfind(muuttuja);
     
-    if (i<0) for (i=0; i<strlen(muuttuja); i++) if (muuttuja[i]==',') muuttuja[i]=EOS; // RS ADD
+    if (i<0) { for (i=0; i<strlen(muuttuja); i++) { if (muuttuja[i]==',') { muuttuja[i]=EOS; // RS ADD
+}
+}
+}
     i=spfind(muuttuja); // RS ADD
 
     if (i<0)
@@ -413,7 +421,8 @@ static int laske2(char *muuttuja,double *y)
     }
 
     k=laske(spb[i],y);
-    if (k<0) return(-1); // RS ADD
+    if (k<0) { return(-1); // RS ADD
+}
     arvo[i]=*y;
     spb[i]=NULL;
     return(1);
@@ -427,14 +436,17 @@ static double luku(char *sana,int len)
 
     sana[len]=EOS;
     p=sana;
-    if (*p=='-') ++p;
+    if (*p=='-') { ++p;
+}
     if (strchr("1234567890.",*p)==NULL)
     {
         laske2(p,&tulos);
-        if (*sana=='-') return(-tulos);
+        if (*sana=='-') { return(-tulos);
+}
         return(tulos);
     }
-    if (sana[len-1]=='%') return(atof(sana)/100.0);   /* 28.2.1992 */
+    if (sana[len-1]=='%') { return(atof(sana)/100.0);   /* 28.2.1992 */
+}
     return(atof(sana));
 }
 
@@ -442,7 +454,8 @@ static int supista(int *t,double opnd[],char op[],int v[])
 {
     while (*t>1)
     {
-        if (v[*t-1]>v[*t-2]) return(1);
+        if (v[*t-1]>v[*t-2]) { return(1);
+}
         opnd[*t-2]=oper(opnd[*t-2],opnd[*t-1],(char)(op[*t-2]));
         op[*t-2]=op[*t-1];
         v[*t-2]=v[*t-1];
@@ -508,21 +521,24 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
     
     if (*lauseke=='i')
     {
-        if (strncmp(lauseke,"if(",3)==0)
+        if (strncmp(lauseke,"if(",3)==0) {
             return(varif(lauseke,y));
-        else if (strncmp(lauseke,"integral(",9)==0)    /* 2.1.1995 */
+        } else if (strncmp(lauseke,"integral(",9)==0) {    /* 2.1.1995 */
             return(laske_integral(lauseke,y));
+}
     }
     if (*lauseke=='f')
     {
-        if (strncmp(lauseke,"for(",4)==0)
+        if (strncmp(lauseke,"for(",4)==0) {
             return(arifor(lauseke,y));
+}
     }
 
     if (*lauseke=='r')
     {
-        if (strncmp(lauseke,"root_of(",8)==0)
+        if (strncmp(lauseke,"root_of(",8)==0) {
             return(root_of(lauseke,y));
+}
     }
 
     if (strlen(lauseke)>MAXPITUUS-2)
@@ -542,7 +558,8 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
         *x='0';
         strcpy(x+1,lauseke);
     }
-    else strcpy(x,lauseke);
+    else { strcpy(x,lauseke);
+}
 
     len=0;
     p=x;
@@ -550,7 +567,8 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
 // Rprintf("\nlauseke=%s|\n",lauseke); /* getch(); */
     while (*p)
     {
-        if (l_virhe) return(-1);
+        if (l_virhe) { return(-1);
+}
         switch (*p)
         {
         case '+':
@@ -559,7 +577,8 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
                 ++p;
                 break;
             }
-            if (len>0) opnd[t]=luku(sana,len);
+            if (len>0) { opnd[t]=luku(sana,len);
+}
             len=0;
             op[t]='+';
             v[t++]=1;
@@ -574,7 +593,8 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
                 ++p;
                 break;
             }
-            if (len>0) opnd[t]=luku(sana,len);
+            if (len>0) { opnd[t]=luku(sana,len);
+}
             len=0;
             op[t]='-';
             v[t++]=1;
@@ -588,7 +608,8 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
                 syntax_error(lauseke);
                 return(-1);
             }
-            if (len>0) opnd[t]=luku(sana,len);
+            if (len>0) { opnd[t]=luku(sana,len);
+}
             len=0;
             op[t]='*';
             v[t++]=2;
@@ -602,7 +623,8 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
                 syntax_error(lauseke);
                 return(-1);
             }
-            if (len>0) opnd[t]=luku(sana,len);
+            if (len>0) { opnd[t]=luku(sana,len);
+}
             len=0;
             op[t]='/';
             v[t++]=2;
@@ -616,7 +638,8 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
                 syntax_error(lauseke);
                 return(-1);
             }
-            if (len>0) opnd[t]=luku(sana,len);
+            if (len>0) { opnd[t]=luku(sana,len);
+}
             len=0;
             op[t]='^';
             v[t++]=3;
@@ -674,8 +697,8 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
                 {
                     *p=EOS;
 
-                    if (mat_element) str_opnd[n_mat_par++]=q;
-                    else
+                    if (mat_element) { str_opnd[n_mat_par++]=q;
+                    } else
                     {
                         /*    Rprintf("\nq=%s|",q); getch(); */
                         laske(q,&opnd[t]);
@@ -710,11 +733,12 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
             ++p;
             /*  Rprintf("\nq=%s",q); getch();   */
 
-            if (mat_element) str_opnd[n_mat_par++]=q;
-            else
+            if (mat_element) { str_opnd[n_mat_par++]=q;
+            } else
             {
                 i=laske(q,&opnd[t]);
-                if (i<0 || l_virhe) return(-1);
+                if (i<0 || l_virhe) { return(-1);
+}
             }
             /*  Rprintf("\ntulos1=%f",opnd[t]); getch();  */
             if (len==0)
@@ -731,11 +755,13 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
                              for (i=t-narg+1; i<=t; ++i)Rprintf(" %g",opnd[i]); getch();
                 ************************/
                 t=t-narg+1;
-                if (*sana=='-')
+                if (*sana=='-') {
                     opnd[t]=-mfunktio(sana+1,opnd+t,narg);
-                else
+                } else {
                     opnd[t]=mfunktio(sana,opnd+t,narg);
-                if (l_virhe) return(-1);
+}
+                if (l_virhe) { return(-1);
+}
 
                 *sana=EOS;
                 len=-1;
@@ -743,11 +769,13 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
             }
 
             /* Yhden muuttujan funktiot */
-            if (*sana=='-')
+            if (*sana=='-') {
                 opnd[t]=-funktio(sana+1,opnd[t]);
-            else
+            } else {
                 opnd[t]=funktio(sana,opnd[t]);
-            if (l_virhe) return(-1);
+}
+            if (l_virhe) { return(-1);
+}
             len=-1;
             break;
 
@@ -764,7 +792,8 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
                 {
                     sana[len++]=*p;
                     ++p;
-                    if (*p!='+' && *p!='-') break;
+                    if (*p!='+' && *p!='-') { break;
+}
                 }
             }
             /* fall through */
@@ -793,7 +822,8 @@ int muste_arit_laske(char *lauseke,double *y)
 {
 int i;
 i=laske(lauseke,y);
-if (l_virhe) i=-1;
+if (l_virhe) { i=-1;
+}
 return(i);
 }
 
@@ -922,7 +952,8 @@ static int varif(char *lauseke,double *y)
         }
         if (*p==')')
         {
-            if (!sulut) break;
+            if (!sulut) { break;
+}
             --sulut;
         }
         ++p;
@@ -951,7 +982,8 @@ static int varif(char *lauseke,double *y)
         }
         if (*p==')')
         {
-            if (!sulut) break;
+            if (!sulut) { break;
+}
             --sulut;
         }
         ++p;
@@ -971,27 +1003,34 @@ static int varif(char *lauseke,double *y)
     switch (rel)
     {
     case '=':
-        if (*y==y1) tosi=1;
+        if (*y==y1) { tosi=1;
+}
         break;
     case '<':
-        if (*y<y1) tosi=1;
+        if (*y<y1) { tosi=1;
+}
         break;
     case '>':
-        if (*y>y1) tosi=1;
+        if (*y>y1) { tosi=1;
+}
         break;
     case 'E':
-        if (*y!=y1) tosi=1;
+        if (*y!=y1) { tosi=1;
+}
         break;
     case 'P':
-        if (*y<=y1) tosi=1;
+        if (*y<=y1) { tosi=1;
+}
         break;
     case 'S':
-        if (*y>=y1) tosi=1;
+        if (*y>=y1) { tosi=1;
+}
         break;
     }
 
-    if (tosi) laske(c,y);
-    else      laske(d,y);
+    if (tosi) { laske(c,y);
+    } else {      laske(d,y);
+}
     return(1);
 }
 
@@ -1030,7 +1069,8 @@ static int kirjoita2(char *sana,int j,int sar)
     len=strlen(sana);
     muste_fieldcopy(rivi+sar,sana,(unsigned int)len);
     i=sar+len;
-    while (i<LLENGTH && rivi[i]!=' ') rivi[i++]=' ';
+    while (i<LLENGTH && rivi[i]!=' ') { rivi[i++]=' ';
+}
     edwrite(rivi,j,0);
     return(1);
 }
@@ -1048,7 +1088,8 @@ static int kirjoita(double tulos,int j,int sar)
     double a;
     /*        int e;  */
     t=empty;
-    if (puhdas_dat_kysely) return(1);
+    if (puhdas_dat_kysely) { return(1);
+}
     if (*(z+(j-1)*ed1)=='\'')
     {
         muste_sprintf(sana,"%.16e",tulos);
@@ -1071,7 +1112,8 @@ static int kirjoita(double tulos,int j,int sar)
             if (strchr(spb[i],':')!=NULL) // RS 6.5.2014
                 {
                 *x=EOS;
-                if (*spb[i]!='(') strcpy(x,"()");
+                if (*spb[i]!='(') { strcpy(x,"()");
+}
                 strcat(x,spb[i]);
                 comp=0; dec=0; i=0; while (x[i]!=EOS) 
                     { 
@@ -1080,18 +1122,20 @@ static int kirjoita(double tulos,int j,int sar)
                     i++;
                     }
                 comp=split(x,osa,20);
-                if (dec==0) dec=comp;            
+                if (dec==0) { dec=comp;            
+}
 //    Rprintf("\ncomp: %d, dec: %d",comp,dec);
                 for (i=0; i<comp; i++)
                     {
                     p=strchr(osa[comp-1-i],'(');
-                    if (p==NULL) label[i]=t;
-                    else
+                    if (p==NULL) { label[i]=t;
+                    } else
                         {
                         label[i]=p+1;  
                         q=strchr(p+1,')');
                         *p=EOS; 
-                        if (q!=NULL) *q=EOS;
+                        if (q!=NULL) { *q=EOS;
+}
                         }
                     modu[i]=atoi(osa[comp-1-i]);
                     if (i<(comp-1) && modu[i]<=0) 
@@ -1120,7 +1164,8 @@ static int kirjoita(double tulos,int j,int sar)
                         l_virhe=1;
                         return(-1);
                         }
-                    else resu[i]=(int)a1%a2;
+                    else { resu[i]=(int)a1%a2;
+}
                     tulos/=modu[i];
                     i++;
                     }
@@ -1152,16 +1197,19 @@ static int kirjoita(double tulos,int j,int sar)
         {
             muste_sprintf(x,"%.*f",-tarkkuus,tulos);
             p=x;
-            if (*p==' ') ++p;
+            if (*p==' ') { ++p;
+}
             strcpy(sana,p);
         }
         else
         {
-            if (tarkkuus>20) tarkkuus=20; /* 11.7.2002 */
+            if (tarkkuus>20) { tarkkuus=20; /* 11.7.2002 */
+}
 
             fnconv(tulos,tarkkuus+3,x);
             p=x;
-            while (*p && *p==' ') ++p;
+            while (*p && *p==' ') { ++p;
+}
             strcpy(sana,p);
             if (strchr(sana,'.')!=NULL && strchr(sana,'e')==NULL)
             {
@@ -1171,12 +1219,14 @@ static int kirjoita(double tulos,int j,int sar)
                     *p=EOS;
                     --p;
                 }
-                if (*p=='.') *p=EOS;
+                if (*p=='.') { *p=EOS;
+}
             }
         }
     }
-    else
+    else {
         fconv(tulos,"",sana);
+}
     kirjoita2(sana,j,sar);
     return(1);
 }
@@ -1247,7 +1297,8 @@ static int parsplit(char *x,char **a,char **b,int max)
         a[i]=p;
         while (*p)
         {
-            if (*p=='(') break;
+            if (*p=='(') { break;
+}
             if (*p==')')
             {
                 if_syntax_error(y);
@@ -1268,9 +1319,11 @@ static int parsplit(char *x,char **a,char **b,int max)
             if (*p==')')
             {
                 --sulut;
-                if (!sulut) break;
+                if (!sulut) { break;
+}
             }
-            else if (*p=='(') ++sulut;
+            else if (*p=='(') { ++sulut;
+}
             ++p;
         }
         if (sulut)
@@ -1280,7 +1333,8 @@ static int parsplit(char *x,char **a,char **b,int max)
         }
         *p=EOS;
         ++p;
-        if (*p==EOS) break;
+        if (*p==EOS) { break;
+}
         ++i;
         if (i>=max)
         {
@@ -1327,7 +1381,8 @@ static int laske_integral(char *lauseke,double *y)
     strcpy(x,lauseke);
     g=parsplit(x,sana,laus,5);
     /* for (i=0; i<g; ++i)Rprintf("\n%s %s",sana[i],laus[i]); getch(); */
-    if (g<0) return(-1);
+    if (g<0) { return(-1);
+}
     if (g<3)
     {
         integral_syntax_error(lauseke);
@@ -1338,7 +1393,8 @@ static int laske_integral(char *lauseke,double *y)
     laske(laus[2],&loppu);
     eps=1e-10;
     n0=12;
-    if (g>3) laske(laus[3],&eps);
+    if (g>3) { laske(laus[3],&eps);
+}
     if (g>4)
     {
         laske(laus[4],&s);
@@ -1346,7 +1402,8 @@ static int laske_integral(char *lauseke,double *y)
     }
     /*Rprintf("\n%g %g %g",alku,loppu,eps); getch(); */
     iind=aseta_earg(alku,esana);
-    if (iind<0) return(-1);
+    if (iind<0) { return(-1);
+}
     korvaa(sterm,"x",esana);
     /*Rprintf("\nsterm=%s",sterm); getch(); */
     /* koe:
@@ -1376,7 +1433,8 @@ static int laske_integral(char *lauseke,double *y)
         s=(t+2*m)/3;
         h/=2;
         /*      Rprintf("\ns=%.16g",s);   */
-        if (muste_fabs(t-m)/(muste_fabs(s)+eps*eps)<eps) break;
+        if (muste_fabs(t-m)/(muste_fabs(s)+eps*eps)<eps) { break;
+}
         ++n;
     }
     *y=s;
@@ -1409,7 +1467,8 @@ static int arifor(char *lauseke,double *y)
 
     strcpy(x,lauseke);
     g=parsplit(x,sana,laus,4);
-    if (g<0) return(-1);
+    if (g<0) { return(-1);
+}
     if (g<3)
     {
         if_syntax_error(lauseke);
@@ -1435,8 +1494,8 @@ static int arifor(char *lauseke,double *y)
     {
         iterm=1;
         p=strchr(laus[2],'=');
-        if (p==NULL) term=0.0;
-        else
+        if (p==NULL) { term=0.0;
+        } else
         {
             *p=EOS;    /* laus[2]='term' */
             laske(p+1,&term);
@@ -1444,12 +1503,14 @@ static int arifor(char *lauseke,double *y)
     }
     strcpy(sterm,laus[2+iterm]);
     iind=aseta_earg((double)ialku,esana);
-    if (iind<0) return(-1);
+    if (iind<0) { return(-1);
+}
     korvaa(sterm,laus[0],esana);
     if (iterm)
     {
         tind=aseta_earg(term,esana);
-        if (iind<0) return(-1);
+        if (iind<0) { return(-1);
+}
         korvaa(sterm,laus[2],esana);
     }
 
@@ -1461,13 +1522,15 @@ static int arifor(char *lauseke,double *y)
         {
             max=3;
             sum=1e300;
-            if (p[3]=='i') max=4;
+            if (p[3]=='i') { max=4;
+}
         }
         else
         {
             max=1;
             sum=-1e300;
-            if (p[3]=='i') max=2;
+            if (p[3]=='i') { max=2;
+}
         }
         for (il=ialku; il<=iloppu; ++il)
         {
@@ -1475,9 +1538,11 @@ static int arifor(char *lauseke,double *y)
             if (iterm)
             {
                 earg[tind]=term;
-                if (il>ialku) laske(sterm,&term);
+                if (il>ialku) { laske(sterm,&term);
+}
             }
-            else laske(sterm,&term);
+            else { laske(sterm,&term);
+}
             if (max<3 && term>sum)
             {
                 sum=term;
@@ -1499,9 +1564,11 @@ static int arifor(char *lauseke,double *y)
             if (iterm)
             {
                 earg[tind]=term;
-                if (il>ialku) laske(sterm,&term);
+                if (il>ialku) { laske(sterm,&term);
+}
             }
-            else laske(sterm,&term);
+            else { laske(sterm,&term);
+}
             sum+=term;
         }
     }
@@ -1514,9 +1581,11 @@ static int arifor(char *lauseke,double *y)
             if (iterm)
             {
                 earg[tind]=term;
-                if (il>ialku) laske(sterm,&term);
+                if (il>ialku) { laske(sterm,&term);
+}
             }
-            else laske(sterm,&term);
+            else { laske(sterm,&term);
+}
             sum*=term;
         }
     }
@@ -1528,9 +1597,11 @@ static int arifor(char *lauseke,double *y)
             if (iterm)
             {
                 earg[tind]=term;
-                if (il>ialku) laske(sterm,&term);
+                if (il>ialku) { laske(sterm,&term);
+}
             }
-            else laske(sterm,&term);
+            else { laske(sterm,&term);
+}
         }
         sum=term;
     }
@@ -1540,8 +1611,9 @@ static int arifor(char *lauseke,double *y)
         return(-1);
     }
 
-    if (max==2 || max==4) *y=(double)imax;
-    else *y=sum;
+    if (max==2 || max==4) { *y=(double)imax;
+    } else { *y=sum;
+}
     n_earg-=1+iterm;
     return(1);
 }
@@ -1583,12 +1655,14 @@ static int root_of(char *lauseke,double *y)  /* root_of(f(x),x1,x2,accuracy) */
             *q++='r';
             ++p;
         }
-        else *q++=*p++;
+        else { *q++=*p++;
+}
     }
     *q=EOS;
 
-    if (i==4) acc=atof(par[3]);
-    else acc=1e-14;
+    if (i==4) { acc=atof(par[3]);
+    } else { acc=1e-14;
+}
 
     i_x=spfind("@r");
     spb[i_x]=NULL;
@@ -1628,7 +1702,8 @@ static int root_of(char *lauseke,double *y)  /* root_of(f(x),x1,x2,accuracy) */
         strcpy(fct,fct0);
         arvo[i_x]=xmid;
         laske(fct,&fmid);
-        if (fmid<=0.0) rtb=xmid;
+        if (fmid<=0.0) { rtb=xmid;
+}
         if (muste_fabs(dx)<acc || fmid==0.0)
         {
             *y=rtb;
@@ -1659,7 +1734,8 @@ static int f_edit(char *s,double *x,int n,double *py)
         remember_this=0;
         len=strlen(s); s[len++]='(';
         i=0;
-        while (i<spn && ((spp[i]!=':' && spp[i]!='|') || strncmp(s,spa[i],len)!=0)) ++i;
+        while (i<spn && ((spp[i]!=':' && spp[i]!='|') || strncmp(s,spa[i],len)!=0)) { ++i;
+}
         if (i==spn) { s[len-1]=EOS; return(-1); }
 //Rprintf("\nargs: %g %g",x[0],x[1]); getck();
 //Rprintf("spa=%s spp=%c spb=%s\n",spa[i],spp[i],spb[i]); getck();
@@ -1669,9 +1745,13 @@ static int f_edit(char *s,double *x,int n,double *py)
         if (spp[i]=='|')
             {
             ir=-1;
-            if (n_remf>0)
-            for (k=0; k<n_remf; ++k) if (strcmp(fname,remf_name[k])==0) break;
-            if (k<n_remf) ir=k;
+            if (n_remf>0) {
+            for (k=0; k<n_remf; ++k) { if (strcmp(fname,remf_name[k])==0) { break;
+}
+}
+}
+            if (k<n_remf) { ir=k;
+}
 /***********
   Rprintf("\nn_remf=%d fname=%s ir=%d",n_remf,fname,ir);
    for (k=0; k<n_remf; ++k)Rprintf("\n%d name=%s",k,remf_name[k]);
@@ -1691,7 +1771,8 @@ static int f_edit(char *s,double *x,int n,double *py)
                     p=remember_space[ir]+k*remember_width[ir];
                     for (h=0; h<n; ++h)
                         {
-                        if (*(int *)p!=(int)x[h]) break;
+                        if (*(int *)p!=(int)x[h]) { break;
+}
                         p+=sizeof(int); // RS FIXME SYSDEP?
                         }
                     if (h==n)
@@ -1708,8 +1789,9 @@ static int f_edit(char *s,double *x,int n,double *py)
                 if (n_remf==0)
                   {
                   k=spfind("REMEMBER");
-                  if (k>=0) remember=atoi(spb[k]);
-                  else remember=100000;
+                  if (k>=0) { remember=atoi(spb[k]);
+                  } else { remember=100000;
+}
                   }
 
                 if (n_remf>=MAX_RF)
@@ -1746,7 +1828,8 @@ static int f_edit(char *s,double *x,int n,double *py)
 */
         for (i=0; i<n; ++i)
             {
-            k=aseta_earg(x[i],sana); if (k<0) return(-1);
+            k=aseta_earg(x[i],sana); if (k<0) { return(-1);
+}
             korvaa(lauseke,osa[i],sana);
             }
 //Rprintf("x[0]=%g x[1]=%g\n",x[0],x[1]); getch();
@@ -1765,9 +1848,11 @@ static int f_edit(char *s,double *x,int n,double *py)
             for (i=0; i<n; ++i)
                 {
                 len=x[i]; q=(char *)&len;
-                for (k=0; k<sizeof(int); ++k) *p++=*q++; // RS FIXME SYSDEP?
+                for (k=0; k<sizeof(int); ++k) { *p++=*q++; // RS FIXME SYSDEP?
+}
                 }
-            q=(char *)&y; for (k=0; k<sizeof(double); ++k) *p++=*q++;
+            q=(char *)&y; for (k=0; k<sizeof(double); ++k) { *p++=*q++;
+}
             ++n_remember[ir];
 
 //Rprintf("n_remember=%d %g %g %g\n",n_remember[ir],x[0],x[1],*py); getck();
@@ -1781,10 +1866,14 @@ static int lab_find(char *x, char *lab, int m, int len)
         int i;
 
         strcpy(s,x);
-        for (i=strlen(s); i<len; ++i) s[i]=' ';
-        for (i=0; i<m; ++i)
-            if (strncmp(s,lab+i*len,(unsigned int)len)==0) break;
-        if (i==m) return(-1);
+        for (i=strlen(s); i<len; ++i) { s[i]=' ';
+}
+        for (i=0; i<m; ++i) {
+            if (strncmp(s,lab+i*len,(unsigned int)len)==0) { break;
+}
+}
+        if (i==m) { return(-1);
+}
         return(i+1);
         }
         
@@ -1814,16 +1903,18 @@ if (str_opnd[0]==NULL) { /* sur_print("\nERROR (f_tiedosto_read)"); WAIT */ retu
         strcpy(aineisto,str_opnd[0]);
         i=data_read_open(aineisto,&dat);
         
-        if (i<0) return('-');
+        if (i<0) { return('-');
+}
         strcpy(muuttuja,str_opnd[2]);
-        if (strcmp(muuttuja,"ORDER")==0) var=-2;
-        else
+        if (strcmp(muuttuja,"ORDER")==0) { var=-2;
+        } else
             {
             var=varfind2(&dat,muuttuja,0);
             if (var<0)
                  {
                  p=muuttuja;
-                 if (*p=='#') ++p;
+                 if (*p=='#') { ++p;
+}
                  var=atoi(p)-1;
                  }
             if (var<0 || var>dat.m-1)
@@ -1834,8 +1925,9 @@ if (str_opnd[0]==NULL) { /* sur_print("\nERROR (f_tiedosto_read)"); WAIT */ retu
                 }
             }
 
-        if (*str_opnd[1]=='#') j=atol(str_opnd[1]+1);
-        else j=0L;
+        if (*str_opnd[1]=='#') { j=atol(str_opnd[1]+1);
+        } else { j=0L;
+}
 
         if (j==0L)
             {
@@ -1860,18 +1952,23 @@ if (str_opnd[0]==NULL) { /* sur_print("\nERROR (f_tiedosto_read)"); WAIT */ retu
                 p=haku_sana2;
                 while (1)
                     {
-                    p=strchr(p,'_'); if (p==NULL) break;
+                    p=strchr(p,'_'); if (p==NULL) { break;
+}
                     *p=' ';
                     }
-                if (strchr(haku_sana2,' ')==NULL) *haku_sana2=EOS;
+                if (strchr(haku_sana2,' ')==NULL) { *haku_sana2=EOS;
+}
                 for (j=(unsigned int)dat.l1; j<=(unsigned int)dat.l2; ++j) // RS 64-bit?!?
                     {
 // Rprintf("\ndat.l2: %d, j: %d",dat.l2,j);
                     data_alpha_load(&dat,j,nimi_var,hav_nimi);
                     i=strlen(hav_nimi)-1;
-                    while (i>0 && hav_nimi[i]==' ') hav_nimi[i--]=EOS;
-                    if (strcmp(str_opnd[1],hav_nimi)==0) break;
-            if (*haku_sana2!=EOS && strcmp(haku_sana2,hav_nimi)==0) break;
+                    while (i>0 && hav_nimi[i]==' ') { hav_nimi[i--]=EOS;
+}
+                    if (strcmp(str_opnd[1],hav_nimi)==0) { break;
+}
+            if (*haku_sana2!=EOS && strcmp(haku_sana2,hav_nimi)==0) { break;
+}
                     }
                 }
             else // numeerinen hav.tunnus
@@ -1882,7 +1979,8 @@ if (str_opnd[0]==NULL) { /* sur_print("\nERROR (f_tiedosto_read)"); WAIT */ retu
                 for (j=dat.l1; j<=dat.l2; ++j)
                     {
                     data_load(&dat,j,nimi_var,&hav_num);
-                    if (hav_num==tunnus) break;
+                    if (hav_num==tunnus) { break;
+}
                     }
                 }
             }
@@ -1902,7 +2000,8 @@ if (str_opnd[0]==NULL) { /* sur_print("\nERROR (f_tiedosto_read)"); WAIT */ retu
             }
         else
             {
-            if (*dat.vartype[var]=='S') type='S';
+            if (*dat.vartype[var]=='S') { type='S';
+}
 
             if (type=='S')
                 {
@@ -1910,16 +2009,20 @@ if (str_opnd[0]==NULL) { /* sur_print("\nERROR (f_tiedosto_read)"); WAIT */ retu
                 i=strlen(x)-1;
                 
 // Rprintf("\nAlphaload: %s, len=%d",x,i);                
-                while (i>0) if (x[i]!=' ') break; else x[i--]=EOS; // RS CHA sbuf[i]->x[i]
+                while (i>0) { if (x[i]!=' ') { break; } else { x[i--]=EOS; // RS CHA sbuf[i]->x[i]
+}
+}
                 p=x;
-                while (*p==' ') ++p;
+                while (*p==' ') { ++p;
+}
                 strcpy(sbuf,p);
 // Rprintf("\nAlphaload_ret: %s",sbuf);              
                 }
-            else
+            else {
 // Rprintf("\nPerusdataload");            
             
                 data_load(&dat,j,var,y); // RS CHA &y
+}
             }
         data_close(&dat);
 
@@ -2007,12 +2110,14 @@ static void mat_function(char *f, char **s, int nn, double *yy)
 
         for (k=0; k<nmat; ++k)
             {
-            if (strcmp(f,mat_name_arit[k])==0) break;
+            if (strcmp(f,mat_name_arit[k])==0) { break;
+}
             }
         if (nmat==0 || k==nmat)
             {
 
-            if (nmat==NMAT) nmat=0; /* kiertokulku */
+            if (nmat==NMAT) { nmat=0; /* kiertokulku */
+}
 /*
                 {
                 muste_sprintf(sbuf,"Too many matrices (more than %d)!",NMAT);
@@ -2027,38 +2132,42 @@ static void mat_function(char *f, char **s, int nn, double *yy)
             }
         if (nn==1 && m[k]==1) { nn=2; s[1]=s[0]; s[0]="1"; }
         i=lab_find(s[0],rlab[k],m[k],lr[k]);
-        if (i>0) xx[0]=i;
-        else
+        if (i>0) { xx[0]=i;
+        } else
             {
             laske(s[0],&xx[0]);
             muste_sprintf(sbuf,"%g",xx[0]);    /* 9.9.1999 */
             i=lab_find(sbuf,rlab[k],m[k],lr[k]);
-            if (i>0) xx[0]=i;
+            if (i>0) { xx[0]=i;
+}
             }
         if (nn>1)
             {
             i=lab_find(s[1],clab[k],n[k],lc[k]);
-            if (i>0) xx[1]=i;
-            else
+            if (i>0) { xx[1]=i;
+            } else
                 {
                 laske(s[1],&xx[1]);
                 muste_sprintf(sbuf,"%g",xx[1]);    /* 9.9.1999 */
                 i=lab_find(sbuf,clab[k],n[k],lc[k]);
-                if (i>0) xx[1]=i;
+                if (i>0) { xx[1]=i;
+}
                 }
             }
 
-        i=xx[0]; if (nn>1) j=xx[1];
+        i=xx[0]; if (nn>1) { j=xx[1];
+}
         if (i<1 || i>m[k] || (nn>1 && (j<1 || j>n[k])) )
             {
             sur_print("\nError in matrix index!"); WAIT;
             l_virhe=1;
             return;
             }
-        if (nn==1)
+        if (nn==1) {
             *yy=mat[k][i-1];
-        else
+        } else {
             *yy=mat[k][i-1+m[k]*(j-1)];
+}
         }
 
 
@@ -2070,23 +2179,36 @@ static double funktio(char *s, double x)
     double y;
     double xx;
 
-    if (*s==EOS) return(x);
+    if (*s==EOS) { return(x);
+}
     muste_fieldcopy(S,s,31);
     S[31]=EOS;
     muste_strupr(S);
 
-    if (strncmp(S,"SQR",3)==0) return(muste_sqrt(x));
-    if (strcmp(S,"LOG")==0) return(muste_log(x));
-    if (strcmp(S,"EXP")==0) return(muste_exp(x));
-    if (strcmp(S,"SIN")==0) return(muste_sin(x));
-    if (strcmp(S,"COS")==0) return(muste_cos(x));
-    if (strcmp(S,"TAN")==0) return(muste_tan(x));
-    if (strcmp(S,"ATN")==0 || strcmp(S,"ARCTAN")==0) return(muste_atan(x));
-    if (strcmp(S,"ARCSIN")==0) return(muste_asin(x));
-    if (strcmp(S,"ARCCOS")==0) return(muste_acos(x));
-    if (strcmp(S,"ABS")==0) return(muste_fabs(x));
-    if (strcmp(S,"INT")==0) return(muste_floor(x));
-    if (strcmp(S,"SGN")==0) return(muste_sign(x)); // RS CHA
+    if (strncmp(S,"SQR",3)==0) { return(muste_sqrt(x));
+}
+    if (strcmp(S,"LOG")==0) { return(muste_log(x));
+}
+    if (strcmp(S,"EXP")==0) { return(muste_exp(x));
+}
+    if (strcmp(S,"SIN")==0) { return(muste_sin(x));
+}
+    if (strcmp(S,"COS")==0) { return(muste_cos(x));
+}
+    if (strcmp(S,"TAN")==0) { return(muste_tan(x));
+}
+    if (strcmp(S,"ATN")==0 || strcmp(S,"ARCTAN")==0) { return(muste_atan(x));
+}
+    if (strcmp(S,"ARCSIN")==0) { return(muste_asin(x));
+}
+    if (strcmp(S,"ARCCOS")==0) { return(muste_acos(x));
+}
+    if (strcmp(S,"ABS")==0) { return(muste_fabs(x));
+}
+    if (strcmp(S,"INT")==0) { return(muste_floor(x));
+}
+    if (strcmp(S,"SGN")==0) { return(muste_sign(x)); // RS CHA
+}
 /* RS REM    
     {
         if (x>0.0) return(1.0);
@@ -2094,7 +2216,8 @@ static double funktio(char *s, double x)
         return (0.0);
     }
 */    
-    if (strcmp(S,"IND")==0) return(muste_ind(x)); // RS CHA
+    if (strcmp(S,"IND")==0) { return(muste_ind(x)); // RS CHA
+}
 /*    RS REM
     {
         if (x>0.0) return(1.0);
@@ -2102,17 +2225,23 @@ static double funktio(char *s, double x)
     }
 */
 
-    if (strcmp(S,"RND")==0) return(uniform(x));
-    if (strcmp(S,"RAND")==0) return(uniform(x)); // RS CHA
+    if (strcmp(S,"RND")==0) { return(uniform(x));
+}
+    if (strcmp(S,"RAND")==0) { return(uniform(x)); // RS CHA
+}
 /* RS Tämä kutsui vain uniformia
     if (strcmp(S,"RAND")==0) return(sur_rand0(x));
 */
 
-    if (strcmp(S,"PROBIT")==0) return(probit(x));
-    if (strcmp(S,"ROUND")==0) return(sur_round(x));
-    if (strcmp(S,"FACT")==0) return(fact(x));
-    if (strcmp(S,"LFACT")==0 || strcmp(S,"FACT.L")==0)
+    if (strcmp(S,"PROBIT")==0) { return(probit(x));
+}
+    if (strcmp(S,"ROUND")==0) { return(sur_round(x));
+}
+    if (strcmp(S,"FACT")==0) { return(fact(x));
+}
+    if (strcmp(S,"LFACT")==0 || strcmp(S,"FACT.L")==0) {
         return(lfact(x));
+}
     if (strcmp(S,"NFACTORS")==0)
         {
         if (x>4294967295.0)
@@ -2124,16 +2253,24 @@ static double funktio(char *s, double x)
         return(nfactors(x));
         }
     
-    if (strcmp(S,"TOTIENT")==0) return(totient(x)); // 19.4.2009
+    if (strcmp(S,"TOTIENT")==0) { return(totient(x)); // 19.4.2009
+}
 
-    if (strcmp(S,"ZETA")==0) return(zeta(x));
+    if (strcmp(S,"ZETA")==0) { return(zeta(x));
+}
 
-    if (strcmp(S,"LGAMMA")==0) return(muste_lgamma(x)); // RS 
-    if (strcmp(S,"GAMMA")==0) return(muste_gamma(x)); // RS 
-    if (strcmp(S,"DIGAMMA")==0) return(muste_digamma(x)); // RS 
-    if (strcmp(S,"TRIGAMMA")==0) return(muste_trigamma(x)); // RS 
-    if (strcmp(S,"TETRAGAMMA")==0) return(muste_tetragamma(x)); // RS 
-    if (strcmp(S,"PENTAGAMMA")==0) return(muste_pentagamma(x)); // RS 
+    if (strcmp(S,"LGAMMA")==0) { return(muste_lgamma(x)); // RS 
+}
+    if (strcmp(S,"GAMMA")==0) { return(muste_gamma(x)); // RS 
+}
+    if (strcmp(S,"DIGAMMA")==0) { return(muste_digamma(x)); // RS 
+}
+    if (strcmp(S,"TRIGAMMA")==0) { return(muste_trigamma(x)); // RS 
+}
+    if (strcmp(S,"TETRAGAMMA")==0) { return(muste_tetragamma(x)); // RS 
+}
+    if (strcmp(S,"PENTAGAMMA")==0) { return(muste_pentagamma(x)); // RS 
+}
 
 
      xx=x;
@@ -2154,9 +2291,11 @@ static double funktio(char *s, double x)
 
  
     i=f_edit(s,&xx,1,&y);
-    if (i>0) return(y);  	/* Temporary functions */
+    if (i>0) { return(y);  	/* Temporary functions */
+}
     i=f_tiedosto(s,&xx,1,&y);
-    if (i>0 && y!=MISSING8) return(y);
+    if (i>0 && y!=MISSING8) { return(y);
+}
 
 /* RS REM    set_console_title();  */
 
@@ -2371,15 +2510,20 @@ static double mfunktio(char *s,double *x,int n)
     /* R-style normal density */
     if (strcmp(S,"DNORM")==0)
     {
-        if (n>3) return(muste_density_normal(x[0],x[1],x[2],(int)x[3]));
+        if (n>3) { return(muste_density_normal(x[0],x[1],x[2],(int)x[3]));
+}
         return(muste_density_normal(x[0],x[1],x[2],(int)0));
     }
 
 
-    if (strcmp(S,"MAX")==0) return(muste_max(x,n));
-    if (strcmp(S,"MIN")==0) return(muste_min(x,n));
-    if (strcmp(S,"MAXN")==0) return(muste_maxn(x,n));
-    if (strcmp(S,"MINN")==0) return(muste_minn(x,n));
+    if (strcmp(S,"MAX")==0) { return(muste_max(x,n));
+}
+    if (strcmp(S,"MIN")==0) { return(muste_min(x,n));
+}
+    if (strcmp(S,"MAXN")==0) { return(muste_maxn(x,n));
+}
+    if (strcmp(S,"MINN")==0) { return(muste_minn(x,n));
+}
     if (strcmp(s,"C")==0)
     {
         if (n!=2)
@@ -2394,7 +2538,8 @@ static double mfunktio(char *s,double *x,int n)
         int h;
 
         h=0;
-        if (*S=='L') h=1;
+        if (*S=='L') { h=1;
+}
         if (n!=2)
         {
             arg_virhe(s);
@@ -2443,20 +2588,30 @@ static double mfunktio(char *s,double *x,int n)
             return(mtotient(x[0],x[1]));
             }
 
-        if (strcmp(S,"BETA")==0) return(muste_beta(x[0],x[1])); // RS
-        if (strcmp(S,"LBETA")==0) return(muste_lbeta(x[0],x[1])); // RS
+        if (strcmp(S,"BETA")==0) { return(muste_beta(x[0],x[1])); // RS
+}
+        if (strcmp(S,"LBETA")==0) { return(muste_lbeta(x[0],x[1])); // RS
+}
         
-        if (strcmp(S,"FIN.PV")==0) return(muste_fin_pv(x[0],x[1],x[2])); // RS
-        if (strcmp(S,"FIN.FV")==0) return(muste_fin_fv(x[0],x[1],x[2])); // RS
-        if (strcmp(S,"FIN.PMT")==0) return(muste_fin_pmt(x[0],x[1],x[2])); // RS
+        if (strcmp(S,"FIN.PV")==0) { return(muste_fin_pv(x[0],x[1],x[2])); // RS
+}
+        if (strcmp(S,"FIN.FV")==0) { return(muste_fin_fv(x[0],x[1],x[2])); // RS
+}
+        if (strcmp(S,"FIN.PMT")==0) { return(muste_fin_pmt(x[0],x[1],x[2])); // RS
+}
     
-        if (strcmp(S,"BOXCOX")==0) return(muste_boxcox(x[0],x[1])); // RS
-        if (strcmp(S,"BOXCOX.G")==0) return(muste_inv_boxcox(x[0],x[1])); // RS
+        if (strcmp(S,"BOXCOX")==0) { return(muste_boxcox(x[0],x[1])); // RS
+}
+        if (strcmp(S,"BOXCOX.G")==0) { return(muste_inv_boxcox(x[0],x[1])); // RS
+}
 
-        if (strcmp(S,"DISS")==0) return(muste_diss(x[0],x[1],(int)0)); // RS
-        if (strcmp(S,"DISS.F")==0) return(muste_diss(x[0],x[1],(int) 1)); // RS
+        if (strcmp(S,"DISS")==0) { return(muste_diss(x[0],x[1],(int)0)); // RS
+}
+        if (strcmp(S,"DISS.F")==0) { return(muste_diss(x[0],x[1],(int) 1)); // RS
+}
 
-        if (strcmp(S,"BESTVAL")==0) return(muste_bestval(x[0],x[1])); // RS
+        if (strcmp(S,"BESTVAL")==0) { return(muste_bestval(x[0],x[1])); // RS
+}
     
             if (*s=='M' && strncmp(s,"MAT_",4)==0)
                 {
@@ -2478,10 +2633,12 @@ static double mfunktio(char *s,double *x,int n)
                 }
     
     i=f_edit(s,x,n,&y);
-    if (i>0) return(y);
+    if (i>0) { return(y);
+}
     i=f_tiedosto(s,x,n,&y);
     // RS REM        set_console_title();
-    if (i>0 && y!=MISSING8) return(y);
+    if (i>0 && y!=MISSING8) { return(y);
+}
     
 
     l_virhe=1;
@@ -2497,13 +2654,20 @@ int op_arit()
     int monia=0;
 
 	extern char OO[];
-	if (strcmp(OO,"GPLOT")==0) return(2);
-	if (strcmp(OO,"PLOT")==0) return(2);
-	if (strcmp(OO,"HISTO")==0) return(2);
-	if (strcmp(OO,"GHISTO")==0) return(2);
-	if (strcmp(OO,"TAB")==0) return(2);
-	if (strcmp(OO,"MASK")==0 || strncmp(OO,"MASK=",5)==0) return(2);
-	if (strcmp(OO,"VARS")==0 || strncmp(OO,"VARS=",5)==0) return(2);
+	if (strcmp(OO,"GPLOT")==0) { return(2);
+}
+	if (strcmp(OO,"PLOT")==0) { return(2);
+}
+	if (strcmp(OO,"HISTO")==0) { return(2);
+}
+	if (strcmp(OO,"GHISTO")==0) { return(2);
+}
+	if (strcmp(OO,"TAB")==0) { return(2);
+}
+	if (strcmp(OO,"MASK")==0 || strncmp(OO,"MASK=",5)==0) { return(2);
+}
+	if (strcmp(OO,"VARS")==0 || strncmp(OO,"VARS=",5)==0) { return(2);
+}
 	
 
 // RS Variable init
@@ -2549,18 +2713,20 @@ static char mat_name_arit[NMAT][9];
     tarkkuus=0;
     /*        nmat=0; */ /* 8.5.1999 */    
     i=spec_init_arit(r1+r-1);
-    if (i<0) return(-1);  /* 14.1.92 */
+    if (i<0) { return(-1);  /* 14.1.92 */
+}
 
     i=varaa_earg();
-    if (i<0) return(-1);
+    if (i<0) { return(-1);
+}
 
     if (spn)
     {
         i=spfind("ACCURACY");
         if (i>=0)
         {
-        if (strchr(spb[i],':')!=NULL) tarkkuus=0; // RS 6.5.2014
-        else
+        if (strchr(spb[i],':')!=NULL) { tarkkuus=0; // RS 6.5.2014
+        } else
             {
             laske("ACCURACY",&tulos);
             tarkkuus=(int)tulos;
@@ -2591,7 +2757,8 @@ muste_fixme("FIXME: MARIT (accuracy>16 artihmetics) not implemented!\n");
         lauseke[--i]=EOS;
         monia=1;
     }
-    while (lauseke[i]!=' '&& i>0) --i;
+    while (lauseke[i]!=' '&& i>0) { --i;
+}
     /* Rprintf("\nlauseke=%s\n",lauseke+i+1); WAIT; */
 
     puhdas_dat_kysely=0; /* 8.12.2002 */
@@ -2599,9 +2766,12 @@ muste_fixme("FIXME: MARIT (accuracy>16 artihmetics) not implemented!\n");
     /*Rprintf("\nsbuf=%s|",sbuf); WAIT; */
     if (sbuf[0]=='D' && strncmp(sbuf,"DAT_",4)==0)
     {
-        for (k=4; k<strlen(sbuf); ++k)
-            if (strchr("+-*/%",sbuf[k])!=NULL) break;
-        if (k==strlen(sbuf)) puhdas_dat_kysely=1;
+        for (k=4; k<strlen(sbuf); ++k) {
+            if (strchr("+-*/%",sbuf[k])!=NULL) { break;
+}
+}
+        if (k==strlen(sbuf)) { puhdas_dat_kysely=1;
+}
     }
     /*Rprintf("\npuhdas=%d|",puhdas_dat_kysely); WAIT; */
     i=laske(lauseke+i+1,&tulos);
@@ -2656,7 +2826,8 @@ muste_fixme("FIXME: MARIT (accuracy>16 artihmetics) not implemented!\n");
     {
         for (k=0; k<spn; ++k)
         {
-            if (spp[k]!='.') continue;
+            if (spp[k]!='.') { continue;
+}
             strcpy(lauseke,spa[k]);
             lauseke[strlen(lauseke)-1]=EOS;
             i=laske(lauseke,&tulos);

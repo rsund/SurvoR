@@ -93,7 +93,8 @@ static int n_strcat(char *x,int len,char *s)
 
 static char *spois(char *s)
         {
-        while (*s && *s==' ') ++s;
+        while (*s && *s==' ') { ++s;
+}
         return(s);
         }
 
@@ -135,35 +136,42 @@ static int cholinv(double *a,int n)
                 {
                 j1=j+1;
                 x=a[n*i+j];
-                for (k=i-1; k>=0; --k)
+                for (k=i-1; k>=0; --k) {
                     x-=a[n*j1+k]*a[n*i1+k];
+}
                 if (j==i)
                     {
-                    if (x<=1e-15) return(-j-1);
+                    if (x<=1e-15) { return(-j-1);
+}
                     a[n*i1+i]=y=1/sqrt(x);
                     }
-                else a[n*j1+i]=x*y;
+                else { a[n*j1+i]=x*y;
+}
                 }
             }
 
-        for (i=0; i<n; ++i)
+        for (i=0; i<n; ++i) {
         for (j=i+1; j<n; ++j)
             {
             z=0;
             j1=j+1;
-            for (k=j-1; k>=i; --k)
+            for (k=j-1; k>=i; --k) {
                 z-=a[n*j1+k]*a[n*(k+1)+i];
+}
             a[n*j1+i]=z*a[n*j1+j];
             }
-        for (i=0; i<n; ++i)
+}
+        for (i=0; i<n; ++i) {
         for (j=i; j<n; ++j)
             {
             z=0;
             j1=n;
-            for (k=j+1; k<=j1; ++k)
+            for (k=j+1; k<=j1; ++k) {
                 z+=a[n*k+j]*a[n*k+i];
+}
             a[n*(j+1)+i]=z;
             }
+}
         return(1);
         }
 
@@ -202,7 +210,8 @@ static int varaa_tilat()
 static int eoutput(char *rivi)
         {
         output_line(rivi,eout,tulosrivi);
-        if (tulosrivi) ++tulosrivi;
+        if (tulosrivi) { ++tulosrivi;
+}
         return(1);
         }
 
@@ -215,42 +224,53 @@ static int momentit()
         for (i=0; i<m; ++i)
             {
             sum[i]=0.0;
-            for (j=0; j<=i; ++j)
+            for (j=0; j<=i; ++j) {
                 A[i+m*j]=0.0;
+}
             }
 
         for (i=0; i<m; ++i)
             {
             k=data_load(&d,d.l1,d.v[i],&x0[i]);
-            if (k<0) return(-1);
-            if (x0[i]==MISSING8) x0[i]=0.0;
+            if (k<0) { return(-1);
+}
+            if (x0[i]==MISSING8) { x0[i]=0.0;
+}
             }
 
-        i=hae_apu("prind",sbuf); if (i) keyind=atoi(sbuf);
-        if ((i=spfind("PRIND"))>=0) keyind=atoi(spb[i]);
+        i=hae_apu("prind",sbuf); if (i) { keyind=atoi(sbuf);
+}
+        if ((i=spfind("PRIND"))>=0) { keyind=atoi(spb[i]);
+}
 
         sur_print("\n");
         for (l=d.l1; l<=d.l2; ++l)
             {
             double paino;   // ,ind; 16.6.2011 SM
 
-            if (unsuitable(&d,l)) continue;
-            if (painomuuttuja==-1) paino=1.0;
-            else
+            if (unsuitable(&d,l)) { continue;
+}
+            if (painomuuttuja==-1) { paino=1.0;
+            } else
                 {
                 k=data_load(&d,l,painomuuttuja,&paino);
-                if (k<0) return(-1);
-                if (paino==MISSING8) continue;
+                if (k<0) { return(-1);
+}
+                if (paino==MISSING8) { continue;
+}
                 }
             if (keyind) { muste_sprintf(sbuf,"%ld ",l); sur_print(sbuf); }
-            if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); keyind=1-keyind; }
+            if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) { sur_getch(); 
+}keyind=1-keyind; }
 //          if (kbhit()) { getch(); keyind=1-keyind; }
             ++n;
             for (i=0; i<m; ++i)
                 {
                 k=data_load(&d,l,d.v[i],&x[i]);
-                if (k<0) return(-1);
-                if (x[i]==MISSING8) break;
+                if (k<0) { return(-1);
+}
+                if (x[i]==MISSING8) { break;
+}
                 x[i]-=x0[i];  /* keskistys */
                 }
             if (i<m) { sur_print("- "); continue; }
@@ -260,11 +280,13 @@ static int momentit()
                 {
                 double z;
 
-                if (d.v[i]==painomuuttuja) continue;
+                if (d.v[i]==painomuuttuja) { continue;
+}
                 z=paino*x[i];
                 sum[i]+=z;
-                for (j=0; j<=i; ++j)
+                for (j=0; j<=i; ++j) {
                     A[i+m*j]+=z*x[j];
+}
                 }
             } /* l */
 
@@ -280,9 +302,11 @@ static int momentit()
             WAIT; return(-1);
             }
         nsuhde=(double)(n1-1L)/(double)n1;
-        for (i=0; i<m; ++i)
-            for (j=0; j<=i; ++j)
+        for (i=0; i<m; ++i) {
+            for (j=0; j<=i; ++j) {
                 A[i+m*j]-=sum[i]*sum[j]/weightsum;
+}
+}
         for (i=0; i<m; ++i)
             {
             sum[i]=sum[i]/weightsum+x0[i];
@@ -310,7 +334,8 @@ static int momentit()
                 }
             }
 
-        for (i=0; i<m; ++i) sum2[i]/=sqrt(nsuhde*weightsum);
+        for (i=0; i<m; ++i) { sum2[i]/=sqrt(nsuhde*weightsum);
+}
 
         return(1);
         }
@@ -345,11 +370,13 @@ char otsikko[]
 
         j1=0; j2=m-1;
         j3=(int)floor((double)((lev-sar-3)/sar));
-        if (j3<m) j2=j3-1;
+        if (j3<m) { j2=j3-1;
+}
         while (j2<=m-1)
             {
             k=0;
-            for (i=0; i<sar+4; ++i) k+=muste_sprintf(rivi+k," ");
+            for (i=0; i<sar+4; ++i) { k+=muste_sprintf(rivi+k," ");
+}
             for (j=j1; j<=j2; ++j)
                 {
                 strcpy(nimi,xname[j]); nimi[sar-1]=EOS;
@@ -360,14 +387,16 @@ char otsikko[]
                 {
                 strcpy(nimi,xname[i]); nimi[sar+2]=EOS;
                 k=muste_sprintf(rivi,xriv,nimi);
-                for (j=j1; j<=j2; ++j)
+                for (j=j1; j<=j2; ++j) {
                     k+=muste_sprintf(rivi+k,rriv,S[i+j*m]);
+}
 
                 eoutput(rivi);
                 }
             j1=j2+1;
-            if (j2==m-1) ++j2;
-            else         { j2+=j3; if (j2>m-1) j2=m-1; }
+            if (j2==m-1) { ++j2;
+            } else         { j2+=j3; if (j2>m-1) { j2=m-1; 
+}}
             }
         output_close(eout);
 
@@ -378,8 +407,10 @@ static int tulostus()
         {
         int i;
         char rivi[LLENGTH];
-		for (i=0; i<LLENGTH; i++) rivi[i]=0; // RS ADD 16.10.2012
-        i=output_open(eout); if (i<0) return(-1);
+		for (i=0; i<LLENGTH; i++) { rivi[i]=0; // RS ADD 16.10.2012
+}
+        i=output_open(eout); if (i<0) { return(-1);
+}
         muste_sprintf(rivi,"Means, std.devs and correlations of %s  N=%ld",
                           word[1],n);
         if (painomuuttuja>=0)
@@ -405,7 +436,8 @@ static int tulostus()
             }
         output_close(eout);
 
-        for (i=0; i<m; ++i) varname[i]=d.varname[d.v[i]];
+        for (i=0; i<m; ++i) { varname[i]=d.varname[d.v[i]];
+}
 // Rprintf("\ncorrp 16.6.2011"); sur_getch();
         corrp_linreg(A,m,varname,c3,accuracy+1,accuracy-3,"Correlations:");
         output_open(eout);
@@ -428,7 +460,8 @@ static int save_corr(double *A,int m)
 //  extern double invc;        16.6.2011 SM
 // RS REM    extern double stddev0;
 
-    if (nyvar>1) return(1);
+    if (nyvar>1) { return(1);
+}
 
     lab_corr=(char *)muste_malloc((m+2)*8);
     if (lab_corr==NULL) { not_enough_memory(); return(-1); }
@@ -446,14 +479,19 @@ static int save_corr(double *A,int m)
     mm=nxvar;
 
 // mprint(invR,mm,mm);
-    for (i=0; i<mm; ++i) A[i]=1.0/sqrt(invR[i*(mm+1)]);
+    for (i=0; i<mm; ++i) { A[i]=1.0/sqrt(invR[i*(mm+1)]);
+}
 
-    for (i=0; i<mm; ++i)
-    for (j=0; j<mm; ++j)
+    for (i=0; i<mm; ++i) {
+    for (j=0; j<mm; ++j) {
         invR[i+mm*j]*=A[i]*A[j];
-    for (i=0; i<mm; ++i)
-    for (j=0; j<mm; ++j)
+}
+}
+    for (i=0; i<mm; ++i) {
+    for (j=0; j<mm; ++j) {
          A[i+1+m*(j+1)]=invR[i+mm*j];
+}
+}
 
     for (i=0; i<mm; ++i)
         {
@@ -468,7 +506,8 @@ static int save_corr(double *A,int m)
         }
         
     A[0]=1.0;
-    for (i=0; i<m*8; ++i) lab_corr[i]=' ';
+    for (i=0; i<m*8; ++i) { lab_corr[i]=' ';
+}
     
     lab_nimi=lab_corr; // RS ADD
     for (i=0; i<mm; ++i)
@@ -517,9 +556,11 @@ static int kokoa_momentit()
         {
         int i,j;
 
-        for (i=0; i<nxvar; ++i)
-            for (j=i; j<nxvar; ++j)
+        for (i=0; i<nxvar; ++i) {
+            for (j=i; j<nxvar; ++j) {
                 S[i*nxvar+j]=A[xvariable[i]*m+xvariable[j]];
+}
+}
         return(1);
         }
 
@@ -528,12 +569,13 @@ static int symmetrisoi()
         int i,j;
         double xxx;
 
-        for (i=0; i<nxvar; ++i)
+        for (i=0; i<nxvar; ++i) {
             for (j=i+1; j<nxvar; ++j)
                 {
                 xxx=invR[j*nxvar+i];
                 invR[i*nxvar+j]=xxx;
                 }
+}
 
 //      mprint(invR,nxvar,nxvar);
         return(1);
@@ -561,8 +603,9 @@ static int regrkert(int k)
         for (j=0; j<nxvar; ++j)
             {
             z=0.0;
-            for (i=0; i<nxvar; ++i)
+            for (i=0; i<nxvar; ++i) {
                 z+=invR[i+nxvar*j]*A[xvariable[i]+m*yvar];
+}
             b[j]=z*sum2[yvar]/sum2[xvariable[j]];
             bs[j]=z;
             constant-=b[j]*sum[xvariable[j]];
@@ -576,9 +619,11 @@ static int resvariance(int k)
         double s,a;
 
         s=0.0;
-        for (i=0; i<nxvar; ++i)
-            for (j=0; j<nxvar; ++j)
+        for (i=0; i<nxvar; ++i) {
+            for (j=0; j<nxvar; ++j) {
                     s+=bs[i]*bs[j]*A[xvariable[i]+m*xvariable[j]];
+}
+}
         a=sum2[yvariable[k]];
         vy=a*a;
         vres=(1.0-s)*vy*(double)(n1-1L)/(double)(n1-(long)nxvar-1L);
@@ -619,32 +664,37 @@ static int regtulostus(int k)
         reg_stddev=(double *)muste_malloc(m*sizeof(double)); // 12.4.2005
         if (reg_stddev==NULL) { not_enough_memory(); return(-1); }
 
-        if (k==0) { i=output_open(eout); if (i<0) return(-1); }
+        if (k==0) { i=output_open(eout); if (i<0) { return(-1); 
+}}
         i=muste_sprintf(rivi,"Linear regression analysis: Data %s",word[1]);
         i+=muste_sprintf(rivi+i,", Regressand %.8s",d.varname[d.v[yvariable[k]]]);
         i+=muste_sprintf(rivi+i,"  N=%ld",n1);
         rg[_n]=(double)n1;
         rg[_k]=(double)m;
         rg[_df]=(double)(n1-m);
-        if (painomuuttuja) rg[_Wsum]=weightsum; else rg[_Wsum]=rg[_n];
+        if (painomuuttuja) { rg[_Wsum]=weightsum; } else { rg[_Wsum]=rg[_n];
+}
 
 
         eoutput(rivi);
         i=0;
-        if (n>n1)
+        if (n>n1) {
             i=muste_sprintf(rivi,"N(missing)=%ld  ",n-n1);
+}
         if (painomuuttuja>=0)
             {
             i+=muste_sprintf(rivi+i,"Weight variable: %.8s",d.varname[painomuuttuja]);
             fnconv(weightsum,accuracy+2,sana);
             i+=muste_sprintf(rivi+i,", sum of weights=%s",sana);
             }
-        if (i) eoutput(rivi);
+        if (i) { eoutput(rivi);
+}
 
         h=muste_sprintf(rivi,"Variable Regr.coeff. %.*sStd.dev.",accuracy-4,space);
         h+=muste_sprintf(rivi+h," %.*st %.*s beta",accuracy-4,space,accuracy-4,space);
         eoutput(rivi);
-        if (vres<0.0) vres=0.0;  // 12.10.2000
+        if (vres<0.0) { vres=0.0;  // 12.10.2000
+}
         for (i=0; i<nxvar; ++i)
             {
             a=sum2[xvariable[i]];
@@ -681,7 +731,8 @@ static int regtulostus(int k)
         eoutput(rivi);
 
         muste_fieldcopy(sana,d.varname[d.v[yvariable[k]]],8);
-        h=8; sana[h]=EOS; while(sana[h-1]==' ') sana[--h]=EOS;
+        h=8; sana[h]=EOS; while(sana[h-1]==' ') { sana[--h]=EOS;
+}
         h=muste_sprintf(rivi,"Variance of regressand %s",sana);
         fnconv(vy,accuracy+5,sana);
         rg[_Yvar]=vy; rg[_SST]=(double)(n1-1L)*vy;
@@ -703,7 +754,8 @@ static int regtulostus(int k)
         fnconv(a,accuracy,sana);
         h=muste_sprintf(rivi+h," R^2=%s",spois(sana));
         eoutput(rivi);
-        if (k==nyvar-1) output_close(eout);
+        if (k==nyvar-1) { output_close(eout);
+}
              /* ennen 8.5.90 k==nyvar */
         return(1);
         }
@@ -761,11 +813,13 @@ static int residuals(int k)
         long ndw;
         char sana[LLENGTH];
 
-        if (nyvar>1) return(1);
+        if (nyvar>1) { return(1);
+}
 
         resvar=activated(&d,'R');
         predvar=activated(&d,'P');
-        if (resvar<0 && predvar<0) return(1);
+        if (resvar<0 && predvar<0) { return(1);
+}
 
         sur_print("\nSaving ");
         if (resvar>=0) { muste_sprintf(sbuf,"\nresiduals as variable %.8s...",
@@ -777,7 +831,8 @@ static int residuals(int k)
                           sur_print(sbuf);
                         }
 
-        i=data_to_write(aineisto,&d); if (i<0) return(-1);
+        i=data_to_write(aineisto,&d); if (i<0) { return(-1);
+}
 
         dw=1; ndw=0L; d1=d2=0.0;  /* d1,d2 5.8.1996 */
         xd=0.0; // 16.6.2011 SM (ei v?ltt?m?t?n)
@@ -792,21 +847,25 @@ static int residuals(int k)
                 if (x==MISSING8) { miss=1; break; }
                 pred+=b[i]*x;
                 }
-            if (miss) pred=MISSING8;
+            if (miss) { pred=MISSING8;
+}
             if (resvar>=0)
                 {
                 data_load(&d,j,d.v[yvariable[k]],&x);
-                if (x!=MISSING8 && pred!=MISSING8) x-=pred;
-                else x=MISSING8;
+                if (x!=MISSING8 && pred!=MISSING8) { x-=pred;
+                } else { x=MISSING8;
+}
                 i=data_save(&d,j,resvar,x);
-                if (i<0) return(-1);
+                if (i<0) { return(-1);
+}
                 if (dw)
                     {
-                    if (x==MISSING8) dw=0;
-                    else
+                    if (x==MISSING8) { dw=0;
+                    } else
                         {
-                        if (ndw>0L)
+                        if (ndw>0L) {
                             d1+=(x-xd)*(x-xd);
+}
                         d2+=x*x;
                         xd=x; ++ndw;
                         }
@@ -815,17 +874,21 @@ static int residuals(int k)
             if (predvar>=0)
                 {
                 i=data_save(&d,j,predvar,pred);
-                if (i<0) return(-1);
+                if (i<0) { return(-1);
+}
                 }
 
             if (keyind) { muste_sprintf(sbuf," %ld",j); sur_print(sbuf); }
-            if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); keyind=1-keyind; }
+            if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) { sur_getch(); 
+}keyind=1-keyind; }
 //          if (kbhit()) { getch(); keyind=1-keyind; }
             }
 
         /* 11.10.1996 */
-        if (resvar>=0) update_varname(&d,resvar,"Residual from LINREG");
-        if (predvar>=0) update_varname(&d,predvar,"Predicted value from LINREG");
+        if (resvar>=0) { update_varname(&d,resvar,"Residual from LINREG");
+}
+        if (predvar>=0) { update_varname(&d,predvar,"Predicted value from LINREG");
+}
 
         if (dw && ndw>0L && d2>0)
             {
@@ -844,7 +907,8 @@ static int regressiolaskut()
         {
         int i,k;
 
-        i=varaa_matriisit(); if (i<0) return(-1);
+        i=varaa_matriisit(); if (i<0) { return(-1);
+}
         kokoa_momentit();
         i=cholinv(S,nxvar);
         if (i<0)
@@ -866,8 +930,10 @@ static int regressiolaskut()
             {
             regrkert(k);
             resvariance(k);
-            i=regtulostus(k); if (i<0) return(-1);
-            i=residuals(k); if (i<0) return(-1);
+            i=regtulostus(k); if (i<0) { return(-1);
+}
+            i=residuals(k); if (i<0) { return(-1);
+}
 
             }
         return(1);
@@ -885,21 +951,24 @@ static int regr_talletus()
         char *label;
         char name[9];
 
-        if (nyvar>1) return(1);
+        if (nyvar>1) { return(1);
+}
         m2=m;
         reg=(double *)muste_malloc(2*m2*sizeof(double));
         if (reg==NULL) { not_enough_memory(); return(-1); }
         label=(char *)muste_malloc(m2*(8+1)); // RS ADD +1
         if (label==NULL) { not_enough_memory(); return(-1); }
 
-        for (i=0; i<8*m2; ++i) label[i]=' ';
+        for (i=0; i<8*m2; ++i) { label[i]=' ';
+}
         muste_fieldcopy(label,"Constant",8);
         for (i=1; i<m2; ++i)
             {
             muste_fieldcopy(name,d.varname[d.v[xvariable[i-1]]],8); name[8]=EOS;
             for (h=0; h<8; ++h)
                 {
-                if (name[h]==EOS) break;
+                if (name[h]==EOS) { break;
+}
                 label[8*i+h]=name[h];
                 }
             }
@@ -942,7 +1011,8 @@ static int regr_talletus()
             if (fabs(sx-sy)<1e-10)
                 {
                 b=1.0;
-                if (r<0.0) b=-1.0;
+                if (r<0.0) { b=-1.0;
+}
                 }
             else
                 {
@@ -981,12 +1051,15 @@ static int corr_ind(int i,char *lab,int len,int dim,char *filename)
         int k,h;
 
         muste_fieldcopy(nimi,d.varname[d.v[i]],8); nimi[8]=EOS;
-        k=8; while (nimi[k-1]==' ') nimi[--k]=EOS;
+        k=8; while (nimi[k-1]==' ') { nimi[--k]=EOS;
+}
         for (h=0; h<dim; ++h)
             {
             muste_fieldcopy(nimi2,lab+h*len,len); nimi2[8]=EOS;
-            k=8; while (nimi2[k-1]==' ') nimi2[--k]=EOS;
-            if (strcmp(nimi,nimi2)==0) return(h);
+            k=8; while (nimi2[k-1]==' ') { nimi2[--k]=EOS;
+}
+            if (strcmp(nimi,nimi2)==0) { return(h);
+}
             }
         muste_sprintf(sbuf,"\nVariable %s not in file %s",nimi,filename);
         sur_print(sbuf); WAIT;
@@ -1013,12 +1086,14 @@ static int corr_momentit()
 
         vc=NULL; R=NULL; V=NULL; rlab=NULL; clab=NULL; vrlab=NULL; vclab=NULL;
         corrf=corrfile;
-        if (*corrfile=='.') corrf=corrfile+1;
+        if (*corrfile=='.') { corrf=corrfile+1;
+}
         strcpy(filename,"CORR."); strcat(filename,corrf);
 
         i=matrix_load(filename,&R,&rdim,&cdim,&rlab,&clab,&lr,&lc,&type,expr);
 
-        if (i<0) return(-1);
+        if (i<0) { return(-1);
+}
 
         if (rdim!=cdim)
             {
@@ -1032,23 +1107,29 @@ static int corr_momentit()
         for (i=0; i<m; ++i)
             {
             vc[i]=corr_ind(i,rlab,lr,rdim,filename);
-            if (vc[i]<0) return(-1);
+            if (vc[i]<0) { return(-1);
+}
             }
 
-        for (i=0; i<m; ++i)
-            for (j=0; j<m; ++j)
+        for (i=0; i<m; ++i) {
+            for (j=0; j<m; ++j) {
                 A[i*m+j]=R[vc[i]*rdim+vc[j]];
+}
+}
 
         strcpy(filename,"MSN."); strcat(filename,corrf);
         i=matrix_load(filename,&V,&vrdim,&vcdim,&vrlab,&vclab,&vlr,&vlc,&vtype,vexpr);
-        if (i<0) return(-1);
+        if (i<0) { return(-1);
+}
         if (vrdim!=rdim || strncmp(vrlab,rlab,rdim*lr)!=0)
             {
             muste_sprintf(sbuf,"\nFile %s is not compatible with correlation file!",filename);
             sur_print(sbuf); WAIT; return(-1);
             }
-        for (i=0; i<m; ++i) sum[i]=V[vc[i]];
-        for (i=0; i<m; ++i) sum2[i]=V[rdim+vc[i]];
+        for (i=0; i<m; ++i) { sum[i]=V[vc[i]];
+}
+        for (i=0; i<m; ++i) { sum2[i]=V[rdim+vc[i]];
+}
         n=n1=(long)V[2*rdim];
         weightsum=(double)n;
 
@@ -1126,9 +1207,11 @@ vy=vres=0;
         if (g>2)
             {
             tulosrivi=edline2(word[2],1,1);
-            if (tulosrivi<0) return;
+            if (tulosrivi<0) { return;
+}
             }
-        i=spec_init(r1+r-1); if (i<0) return;
+        i=spec_init(r1+r-1); if (i<0) { return;
+}
         
         strcpy(aineisto,word[1]);
         *corrfile=EOS;
@@ -1142,7 +1225,8 @@ vy=vres=0;
         i=mask(&d); if (i<0) { s_end(argv); return; }
         scales(&d);
         i=conditions(&d); if (i<0) { s_end(argv); return; }
-        i=spfind("RESULTS"); if (i>=0) results=atoi(spb[i]);
+        i=spfind("RESULTS"); if (i>=0) { results=atoi(spb[i]);
+}
 /******************
         i=optdim_d(); if (i && i<d.m) err(0);
         i=optdim_o(); if (i && (long)i<d.n) err(0);
@@ -1153,16 +1237,19 @@ vy=vres=0;
             {
             muste_sprintf(sbuf,"\nWeight variable %.8s has not ratio scale!",
                         d.varname[painomuuttuja]); sur_print(sbuf);
-            WAIT; if (scale_check==SCALE_INTERRUPT) return;
+            WAIT; if (scale_check==SCALE_INTERRUPT) { return;
+}
             }
         k=0;
         nyvar=nxvar=0;
         for (i=0; i<d.m; ++i)
             {
             char ch=d.vartype[i][1];
-            if (ch=='-' || ch=='W' || (ch!='X' && ch!='Y')) continue;
+            if (ch=='-' || ch=='W' || (ch!='X' && ch!='Y')) { continue;
+}
             d.v[k++]=i;
-            if (ch=='X') xvariable[nxvar++]=k-1;
+            if (ch=='X') { xvariable[nxvar++]=k-1;
+}
             if (ch=='Y')
                 {
                 if (nyvar==YMAX)
@@ -1188,14 +1275,16 @@ vy=vres=0;
                 }
         d.m_act=k;
         m=d.m_act; k=0;
-        for (i=0; i<m; ++i)
+        for (i=0; i<m; ++i) {
             if (!scale_ok(&d,d.v[i],SCORE_SCALE))
                 {
-                if (k==0)
+                if (k==0) {
                     sur_print("\nInsufficient scale in variables: ");
+}
                 k=1;
                 muste_sprintf(sbuf,"%.8s ",d.varname[d.v[i]]); sur_print(sbuf);
                 }
+}
         if (k)
             {
             if (etu==2)
@@ -1208,13 +1297,17 @@ vy=vres=0;
                     }
                 }
             sur_print("\nInterval or score scale required, at least!");
-            WAIT; if (scale_check==SCALE_INTERRUPT) return;
+            WAIT; if (scale_check==SCALE_INTERRUPT) { return;
+}
             }
-        i=varaa_tilat(); if (i<0) return;
+        i=varaa_tilat(); if (i<0) { return;
+}
         if (*corrfile)
-            { i=corr_momentit(); if (i<0) return; }
+            { i=corr_momentit(); if (i<0) { return; 
+}}
         else
-            { i=momentit(); if (i<0) return; }
+            { i=momentit(); if (i<0) { return; 
+}}
         if ((long)(nxvar+1)>=n1)
             {
             if (etu==2)
@@ -1229,9 +1322,11 @@ vy=vres=0;
                            ,nxvar+2);
             sur_print(sbuf); WAIT; return;
             }
-        if (results>=70) { i=tulostus(); if (i<0) return; }
+        if (results>=70) { i=tulostus(); if (i<0) { return; 
+}}
 
-        i=regressiolaskut(); if (i<0) return;
+        i=regressiolaskut(); if (i<0) { return;
+}
         i=regr_talletus();        
         save_corr(A,m); // 15.4.2005       
 // RS REM FIXME       muste_free(A); muste_free(ptila);         

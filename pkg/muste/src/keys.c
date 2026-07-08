@@ -151,7 +151,8 @@ char *struprf(char *s) /* as strupr() but observes ÜÑî... */
 char *strnuprf(char *s,int len)
         {
         int i;
-        for (i=0; i<len; ++i) s[i]=iso[(unsigned char)s[i]];
+        for (i=0; i<len; ++i) { s[i]=iso[(unsigned char)s[i]];
+}
         return(s);
         }
 
@@ -164,8 +165,9 @@ char *muste_strupr(char *str)
 
     if (str)
     {
-        for ( ; *str; ++str)
+        for ( ; *str; ++str) {
           *str = uc_cp850[(unsigned char)*str]; // RS CHA *str = toupper(*str);
+}
     }
     return string;
 }
@@ -176,8 +178,9 @@ char *muste_strlwr(char *str)
 
     if (str)
     {
-        for ( ; *str; ++str)
+        for ( ; *str; ++str) {
           *str = lc_cp850[(unsigned char)*str];
+}
     }
     return string;
 }
@@ -194,7 +197,8 @@ static void *R_AllocStringBuffer(size_t blen, R_StringBuffer *buf)
 {
     size_t blen1, bsize = buf->defaultSize;
 
-    if(blen * sizeof(char) < buf->bufsize) return buf->data;
+    if(blen * sizeof(char) < buf->bufsize) { return buf->data;
+}
     blen1 = blen = (blen + 1) * sizeof(char);
     blen = (blen / bsize) * bsize;
     if(blen < blen1) blen += bsize;
@@ -204,7 +208,8 @@ static void *R_AllocStringBuffer(size_t blen, R_StringBuffer *buf)
         buf->data = (char *) malloc(blen);
         buf->data[0] = '\0';
         }
-    else buf->data = (char *) realloc(buf->data, blen);
+    else { buf->data = (char *) realloc(buf->data, blen);
+}
     buf->bufsize = blen;
     if(!buf->data)
         {
@@ -246,12 +251,16 @@ int muste_iconv(char *teksti,char *to,char *from)
 
     void *obj;
  
-    if (strcmp(to,"DEFAULT")==0 || strcmp(to,"SYSTEM")==0) to2=nullstring; // RS 27.3.2013
-    else to2=to;
-    if (strcmp(from,"DEFAULT")==0 || strcmp(from,"SYSTEM")==0) from2=nullstring;
-    else from2=from;
-    if (strcmp(to,"WIN")==0) to2=winstring; // RS 27.3.2013
-    if (strcmp(from,"WIN")==0) from2=winstring;  
+    if (strcmp(to,"DEFAULT")==0 || strcmp(to,"SYSTEM")==0) { to2=nullstring; // RS 27.3.2013
+    } else { to2=to;
+}
+    if (strcmp(from,"DEFAULT")==0 || strcmp(from,"SYSTEM")==0) { from2=nullstring;
+    } else { from2=from;
+}
+    if (strcmp(to,"WIN")==0) { to2=winstring; // RS 27.3.2013
+}
+    if (strcmp(from,"WIN")==0) { from2=winstring;  
+}
 
     obj = Riconv_open(to2,from2);
     if(obj == (void *)(-1))  // error("Unsupported conversion!");  RS 14.3.2013
@@ -263,9 +272,11 @@ int muste_iconv(char *teksti,char *to,char *from)
 
 
 	len=strlen(teksti);
-	if (len<1) return(-1); // RS ADD 6.11.2012 
+	if (len<1) { return(-1); // RS ADD 6.11.2012 
+}
     x=(char *)malloc(len+2); 
-    if (x==NULL) return(-1); // RS ADD 4.10.2012
+    if (x==NULL) { return(-1); // RS ADD 4.10.2012
+}
     strcpy(x,teksti); 
 
 /*
@@ -521,9 +532,11 @@ int muste_peekinputevent(int readevent)
 //   newtime = INTEGER(muste_eventtimesexp)[0];
    
    newtime=muste_get_R_int(".muste$event.time");
-   if (newtime==muste_eventtime) return(FALSE);
+   if (newtime==muste_eventtime) { return(FALSE);
+}
 
-   if (readevent) muste_eventtime=newtime;
+   if (readevent) { muste_eventtime=newtime;
+}
 
 //   muste_eventtypesexp = findVar(install(".muste$event.type"),R_GlobalEnv);
 //   muste_eventtype = INTEGER(muste_eventtypesexp)[0];
@@ -536,7 +549,8 @@ int muste_peekinputevent(int readevent)
      muste_keystatus = muste_get_R_int(".muste$key.status");
 
      sur_ctrl=0;
-     if (muste_keystatus==4) sur_ctrl=1;
+     if (muste_keystatus==4) { sur_ctrl=1;
+}
 //Rprintf("\nkeystatus: %d, crtl: %d",muste_keystatus, sur_ctrl);
      }
 
@@ -552,7 +566,8 @@ int muste_peekinputevent(int readevent)
          
          merkki=(unsigned char)keybuffer[0];
          muste_char=merkki;
-         if (strlen(keybuffer)>0 && muste_char!='?') break;
+         if (strlen(keybuffer)>0 && muste_char!='?') { break;
+}
 
       case SPECIAL_KEY_EVENT:
 //         muste_keykeysymsexp = findVar(install(".muste$key.keysym"),R_GlobalEnv);
@@ -577,14 +592,17 @@ int muste_peekinputevent(int readevent)
          mousebutton = muste_get_R_int(".muste$mouse.button");          
          
          m_click=FALSE; right_mouse_click=FALSE;
-         if (mousebutton==1 || mousebutton==3) m_click=TRUE;
-         if (mousebutton==3) right_mouse_click=TRUE;
+         if (mousebutton==1 || mousebutton==3) { m_click=TRUE;
+}
+         if (mousebutton==3) { right_mouse_click=TRUE;
+}
 //         muste_mousesexp = findVar(install(".muste$mouse.double"),R_GlobalEnv);
 //         mousedouble = INTEGER(muste_mousesexp)[0];
          mousedouble = muste_get_R_int(".muste$mouse.double");          
          
          m_double_click=FALSE;
-         if (m_click && mousedouble==1) m_double_click=TRUE;
+         if (m_click && mousedouble==1) { m_double_click=TRUE;
+}
       }
    return(TRUE);
 }
@@ -629,16 +647,19 @@ int sur_kbhit() // RS Painettu näppäintä
     
     if (muste_peekinputevent(FALSE))
       {
-      if (muste_eventtype==KEY_EVENT) return(TRUE);
+      if (muste_eventtype==KEY_EVENT) { return(TRUE);
+}
       }
     return(FALSE);
     }
 
 int s_hit(unsigned int c) // RS Onko painettu haluttua näppäintä
     {
-    if (!sur_kbhit()) return(FALSE);
+    if (!sur_kbhit()) { return(FALSE);
+}
     muste_peekinputevent(TRUE);
-    if ((char)muste_char==(char)c) return(TRUE);
+    if ((char)muste_char==(char)c) { return(TRUE);
+}
 /* RS CHA
     ReadConsoleInput(hStdIn, &inputBuffer, 1, &dwInputEvents);
     if(inputBuffer.Event.KeyEvent.uChar.AsciiChar==(char)c)
@@ -661,7 +682,8 @@ int sur_mkbhit() // 20.11.2000 // RS Painettu näppäintä tai liikutettu/painet
         sur_flush_input();
         }
 */
-    if (muste_peekinputevent(TRUE)) return(1);
+    if (muste_peekinputevent(TRUE)) { return(1);
+}
     return(FALSE);
     }
 
@@ -683,8 +705,10 @@ int sur_m2kbhit() // 31.12.2000 on key (sucros) // RS Näppäimen tai hiiren pai
 */
     if (muste_peekinputevent(FALSE))
       {
-      if (muste_eventtype==KEY_EVENT) return(1);
-      if (muste_eventtype==MOUSE_EVENT && m_click) return(2);
+      if (muste_eventtype==KEY_EVENT) { return(1);
+}
+      if (muste_eventtype==MOUSE_EVENT && m_click) { return(2);
+}
       }
     return(FALSE);
     }
@@ -708,8 +732,9 @@ int getck2(int mouse,int max) // 1=mouse click accepted 0=not
 //       muste_no_selection=FALSE;   // RS REM 27.2.2013
 		 if (muste_eventtype==MOUSE_EVENT && m_click)
 		    {
-			if (mouse==2) m=-2;
-			else m=' ';
+			if (mouse==2) { m=-2;
+			} else { m=' ';
+}
 			break;
 			}
 		 }
@@ -717,7 +742,8 @@ int getck2(int mouse,int max) // 1=mouse click accepted 0=not
 		  {
 		  m=muste_char;
 //Rprintf("\nm: %d",m);		   
-		  if (m<=0 || m>max) continue; // RS CHA m==-1 -> m<=0  23.11.2012 || m>max
+		  if (m<=0 || m>max) { continue; // RS CHA m==-1 -> m<=0  23.11.2012 || m>max
+}
 		  break;
 		  }
 		}
@@ -733,7 +759,8 @@ int s_caps_on()
     {
     muste_peekinputevent(FALSE);
 // Rprintf("\nkeystatus: %d, bit: %d",muste_keystatus,(muste_keystatus & 2));    
-    if ((muste_keystatus & 2)==2) return(TRUE);
+    if ((muste_keystatus & 2)==2) { return(TRUE);
+}
     return(FALSE);
 /* RS REM   
     DWORD state;
@@ -776,7 +803,8 @@ int muste_GetTickCount_start(int start)
 
         muste_ftime(&count);
         ticktimecount2=count.time+0.001*(double)count.millitm;
-        if (start) ticktimecount1=ticktimecount2; ticktimestart=0.0;
+        if (start) { ticktimecount1=ticktimecount2; 
+}ticktimestart=0.0;
    		return((int)((ticktimestart+ticktimecount2-ticktimecount1)*1000));
         }
 
@@ -812,16 +840,19 @@ extern int dispoint(void);
         time(&aika2);
         time1=time2=aika2; // RS 1.6.2013 time2
         
-        if (difftime(time2,muste_evenloop_oldtime)>0.5) headline_editor(); // RS 2.3.2013 if
+        if (difftime(time2,muste_evenloop_oldtime)>0.5) { headline_editor(); // RS 2.3.2013 if
+}
         if (survopoint_on) 
         	{ 
         	ptime1=muste_GetTickCount(); 
-        	if (muste_eventpeek==TRUE) dispoint(); 
+        	if (muste_eventpeek==TRUE) { dispoint(); 
+}
         	} // 15.3.2012        
     
         while (1) // 16.2.1997
             {
-            if (key_sleep) sur_sleep(key_sleep);
+            if (key_sleep) { sur_sleep(key_sleep);
+}
 
 //            if (muste_eventpeek==FALSE)    // RS REM ehdollistus pois 2.11.2014
             muste_sleep(10); // RS oli Windowsin oma Sleep(10)
@@ -839,13 +870,15 @@ extern int dispoint(void);
                 	ptime1=ptime2; 
                 	dispoint(); 
                 	} // 18.3.2012
-                else headline_editor();
+                else { headline_editor();
+}
             
 
                 if (wait_tut_type) // 14.2.2001
                     {
-                    if (time2>=wait_tut_time)
+                    if (time2>=wait_tut_time) {
                         return(-7);
+}
                     }
 
 
@@ -893,7 +926,8 @@ extern int dispoint(void);
 
 
 // Rprintf("nextkey2 while %d\n",difftime(time2,time1));
-            if (muste_peekinputevent(TRUE)) break;  // RS
+            if (muste_peekinputevent(TRUE)) { break;  // RS
+}
             if (muste_eventpeek==TRUE) { /* muste_eventpeek=FALSE; */ return(-5); }
 ////            PeekConsoleInput(hStdIn, &inputBuffer, 1, &dwInputEvents);
 ////            if (dwInputEvents) break;
@@ -947,8 +981,10 @@ muste_eventpeek=TRUE;
               {
 
 */
-              if (wait_tut_type!=2) wait_tut_type=0; // 14.2.2001
-              if (insert_mode) CURSOR_INS; else CURSOR_ON;
+              if (wait_tut_type!=2) { wait_tut_type=0; // 14.2.2001
+}
+              if (insert_mode) { CURSOR_INS; } else { CURSOR_ON;
+}
 
               special=FALSE;
               m=ch=muste_char;  // RS Aikaisemmin vain muuttujaan m
@@ -1036,7 +1072,8 @@ muste_eventpeek=TRUE;
                 default: ; // mahd.dekoodaus
                   }
 */
-      if (ch>31 && ch<256 && ch!=127) return(ch);
+      if (ch>31 && ch<256 && ch!=127) { return(ch);
+}
  
       special=TRUE;
 // Rprintf("\nkey: %d",ch);
@@ -1161,11 +1198,15 @@ muste_eventpeek=TRUE;
 // RS Siirretty alempaa tähän
             c_mouse=cc+7;
             r_mouse=rr;
-            if (sucro_menu && m_click) return(-2);
-            if (m_double_click || m_click) if (wait_tut_type!=2) wait_tut_type=0; // 14.2.2001
+            if (sucro_menu && m_click) { return(-2);
+}
+            if (m_double_click || m_click) { if (wait_tut_type!=2) { wait_tut_type=0; // 14.2.2001
+}
+}
 
            
-           if (muste_eventpeek==FALSE) return(-1); // RS ADD 15.8.2010
+           if (muste_eventpeek==FALSE) { return(-1); // RS ADD 15.8.2010
+}
 
 /* RS jo peekissä
             m_double_click=0; m_click=0;
@@ -1190,7 +1231,8 @@ muste_eventpeek=TRUE;
 
             if (!m_double_click && m_click)  // 14.10.2005
                 {
-                if (right_mouse_click) i=2; else i=1;
+                if (right_mouse_click) { i=2; } else { i=1;
+}
 
 extern int act_sounds_on; 
 extern char *act_sound[];
@@ -1215,10 +1257,12 @@ extern char *act_sound[];
 						{
 						if (one_click_copy)
 							{
-							if (cc>=0 && cc<=c3 && rr>0 && rr<=r3) m_copy_word2();
-							else if (cc<-1) delete(); // RS 14.11.2012
+							if (cc>=0 && cc<=c3 && rr>0 && rr<=r3) { m_copy_word2();
+							} else if (cc<-1) { delete(); // RS 14.11.2012
+}
 							}
-						else prompt_line=NULL;
+						else { prompt_line=NULL;
+}
 						}
 					}
                 }
@@ -1254,10 +1298,11 @@ extern int m_move_ind2,m_move_ind;
                     m_move_ind=m_move_ind2=0;
                     }
 */
-                if (!r_soft)
+                if (!r_soft) {
                     restore_softkeys();
-                else
+                } else {
                     soft_disp(1);
+}
                 return(-1);
                 }
 
@@ -1266,7 +1311,8 @@ extern int m_move_ind2,m_move_ind;
 
             if (cc>0 && cc<=c3 && rr>0 && rr<=r3)
                 {
-                if (soft_message) soft_bottom_line_erase();
+                if (soft_message) { soft_bottom_line_erase();
+}
                 if (m_double_click)
                   {
                   c=cc;
@@ -1286,8 +1332,9 @@ extern int m_move_ind2,m_move_ind;
                     { 
                     mouse_define_block(); cursor(r,c);
                     }
-                  else
+                  else {
                       disp();
+}
                   }
                 }
 
@@ -1304,7 +1351,8 @@ extern int m_move_ind2,m_move_ind;
                 if (i==3)
                     {
                     special=1;
-                    if (soft_code==CODE_HELP) special=2;
+                    if (soft_code==CODE_HELP) { special=2;
+}
                     return(soft_code);
                     }
                 if (i==4)
@@ -1331,7 +1379,8 @@ int nextkey_editor()
             {
 //Rprintf("nextkey while\n");
             m=nextkey2();
-            if (m!=-1) return(m); 
+            if (m!=-1) { return(m); 
+}
 // Rprintf("\nnextkey m: %d",m);            
             }
         }
@@ -1387,17 +1436,21 @@ static int nextch_common()
         if (etu==2)
             {            
             m=tutch_editor();
-            while (m==255 && etu==2) m=tutch_editor();
+            while (m==255 && etu==2) { m=tutch_editor();
+}
 //Rprintf("\ntutm: %d",m);            
-            if (m>0) return(m); // RS CHA m!=0 -> m>0
+            if (m>0) { return(m); // RS CHA m!=0 -> m>0
+}
             }
         if (etu==1)
             {
             m=nextkey_editor();
 //          cursor(2,50); muste_sprintf(sbuf,"%d  ",m); sur_print(sbuf); getck();
 //          cursor(r,c);
-            if (m<0) return(m); // RS FIXME Allow only "true" events to be saved!
-            if (wait_save) save_wait(m);
+            if (m<0) { return(m); // RS FIXME Allow only "true" events to be saved!
+}
+            if (wait_save) { save_wait(m);
+}
             tutsave(m);
             return(m);
             }
@@ -1425,10 +1478,12 @@ int nextch_editor()
         	{
         	muste_eventpeek=FALSE;
         	m=nextch_common();            	
-        	if (m>0) break;
+        	if (m>0) { break;
+}
         	if (sucro_menu)
             	{                  	
-                if (m==-2) break;  // RS ADD sucromenu mouse
+                if (m==-2) { break;  // RS ADD sucromenu mouse
+}
         		}          		
         	}
 
@@ -1482,7 +1537,8 @@ int s_getch()
         {
 //        ReadConsoleInput(hStdIn, &inputBuffer, 1, &dwInputEvents);
         m=sur_getch_ext();      
-        if (m!=-1) return(m);
+        if (m!=-1) { return(m);
+}
         }
     }
 
@@ -1496,9 +1552,11 @@ int sur_getch_ext()
 
     if (sur_prefix_code) { sur_prefix_code=0; return(sur_key); }
     i=sur_getch2(&sur_key,&special,&ascii);
-    if (i==EURO) return(EURO);
+    if (i==EURO) { return(EURO);
+}
 
-    if (sur_key<1) return(-1);  // RS CHA !sur_key
+    if (sur_key<1) { return(-1);  // RS CHA !sur_key
+}
     if (special) { sur_prefix_code=1; return(EXTEND_CH); }
     
     return(sur_key);
@@ -1523,7 +1581,8 @@ static int sur_getch2(int *psur_key,int *pspecial,char *pascii)
 // RS NYI if (euro-merkki) return(EURO);
 
     sur_ctrl=0;
-    if (state & MUSTE_CTRL) sur_ctrl=1; // At least CTRL pressed  
+    if (state & MUSTE_CTRL) { sur_ctrl=1; // At least CTRL pressed  
+}
 
 //    caps_on=state & MUSTE_CAPSLOCK;
 //    shift_pressed=state & MUSTE_SHIFT;
@@ -1629,7 +1688,8 @@ static int sur_getch2(int *psur_key,int *pspecial,char *pascii)
 //          if (caps F12) *psur_key=CODE_SUCRO8; break;
 
          default:
-            if (*pspecial==1) *psur_key=-1;
+            if (*pspecial==1) { *psur_key=-1;
+}
             break;
           }
 
@@ -1791,9 +1851,11 @@ int nextkey2_medit()
 
         while (1) /* 16.2.1997 */
             {
-            if (key_sleep) sur_sleep(key_sleep);
+            if (key_sleep) { sur_sleep(key_sleep);
+}
             
-            if (muste_peekinputevent(TRUE)) break;
+            if (muste_peekinputevent(TRUE)) { break;
+}
 // RS CHA            PeekConsoleInput(hStdIn, &inputBuffer, 1, &dwInputEvents);
 // RS CHA            if (dwInputEvents) break;
             
@@ -1810,8 +1872,9 @@ int nextkey2_medit()
 
                 if (wait_tut_type) // 14.2.2001
                     {
-                    if (time2>=wait_tut_time)
+                    if (time2>=wait_tut_time) {
                         return(-7);
+}
                     }
 
                 time1=time2;
@@ -1867,8 +1930,10 @@ int nextkey2_medit()
 //            if (inputBuffer.Event.KeyEvent.bKeyDown)
 //              {
               
-              if (wait_tut_type!=2) wait_tut_type=0; // 14.2.2001
-              if (insert_mode) CURSOR_INS; else CURSOR_ON;
+              if (wait_tut_type!=2) { wait_tut_type=0; // 14.2.2001
+}
+              if (insert_mode) { CURSOR_INS; } else { CURSOR_ON;
+}
               special=0;
               m=ch=muste_char; // sur_getch();
               /* if (!key_code) break; */
@@ -1882,7 +1947,8 @@ int nextkey2_medit()
 ***********************************/
 //              loading_help_lines=0;
 
-      if (ch>31 && ch<256 && ch!=127) return(ch);
+      if (ch>31 && ch<256 && ch!=127) { return(ch);
+}
  
       special=TRUE;
 

@@ -100,15 +100,20 @@ void muste_cluster(char *argv)
         if (g>2)
             {
             tulosrivi=edline2(word[2],1,1);
-            if (tulosrivi==0) return;
+            if (tulosrivi==0) { return;
+}
             }
 
         strcpy(aineisto,word[1]);
-        i=data_open(aineisto,&d); if (i<0) return;
-        i=sp_init(r1+r-1); if (i<0) return;
-        i=mask(&d); if (i<0) return;
+        i=data_open(aineisto,&d); if (i<0) { return;
+}
+        i=sp_init(r1+r-1); if (i<0) { return;
+}
+        i=mask(&d); if (i<0) { return;
+}
         scales(&d);
-        i=conditions(&d); if (i<0) return;
+        i=conditions(&d); if (i<0) { return;
+}
 
         gvar=activated(&d,'G');
         if (gvar<0)
@@ -120,20 +125,24 @@ void muste_cluster(char *argv)
         ivar=-1; ivar=activated(&d,'I');
 
         i=spfind("TRIALS");
-        if (i>=0) maxiter=atoi(spb[i]);
+        if (i>=0) { maxiter=atoi(spb[i]);
+}
 
-        i=rand_init(); if (i<0) return;   /* 30.4.1994 */
+        i=rand_init(); if (i<0) { return;   /* 30.4.1994 */
+}
 
         i=spfind("TEMPFILE");
-        if (i>=0) strcpy(tempfile,spb[i]);
-        else { strcpy(tempfile,etmpd); strcat(tempfile,"SURVO.CLU"); }
+        if (i>=0) { strcpy(tempfile,spb[i]);
+        } else { strcpy(tempfile,etmpd); strcat(tempfile,"SURVO.CLU"); }
 
         i=spfind("PRIND");
-        if (i>=0 && atoi(spb[i])>0) prind=1;
+        if (i>=0 && atoi(spb[i])>0) { prind=1;
+}
 
         data_load(&d,1L,gvar,&a);
         i=data_save(&d,1L,gvar,a);
-        if (i<0) return;
+        if (i<0) { return;
+}
 
         gvar2=(int *)muste_malloc(d.m_act*sizeof(int));
         if (gvar2==NULL) { not_enough_memory(); return; }
@@ -158,49 +167,65 @@ printf("\n"); for (i=0; i<n_saved; ++i) Rprintf(" %d",gvar2[i]); getch();
 */
 
         i=spfind("GROUPS");
-        if (i<0) ng=2; else ng=atoi(spb[i]);
-        if (ng<2) ng=2;
+        if (i<0) { ng=2; } else { ng=atoi(spb[i]);
+}
+        if (ng<2) { ng=2;
+}
         ng2=ng+2;
-        mn=m; if (mn<ng) mn=ng;
+        mn=m; if (mn<ng) { mn=ng;
+}
 
-        first_line=r+1; if (r+n_saved>r3) first_line=1;
-        n_show=n_saved; if (n_show>r3) n_show=r3;
+        first_line=r+1; if (r+n_saved>r3) { first_line=1;
+}
+        n_show=n_saved; if (n_show>r3) { n_show=r3;
+}
 
-        i=varaa_tilat(); if (i<0) return;
+        i=varaa_tilat(); if (i<0) { return;
+}
 
-        i=lue_havainnot(); if (i<0) return;
+        i=lue_havainnot(); if (i<0) { return;
+}
         hav_muistissa=havainnot_muistiin();
         ortogonalisoi();
-        if (ivar_init) alustava_luokittelu();
+        if (ivar_init) { alustava_luokittelu();
+}
         LOCATE(first_line,1);
         SCROLL_UP(first_line,r3+1,r3);
         sur_print("\nCluster analysis: Iteration 1:");
-        while (sur_kbhit()) sur_getch();
+        while (sur_kbhit()) { sur_getch();
+}
         it=0;
         while (1)
             {
             while (1)
                 {
-                if (it) init_gr();
+                if (it) { init_gr();
+}
                 i=init_tilat();
-                if (i>=0) break;
-                if (maxiter==1) return;
+                if (i>=0) { break;
+}
+                if (maxiter==1) { return;
+}
                 }
             iteroi();
             ++it;
-            if (maxiter>1) vertaa_muihin();
-            if (it==maxiter) break;
+            if (maxiter>1) { vertaa_muihin();
+}
+            if (it==maxiter) { break;
+}
             LOCATE(first_line,1);
             muste_sprintf(sbuf,"\nIteration %d (Cluster analysis)",it);
             sur_print(sbuf);
             for (i=0; i<n_show; ++i)
                {
-               if (freq[i]==0) break;
+               if (freq[i]==0) { break;
+}
                muste_sprintf(sbuf,"\n%d %g %d        ",i+1,lambda2[i],freq[i]); sur_print(sbuf);
                }
             if (sur_kbhit())
                 {
-                i=sur_getch(); if (i=='.') break;
+                i=sur_getch(); if (i=='.') { break;
+}
                 }
             }
         tulosta();
@@ -261,11 +286,13 @@ static int lue_havainnot()
             }
 
         sur_print("\nReading observations... ");
-        for (i=0; i<m*m; ++i) T[i]=0.0;
+        for (i=0; i<m*m; ++i) { T[i]=0.0;
+}
         n=0L;
         for (j=d.l1; j<=d.l2; ++j)
             {
-            if (unsuitable(&d,j)) continue;
+            if (unsuitable(&d,j)) { continue;
+}
             miss=0;
             for (i=0; i<m; ++i)
                 {
@@ -273,37 +300,47 @@ static int lue_havainnot()
                 if (y==MISSING8) { miss=1; break; }
                 xx[i]=y;
                 }
-            if (miss) continue;
+            if (miss) { continue;
+}
 
             if (ivar>=0)
                 {
                 data_load(&d,j,ivar,&y);
-                if (y==MISSING8) continue;
+                if (y==MISSING8) { continue;
+}
                 group=y;
 
                 if (group<=0 || group>ng)
                     { ++ivar_init; group=0; }
                 }
-            else
+            else {
                 group=ng*rand_uniform()+1;
+}
 
             p=(char *)&group;
-            for (h=0; h<sizeof(int); ++h) putc((int)p[h],hav);
+            for (h=0; h<sizeof(int); ++h) { putc((int)p[h],hav);
+}
             group=0; p=(char *)&group;
-            for (i=0; i<n_saved; ++i)
-                for (h=0; h<sizeof(int); ++h) putc((int)p[h],hav);
+            for (i=0; i<n_saved; ++i) {
+                for (h=0; h<sizeof(int); ++h) { putc((int)p[h],hav);
+}
+}
 
             p=(char *)&j;
-            for (h=0; h<sizeof(int); ++h) putc((int)p[h],hav);
+            for (h=0; h<sizeof(int); ++h) { putc((int)p[h],hav);
+}
             for (i=0; i<m; ++i)
                 {
                 p=(char *)&xx[i];
-                for (h=0; h<sizeof(double); ++h) putc((int)p[h],hav);
+                for (h=0; h<sizeof(double); ++h) { putc((int)p[h],hav);
+}
                 }
             ++n;
 
-            for (i=0; i<m; ++i)
-                for (h=0; h<=i; ++h) T[i+m*h]+=xx[i]*xx[h];
+            for (i=0; i<m; ++i) {
+                for (h=0; h<=i; ++h) { T[i+m*h]+=xx[i]*xx[h];
+}
+}
 
             if (sur_kbhit())
                 {
@@ -316,8 +353,10 @@ static int lue_havainnot()
         hav_len=sizeof(int)+n_saved_len+sizeof(int)+m*sizeof(double);
         muste_fclose(hav);
 
-        for (i=0; i<m; ++i)
-            for (h=0; h<i; ++h) T[h+m*i]=T[i+m*h];
+        for (i=0; i<m; ++i) {
+            for (h=0; h<i; ++h) { T[h+m*i]=T[i+m*h];
+}
+}
 
         for (i=0; i<n_saved; ++i) { lambda2[i]=1e100; freq[i]=0; }
 
@@ -338,11 +377,14 @@ static int havainnot_muistiin()
      // char *p;
 
         s_obs=(double *)muste_malloc(m*n*sizeof(double));
-        if (s_obs==NULL) return(0);
+        if (s_obs==NULL) { return(0);
+}
         s_group=(short *)muste_malloc(n*sizeof(short));
-        if (s_group==NULL) return(0);
+        if (s_group==NULL) { return(0);
+}
         s_groups=(short *)muste_malloc(n_saved*n*sizeof(double));
-        if (s_groups==NULL) return(0);
+        if (s_groups==NULL) { return(0);
+}
 
         hav=muste_fopen(tempfile,"r+b");
         apu=0;
@@ -375,7 +417,8 @@ static int hav_read1(int jj,int *pgroup)
             { *pgroup=s_group[jj]; return(1); }
         muste_fseek(hav,jj*(int)hav_len,SEEK_SET);
         p=(char *)pgroup;
-        for (i=0; i<sizeof(int); ++i) p[i]=(char)getc(hav);
+        for (i=0; i<sizeof(int); ++i) { p[i]=(char)getc(hav);
+}
         return(1);
         }
 
@@ -386,7 +429,8 @@ static int hav_read2(int jj,int *pj)
 
         muste_fseek(hav,jj*(int)hav_len+(int)sizeof(int)+(int)n_saved_len,SEEK_SET);
         p=(char *)pj;
-        for (i=0; i<sizeof(int); ++i) p[i]=(char)getc(hav);
+        for (i=0; i<sizeof(int); ++i) { p[i]=(char)getc(hav);
+}
         return(1);
         }
 
@@ -397,14 +441,16 @@ static int hav_read3(int jj,double *y)
 
         if (hav_muistissa)
             {
-            for (i=0; i<m; ++i) y[i]=s_obs[jj*m+i];
+            for (i=0; i<m; ++i) { y[i]=s_obs[jj*m+i];
+}
             return(1);
             }
         muste_fseek(hav,jj*(int)hav_len+(int)sizeof(int)+(int)n_saved_len+(int)sizeof(int),SEEK_SET);
         for (i=0; i<m; ++i)
             {
             p=(char *)&y[i];
-            for (h=0; h<sizeof(double); ++h) p[h]=(char)getc(hav);
+            for (h=0; h<sizeof(double); ++h) { p[h]=(char)getc(hav);
+}
             }
         return(1);
         }
@@ -418,7 +464,8 @@ static int hav_read4(int jj,int k,int *pgroup)
             { *pgroup=s_groups[jj*n_saved+k]; return(1); }
         muste_fseek(hav,jj*(int)hav_len+(int)((k+1)*sizeof(int)),SEEK_SET);
         p=(char *)pgroup;
-        for (i=0; i<sizeof(int); ++i) p[i]=(char)getc(hav);
+        for (i=0; i<sizeof(int); ++i) { p[i]=(char)getc(hav);
+}
         return(1);
         }
 
@@ -431,7 +478,8 @@ static int hav_write1(int jj,int *pgroup)
             { s_group[jj]=*pgroup; return(1); }
         muste_fseek(hav,jj*(int)hav_len,SEEK_SET);
         p=(char *)pgroup;
-        for (i=0; i<sizeof(int); ++i) putc((int)p[i],hav);
+        for (i=0; i<sizeof(int); ++i) { putc((int)p[i],hav);
+}
         return(1);
         }
 
@@ -442,14 +490,16 @@ static int hav_write3(int jj,double *y)
 
         if (hav_muistissa)
             {
-            for (i=0; i<m; ++i) s_obs[jj*m+i]=y[i];
+            for (i=0; i<m; ++i) { s_obs[jj*m+i]=y[i];
+}
             return(1);
             }
         muste_fseek(hav,jj*(int)hav_len+(int)sizeof(int)+(int)n_saved_len+(int)sizeof(int),SEEK_SET);
         for (i=0; i<m; ++i)
             {
             p=(char *)&y[i];
-            for (h=0; h<sizeof(double); ++h) putc((int)p[h],hav);
+            for (h=0; h<sizeof(double); ++h) { putc((int)p[h],hav);
+}
             }
         return(1);
         }
@@ -464,7 +514,8 @@ static int hav_write4(int jj,int k,int *pgroup)
 
         muste_fseek(hav,jj*(int)hav_len+(int)((k+1)*sizeof(int)),SEEK_SET);
         p=(char *)pgroup;
-        for (i=0; i<sizeof(int); ++i) putc((int)p[i],hav);
+        for (i=0; i<sizeof(int); ++i) { putc((int)p[i],hav);
+}
         return(1);
         }
 
@@ -481,7 +532,8 @@ static int ortogonalisoi()
         for (j=0; j<m; ++j)
             {
             eps=1/sqrt(v1[j]);
-            for (i=0; i<m; ++i) T[i+m*j]*=eps;
+            for (i=0; i<m; ++i) { T[i+m*j]*=eps;
+}
             }
 
         hav=muste_fopen(tempfile,"r+b");
@@ -522,17 +574,21 @@ used += snprintf(rivi + used, LLENGTH - used, "%d", n);
         for (i=0; i<m; ++i)
             {
             strcpy(x,d.varname[d.v[i]]);
-            h=strlen(x); while (h && x[h-1]==' ') x[--h]=EOS;
+            h=strlen(x); while (h && x[h-1]==' ') { x[--h]=EOS;
+}
             k+=muste_sprintf(rivi+k,"%s",x);
-            if (i<m-1) k+=muste_sprintf(rivi+k,", ");
+            if (i<m-1) { k+=muste_sprintf(rivi+k,", ");
+}
             if (k>c3-10) { eoutput(rivi); k=0; }
             }
-        if (k) eoutput(rivi);
+        if (k) { eoutput(rivi);
+}
 
         n_used=0;
         for (i=0; i<n_saved; ++i)
             {
-            if (freq[i]==0) break;
+            if (freq[i]==0) { break;
+}
             ++n_used;
             }
 
@@ -629,14 +685,16 @@ static int vertaa_muihin()
 
         for (i=0; i<n_saved; ++i)
             {
-            if (freq[i]==0) break;
+            if (freq[i]==0) { break;
+}
             if (fabs(f2-lambda2[i])<1e-8) { ++freq[i]; return(1); }
             }
         max=-1e10; imax=-1;
         n_used=0;
         for (i=0; i<n_saved; ++i)
             {
-            if (freq[i]==0) break;
+            if (freq[i]==0) { break;
+}
             ++n_used;
             if (lambda2[i]>max) { imax=i; max=lambda2[i]; }
             }
@@ -675,7 +733,8 @@ static int kopioi_gr(int k)
 static int eoutput(char *rivi)
         {
         output_line(rivi,eout,tulosrivi);
-        if (tulosrivi) ++tulosrivi;
+        if (tulosrivi) { ++tulosrivi;
+}
         return(1);
         }
 
@@ -696,7 +755,8 @@ static int init_tilat()
         for (i=0; i<ng; ++i)
             {
             N1[i]=0.0;
-            for (j=0; j<m; ++j) S[i+ng*j]=0.0;
+            for (j=0; j<m; ++j) { S[i+ng*j]=0.0;
+}
             }
 
         for (jj=0L; jj<n; ++jj)
@@ -704,7 +764,8 @@ static int init_tilat()
             hav_read1(jj,&gr); --gr;
             hav_read3(jj,xx);
             ++N1[gr];
-            for (i=0; i<m; ++i) S[gr+ng*i]+=xx[i];
+            for (i=0; i<m; ++i) { S[gr+ng*i]+=xx[i];
+}
             }
 
         for (i=0; i<ng; ++i)
@@ -718,22 +779,27 @@ static int init_tilat()
             }
 
         mat_mmt(H1,S,ng,m);
-        for (i=0; i<ng; ++i)
+        for (i=0; i<ng; ++i) {
             for (j=0; j<ng; ++j)
                 {
-                if (i==j) H1[i+ng*j]=N1[i]-H1[i+ng*j];
-                else      H1[i+ng*j]=-H1[i+ng*j];
+                if (i==j) { H1[i+ng*j]=N1[i]-H1[i+ng*j];
+                } else {      H1[i+ng*j]=-H1[i+ng*j];
+}
                 }
+}
         mat_inv(H2,H1,ng,&f2);
-        for (i=0; i<ng; ++i) f2/=N1[i];
+        for (i=0; i<ng; ++i) { f2/=N1[i];
+}
 
 
 /* for (i=0; i<ng2*ng2; ++i) Q[i]=0.0;     tarpeeton */
 
 
-        for (i=0; i<ng; ++i)
-            for (j=0; j<ng; ++j)
+        for (i=0; i<ng; ++i) {
+            for (j=0; j<ng; ++j) {
                 Q[i+ng2*j]=H2[i+ng*j];
+}
+}
 
 /*  muste_sprintf(sbuf,"\nlambda=%g",f2); sur_print(sbuf); */
 /* Rprintf("\nH2:"); matprint(H2,ng,ng);   */
@@ -759,11 +825,14 @@ static int iteroi()
             init_obs(gr);
             for (d=0; d<ng; ++d)
                 {
-                if (d==gr) continue;
+                if (d==gr) { continue;
+}
                 i=sift(gr,d);
-                if (i) break;
+                if (i) { break;
+}
                 }
-            if (d==ng) { ++nj; if (nj>=n) break; }
+            if (d==ng) { ++nj; if (nj>=n) { break; 
+}}
             else
                 {
                 nj=0L;
@@ -772,7 +841,8 @@ static int iteroi()
                 hav_write1(jj,&d);
 /*              muste_sprintf(sbuf,"\nL=%g shift %d -> %d ",f2,gr+1,d); sur_print(sbuf); */
                 }
-            ++jj; if (jj==n) jj=0L;
+            ++jj; if (jj==n) { jj=0L;
+}
             }
         muste_fclose(hav);
         return(1);
@@ -785,23 +855,28 @@ static int init_obs(int gr)
 
         for (i=0; i<ng; ++i)
             {
-            if (i==gr) a=1.0; else a=0.0;
-            for (j=0; j<m; ++j)
+            if (i==gr) { a=1.0; } else { a=0.0;
+}
+            for (j=0; j<m; ++j) {
                 a-=xx[j]*S[i+ng*j];
+}
             v1[i]=a;  /* m(s) */
             }
         rr=0.0;
-        for (i=0; i<m; ++i) rr+=xx[i]*xx[i];
+        for (i=0; i<m; ++i) { rr+=xx[i]*xx[i];
+}
 
         for (i=0; i<ng; ++i)
             {
             a=0.0;
-            for (j=0; j<ng; ++j)
+            for (j=0; j<ng; ++j) {
                 a+=v1[j]*Q[i+ng2*j];
+}
             v2[i]=a;  /* b(s) */
             }
         vss=0.0;
-        for (i=0; i<ng; ++i) vss+=v1[i]*v2[i];
+        for (i=0; i<ng; ++i) { vss+=v1[i]*v2[i];
+}
 /* matprint(Q,ng2,ng2); */
         return(1);
         }
@@ -811,7 +886,8 @@ static int sift(int gr,int d)
         double f;
         double a;
 
-        if (N1[gr]==1.0) return(0);
+        if (N1[gr]==1.0) { return(0);
+}
         a=v2[d]-v2[gr]+1;
         f=f2*N1[gr]*N1[d]/(N1[gr]-1.0)/(N1[d]+1.0)*
           (a*a-(vss+rr-1)*(Q[gr+ng2*gr]+Q[d+ng2*d]-2*Q[d+ng2*gr]));
@@ -829,7 +905,8 @@ static int shift(int gr,int d)
         for (i=0; i<ng; ++i)
             { Q[ng+ng2*i]=v2[i]; Q[i+ng2*ng]=v2[i]; }
         Q[ng+ng2*ng]=-1.0+rr+vss;
-        for (i=0; i<ng; ++i) v1[i]=v2[i]-Q[i+ng2*gr]+Q[i+ng2*d];  /* b(d) */
+        for (i=0; i<ng; ++i) { v1[i]=v2[i]-Q[i+ng2*gr]+Q[i+ng2*d];  /* b(d) */
+}
         vsd=vss-v2[gr]+v2[d];
         vdd=vss-2*(v2[gr]-v2[d])+Q[gr+ng2*gr]+Q[d+ng2*d]-2*Q[gr+ng2*d];
         for (i=0; i<ng; ++i)
@@ -864,14 +941,16 @@ static int alustava_luokittelu()
         for (jj=0L; jj<n; ++jj)
             {
             hav_read1(jj,&gr);
-            if (gr>0) continue;
+            if (gr>0) { continue;
+}
 
             min=1e100;
             hav_read3(jj,v1);
             for (jj2=0L; jj2<n; ++jj2)
                 {
                 hav_read1(jj2,&gr);
-                if (gr==0) continue;
+                if (gr==0) { continue;
+}
                 hav_read3(jj2,xx);
                 dist=0.0;
                 for (i=0; i<m; ++i) { a=v1[i]-xx[i]; dist+=a*a; }
@@ -890,7 +969,8 @@ static int alustava_luokittelu()
 
 static int kirjoita_lauseke(int outvar,char *lauseke)
         {
-        if (d.type!=2) return(1);
+        if (d.type!=2) { return(1);
+}
         uusi_nimi(outvar,lauseke);
         return(1);
         }
@@ -903,15 +983,19 @@ static int uusi_nimi(int i,char *s)
         int k,len,h;
 
 
-        len=d.d2.l; if (len<10) return(1);
+        len=d.d2.l; if (len<10) { return(1);
+}
         fi_rewind(&(d.d2));
         fi_gets(&(d.d2),x,d.d2.l,(int)(d.d2.var+(int)i*((int)len+(int)d.d2.extra)+(int)d.d2.extra));
         x[len]=EOS;
 
-        k=8; while (x[k]==' ' && k<len) ++k;
+        k=8; while (x[k]==' ' && k<len) { ++k;
+}
         if (k==len || x[k]==EQ)
             {
-            if (x[k]==EQ) for (h=k; h<len; ++h) x[h]=' ';
+            if (x[k]==EQ) { for (h=k; h<len; ++h) { x[h]=' ';
+}
+}
             x[9]=EQ;
             h=0; while (h<strlen(s) && h+10<len) { x[h+10]=s[h]; ++h; }
         fi_rewind(&(d.d2));
@@ -935,7 +1019,8 @@ static int rand_init()
         char *p;
 
         i=spfind("RND");
-        if (i<0) i=spfind("SEED");
+        if (i<0) { i=spfind("SEED");
+}
         if (i<0) { type=0; seed=0L; return(1); }
 
         strcpy(s,spb[i]);

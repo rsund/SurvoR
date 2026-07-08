@@ -64,7 +64,8 @@ void muste_minstat(char *argv)
         if (g>2)
             {
             results_line=edline2(word[2],1,1);
-            if (results_line==0) return;
+            if (results_line==0) { return;
+}
             }
         prind=0;
 
@@ -80,17 +81,25 @@ void muste_minstat(char *argv)
     rlab=NULL;
     clab=NULL;
 
-        i=data_read_open(word[1],&d); if (i<0) return;
-        i=spec_init(r1+r-1); if (i<0) return;
-        i=mask(&d); if (i<0) return;
+        i=data_read_open(word[1],&d); if (i<0) { return;
+}
+        i=spec_init(r1+r-1); if (i<0) { return;
+}
+        i=mask(&d); if (i<0) { return;
+}
         m_act=d.m_act;
-        i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
-        if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);
+        i=hae_apu("prind",sbuf); if (i) { prind=atoi(sbuf);
+}
+        if ((i=spfind("PRIND"))>=0) { prind=atoi(spb[i]);
+}
 
-        i=conditions(&d); if (i<0) return;  /* permitted only once */
-        i=space_allocation(); if (i<0) return;
+        i=conditions(&d); if (i<0) { return;  /* permitted only once */
+}
+        i=space_allocation(); if (i<0) { return;
+}
 
-        i=compute_stat(); if (i<0) return;
+        i=compute_stat(); if (i<0) { return;
+}
         printout();
         data_close(&d);
         s_end(argv);
@@ -125,7 +134,8 @@ static int space_allocation()
             }
 
         mm=m_act;
-        nn=5; if (jitter) nn=7;
+        nn=5; if (jitter) { nn=7;
+}
         aa=(double *)muste_malloc(mm*nn*sizeof(double));
         if (aa==NULL) { not_enough_memory(); return(-1); }
         rlab=(char *)muste_malloc(mm*8+1);
@@ -153,15 +163,19 @@ static int compute_stat()
             min[i]=1e300; max[i]=-1e300;
             }
 
-        if (jitter) for (i=0; i<m_act; ++i) nval[i]=0;
+        if (jitter) { for (i=0; i<m_act; ++i) { nval[i]=0;
+}
+}
 
         for (l=d.l1; l<=d.l2; ++l) // tukihavainnon haku!
             {
-            if (unsuitable(&d,l)) continue;
+            if (unsuitable(&d,l)) { continue;
+}
             for (i=0; i<m_act; ++i)
                 {
                 data_load(&d,l,d.v[i],&x);
-                if (x==MISSING8) x=0.0;
+                if (x==MISSING8) { x=0.0;
+}
                 x0[i]=x;
                 }
             break;
@@ -175,7 +189,8 @@ static int compute_stat()
 
         for (l=d.l1; l<=d.l2; ++l)
             {
-            if (unsuitable(&d,l)) continue;
+            if (unsuitable(&d,l)) { continue;
+}
             ++n;
             if (prind)
                 {
@@ -184,11 +199,15 @@ static int compute_stat()
             for (i=0; i<d.m_act; ++i)
                 {
                 data_load(&d,l,d.v[i],&x);
-                if (x==MISSING8) continue;
+                if (x==MISSING8) { continue;
+}
                 ++f[i]; a=x-x0[i]; sum[i]+=a; sum2[i]+=a*a;
-                if (x<min[i]) min[i]=x;
-                if (x>max[i]) max[i]=x;
-                if (jitter) find_values(i,x);
+                if (x<min[i]) { min[i]=x;
+}
+                if (x>max[i]) { max[i]=x;
+}
+                if (jitter) { find_values(i,x);
+}
                 }
             }
         return(1);
@@ -228,25 +247,28 @@ static int printout()
             }
         print_line(line);
 
-        for (i=0; i<mm*nn; ++i) aa[i]=0.0;
+        for (i=0; i<mm*nn; ++i) { aa[i]=0.0;
+}
         *rlab=EOS;
         for (i=0; i<d.m_act; ++i)
             {
             strcpy(sbuf,d.varname[d.v[i]]);
-            for (h=strlen(sbuf); h<8; ++h) sbuf[h]=' '; sbuf[8]=EOS;
+            for (h=strlen(sbuf); h<8; ++h) { sbuf[h]=' '; 
+}sbuf[8]=EOS;
             strcat(rlab,sbuf);
 
-            if (f[i]==0L)
+            if (f[i]==0L) {
                 muste_sprintf(line,"%-8.8s            -  %6d",d.varname[d.v[i]],
                          n-f[i]);
-            else
+            } else
                 {
                 a0=sum[i]/(double)f[i];
                 fnconv(a0+x0[i],accuracy+2,stat);
                 aa[i+mm*0]=a0+x0[i];
                 k=muste_sprintf(line," %-8.8s %s",d.varname[d.v[i]],
                                 stat);
-                b0=f[i]-1; if (b0==0.0) b0=1.0;
+                b0=f[i]-1; if (b0==0.0) { b0=1.0;
+}
                 a0=sqrt((sum2[i]-a0*a0*(double)f[i])/b0);
                 fnconv(a0,accuracy+2,stat);
                 aa[i+mm*1]=a0;
@@ -265,13 +287,15 @@ static int printout()
 
                 if (jitter)
                     {
-                    h=nval[i]; if (h==-1) h=0;
+                    h=nval[i]; if (h==-1) { h=0;
+}
                     aa[i+mm*5]=(double)h;
                     muste_sprintf(stat,"%5d",h);
                     k+=muste_sprintf(line+k," %s",stat);
 
-                    if (h<2) a0=0.0;
-                    else a0=(max[i]-min[i])/(nval[i]-1);
+                    if (h<2) { a0=0.0;
+                    } else { a0=(max[i]-min[i])/(nval[i]-1);
+}
                     fnconv(a0,accuracy+2,stat);
                     aa[i+mm*6]=a0;
                     k+=muste_sprintf(line+k," %s",stat);
@@ -291,7 +315,8 @@ static int printout()
 static int print_line(char *line)
         {
         output_line(line,eout,results_line);
-        if (results_line) ++results_line;
+        if (results_line) { ++results_line;
+}
         return(1);
         }
 
@@ -300,7 +325,8 @@ static int find_values(int i,double x)
         double *px,*px0;
         int k,h;
 
-        if (nval[i]<0) return(1);
+        if (nval[i]<0) { return(1);
+}
         if (nval[i]==0)
             {
             values[i*jitter]=x;
@@ -310,11 +336,13 @@ static int find_values(int i,double x)
         k=0;
         while (k<nval[i])
             {
-            if (x==*px) return(1);
+            if (x==*px) { return(1);
+}
             if (x<*px)
                 {
                 if (nval[i]==jitter) { nval[i]=-1; return(1); }
-                for (h=nval[i]-1; h>=k; --h) px0[h+1]=px0[h];
+                for (h=nval[i]-1; h>=k; --h) { px0[h+1]=px0[h];
+}
                 *px=x; ++nval[i]; return(1);
                 }
             ++px; ++k;

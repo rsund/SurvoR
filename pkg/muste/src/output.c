@@ -47,7 +47,8 @@ int sur_print(char *x)
 
 int output_open(char *file)
         {
-        if (file==NULL || *file==EOS) return(1);      
+        if (file==NULL || *file==EOS) { return(1);      
+}
         output_file=muste_fopen(file,"at");
         if (output_file==NULL)
             {
@@ -59,7 +60,8 @@ int output_open(char *file)
 
 int output_close(char *file)
         {
-        if (file==NULL || *file==EOS) return(1);
+        if (file==NULL || *file==EOS) { return(1);
+}
         muste_fclose(output_file);
         return(1);
         }
@@ -71,26 +73,33 @@ int output_line(char *string,char *file,unsigned int editline)
         char s[LLENGTH];
         int prind=1; // RS 17.5.2013
 		lev=1; // RS ADD 16.10.2012
-        if (*file==EOS && editline==0) return(1); /* 3.2.1996 */
+        if (*file==EOS && editline==0) { return(1); /* 3.2.1996 */
+}
         strcpy(s,string);
         lev=strlen(s);
         if (editline>0 && editline<=r2)
             {
             for (i=0, j=(editline-1)*ed1+1; i<c2; ++i, ++j)
                 {
-                if (i<lev) z[j]=s[i]; else z[j]=' ';
+                if (i<lev) { z[j]=s[i]; } else { z[j]=' ';
+}
                 }
             }
-        if (output_level==0) return(1);
-        while (s[lev-1]==' ' && lev>0) s[--lev]=EOS;
+        if (output_level==0) { return(1);
+}
+        while (s[lev-1]==' ' && lev>0) { s[--lev]=EOS;
+}
         if (output_level==2) 
             {
 //            i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
-            i=spfind("PRIND"); if (i>=0) prind=atoi(spb[i]);
+            i=spfind("PRIND"); if (i>=0) { prind=atoi(spb[i]);
+}
             muste_sprintf(sbuf,"\n%s",s);            
-            if (prind) sur_print(sbuf); // RS 17.5.2013 prind
+            if (prind) { sur_print(sbuf); // RS 17.5.2013 prind
+}
             }
-        if (file==NULL || *file==EOS) return(1);
+        if (file==NULL || *file==EOS) { return(1);
+}
         s[lev]='\n'; s[lev+1]=EOS;
         fputs(s,output_file);
         return(1);
@@ -109,12 +118,15 @@ int output_line2(char *string,char *file,unsigned int editline,int crt)
             {
             for (i=0, j=(editline-1)*ed1+1; i<c2; ++i, ++j)
                 {
-                if (i<lev) z[j]=s[i]; else z[j]=' ';
+                if (i<lev) { z[j]=s[i]; } else { z[j]=' ';
+}
                 }
             }
-        while (s[lev-1]==' ' && lev>0) s[--lev]=EOS;
+        while (s[lev-1]==' ' && lev>0) { s[--lev]=EOS;
+}
         if (crt) { muste_sprintf(sbuf,"\n%s",s); sur_print(sbuf); }
-        if (file==NULL || *file==EOS) return(1);
+        if (file==NULL || *file==EOS) { return(1);
+}
         s[lev]='\n'; s[lev+1]=EOS;
         fputs(s,output_file);
         return(1);
@@ -128,10 +140,12 @@ int init2_remarks()
 
         strcpy(nimi,etmpd); strcat(nimi,"SURVO.REM");
         sur_remarks=muste_fopen(nimi,"w+t");
-        if (sur_remarks==NULL) return(-1);
+        if (sur_remarks==NULL) { return(-1);
+}
         LOCATE(rem_first_line+1,1); rem_line=rem_first_line+1; PR_EUDL;
-     for (i=0; i<r3+1-rem_first_line; ++i)
+     for (i=0; i<r3+1-rem_first_line; ++i) {
         sur_scroll_up(1,rem_first_line+3,1,r3+2,c3+8,(int)shadow_code[sdisp]);
+}
         LOCATE(rem_first_line+1,1);
         return(1);
         }
@@ -149,7 +163,8 @@ void init_remarks()
 int rem_pr(char *x)
         {
         sur_print("\n"); sur_print(x);
-        ++rem_line; if (rem_line>=r3+1) --rem_first_line;
+        ++rem_line; if (rem_line>=r3+1) { --rem_first_line;
+}
         fputs(x,sur_remarks);
         fputc((int)'\n',sur_remarks);
         return(1);
@@ -162,7 +177,8 @@ int rem_load()
         rewind(sur_remarks);
         while (1)
             {
-            if (rem_edit_line==r2) break;
+            if (rem_edit_line==r2) { break;
+}
             edread(x,rem_edit_line);
             if (!empty_line(x+1,strlen(x+1)))
                 {
@@ -171,7 +187,8 @@ int rem_load()
                 sur_getch(); return(-1); // RS FIX exit
                 }
             muste_fgets(x,LLENGTH-1,sur_remarks);
-            if (feof(sur_remarks)) break;
+            if (feof(sur_remarks)) { break;
+}
             x[strlen(x)-1]=EOS;
             edwrite(x,rem_edit_line,1);
             ++rem_edit_line;
@@ -184,10 +201,12 @@ int wait_remarks(int k)
         {
         int m;
 
-        if (muste_remarks_return) return(-1);
+        if (muste_remarks_return) { return(-1);
+}
         sur_print("\n"); PR_EINV;
-        if (k==1) sur_print("Next page by 'space'  |  Load lines by '+'  |  Interrupt by ENTER!");
-        else sur_print("Load lines by '+'  |  Interrupt by ENTER!");
+        if (k==1) { sur_print("Next page by 'space'  |  Load lines by '+'  |  Interrupt by ENTER!");
+        } else { sur_print("Load lines by '+'  |  Interrupt by ENTER!");
+}
     /*  m=nextch("");    */
         m=sur_getch();
         switch (m)
@@ -197,12 +216,14 @@ int wait_remarks(int k)
                 muste_remarks_return=TRUE;
                 break; 
           case '+': 
-                if (rem_load()<0) return(-1); // RS FIX exit
+                if (rem_load()<0) { return(-1); // RS FIX exit
+}
 //                muste_remarks_return=TRUE; 
                 break;
             }
         muste_fclose(sur_remarks);
-        if (muste_remarks_return) return(-1);
+        if (muste_remarks_return) { return(-1);
+}
         init2_remarks();
         return(1);
         }

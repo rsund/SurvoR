@@ -80,7 +80,8 @@ void muste_quanta(char *argv)
 
 //  if (argc==1) return;
     s_init(argv);
-    i=spec_init(r1+r-1); if (i<0) return;
+    i=spec_init(r1+r-1); if (i<0) { return;
+}
     if (g<4)
         {
         init_remarks();
@@ -92,10 +93,12 @@ void muste_quanta(char *argv)
         }
     strcpy(name,word[1]);
     i=data_open(word[1],&d);
-    if (i<0) return;
+    if (i<0) { return;
+}
 
     var=varfind(&d,word[2]);
-    if (var<0) return;
+    if (var<0) { return;
+}
 
     dim=atoi(word[3]);
     if (dim>MAX_Q)
@@ -108,12 +111,14 @@ void muste_quanta(char *argv)
     if (g>4)
         {
         results_line=edline2(word[4],1,1);
-        if (results_line==0) return;
+        if (results_line==0) { return;
+}
         }
 
     q_min=2.0;
     i=spfind("Q_MIN");
-    if (i>=0) q_min=atof(spb[i]);
+    if (i>=0) { q_min=atof(spb[i]);
+}
 
     i=spfind("RANGE");
     if (i<0)
@@ -124,19 +129,23 @@ void muste_quanta(char *argv)
     strcpy(sbuf,spb[i]);
 
     p=strchr(sbuf,'(');
-    if (p==NULL) return;
+    if (p==NULL) { return;
+}
     *p=EOS;
     x_min=atof(sbuf);
     p2=strchr(p+1,')');
-    if (p2==NULL) return;
+    if (p2==NULL) { return;
+}
     step=atof(p+1);
     x_max=atof(p2+1);
 
     n_elem=1+(int)((x_max-x_min)/step);
-    for (i=0; i<dim; ++i) elem[i]=i;
+    for (i=0; i<dim; ++i) { elem[i]=i;
+}
 
     i=conditions(&d);
-    if (i<0) return;
+    if (i<0) { return;
+}
 
 
     var_quant=var_res=var_coeff=-1;
@@ -148,16 +157,19 @@ void muste_quanta(char *argv)
         if (i>0)
             {
             var_quant=varfind(&d,s[0]);
-            if (var_quant<0) return;
+            if (var_quant<0) { return;
+}
             if (i>1)
                 {
                 var_res=varfind(&d,s[1]);
-                if (var_res<0) return;
+                if (var_res<0) { return;
+}
                 }
             if (i>2)
                 {
                 var_coeff=varfind(&d,s[2]);
-                if (var_coeff<0) return;
+                if (var_coeff<0) { return;
+}
                 }
             }
         }
@@ -167,18 +179,22 @@ void muste_quanta(char *argv)
     if (i>=0)
         {
         var_weight=varfind(&d,spb[i]);
-        if (var_weight<0) return;
+        if (var_weight<0) { return;
+}
         }
 
     n=0L;
     for (j=d.l1; j<=d.l2; ++j)
         {
-        if (unsuitable(&d,j)) continue;
+        if (unsuitable(&d,j)) { continue;
+}
         data_load(&d,j,var,&a);
-        if (a==MISSING8) continue;
+        if (a==MISSING8) { continue;
+}
         dat[n]=a;
-        if (var_weight>=0)
+        if (var_weight>=0) {
             data_load(&d,j,var_weight,&weight[n]);
+}
         ++n;
         }
 
@@ -189,7 +205,8 @@ void muste_quanta(char *argv)
         }
 
     i=spfind("ACCURACY");
-    if (i>=0) accuracy=atoi(spb[i]);
+    if (i>=0) { accuracy=atoi(spb[i]);
+}
 
     i=spfind("METHOD");
     if (i>=0 && *spb[i]=='K')
@@ -199,17 +216,19 @@ void muste_quanta(char *argv)
         return;
         }
 
-    if (i>=0 && *spb[i]=='L')
+    if (i>=0 && *spb[i]=='L') {
         f=log_sum_fit;
-    else
+    } else {
         f=sum_fit;
+}
 
     i=spfind("FIXED_QUANTA");
     if (i>=0)
         {
         strcpy(sbuf,spb[i]);
         split(sbuf,s,dim);
-        for (i=0; i<dim; ++i) qmin[i]=atof(s[i]);
+        for (i=0; i<dim; ++i) { qmin[i]=atof(s[i]);
+}
         y_min=f(qmin);
         }
     else
@@ -222,8 +241,11 @@ void muste_quanta(char *argv)
             q[i]=x_min+elem[i]*step;
 //          Rprintf("\nq[%d]=%g|",i,q[i]);
             }
-        for (i=0; i<dim; ++i) for (k=0; k<dim; ++k)
-            if (i==k) xi[i+dim*k]=1.0; else xi[i+dim*k]=0.0;
+        for (i=0; i<dim; ++i) { for (k=0; k<dim; ++k) {
+            if (i==k) { xi[i+dim*k]=1.0; } else { xi[i+dim*k]=0.0;
+}
+}
+}
 
         totnf=powell(q,xi,dim,(double)1e-5,&y,f);
                                  // oli 1e-4
@@ -238,17 +260,20 @@ void muste_quanta(char *argv)
                 }
             }
         i=next_m_comb(n_elem,dim,elem);
-        if (i<0) break;
+        if (i<0) { break;
+}
         }
       }
     j=0L;
-    for (i=0; i<dim; ++i) elem[i]=0;
+    for (i=0; i<dim; ++i) { elem[i]=0;
+}
     for (jn=d.l1; jn<=d.l2; ++jn)
         {
         double min,a1,a2,r;
         int kmin=0;
 
-        if (unsuitable(&d,jn)) continue;
+        if (unsuitable(&d,jn)) { continue;
+}
 
         min=1e100; imin=0;
         a=dat[j];
@@ -264,18 +289,22 @@ void muste_quanta(char *argv)
             if (fabs(b)<fabs(min)) { min=b; imin=i; kmin=k; }
             }
 
-        if (var_quant>=0) data_save(&d,jn,var_quant,(double)(imin+1));
+        if (var_quant>=0) { data_save(&d,jn,var_quant,(double)(imin+1));
+}
 
-        if (var_res>=0) data_save(&d,jn,var_res,min);
+        if (var_res>=0) { data_save(&d,jn,var_res,min);
+}
 
-        if (var_coeff>=0) data_save(&d,jn,var_coeff,(double)kmin);
+        if (var_coeff>=0) { data_save(&d,jn,var_coeff,(double)kmin);
+}
 
         ++elem[imin];
         ++j;
         }
 
     i=output_open(eout);
-    if (i<0) return;
+    if (i<0) { return;
+}
     muste_sprintf(sbuf,"Data: %s Variable: %s  N=%d",word[1],word[2],n);
     print_line(sbuf);
     muste_sprintf(sbuf,"ss=%g",y_min);
@@ -310,14 +339,17 @@ static double sum_fit(double *q)
             if (r<q_min) { return(1e2); }
             k=(int)(a/q[i]);
             a1=k*r; a2=a1+r;
-            b=a-a1; if (a2-a<b) b=a2-a;
+            b=a-a1; if (a2-a<b) { b=a2-a;
+}
 // Rprintf("\nk=%d q=%g a1=%g a=%g a2=%g b=%g|",k,r,a1,a,a2,b); getch();
-            if (b<min) min=b;
+            if (b<min) { min=b;
+}
             }
-        if (var_weight>=0)
+        if (var_weight>=0) {
            s+=weight[j]*min*min;
-        else
+        } else {
            s+=min*min;
+}
         }
     return(s);
     }
@@ -343,8 +375,10 @@ static double log_sum_fit(double *q)
             aa=al-log(r);
             a1=fabs(aa-log((double)k));
             a2=fabs(aa-log((double)(k+1)));
-            b=a1; if (a2<a1) b=a2;
-            if (b<min) min=b;
+            b=a1; if (a2<a1) { b=a2;
+}
+            if (b<min) { min=b;
+}
             }
         s+=min*min;
         }
@@ -357,17 +391,21 @@ static int next_m_comb(int n,int m,int *p)
 
         if (p[m-1]<n-1) { ++p[m-1]; return(1); }
         i=m-2;
-        while (p[i]==n-m+i && i>=0 ) --i;
-        if (i<0) return(-1);
+        while (p[i]==n-m+i && i>=0 ) { --i;
+}
+        if (i<0) { return(-1);
+}
         ++p[i]; k=p[i]; ++i;
-        for ( ; i<m; ++i) p[i]=++k;
+        for ( ; i<m; ++i) { p[i]=++k;
+}
         return(1);
         }
 
 static int print_line(char *line)
         {
         output_line(line,eout,results_line);
-        if (results_line) ++results_line;
+        if (results_line) { ++results_line;
+}
         return(1);
         }
 
@@ -401,7 +439,8 @@ static int kendall()
 
     s_min=1.5;
     i=spfind("SCORE_MIN");
-    if (i>=0) s_min=atof(spb[i]);
+    if (i>=0) { s_min=atof(spb[i]);
+}
 
     cc=(double *)muste_malloc(n_elem*sizeof(double));
     if (cc==NULL) { not_mem(); return(-1); }
@@ -418,12 +457,14 @@ static int kendall()
        cc[i]=s;
        }
     q=sqrt(2.0/(double)n);
-    for (i=0; i<n_elem; ++i) cc[i]*=q;
+    for (i=0; i<n_elem; ++i) { cc[i]*=q;
+}
 
     varlen[0]=varlen[1]=8;
     fi_create("COSQUANT",16,2,2,(int)n_elem,64,7,0,0,NULL,varname,varlen,vartype);
     i=data_open("COSQUANT",&d2);
-    if (i<0) return(-1);
+    if (i<0) { return(-1);
+}
 
     for (i=0; i<n_elem; ++i)
         {
@@ -434,7 +475,8 @@ static int kendall()
     data_close(&d2);
 
     i=output_open(eout);
-    if (i<0) return(-1);
+    if (i<0) { return(-1);
+}
     muste_sprintf(sbuf,"Data: %s Variable: %s  N=%d",word[1],word[2],n);
     print_line(sbuf);
     print_line(
@@ -479,7 +521,8 @@ static int kendall()
 
 static char *spois(char *s)
     {
-    if (*s==' ') ++s;
+    if (*s==' ') { ++s;
+}
     return(s);
     }
 
@@ -502,7 +545,8 @@ static int powell(double *p, double *xi, int n, double ftol, double *fret,
     xit=(double *)muste_malloc(n*sizeof(double));
     if (xit==NULL) { not_mem(); return(-1); }
     *fret=(*func)(p);
-    for (j=0; j<n; ++j) pt[j]=p[j];
+    for (j=0; j<n; ++j) { pt[j]=p[j];
+}
     iter=0; totnf=0;
     while (1)
       {
@@ -512,7 +556,8 @@ static int powell(double *p, double *xi, int n, double ftol, double *fret,
       del=0.0;
       for (i=0; i<n; ++i)
         {
-        for (j=0; j<n; ++j) xit[j]=xi[j+n*i];
+        for (j=0; j<n; ++j) { xit[j]=xi[j+n*i];
+}
         fptt=(*fret);
         linmin(p,xit,n,fret,func);
 // Rprintf("\n*fret=%g|",*fret);
@@ -527,7 +572,8 @@ static int powell(double *p, double *xi, int n, double ftol, double *fret,
       if (sur_kbhit())
           {
           i=sur_getch();
-          if (i=='.') stop=1;
+          if (i=='.') { stop=1;
+}
           }
 
 
@@ -617,7 +663,8 @@ static double f1dim(double x)
 
     xt=(double *)muste_malloc(ncom*sizeof(double));
     if (xt==NULL) { not_mem(); return(0.0); }
-    for (j=0; j<ncom; ++j) xt[j]=pcom[j]+x*xicom[j];
+    for (j=0; j<ncom; ++j) { xt[j]=pcom[j]+x*xicom[j];
+}
     f=(*nrfunc)(xt); ++totnf;
     muste_free(xt);
     return(f);
@@ -657,33 +704,38 @@ static double brent(double ax,double bx,double cx,double (*f)(double),
         q=(x-v)*(fx-fw);
         p=(x-v)*q-(x-w)*r;
         q=2*(q-r);
-        if (q>0.0) p=-p;
+        if (q>0.0) { p=-p;
+}
         q=fabs(q);
 
         etemp=e;
         e=d;
-        if (fabs(p)>=fabs(0.5*q*etemp) || p<=q*(a-x) || p>=q*(b-x))
+        if (fabs(p)>=fabs(0.5*q*etemp) || p<=q*(a-x) || p>=q*(b-x)) {
             d=CGOLD*(e=(x>=xm ? a-x:b-x));
-        else
+        } else
           {
           d=p/q;
           u=x+d;
-          if (u-a<tol2 || b-u<tol2) d=SIGN(tol1,xm-x);
+          if (u-a<tol2 || b-u<tol2) { d=SIGN(tol1,xm-x);
+}
           }
         }
-      else d=CGOLD*(e=(x>=xm ? a-x:b-x));
+      else { d=CGOLD*(e=(x>=xm ? a-x:b-x));
+}
 
       u=(fabs(d)>=tol1 ? x+d:x+SIGN(tol1,d));
       fu=(*f)(u); ++totnf;
       if (fu<=fx)
         {
-        if (u>=x) a=x; else b=x;
+        if (u>=x) { a=x; } else { b=x;
+}
         SHFT(v,w,x,u)
         SHFT(fv,fw,fx,fu)
         }
       else
         {
-        if (u<x) a=u; else b=u;
+        if (u<x) { a=u; } else { b=u;
+}
         if (fu<=fw || w == x)
             { v=w; w=u; fv=fw; fw=fu; }
         else if (fu<=fv|| v==x || v==w) { v=u; fv=fu; }

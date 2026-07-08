@@ -68,51 +68,64 @@ void muste_logmean(char *argv)
         if (g>3)
             {
             results_line=edline2(word[3],1,1);
-            if (results_line==0) return;
+            if (results_line==0) { return;
+}
             }
 
     d1=NULL;
     d2=NULL;
 
-        i=spec_init(r1+r-1); if (i<0) return;
+        i=spec_init(r1+r-1); if (i<0) { return;
+}
         i=data_read_open(word[1],&dat);
-        if (i<0) return;
+        if (i<0) { return;
+}
 
-        i=conditions(&dat); if (i<0) return;
+        i=conditions(&dat); if (i<0) { return;
+}
 
         prind=0;
-        i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
-        if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);
+        i=hae_apu("prind",sbuf); if (i) { prind=atoi(sbuf);
+}
+        if ((i=spfind("PRIND"))>=0) { prind=atoi(spb[i]);
+}
 
-        xvar=varfind(&dat,word[2]); if (xvar<0) return;
+        xvar=varfind(&dat,word[2]); if (xvar<0) { return;
+}
 
         method=3;
         i=spfind("METHOD");
-        if (i>=0) method=atoi(spb[i]);
+        if (i>=0) { method=atoi(spb[i]);
+}
 
         term_comp=0;
-        i=spfind("TERM_COMP"); if (i>=0) term_comp=atoi(spb[i]);
+        i=spfind("TERM_COMP"); if (i>=0) { term_comp=atoi(spb[i]);
+}
 
-        i=load_data(); if (i<0) return;
+        i=load_data(); if (i<0) { return;
+}
         if (n<2L) { sur_print("\nAt least 2 observations needed!");
                     WAIT; return;
                   }
 
         if (method>3)
             {
-            if (method==5)
+            if (method==5) {
 //              for (i=0; i<n; ++i)
 //              logx[i]=sqrt(x[i]);
             comp5();
 
-            else comp4();
+            } else { comp4();
+}
             }
-        else if (method==3) comp3();
-        else if (method==2) comp2();
-        else if (method==1) comp1();
-        else comp_x(-method);
+        else if (method==3) { comp3();
+        } else if (method==2) { comp2();
+        } else if (method==1) { comp1();
+        } else { comp_x(-method);
+}
 
-        i=output_open(eout); if (i<0) return;
+        i=output_open(eout); if (i<0) { return;
+}
         muste_sprintf(sbuf,"Data: %s Variable: %s  N=%d",word[1],word[2],n);
         print_line(sbuf);
         muste_sprintf(sbuf,"Logarithmic mean: %16.16g",lmean/scale_factor);
@@ -143,22 +156,28 @@ static int load_data()
 
     for (l=dat.l1; l<=dat.l2; ++l)
         {
-        if (unsuitable(&dat,l)) continue;
+        if (unsuitable(&dat,l)) { continue;
+}
         data_load(&dat,l,xvar,&a);
-        if (a==MISSING8) continue;
+        if (a==MISSING8) { continue;
+}
         if (a<=0.0) { sur_print("\nOnly positive values allowed!");
                       WAIT; return(-1);
                     }
         x[n]=a;
-        if (a<min) min=a;
-        if (a>max) max=a;
+        if (a<min) { min=a;
+}
+        if (a>max) { max=a;
+}
         logx[n]=log(a);
         ++n;
         }
 
-    if (min!=max) scale_factor=2/(max-min);
-    else scale_factor=max;
-    if (method<=0 || term_comp) scale_factor=1.0;
+    if (min!=max) { scale_factor=2/(max-min);
+    } else { scale_factor=max;
+}
+    if (method<=0 || term_comp) { scale_factor=1.0;
+}
 
     for (l=0L; l<n; ++l)
         { x[l]*=scale_factor; logx[l]=log(x[l]); }
@@ -175,11 +194,13 @@ static int comp1()
     fact=1.0; lmean=0;
     for (i=0; i<n; ++i)
         {
-        if (i) fact*=(double)i;
+        if (i) { fact*=(double)i;
+}
         term=x[i]; lx=logx[i];
         for (j=0; j<n; ++j)
             {
-            if (i!=j) term/=lx-logx[j];
+            if (i!=j) { term/=lx-logx[j];
+}
             }
         lmean+=term;
         }
@@ -200,7 +221,8 @@ static int comp_x(int k)
         lx=x[i];
         for (j=0; j<n; ++j)
             {
-            if (i!=j) term/=lx-x[j];
+            if (i!=j) { term/=lx-x[j];
+}
             }
         lmean+=term;
         }
@@ -218,10 +240,12 @@ static int comp4()
     d2=(double *)muste_malloc(n*sizeof(double));
 
     fact=1.0; lmean=0;
-    for (i=1; i<n; ++i)
+    for (i=1; i<n; ++i) {
         fact*=(double)i;
+}
 
-    for (i=0; i<n; ++i) d1[i]=x[i];
+    for (i=0; i<n; ++i) { d1[i]=x[i];
+}
 
 // for (i=0; i<n; ++i) Rprintf("\n%d %g %g",i,d1[i],logx[i]);
 
@@ -233,7 +257,8 @@ static int comp4()
 // getch();
             d2[i]=(d1[i+1]-d1[i])/(logx[i+j+1]-logx[i]);
             }
-        for (i=0; i<n-j-1; ++i) d1[i]=d2[i];
+        for (i=0; i<n-j-1; ++i) { d1[i]=d2[i];
+}
         }
     lmean=fact*d1[0];
     return(1);
@@ -253,7 +278,8 @@ static int comp5()
 //  for (i=1; i<n; ++i)
 //      fact*=(double)i;
 
-    for (i=0; i<n; ++i) d1[i]=x[i];
+    for (i=0; i<n; ++i) { d1[i]=x[i];
+}
 
 // for (i=0; i<n; ++i) Rprintf("\n%d %g %g",i,d1[i],logx[i]);
 
@@ -266,7 +292,8 @@ static int comp5()
 
             d2[i]=fact*(d1[i+1]-d1[i])/(logx[i+j+1]-logx[i]);
             }
-        for (i=0; i<n-j-1; ++i) d1[i]=d2[i];
+        for (i=0; i<n-j-1; ++i) { d1[i]=d2[i];
+}
         ++fact;
         }
     lmean=d1[0];
@@ -291,16 +318,20 @@ static int comp2()
     double lmean1=0.0;
 
     i=spfind("POWMAX");
-    if (i>=0) powmax=atoi(spb[i]);
-    if (powmax>POWMAX) powmax=POWMAX;
+    if (i>=0) { powmax=atoi(spb[i]);
+}
+    if (powmax>POWMAX) { powmax=POWMAX;
+}
 
-    for (i=0; i<n; ++i) powlog[i][0]=logx[i];
+    for (i=0; i<n; ++i) { powlog[i][0]=logx[i];
+}
     lmean=1.0;
     m=1; fact=1.0;
     while (1)
         {
 // Rprintf("\nm=%d",m); getch();
-        for (i=0; i<n; ++i) pot[i]=0;
+        for (i=0; i<n; ++i) { pot[i]=0;
+}
         pot[n-1]=m; ncomb=1L;
         term2=0.0;
         while (1)
@@ -310,23 +341,27 @@ static int comp2()
             term1=1.0;
             for (i=0; i<n; ++i)
                 {
-                if (pot[i]!=0) term1*=powlog[i][pot[i]-1];
+                if (pot[i]!=0) { term1*=powlog[i][pot[i]-1];
+}
                 }
             term2+=term1;
 // muste_sprintf(sbuf,"\nterm1=%g term2=%g",term1,term2); sur_print(sbuf); getch();
             i=next_m_distr(m,n,pot);
-            if (i<0) break;
+            if (i<0) { break;
+}
             ++ncomb;
             }
         fact*=(double)m;
 //      Rprintf("\nncomb=%ld fact=%g",ncomb,fact); getch();
         lmean+=term2/(double)ncomb/fact;
 muste_sprintf(sbuf,"\n%d: lmean=%16.16g",m,lmean); sur_print(sbuf);
-        if (fabs(lmean-lmean1)==0.0 || m>=powmax) break;
+        if (fabs(lmean-lmean1)==0.0 || m>=powmax) { break;
+}
         lmean1=lmean;
         ++m;
 
-        for (i=0; i<n; ++i) powlog[i][m-1]=logx[i]*powlog[i][m-2];
+        for (i=0; i<n; ++i) { powlog[i][m-1]=logx[i]*powlog[i][m-2];
+}
         }
     return(1);
     }
@@ -337,12 +372,14 @@ static double polm(int n,int m)
     double s;
 
     s=pm[n-1][m-1];
-    if (s!=1e308) return(s);
+    if (s!=1e308) { return(s);
+}
 
     if (m==1)
         {
         s=0.0;
-        for (i=0; i<n; ++i) s+=logx[i];
+        for (i=0; i<n; ++i) { s+=logx[i];
+}
         pm[n-1][m-1]=s;
         return(s);
         }
@@ -352,7 +389,8 @@ static double polm(int n,int m)
         return(s);
         }
     s=powlog[n-1][m-1];
-    for (i=1; i<m; ++i) s+=powlog[n-1][m-i-1]*polm(n-1,i);
+    for (i=1; i<m; ++i) { s+=powlog[n-1][m-i-1]*polm(n-1,i);
+}
     s+=polm(n-1,m);
     pm[n-1][m-1]=s;
     return(s);
@@ -371,22 +409,28 @@ static int comp3()
 
 
     i=spfind("POWMAX");
-    if (i>=0) powmax=atoi(spb[i]);
-    if (powmax>POWMAX) powmax=POWMAX;
+    if (i>=0) { powmax=atoi(spb[i]);
+}
+    if (powmax>POWMAX) { powmax=POWMAX;
+}
 
     if (term_comp)
         {
         sum=0.0;
-        for (i=0; i<n; ++i) sum+=logx[i];
+        for (i=0; i<n; ++i) { sum+=logx[i];
+}
         sum/=(double)n;
         }
 
-    for (i=0; i<n; ++i) for(m=0; m<powmax; ++m) pm[i][m]=1e308;
+    for (i=0; i<n; ++i) { for(m=0; m<powmax; ++m) { pm[i][m]=1e308;
+}
+}
 
     for (i=0; i<n; ++i)
         {
         powlog[i][0]=logx[i];
-        for (m=2; m<=powmax; ++m) powlog[i][m-1]=powlog[i][m-2]*logx[i];
+        for (m=2; m<=powmax; ++m) { powlog[i][m-1]=powlog[i][m-2]*logx[i];
+}
         }
 
     lmean=1.0;
@@ -398,14 +442,15 @@ static int comp3()
 // Rprintf("\nterm2=%g",term2); getch();
         fact*=(double)m;
 //      Rprintf("\nncomb=%g fact=%g",ncomb,fact); getch();
-        if (!term_comp)
+        if (!term_comp) {
             lmean+=term2/(double)ncomb/fact;
-        else
+        } else
             {
             term3=term2/(double)ncomb;
             lmean+=term2/(double)ncomb/fact;
             aterm=0.0;
-            for (i=0; i<n; ++i) aterm+=pow(logx[i],(double)m);
+            for (i=0; i<n; ++i) { aterm+=pow(logx[i],(double)m);
+}
             aterm/=(double)n;
             gterm=pow(sum,(double)m);
             if (term3<gterm || aterm<term3)
@@ -416,7 +461,8 @@ sur_print(sbuf); sur_getch();
 
             }
 // muste_sprintf(sbuf,"\n%d: lmean=%16.16g",m,lmean); sur_print(sbuf);
-        if (fabs(lmean-lmean1)==0.0 || m>=powmax) break;
+        if (fabs(lmean-lmean1)==0.0 || m>=powmax) { break;
+}
         lmean1=lmean;
 
         ++m;
@@ -430,11 +476,14 @@ static int next_m_distr(int n,int m,int *elem1) // n ja m vaihtaneet paikkojaan!
         int i,k;
 
         i=m-1;
-        while (elem1[i]==0) --i;
-        if (i==0) return(-1);
+        while (elem1[i]==0) { --i;
+}
+        if (i==0) { return(-1);
+}
         ++elem1[i-1];
         elem1[m-1]=elem1[i]-1;
-        for (k=i; k<m-1; ++k) elem1[k]=0;
+        for (k=i; k<m-1; ++k) { elem1[k]=0;
+}
         return(1);
         }
 
@@ -457,8 +506,10 @@ static int other_means()
 static int print_line(char *x)
         {
         output_line(x,eout,results_line);
-        if (results_line) ++results_line;
-        if (results_line>r2) results_line=0;
+        if (results_line) { ++results_line;
+}
+        if (results_line>r2) { results_line=0;
+}
         return(1);
         }
 

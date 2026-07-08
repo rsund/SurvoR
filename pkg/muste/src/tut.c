@@ -140,11 +140,13 @@ int tut_avaa()  // RS Added check for successful (re)opening of sucro
         {
         char x[LLENGTH];
         
-        if (!etu) return(1);
+        if (!etu) { return(1);
+}
 
         strcpy(x,etufile);
         
-        if (etu==1) tutor=muste_fopen2(etufile,"r+b");
+        if (etu==1) { tutor=muste_fopen2(etufile,"r+b");
+}
         if (etu==2)
         	{ 
         	tutor=muste_fopen2(etufile,"rb"); 
@@ -172,10 +174,13 @@ int tut_avaa()  // RS Added check for successful (re)opening of sucro
 
 int s_tut_init()
         {
-        if (etu==0 && sucro_pause==0) return(1);
+        if (etu==0 && sucro_pause==0) { return(1);
+}
 
-        if (etu==1) tutor=muste_fopen2(etufile,"r+b");
-        if (etu==2 || sucro_pause) tutor=muste_fopen2(etufile,"rb");
+        if (etu==1) { tutor=muste_fopen2(etufile,"r+b");
+}
+        if (etu==2 || sucro_pause) { tutor=muste_fopen2(etufile,"rb");
+}
         if (tutor==NULL) { sur_print("Sucro error!"); WAIT; return -1; } // RS ADD
         muste_fseek(tutor,(long)tutpos,0); return(1);
         }
@@ -185,17 +190,21 @@ int tut_init()
         extern int space_break; // RS ADD
         
         space_break=0;
-        if (etu==0) return(1);
+        if (etu==0) { return(1);
+}
 
-        if (etu==1) tutor=muste_fopen2(etufile,"r+b");
-        if (etu==2) tutor=muste_fopen2(etufile,"rb");
+        if (etu==1) { tutor=muste_fopen2(etufile,"r+b");
+}
+        if (etu==2) { tutor=muste_fopen2(etufile,"rb");
+}
         if (tutor==NULL) { sur_print("Sucro error!"); WAIT; return -1; } // RS ADD
         muste_fseek(tutor,tutpos,0); return(1);
         }
 
 int tut_end()
         {
-        if (etu==0) return(1);
+        if (etu==0) { return(1);
+}
         tutpos=muste_ftell(tutor); muste_fclose2(tutor);
         return(1);
         }
@@ -281,7 +290,8 @@ int read_from_stack(char *nro,char *s)  /* 17.9.1995 */
         while (i<h)
             {
             if (*p==EOS) { *s=EOS; return(1); }
-            while (*p!='@') ++p;
+            while (*p!='@') { ++p;
+}
             ++i;
             ++p;
             }
@@ -356,15 +366,19 @@ Rprintf("\n");
 
 			k=1;
 			p=x+1;
-            while (*(x+k)==' ' || *(x+k)=='\n' || *(x+k)=='\r' || *(x+k)=='\t') ++k; // RS FIXME tässä ohi myös \r:stä, \t:stä ja \n:stä 
-            while (*p!=' ') ++p;  
+            while (*(x+k)==' ' || *(x+k)=='\n' || *(x+k)=='\r' || *(x+k)=='\t') { ++k; // RS FIXME tässä ohi myös \r:stä, \t:stä ja \n:stä 
+}
+            while (*p!=' ') { ++p;  
+}
             tutalku=atol(p+1); ++p; *p=EOS;
             
 // Rprintf("\ntutalku:%ld",tutalku);  
             
-            if (muste_strcmpi(etusukro,(x+k))==0) break;  // RS 1 -> k
+            if (muste_strcmpi(etusukro,(x+k))==0) { break;  // RS 1 -> k
+}
             }
-        if (i==n) return(-1);
+        if (i==n) { return(-1);
+}
         muste_fseek(tutor,(long)tutalku,SEEK_SET);
         return(1);
         }
@@ -378,7 +392,8 @@ int tutopen2(char *name,char *mode,char *path)
 //Rprintf("\n\ntutopen etufile: %s",etufile);
       
         tutor=muste_fopen2(etufile,mode);
-        if (tutor==NULL) return(0);
+        if (tutor==NULL) { return(0);
+}
              
         return(1);
         }
@@ -404,7 +419,8 @@ int tutopen(char *name,char *mode)
             
             while (p>=name)
                 {
-                if (*p=='-') break;
+                if (*p=='-') { break;
+}
                 if (strchr("\\:/",*p)!=NULL) { p=NULL; break; } // RS FIXME path "/" lisätty
                 --p;
                 }
@@ -416,7 +432,8 @@ int tutopen(char *name,char *mode)
         if (p!=NULL)
             {
             *p=EOS;
-            if (*name=='*') i=0; else i=1; /* i=0: previous etufile 23.1.93 */
+            if (*name=='*') { i=0; } else { i=1; /* i=0: previous etufile 23.1.93 */
+}
             strcpy(etusukro,p+1); strcat(etusukro," ");
             }
         if (i) { filename(etufile,name); file_name_ext(etufile,".TUT"); }
@@ -426,11 +443,14 @@ int tutopen(char *name,char *mode)
 //Rprintf("\ntutopen name: %s",name);
 
         tutor=muste_fopen2(etufile,mode);        
-        i=0; if (tutor!=NULL) i=1;
+        i=0; if (tutor!=NULL) { i=1;
+}
                 						 
- 		if (i!=1) i=tutopen2(name,mode,muste_getwd()); // RS CHA because filename() is not working
+ 		if (i!=1) { i=tutopen2(name,mode,muste_getwd()); // RS CHA because filename() is not working
+}
 
-        if (*sucropath && i!=1) i=tutopen2(name,mode,sucropath);  /* 10.2.90 */
+        if (*sucropath && i!=1) { i=tutopen2(name,mode,sucropath);  /* 10.2.90 */
+}
 
         if (i!=1 && alkututor) { strcpy(x,muste_startpath); 
         						 i=tutopen2(name,mode,x); }   // RS ADD  
@@ -451,8 +471,9 @@ int tutopen(char *name,char *mode)
                     i=tutopen2(name,mode,x); }
 */
 
-        if (i==1 && *etusukro)      
+        if (i==1 && *etusukro) {      
             i=sukrohaku();
+}
 
 // Rprintf("\ntutopen etufile: %s",etufile);
 // Rprintf("\ntutopen etusukro: %s",etusukro);            
@@ -474,7 +495,8 @@ void tut_continue(char *sana)
         char *s;
         int m;
         char label[LLENGTH];
-        if (*sana==EOS) return;
+        if (*sana==EOS) { return;
+}
 
 		if (muste_debug) // RS 26.1.2013
 			{
@@ -497,11 +519,14 @@ void tut_continue(char *sana)
             while (!feof(tutor))
                 {
                 m=getc(tutor);
-                if (m!=CODE_PRE) continue;
+                if (m!=CODE_PRE) { continue;
+}
                 m=getc(tutor);
-                if (m!='T') continue;
+                if (m!='T') { continue;
+}
                 m=getc(tutor);
-                if (m!='X') continue;
+                if (m!='X') { continue;
+}
                 read_tutword(label);
                 if (strcmp(label,s)==0)
                 	{
@@ -517,7 +542,8 @@ void tut_continue(char *sana)
                 }
             tutclose(); return; /* label not found! */
             }
-        if (*s=='L') ++s;
+        if (*s=='L') { ++s;
+}
         muste_fclose2(tutor);
 
 		if (muste_debug) // RS 26.1.2013
@@ -545,7 +571,8 @@ void tut_select(int n,int k)
 				muste_debug_print(sbuf);
 				}            
             
-            if (i==k) strcpy(jatko,sana);
+            if (i==k) { strcpy(jatko,sana);
+}
             }    
         tut_continue(jatko);
         }
@@ -555,13 +582,16 @@ int op_tutor()
         int i,k;
         int del_ref;
 
-        if (sukro_esto) return(1);
+        if (sukro_esto) { return(1);
+}
         
         muste_debug=0;
 		i=spec_find("DEBUG",sbuf,LLENGTH-1); // RS 26.1.2013
-        if (i>=0) muste_debug=atoi(sbuf);
+        if (i>=0) { muste_debug=atoi(sbuf);
+}
 
-		if (muste_debug) muste_debug_print("op_tutor"); // RS 26.1.2013
+		if (muste_debug) { muste_debug_print("op_tutor"); // RS 26.1.2013
+}
         
         if (ntut>0)
             {
@@ -584,13 +614,16 @@ int op_tutor()
 				}            
             
             }
-        else strcpy(error_handler,"SURVOERR");  /* 30.4.91 */
+        else { strcpy(error_handler,"SURVOERR");  /* 30.4.91 */
+}
 
 
         if (parm[0]!=NULL && *parm[0]=='/')
             {          
-            if (*(parm[0]+1)==' ' || *(parm[0]+1)==EOS) return(1); // RS ADD            
-            for (i=g; i>0; --i) parm[i]=parm[i-1];
+            if (*(parm[0]+1)==' ' || *(parm[0]+1)==EOS) { return(1); // RS ADD            
+}
+            for (i=g; i>0; --i) { parm[i]=parm[i-1];
+}
             ++parm[1];
             ++g;
             }
@@ -612,16 +645,19 @@ int op_tutor()
                     if (parm[i][0]=='[' && parm[i][1]=='[')
                         {
                         k=parm_from_soft_stack(parm[i]);
-                        if (k<0) return(0);
+                        if (k<0) { return(0);
+}
                         }
-                    else strcat(tut_info,parm[i]);
+                    else { strcat(tut_info,parm[i]);
+}
                     strcat(tut_info,"@");
                     }
                 }
-            else del_ref=0;
+            else { del_ref=0;
+}
             }
-        else if (alkututor) strcpy(tut_info,"(start)@");
-        else
+        else if (alkututor) { strcpy(tut_info,"(start)@");
+        } else
         {
 //muste_reset_pointers();
 //Rprintf("\ntut_info %ld : %s",&(*tut_info),tut_info); 
@@ -644,8 +680,10 @@ int op_tutor()
 
 //Rprintf("\nop_tutor ent tutopen; parm: %s",parm[1]);
         i=tutopen(parm[1],"rb");
-        if (i) { erun=0; etu=2; ++ntut; } else ntut=0;  /* ntut=0; 8.11.88 */ // RS 25.11.2012 erun=0
-        if (del_ref) ref_c1=0; /* mahd. refer.piste unohdetaan */
+        if (i) { erun=0; etu=2; ++ntut; } else { ntut=0;  /* ntut=0; 8.11.88 */ // RS 25.11.2012 erun=0
+}
+        if (del_ref) { ref_c1=0; /* mahd. refer.piste unohdetaan */
+}
 
 		if (muste_debug) // RS 26.1.2013
 			{ 
@@ -731,7 +769,8 @@ int tut_sound(char *t)
     if (k>0)
         {
         i=hae_apu("tut_sounds",x);
-        if (i==0) return(1);
+        if (i==0) { return(1);
+}
         i=split(x,s,3);
         muste_sprintf(nimi,"%s",s[k-1]);
         }        
@@ -782,9 +821,10 @@ static void press_key(int m)
 
         if (etu1<2) { sur_sleep(10); Wdisp_editor(); return; }  /* 23.10.89 */
         k=sur_wait2((long)(1000L*tut_wait_c),Wdisp_editor);
-        if (k==2) ch=CODE_EXEC; // mouse_click
+        if (k==2) { ch=CODE_EXEC; // mouse_click
 
-        else if (k) ch=read_nextkey_editor(); else ch=m; // RS 22.11.2012 read_ ; sur_wait2:ssa ei saa lukea näppäintä
+        } else if (k) { ch=read_nextkey_editor(); } else { ch=m; // RS 22.11.2012 read_ ; sur_wait2:ssa ei saa lukea näppäintä
+}
 
         while (ch!=m && ch!=CODE_LEFT)
             {
@@ -802,7 +842,8 @@ static void press_key(int m)
                 PR_ENRM; cursor(r,c); CURSOR_ON;
                 }
             k=sur_wait((long)(1000L*tut_wait_c),Wdisp_editor,1);
-           if (k) ch=read_nextkey_editor(); else ch=m; // RS 22.11.2012
+           if (k) { ch=read_nextkey_editor(); } else { ch=m; // RS 22.11.2012
+}
 //Rprintf("\nch: %d",ch);           
             }
         special=spec;
@@ -820,20 +861,24 @@ int mouse_key_select(int rr,int cc)
 
     // valikoissa tilanteet: ... 2*  ..: 2 *
     p=strstr(x,"... ");
-    if (p!=NULL) return((int)*(p+4));
+    if (p!=NULL) { return((int)*(p+4));
+}
     p=strstr(x,"..: ");
-    if (p!=NULL) return((int)*(p+4));
+    if (p!=NULL) { return((int)*(p+4));
+}
 
     i=cc;
-    if (x[i+1]=='.') return((int)x[i]);
+    if (x[i+1]=='.') { return((int)x[i]);
+}
 
     while (i>=0)
         {
-        if (x[i]=='.') break;
+        if (x[i]=='.') { break;
+}
         --i;
         }
-    if (i>=0) p=x+i;
-    else
+    if (i>=0) { p=x+i;
+    } else
         {
         p=strchr(x+1,'.');
         if (p==NULL)
@@ -874,19 +919,25 @@ int tut_set(char *sana,int i)
         q=x; p=tut_info;
         for (k=0; k<i-1; ++k)
             {
-            while (*p && *p!='@') *q++=*p++;
-            if (*p==EOS) break;
+            while (*p && *p!='@') { *q++=*p++;
+}
+            if (*p==EOS) { break;
+}
             *q++=*p++;  /* @ */
             }
         if (*p==EOS)
             {
-            for ( ; k<i-1; ++k) tutcat("");
+            for ( ; k<i-1; ++k) { tutcat("");
+}
             tutcat(sana); return(1);
             }
         r=sana;
-        while (*r) *q++=*r++;
-        while (*p && *p!='@') p++; // RS 4.2.2013 REM ch=*p++;
-        while (*p) *q++=*p++;
+        while (*r) { *q++=*r++;
+}
+        while (*p && *p!='@') { p++; // RS 4.2.2013 REM ch=*p++;
+}
+        while (*p) { *q++=*p++;
+}
         *q=EOS;
         if (strlen(x)>LLENGTH-1) { sur_print("\nTutstack overflow!");
                                    WAIT; return(-1); }
@@ -900,10 +951,11 @@ int tut_specification(char *sana)
         char x[LLENGTH];
 
         i=spec_find(sana+1,x,LLENGTH-1);
-        if (i>=0)
+        if (i>=0) {
             i=tutcat(x);
-        else
+        } else {
             i=tutcat("");
+}
         if (i<0) { tutclose(); }
         return(1);
         }
@@ -917,10 +969,13 @@ static void time_prompt(char *kysymys,char *vastaus,int pituus,int vastausaika)
         extern int r_mouse,c_mouse;
         
 
-        for (i=0; i<pituus; ++i) tila[i]=' ';
-        for (i=0; i<strlen(vastaus); ++i) tila[i]=vastaus[i];
+        for (i=0; i<pituus; ++i) { tila[i]=' ';
+}
+        for (i=0; i<strlen(vastaus); ++i) { tila[i]=vastaus[i];
+}
         muste_sprintf(sbuf,"%s%.*s*",kysymys,pituus,tila); sur_print(sbuf);
-        for (i=0; i<pituus+1; ++i) PR_LEFT;
+        for (i=0; i<pituus+1; ++i) { PR_LEFT;
+}
         time(&vastauksen_alkuhetki);
                      /* -25.5.95: maxt=0.1*maxaika; */
 
@@ -929,7 +984,8 @@ static void time_prompt(char *kysymys,char *vastaus,int pituus,int vastausaika)
             max_vastausaika=0.01*vastausaika*tut_wait_c;
             rajoitettu_vastausaika=1;
             }
-        else rajoitettu_vastausaika=0;
+        else { rajoitettu_vastausaika=0;
+}
 
         pos=1;
         while (1)
@@ -937,13 +993,15 @@ static void time_prompt(char *kysymys,char *vastaus,int pituus,int vastausaika)
 // RS REM Tarvitaanko tosiaan globaalina, kun ei näyttäisi olevan käytössä muualla: keysum=0;
             SAVE_CURSOR;            
             m=nextch_editor();       
-            if (m==-1) continue; // RS ADD
+            if (m==-1) { continue; // RS ADD
+}
 // if (m<0) { Rprintf("\nmouse: %d %d|",r_mouse,c_mouse); WAIT; }
             RESTORE_CURSOR;  
             if (m<0) // mouse_click
                 {
                 m=mouse_key_select(r_mouse,c_mouse);
-                if (m<0) continue;
+                if (m<0) { continue;
+}
                 *vastaus=(char)m; vastaus[1]=EOS;
                 rajoitettu_vastausaika=0;
                 return;
@@ -955,20 +1013,24 @@ static void time_prompt(char *kysymys,char *vastaus,int pituus,int vastausaika)
                     {
                   case CODE_BACKSP:
                   case CODE_LEFT:
-                    if (pos==1) break;
+                    if (pos==1) { break;
+}
                     PR_LEFT; --pos; break;
                   case CODE_RIGHT:
-                    if (pos==pituus) break;
+                    if (pos==pituus) { break;
+}
                     PR_RIGHT; ++pos; break;
                   case CODE_RETURN:
                     i=pituus;
-                    while(tila[i-1]==' ') --i;
+                    while(tila[i-1]==' ') { --i;
+}
                     tila[i]=EOS;
                     strcpy(vastaus,tila);
                     rajoitettu_vastausaika=0;
                     return;
                   case CODE_HOME:
-                    for (;pos>1;--pos) PR_LEFT;
+                    for (;pos>1;--pos) { PR_LEFT;
+}
                     break;
                   case CODE_ERASE:
                     for (i=pos-1; i<pituus; ++i)
@@ -976,22 +1038,27 @@ static void time_prompt(char *kysymys,char *vastaus,int pituus,int vastausaika)
                         tila[i]=' ';
                         sur_print(" ");
                         }
-                    for (i=pos-1; i<pituus; ++i) PR_LEFT;
+                    for (i=pos-1; i<pituus; ++i) { PR_LEFT;
+}
                     break;
                   case CODE_INSERT:
                     if (tila[pituus-1]!=' ') { BEEP; break; }
-                    for (i=pituus-1; i>=pos; --i) tila[i]=tila[i-1];
+                    for (i=pituus-1; i>=pos; --i) { tila[i]=tila[i-1];
+}
                     tila[pos-1]=' ';
                     for (i=pos; i<=pituus; ++i)
                      { muste_sprintf(sbuf,"%c",tila[i-1]); sur_print(sbuf); }
-                    for (i=pos; i<=pituus; ++i) PR_LEFT;
+                    for (i=pos; i<=pituus; ++i) { PR_LEFT;
+}
                     break;
                   case CODE_DELETE:
-                    for (i=pos; i<pituus; ++i) tila[i-1]=tila[i];
+                    for (i=pos; i<pituus; ++i) { tila[i-1]=tila[i];
+}
                     tila[pituus-1]=' ';
                     for (i=pos; i<=pituus; ++i)
                      { muste_sprintf(sbuf,"%c",tila[i-1]); sur_print(sbuf); }
-                    for (i=pos; i<=pituus; ++i) PR_LEFT;
+                    for (i=pos; i<=pituus; ++i) { PR_LEFT;
+}
                     break;
                   case CODE_EXEC:
                     strcpy(vastaus,"(break)");
@@ -999,7 +1066,8 @@ static void time_prompt(char *kysymys,char *vastaus,int pituus,int vastausaika)
                     return;
                   default:
                     muste_sprintf(sbuf,"%c",m); sur_print(sbuf); tila[pos-1]=(char)m;
-                    if (pos<pituus) ++pos; else PR_LEFT;
+                    if (pos<pituus) { ++pos; } else { PR_LEFT;
+}
                     break;
                     }
             }
@@ -1023,7 +1091,8 @@ int tut_question()
                        */
         read_cond(sana);
         if (*sana=='~') { tut_specification(sana); return(1); }
-        maxaika=atoi(sana); if (maxaika==0) maxaika=600;
+        maxaika=atoi(sana); if (maxaika==0) { maxaika=600;
+}
         read_tutword(kysymys);
 
         i=read_cond(vastaus);
@@ -1048,10 +1117,11 @@ int tut_specification2(char *sana) // 13.6.2005
         char x[LLENGTH];
 
         i=spec_find(sana,x,LLENGTH-1);
-        if (i>=0)
+        if (i>=0) {
             strcpy(sana,x);
-        else
+        } else {
             *sana=EOS;
+}
         return(1);
         }
 
@@ -1069,8 +1139,8 @@ int tut_arit(char *s1,char *s2,char *op)
           case '+': a=a1+a2; break;
           case '-': a=a1-a2; break;
           case '*': a=a1*a2; break;
-          case '/': if (a2!=0.0) a=a1/a2;
-                    else
+          case '/': if (a2!=0.0) { a=a1/a2;
+                    } else
                       {
                       PR_EUDL; sur_print("\nDivision by 0 in a sucro!");
                       PR_ENRM; WAIT; tutclose();
@@ -1088,7 +1158,8 @@ int tut_laske4(char *s,double *px)
         {
         read_from_stack(s+1,sbuf); *px=atof(sbuf);
         }
-    else *px=atof(s);
+    else { *px=atof(s);
+}
     return(1);
     }
 
@@ -1171,10 +1242,11 @@ void sucro_macro(char *s,int old_stack)
         char y[2];
 
         x[0]='/';
-        if (*s=='W' && s[1]!=EOS && atoi(s+1)>0)  // 28.11.2000
+        if (*s=='W' && s[1]!=EOS && atoi(s+1)>0) {  // 28.11.2000
             read_from_stack(s+1,x+1);
-        else
+        } else {
             strcpy(x+1,s);
+}
         parm[0]=x; g=1;
         if (old_stack) { strcpy(y,"@"); parm[1]=y; g=2; }
         op_tutor();
@@ -1187,7 +1259,8 @@ int sucro_key(int k)
 // RS REM        extern char tut_info[];
 
         strcpy(x,"sucro_key_"); x[9]='0'+k;
-        i=hae_apu(x,y); if (!i) return(1);
+        i=hae_apu(x,y); if (!i) { return(1);
+}
         *tut_info=EOS;
         sucro_macro(y,1);
         return(1);
@@ -1211,9 +1284,9 @@ void prefix_y()
 		old_eventpeek=muste_eventpeek; // RS 28.1.2013
 		muste_eventpeek=FALSE;
 
-        if (ntut<2 || etuu==1) m=read_nextkey_editor(); // RS 22.11.2012 read_
+        if (ntut<2 || etuu==1) { m=read_nextkey_editor(); // RS 22.11.2012 read_
 //      if (ntut<2 || etuu==1) m=t_nextkey();  kokeilu 20.9.2000
-        else
+        } else
             {
             
 			if (muste_debug) // RS 26.1.2013
@@ -1295,30 +1368,35 @@ static char *sanahaku2(char *paikka)
         c_1=c;
         p=z+(r1+r-2)*ed1+c1+c-1;
 // Rprintf("\nr1=%d|",r1); getck();
-        if (*p!=' ') --p;
+        if (*p!=' ') { --p;
+}
         pv=p-1;
         pralku=z+(r1+r-2)*ed1; prloppu=pralku+ed1;
         ch=*pv;
-        while (*p==' ' && p>pralku) --p;
+        while (*p==' ' && p>pralku) { --p;
+}
         if (p==pralku) return(NULL);
         q=p;
 
 /*      while (*q!=' ' && q>pralku) --q;   25.9.89 */
-        while (strchr(" ,:;-=+-*/",*q)==NULL && q>pralku) --q;
+        while (strchr(" ,:;-=+-*/",*q)==NULL && q>pralku) { --q;
+}
 
         ++q; qv=q;
         k=p-q+1;   /* valmiiden merkkien lkm */
         pp=s;
-        while (q<=p) *pp++=*q++;
+        while (q<=p) { *pp++=*q++;
+}
         *pp=EOS;
         *pv='*';
         p=strstr(paikka,s);
         *pv=ch;
         if (p==NULL)
             {
-            if (*s>='a' && *s<='z') *s=(char)toupper((int)*s);
-            else if (*s>='A' && *s<='Z') *s=(char)tolower((int)*s);
-            else return(NULL);
+            if (*s>='a' && *s<='z') { *s=(char)toupper((int)*s);
+            } else if (*s>='A' && *s<='Z') { *s=(char)tolower((int)*s);
+            } else { return(NULL);
+}
             *pv='*';
             p=strstr(paikka,s);
             *pv=ch;
@@ -1335,16 +1413,19 @@ static char *sanahaku2(char *paikka)
         *qv=' '; /* loppuun space alla olevan sanan osittaiseksi peittämiseksi */
         while (1)
             {
-            if (qv>=prloppu) return(paikka);
+            if (qv>=prloppu) { return(paikka);
+}
             edread(s,r1+r-1);
-            cc=c3; if (c2<c3) cc=c2;
+            cc=c3; if (c2<c3) { cc=c2;
+}
             write_string(s+c,cc-c+1,'7',r+1,8+c);
 
             LOCATE(r3+2,1); PR_EINV;
             sur_print("Next word by the space bar. Cancel by DELETE. Accept and stop by ENTER!");
             m=nextch_editor();
             if (m==CODE_BACKSP) { paikka=paikka0-1; uusi_c=0; uudelleen=1; return(paikka); }
-            if (m!=' ') paikka0=paikka;
+            if (m!=' ') { paikka0=paikka;
+}
             if (m==CODE_DELETE) { uusi_c=0; uudelleen=1; return(paikka); }
 
             if (m==' ')
@@ -1380,7 +1461,8 @@ static char *sanahaku2(char *paikka)
                         edread(s2,rivi2);
 // Rprintf("\nuusi s2=%s|",s2); getck();
                         c_2=1; *sana=' '; len=1;
-                        while (s2[c_2]==' ') ++c_2;
+                        while (s2[c_2]==' ') { ++c_2;
+}
                         if (s2[c_2]==EOS)
                             { uusi_c=c_1; return(NULL); }
                         }
@@ -1435,14 +1517,18 @@ int pre_j()
             {
             uudelleen=0;
             paikka=sanahaku2(paikka);
-            if (!uudelleen) break;
-            if (paikka==NULL) return(1);
+            if (!uudelleen) { break;
+}
+            if (paikka==NULL) { return(1);
+}
             ++paikka;
             edwrite(jrivi,j,0);
             }
 
-        if (uusi_c==0) return(1);
-        if (uusi_c>c1+c3-1) return(1);
+        if (uusi_c==0) { return(1);
+}
+        if (uusi_c>c1+c3-1) { return(1);
+}
         c=uusi_c-c1+1;
         return(1);
         }
@@ -1485,12 +1571,14 @@ A:     survo_open_ajaxbuffer(1);
             }
         m=getc(tutor);    
             {
-            while (m==TUT_COMMENT_CODE) m=getc(tutor);  /* 12.10.88 */
+            while (m==TUT_COMMENT_CODE) { m=getc(tutor);  /* 12.10.88 */
+}
             if (m==10) { m=13; muste_fixme("\nFIXME: Check LF in sucro!!!"); } // RS 17.11.2013
             if (m==CODE_PRE)
                 {
                 ch=getc(tutor); ungetc(ch,tutor);
-                if (ch=='T') tut_special_code=1;
+                if (ch=='T') { tut_special_code=1;
+}
                 }
             }
 
@@ -1502,18 +1590,21 @@ survo_open_ajaxbuffer(1);
                 {
                 ch=read_nextkey_editor(); // RS 22.11.2012 read_
 //Rprintf("\nch: %d",ch);                
-              if (!tut_not_break2)
+              if (!tut_not_break2) {
                 switch (ch)
                     {
-/* 21.1.2001 */   case '+': --tut_wait_c; if (tut_wait_c<1) tut_wait_c=1;
+/* 21.1.2001 */   case '+': --tut_wait_c; if (tut_wait_c<1) { tut_wait_c=1;
+}
                             break;
                   case '-': ++tut_wait_c; break;
 /****************************
                   case '+': --etu1; if (etu1<=0) etu1=1; break;
                   case '-': ++etu1; if (etu1>40) etu1=40; break;
 ******************************/
-                  case '*': --etu1; if (etu1<=0) etu1=1; break;
-                  case '/': ++etu1; if (etu1>40) etu1=40; break;
+                  case '*': --etu1; if (etu1<=0) { etu1=1; 
+}break;
+                  case '/': ++etu1; if (etu1>40) { etu1=40; 
+}break;
 
                   case '&': ei_odotusta=1;
 /*                case '*': etu1=0; break;     23.10.89 */
@@ -1545,20 +1636,25 @@ survo_open_ajaxbuffer(1);
                             tutclose();
                             return(0);
                   case CODE_HELP:
-                  			if (survopoint_on) break; // 25.3.2012
+                  			if (survopoint_on) { break; // 25.3.2012
+}
                             help_on=1; ei_odotusta=0;
-                            etu2=2; if (etu1<2) etu1=2; break;
+                            etu2=2; if (etu1<2) { etu1=2; 
+}break;
 
                   case ',': sucro_pause=1;   // uusittu 21.8.2004
                             break;
 
-                  default: if (tut_not_break) break;
+                  default: if (tut_not_break) { break;
+}
                            read_nextkey_editor(); break;   /* 23.10.89 */ //RS 22.11.2012 read_  //RS Mitä tämä tekee???
 
                     }
+}
                 }
             special=0;
-        if (etu1>1 && !tut_special_code) sur_wait((long)tut_wait_c*etu1,nop,0);
+        if (etu1>1 && !tut_special_code) { sur_wait((long)tut_wait_c*etu1,nop,0);
+}
 
 // if (m==CODE_SOFT_ON || m==CODE_WORDS) { Rprintf("\nm=%d|",m); getck(); }
 //Rprintf("\nm: %d",m);
@@ -1566,7 +1662,8 @@ survo_open_ajaxbuffer(1);
 			if (muste_debug) // RS 26.1.2013
 				{ 
 				muste_sprintf(sbuf,"tutch, m: %3d  ",m);
-				if (m>31 && m<127) sbuf[strlen(sbuf)-1]=(char)m;
+				if (m>31 && m<127) { sbuf[strlen(sbuf)-1]=(char)m;
+}
 				muste_debug_print(sbuf); 
 				}
 
@@ -1620,8 +1717,10 @@ survo_open_ajaxbuffer(1);
 
             if (etu2>0)
                 {
-                if (tut_special_code) return(m);
-                if(etu1<2) return(m); // 17.7.2000
+                if (tut_special_code) { return(m);
+}
+                if(etu1<2) { return(m); // 17.7.2000
+}
                 CURSOR_OFF; cursor(r3+1,c3-16);
 
                 if (etu2!=1 && m==CODE_EXEC)
@@ -1630,8 +1729,8 @@ survo_open_ajaxbuffer(1);
                     }
                 else
                     {
-                    if (etu2==1) sur_print("      ");
-                                 else { PR_EBLK; sur_print("Press "); }
+                    if (etu2==1) { sur_print("      ");
+                                 } else { PR_EBLK; sur_print("Press "); }
                     PR_EINV;
 
                     label(m,nimi); muste_sprintf(sbuf,"%s",nimi);
@@ -1640,8 +1739,10 @@ survo_open_ajaxbuffer(1);
                 sur_print(sbuf);
                 PR_ENRM; cursor(r,c); CURSOR_ON;
                 if (etu2==1)
-                  { if (etu1>1) sur_wait((long)(4*tut_wait_c)*etu1,Wdisp_editor,0); }
-                else press_key(m);
+                  { if (etu1>1) { sur_wait((long)(4*tut_wait_c)*etu1,Wdisp_editor,0); 
+}}
+                else { press_key(m);
+}
                 CURSOR_OFF; cursor(r3+1,c3-16);
                 sur_print("              ");
                 cursor(r,c); cursor_on();
@@ -1664,18 +1765,20 @@ survo_open_ajaxbuffer(1);
             tutalku=tutalut[ntut-1];  /* 10.2.90 */
             strcpy(etusukro,tutmemb[ntut-1]); // 14.11.2004
             strcpy(etufile,tutnimi[ntut-1]);
-            if (etu==1)
+            if (etu==1) {
                 tutor=muste_fopen2(etufile,"r+b");
-            else
+            } else {
                 tutor=muste_fopen2(etufile,"rb");
+}
             if (tutor==NULL)
                 { muste_sprintf(sbuf,"\nSucro %s not found!",etufile);
                   sur_print(sbuf); WAIT; return(-1); }
             i=muste_fseek(tutor,(long)tutposi[ntut-1],SEEK_SET);
             if (i!=0) { tutclose(); return(0); }
             etu2=tutetu2[ntut-1]; /* 10.11.88 */
-            if (etu==1) return(0);
-            else goto A;
+            if (etu==1) { return(0);
+            } else { goto A;
+}
             }
 
 		sur_dump(); 
@@ -1706,7 +1809,8 @@ survo_open_ajaxbuffer(0);
         switch(etu)
             {
           case 0:
-            if (sukro_esto) break;
+            if (sukro_esto) { break;
+}
             soft_disp(0);
             cursor(r3+1,1); PR_EBLD;
             sur_print("Sucro functions: S=Start definition, R=Run ? ");
@@ -1720,7 +1824,8 @@ survo_open_ajaxbuffer(0);
 
                 disp();
                 soft_disp(0);
-                if (*sana==EOS) break;
+                if (*sana==EOS) { break;
+}
                 i=tutopen(sana,"wb");
                 if (i==0) { etu=0; soft_disp(1); break; }
              /* cursor(r3+1,1); ERASE; */
@@ -1764,7 +1869,8 @@ survo_open_ajaxbuffer(0);
                 if (*sana=='X') { *sana=(char)TUT_EFFECTS_OFF;
                                   sana[1]=EOS; muste_fseek(tutor,(long)-2L,1); }
 
-                for (i=0; i<strlen(sana); ++i) tutsave((int)sana[i]);
+                for (i=0; i<strlen(sana); ++i) { tutsave((int)sana[i]);
+}
                 }
 
             else if (ch=='R' || ch=='r')   /* Repeat ad infinitum */
@@ -1793,8 +1899,8 @@ survo_open_ajaxbuffer(0);
                     extern int survopoint_disp; // 25.3.2012
                     extern unsigned int ptime1,ptime2; // 25.3.2012
                     
-                    if (sucro_pause) tut_pause(); // 21.8.2004
-                    else if (survopoint_on) // 25.3.2012
+                    if (sucro_pause) { tut_pause(); // 21.8.2004
+                    } else if (survopoint_on) // 25.3.2012
       					{
       					wtime=(long)(5*tut_wait_c)*atoi(sana)*etu1;
       					n=(int)(wtime/survopoint_disp);
@@ -1804,7 +1910,8 @@ survo_open_ajaxbuffer(0);
           					dispoint();
          					}
       					}    
-                    else sur_wait((long)(5*tut_wait_c)*atoi(sana)*etu1,Wdisp_editor,1);
+                    else { sur_wait((long)(5*tut_wait_c)*atoi(sana)*etu1,Wdisp_editor,1);
+}
                     }
                 else { sur_sleep(10); Wdisp_editor(); }
                 break;
@@ -1819,11 +1926,13 @@ survo_open_ajaxbuffer(0);
                 break;
               case 's':
                 read_tutword(sana);
-                if (etu1>1) etu1=atoi(sana);
+                if (etu1>1) { etu1=atoi(sana);
+}
                 break;
               case 'a':
                 read_tutword(sana);
-                if (etu1>0) { etu1-=atoi(sana); if (etu1<0) etu1=0; }
+                if (etu1>0) { etu1-=atoi(sana); if (etu1<0) { etu1=0; 
+}}
                 break;
               case 't':   /* ehdoton nopeuden muutos */
                 read_cond(sana);
@@ -1831,7 +1940,8 @@ survo_open_ajaxbuffer(0);
                 break;
               case 'D':
                 read_tutword(sana);
-                if (!help_on) etu2=atoi(sana);
+                if (!help_on) { etu2=atoi(sana);
+}
                 break;
               case 'P':
                 read_tutword(sana); ar=atoi(sana);
@@ -1856,15 +1966,18 @@ survo_open_ajaxbuffer(0);
               case 'V': /*  V<aika>@123@<G|L>jatko1@<G|L>jatko2@<G|L>jatko3@ */
                 soft_disp(0);
                 read_cond(sana); l=atol(sana)*(long)(10*tut_wait_c);
-                if (l==0L) l=(long)(6000L*tut_wait_c);
+                if (l==0L) { l=(long)(6000L*tut_wait_c);
+}
                 read_tutword(sana);
-                if (ei_odotusta) k=0;
-                else k=sur_wait2(l,Wdisp_editor);
+                if (ei_odotusta) { k=0;
+                } else { k=sur_wait2(l,Wdisp_editor);
+}
                 if (k)
                     {
                     sucro_menu=1;
-                    ch=0; while (ch<=0) // RS ADD
+                    ch=0; while (ch<=0) { // RS ADD
                       ch=read_nextkey_editor(); // RS 22.11.2012 read_                     
+}
                     sucro_menu=0;
                     if (ch<0)
                         {
@@ -1883,7 +1996,8 @@ survo_open_ajaxbuffer(0);
                         }
 
                     p=strchr(sana,(char)ch);
-                    if (p==NULL) k=0; else k=p-sana;
+                    if (p==NULL) { k=0; } else { k=p-sana;
+}
                     }
                 /* else k=0; */
                 h=strlen(sana);
@@ -1897,17 +2011,19 @@ survo_open_ajaxbuffer(0);
                 if (i=='N')
                     {
                     da=atof(s1)-atof(s2);
-                    if (da<0.0) k=0;
-                    else
+                    if (da<0.0) { k=0;
+                    } else
                         {
-                        if (da==0.0) k=1; else k=2;
+                        if (da==0.0) { k=1; } else { k=2;
+}
                         }
       /* ei enää    k=numcomp(s1,s2);   vältetään atof() tilankäyttö! */
                     }
                 else if (i=='A')
                     {
                     i=strcmp(s1,s2);
-                    if (i<0) k=0; else if (i==0) k=1; else k=2;
+                    if (i<0) { k=0; } else if (i==0) { k=1; } else { k=2;
+}
                     }
                 else { tut_virhe(1); break; }
 
@@ -1933,10 +2049,11 @@ survo_open_ajaxbuffer(0);
                 tut_laske2(jatko,&dy);
 // Rprintf("\nvert: %g %g|",dx,dy); getck();
                 da=dx-dy;
-                if (da<0.0) k=0;
-                else
+                if (da<0.0) { k=0;
+                } else
                     {
-                    if (da==0.0) k=1; else k=2;
+                    if (da==0.0) { k=1; } else { k=2;
+}
                     }
                 tut_select(3,k);
                 break;
@@ -1947,8 +2064,10 @@ survo_open_ajaxbuffer(0);
                 while (1)
                     {
                     read_tutword(jatko);
-                    if (*jatko==EOS) break;
-                    if (strcmp(jatko,s1)==0) break;
+                    if (*jatko==EOS) { break;
+}
+                    if (strcmp(jatko,s1)==0) { break;
+}
                     ++k;
                     }
                 h=k; while (*jatko) { read_tutword(jatko); ++h; }
@@ -1961,10 +2080,12 @@ survo_open_ajaxbuffer(0);
                 i=0; p=tut_info;
                 while (i<h && *p!=EOS)
                     {
-                    if (*p=='@') ++i;
+                    if (*p=='@') { ++i;
+}
                     ++p;
                     }
-                if (i==h) *p=EOS;
+                if (i==h) { *p=EOS;
+}
                 break;
 
               case 'K':
@@ -1998,15 +2119,18 @@ survo_open_ajaxbuffer(0);
                 p=sana;
                 i=0; while (*p)
                    { if (strchr(jatko,*p)!=NULL) { i=1; break; } ++p; }
-                if (i==1) read_tutword(sana);
+                if (i==1) { read_tutword(sana);
+}
                 break;
               case 'p':  /* p<text_to_the_bottom_line>@ */
               case 'q':  /* q<tut_word_index>@ */        /* 30.4.91 */
-                if (m=='p') read_tutword(sana);
-                else read_cond(sana);
+                if (m=='p') { read_tutword(sana);
+                } else { read_cond(sana);
+}
                 sana[EC3+8]=EOS; strcpy(prompt_space,sana);  /* 23.2.93 */
-                if (*prompt_space) prompt_line=prompt_space;
-                else prompt_line=NULL;
+                if (*prompt_space) { prompt_line=prompt_space;
+                } else { prompt_line=NULL;
+}
                 disp();
                 break;
               case 'g':  /* g<first_row>@<row>@<column>@ */
@@ -2014,9 +2138,9 @@ survo_open_ajaxbuffer(0);
                 read_cond(jatko);
                 read_cond(jatko2); // RS 22.1.2014 jatko+32 -> jatko2
                 parm[1]=sana; parm[2]=jatko; parm[3]=jatko2; // RS 22.1.2014 jatko+32 -> jatko2
-                if (*parm[3]!='!')
+                if (*parm[3]!='!') {
                     op_goto2(4,parm);
-                else     /* g<first_row>@<row>@C!@<first_column>@<column>@ */
+                } else     /* g<first_row>@<row>@C!@<first_column>@<column>@ */
                     {
                     read_cond(jatko2); /* parm[3]=jatko+32; */ // RS 22.1.2014 jatko+32 -> jatko2
                     read_cond(jatko3); parm[4]=jatko3; // RS 22.1.2014 jatko+64 -> jatko2             
@@ -2025,7 +2149,8 @@ survo_open_ajaxbuffer(0);
                 disp();
                 break;
               case 'k':
-                if (sur_kbhit()) *sana='1'; else *sana='0';
+                if (sur_kbhit()) { *sana='1'; } else { *sana='0';
+}
                 sana[1]='@'; sana[2]=EOS; strcat(tut_info,sana);
                 break;
               case 'l':
@@ -2052,10 +2177,11 @@ survo_open_ajaxbuffer(0);
                     {
                     i=atoi(sana+1);
                     read_tutword(sana);
-                    if (*sana=='V')
+                    if (*sana=='V') {
                         read_from_soft_stack(sana+1,sbuf);
-                    else
+                    } else {
                         read_from_stack(sana,sbuf);
+}
                     soft_stack_set(sbuf,i);
                     soft_stack_save_load(1,soft_stack_file);
           //        disp_all();
@@ -2064,10 +2190,11 @@ survo_open_ajaxbuffer(0);
                     {
                     i=atoi(sana);
                     read_tutword(sana);
-                    if (*sana=='V')
+                    if (*sana=='V') {
                         read_from_soft_stack(sana+1,sbuf);
-                    else
+                    } else {
                         read_from_stack(sana,sbuf);
+}
                     tut_set(sbuf,i);
                     }
                 break;
@@ -2082,17 +2209,20 @@ survo_open_ajaxbuffer(0);
                 break;
               case '>':   /* >file@   save stack <file>  */
                 read_cond(sana); // 21.8.2004
-                i=stack_save_load(1,sana); if (i<0) return(0); break;
+                i=stack_save_load(1,sana); if (i<0) { return(0); 
+}break;
               case '<':   /* <file@   load stack <file>  */
                 read_cond(sana); // 21.8.2004
-                i=stack_save_load(2,sana); if (i<0) return(0); break;
+                i=stack_save_load(2,sana); if (i<0) { return(0); 
+}break;
               case 'E':      /* 29.4.91 */
                 read_tutword(error_handler);
                 break;
               case 'S': // {sound <file>}
               case 'T':  // T<tut_word_index>@ */        /* 30.4.91 */
-                if (m=='S') read_tutword(sana);
-                else read_cond(sana);
+                if (m=='S') { read_tutword(sana);
+                } else { read_cond(sana);
+}
                 tut_sound(sana);
                 break;
               case 'y':  // 13.6.2005

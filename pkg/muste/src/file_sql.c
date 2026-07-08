@@ -35,8 +35,10 @@ void muste_file_sql(int argc,char *argv[]) // RS 12.2.2013
         char muisti[]=":memory:";
         char *ofile,*qbuf,*loppu,*db;
 
-        if (argc==1) return;
-		if (!muste_requirepackage("virta")) return;        
+        if (argc==1) { return;
+}
+		if (!muste_requirepackage("virta")) { return;        
+}
         s_init(argv[1]);
         if (g<3) { remarks(); return; }
         qbuf=NULL;
@@ -45,23 +47,26 @@ void muste_file_sql(int argc,char *argv[]) // RS 12.2.2013
         
         strcpy(qbuf,"virta.sql('");
         ofile=obuf; *ofile=EOS;
-        if (g>3) if (muste_strcmpi(word[3],"TO")==0) 
+        if (g>3) { if (muste_strcmpi(word[3],"TO")==0) 
         	{ 
         	if (g>4)
         		{
 				if (muste_strcmpi(word[4],"NEW")==0)
 					{
 					strcpy(ofile,word[5]);
-					if (strchr(ofile,'.')==NULL) strcat(ofile,".SVO");
+					if (strchr(ofile,'.')==NULL) { strcat(ofile,".SVO");
+}
 					sur_delete(ofile);			
 					}
 				else
 					{
 					strcpy(ofile,word[4]);
-					if (strchr(ofile,'.')==NULL) strcat(ofile,".SVO");
+					if (strchr(ofile,'.')==NULL) { strcat(ofile,".SVO");
+}
 					}
         		}	
         	}
+}
         if (strchr(word[2],' ')!=NULL) 	// Query from command line
         	{
         	strcat(qbuf,word[2]);
@@ -80,10 +85,13 @@ void muste_file_sql(int argc,char *argv[]) // RS 12.2.2013
             	{
 				++i;
 				edread(sbuf,i);
-				if (strncmp(sbuf,"*END ",5)==0) break;
+				if (strncmp(sbuf,"*END ",5)==0) { break;
+}
 				loppu=strstr(sbuf," / ");
-				if (loppu==NULL) loppu=sbuf+c2;
-				while (loppu>sbuf && *loppu==' ') *loppu--=EOS;	
+				if (loppu==NULL) { loppu=sbuf+c2;
+}
+				while (loppu>sbuf && *loppu==' ') { *loppu--=EOS;	
+}
 				strcat(qbuf,sbuf+1);
 				strcat(qbuf,"\n");
         		}				
@@ -96,7 +104,8 @@ void muste_file_sql(int argc,char *argv[]) // RS 12.2.2013
         	{
         	strcpy(sbuf,spb[i]);
         	muste_expand_path(sbuf);
-        	if (strchr(sbuf,'.')==NULL) strcat(sbuf,".db");
+        	if (strchr(sbuf,'.')==NULL) { strcat(sbuf,".db");
+}
         	db=sbuf;
         	}
 
@@ -109,7 +118,8 @@ void muste_file_sql(int argc,char *argv[]) // RS 12.2.2013
 		muste_iconv(qbuf,"","CP850");
 
 		do { loppu=strchr(qbuf,'\\');
-		if (loppu!=NULL) *loppu='/';
+		if (loppu!=NULL) { *loppu='/';
+}
 		} while (loppu!=NULL);
 
 		i=muste_evalr(qbuf);

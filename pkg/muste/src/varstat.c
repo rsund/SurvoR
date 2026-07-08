@@ -188,15 +188,18 @@ static char str_var_list_space[4*LLENGTH];
             s_end(argv);
             return;
             }
-        i=data_open2(word[1],&d,1,0,0); if (i<0) return;
+        i=data_open2(word[1],&d,1,0,0); if (i<0) { return;
+}
         m0=d.m; // RS 26.3.2013
         i=spec_init(r1+r-1); if (i<0) { data_close(&d); return; } /* spec_init gives also an error message! */
         i=mask(&d); if (i<0) { data_close(&d); return; }
         i=conditions(&d); if (i<0) { data_close(&d); return; }  /* permitted only once */
         i=tasks(); if (i<0) { data_reduce_m(&d,m0); data_close(&d); return; } // RS 26.3.2013 data_reduce+close
         prind=0;
-        i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
-        i=spfind("PRIND"); if (i>=0) prind=atoi(spb[i]);
+        i=hae_apu("prind",sbuf); if (i) { prind=atoi(sbuf);
+}
+        i=spfind("PRIND"); if (i>=0) { prind=atoi(spb[i]);
+}
 /*
 printf("\noutvar=%d task=%s tp1=%g tp2=%g",outvar[0],taskname[task[0]],tp1[0],tp2[0]); getch();
 */
@@ -207,9 +210,11 @@ printf("\noutvar=%d task=%s tp1=%g tp2=%g",outvar[0],taskname[task[0]],tp1[0],tp
         sur_print("\n"); alku=1;
         for (l=d.l1; l<=d.l2; ++l)
             {
-            if (unsuitable(&d,l)) continue;
+            if (unsuitable(&d,l)) { continue;
+}
 
-            if (sur_kbhit()) { i=sur_getch(); if (i=='.') prind=1-prind; }
+            if (sur_kbhit()) { i=sur_getch(); if (i=='.') { prind=1-prind; 
+}}
             if (prind) { muste_sprintf(sbuf," %d",l); sur_print(sbuf); }
 
             nmiss=0; sum=0.0;
@@ -226,15 +231,16 @@ printf("\noutvar=%d task=%s tp1=%g tp2=%g",outvar[0],taskname[task[0]],tp1[0],tp
                     vi=d.v[i];
 
 // Rprintf("\nvar=%d type=%s",vi,d.vartype[vi]); sur_getch();
-                    if (d.vartype[vi][0]=='S')
+                    if (d.vartype[vi][0]=='S') {
                         data_alpha_load(&d,l,vi,p);
-                    else // numeric variable
+                    } else // numeric variable
                         {
                         data_load(&d,l,vi,&a);
                         h=(int)a;
                         muste_sprintf(p,"%d",h);
                         }
-                    h=strlen(p)-1; while (p[h]==' ') p[h--]=EOS;
+                    h=strlen(p)-1; while (p[h]==' ') { p[h--]=EOS;
+}
                     str_x[i]=p;
                     p+=strlen(p)+1;
                     }
@@ -252,7 +258,8 @@ printf("\noutvar=%d task=%s tp1=%g tp2=%g",outvar[0],taskname[task[0]],tp1[0],tp
 					}
                 }
             m1=m-nmiss;
-            if (m1==0) sum=MISSING8; // 13.9.2010
+            if (m1==0) { sum=MISSING8; // 13.9.2010
+}
             sort=0;
 
             if (collective)
@@ -278,8 +285,10 @@ printf("\noutvar=%d task=%s tp1=%g tp2=%g",outvar[0],taskname[task[0]],tp1[0],tp
                   case XSUB:
                     i=xarit(4,l); if (i<0) { data_close(&d); return; } break;
                   case XSORT:
-                    sort_x(); for (i=0; i<m1; ++i) x[i]=x2[i];
-                    for (i=m1; i<m; ++i) x[i]=MISSING8;
+                    sort_x(); for (i=0; i<m1; ++i) { x[i]=x2[i];
+}
+                    for (i=m1; i<m; ++i) { x[i]=MISSING8;
+}
                     break;
                   case XCUM:
                     i=cumulative_sum(); if (i<0) { data_close(&d); return; } break;
@@ -371,7 +380,8 @@ static int tasks()
             strcpy(x,spb[i]); ntask=split(x,osa,MAXTASK);
             for (k=0; k<ntask; ++k)
                 {
-                i=muuttuja(osa[k]); if (i<0) return(-1);
+                i=muuttuja(osa[k]); if (i<0) { return(-1);
+}
                 outvar[k]=i;
                 i=spfind(osa[k]);  /* muuttuja() poistanut :<tyyppi> merkinnõn */
                 if (i<0)
@@ -383,38 +393,47 @@ static int tasks()
 
                 strcpy(y,spb[i]);
                 ip=split(y,yosa,3);
-                i=taskfind(yosa[0]); if(i<0) return(-1);
+                i=taskfind(yosa[0]); if(i<0) { return(-1);
+}
                 task[k]=i; npar[k]=0;
-                if (ip<2) continue;
+                if (ip<2) { continue;
+}
                 tp1[k]=atof(yosa[1]); ++npar[k];
-                if (ip<3) continue;
+                if (ip<3) { continue;
+}
                 tp2[k]=atof(yosa[2]); ++npar[k];
                 }
             return(1);
             }
-        if (strcmp(word[2],"*")==0)
+        if (strcmp(word[2],"*")==0) {
             collective=1;
+}
 
         laji=1;
         if (g<4)
             {
-            if (collective)
+            if (collective) {
                 sur_print("\nUsage: VARSTAT <data>,*,<operation>");
-            else
+            } else {
                 sur_print("\nUsage: VARSTAT <data>,<variable>,<operation>");
+}
             WAIT; return(-1);
             }
         ntask=1;
         if (!collective)
             {
-            i=muuttuja(word[2]); if (i<0) return(-1);
+            i=muuttuja(word[2]); if (i<0) { return(-1);
+}
             outvar[0]=i;
             }
-        else if (g>4) strcpy(aritvar,word[4]);  /* VARSTAT <data>,*,/,<aritvar>  */
+        else if (g>4) { strcpy(aritvar,word[4]);  /* VARSTAT <data>,*,/,<aritvar>  */
+}
 
-        i=taskfind(word[3]); if(i<0) return(-1);
+        i=taskfind(word[3]); if(i<0) { return(-1);
+}
         task[0]=i; npar[0]=0;
-        if (g<5) return(1);
+        if (g<5) { return(1);
+}
 
 // SM ADD 22.5.2012
         strcpy(str_tp1,word[4]); // 22.5.2012  #VAL,VAL_LIST
@@ -435,7 +454,8 @@ static int tasks()
         
         
         tp1[0]=atof(word[4]); ++npar[0];
-        if (g<6) return(1);
+        if (g<6) { return(1);
+}
         tp2[0]=atof(word[5]); ++npar[0];
         return(1);
         }
@@ -454,7 +474,8 @@ static int create_val_list() // SM ADD 22.5.2012
                 }
         strcpy(lst,spb[i]);
         n_list=split(lst,v,100);
-        for (i=0; i<n_list; ++i) val_list[i]=atof(v[i]);
+        for (i=0; i<n_list; ++i) { val_list[i]=atof(v[i]);
+}
         return(1);
         }
         
@@ -464,10 +485,12 @@ static int create_str_val_list(char type) // SM ADD 22.5.2012
 //        char lst[LLENGTH];
 //        char *v[100];
 
-        if (type=='T') str_val_type=1; else str_val_type=2;
+        if (type=='T') { str_val_type=1; } else { str_val_type=2;
+}
 
-        if (type=='T') i=spfind("STR_VAL_LIST");
-        else if (type=='U') i=spfind("SUBSTR_VAL_LIST");
+        if (type=='T') { i=spfind("STR_VAL_LIST");
+        } else if (type=='U') { i=spfind("SUBSTR_VAL_LIST");
+}
         if (i<0)
                 {
       sur_print("\nSTR_VAL_LIST=strval1,strval2,strval3,... or");
@@ -492,13 +515,15 @@ static int muuttuja(char *s)
             {
             *p=EOS;
             type=*(p+1);
-            if (type=='S') len=atoi(p+2);
+            if (type=='S') { len=atoi(p+2);
+}
             }
         i=varfind2(&d,s,0);
         if (i<0)
             {
             i=create_newvar(&d,s,type,len);
-            if (i<0) return(-1);
+            if (i<0) { return(-1);
+}
             }
         return(i);
         }
@@ -508,7 +533,8 @@ static int taskfind(char *s)
         int i;
 
         i=0;
-        while (*taskname[i]!=EOS && muste_strcmpi(taskname[i],s)!=0) ++i;
+        while (*taskname[i]!=EOS && muste_strcmpi(taskname[i],s)!=0) { ++i;
+}
         if (*taskname[i]==EOS)
             {
             muste_sprintf(sbuf,"\nUnknown task name %s !",s); sur_print(sbuf);
@@ -522,19 +548,23 @@ static double xsum(int it)
         int j;
         double a,b;
 
-        if (m1==0) return(MISSING8); // 13.9.2010
-        if (npar[it]==0) pot=1.0;
-        else pot=tp1[it];
+        if (m1==0) { return(MISSING8); // 13.9.2010
+}
+        if (npar[it]==0) { pot=1.0;
+        } else { pot=tp1[it];
+}
         b=0.0;
         for (j=0; j<m; ++j)
             {
             a=x[j];
-            if (a==MISSING8) continue;
+            if (a==MISSING8) { continue;
+}
             if (pot==2.0) { a=a*a; task[it]=XSUM2; }
             else if (pot==3.0) { a=a*a*a; task[it]=XSUM3; }
             else if (pot==4.0) { a=a*a*a*a; task[it]=XSUM4; }
-            else if (pot!=1.0) a=pow(a,pot);
-            else task[it]=XSUM1;
+            else if (pot!=1.0) { a=pow(a,pot);
+            } else { task[it]=XSUM1;
+}
             b+=a;
             }
         return(b);
@@ -561,12 +591,14 @@ static double xsum2(int it)
         int j;
         double a,b;
 
-        if (m1==0) return(MISSING8); // 13.9.2010
+        if (m1==0) { return(MISSING8); // 13.9.2010
+}
         b=0.0;
         for (j=0; j<m; ++j)
             {
             a=x[j];
-            if (a==MISSING8) continue;
+            if (a==MISSING8) { continue;
+}
             b+=a*a;
             }
         return(b);
@@ -577,12 +609,14 @@ static double xsum3(int it)
         int j;
         double a,b;
 
-        if (m1==0) return(MISSING8); // 13.9.2010
+        if (m1==0) { return(MISSING8); // 13.9.2010
+}
         b=0.0;
         for (j=0; j<m; ++j)
             {
             a=x[j];
-            if (a==MISSING8) continue;
+            if (a==MISSING8) { continue;
+}
             b+=a*a*a;
             }
         return(b);
@@ -593,12 +627,14 @@ static double xsum4(int it)
         int j;
         double a,b;
 
-        if (m1==0) return(MISSING8); // 13.9.2010
+        if (m1==0) { return(MISSING8); // 13.9.2010
+}
         b=0.0;
         for (j=0; j<m; ++j)
             {
             a=x[j];
-            if (a==MISSING8) continue;
+            if (a==MISSING8) { continue;
+}
             a=a*a; b+=a*a;
             }
         return(b);
@@ -609,24 +645,32 @@ static double xmean(int it)
         int j;
         double a,b;
 
-        if (m1==0) return(MISSING8);
-        if (npar[it]==0) pot=1.0;
-        else pot=tp1[it];
-        if (pot==1.0) return(sum/(double)m1);
+        if (m1==0) { return(MISSING8);
+}
+        if (npar[it]==0) { pot=1.0;
+        } else { pot=tp1[it];
+}
+        if (pot==1.0) { return(sum/(double)m1);
+}
         b=0.0;
         for (j=0; j<m; ++j)
             {
             a=x[j];
-            if (a==MISSING8) continue;
-            if (pot==2.0) a=a*a;
-            else if (pot==0.0) { if (a<=0.0) return(MISSING8); else a=log(a); }
-            else if (pot==3.0) a=a*a*a;
-            else if (pot==4.0) { a=a*a; a=a*a; }
-            else a=pow(a,pot);
+            if (a==MISSING8) { continue;
+}
+            if (pot==2.0) { a=a*a;
+            } else if (pot==0.0) { if (a<=0.0) { return(MISSING8); } else { a=log(a); 
+}}
+            else if (pot==3.0) { a=a*a*a;
+            } else if (pot==4.0) { a=a*a; a=a*a; }
+            else { a=pow(a,pot);
+}
             b+=a;
             }
-        if (pot==2.0) return(sqrt(b/(double)m1));
-        if (pot==0.0) return(exp(b/(double)m1));
+        if (pot==2.0) { return(sqrt(b/(double)m1));
+}
+        if (pot==0.0) { return(exp(b/(double)m1));
+}
         return(pow(b/(double)m1,1/pot));
         }
 
@@ -635,11 +679,13 @@ static double xpos_side(int it)
         int j;
         double b,x1,x2;
 
-        b=0.0; if (x[0]>0.0) b=1.0;
+        b=0.0; if (x[0]>0.0) { b=1.0;
+}
         for (j=1; j<m; ++j)
             {
             x1=x[j]; x2=x[j-1];
-            if ((x1>0.0 && x2>=0.0) || (x1>=0.0 && x2>0.0)) ++b;
+            if ((x1>0.0 && x2>=0.0) || (x1>=0.0 && x2>0.0)) { ++b;
+}
             }
         return(b);
         }
@@ -663,8 +709,9 @@ static double xfirst(int it)
             nval=split(y,val,m);
             for (i=0; i<nval; ++i)
                 {
-                if (strcmp(val[i],"-")==0) x2[i]=MISSING8;
-                else x2[i]=atof(val[i]);
+                if (strcmp(val[i],"-")==0) { x2[i]=MISSING8;
+                } else { x2[i]=atof(val[i]);
+}
                 }
             alku=0;
             }
@@ -674,7 +721,9 @@ static double xfirst(int it)
             {
             if (x[i]==x2[0])
                 {
-                for (j=1; j<nval; ++j) if (x[i+j]!=x2[j]) break;
+                for (j=1; j<nval; ++j) { if (x[i+j]!=x2[j]) { break;
+}
+}
                 if (j<nval) { ++i; continue; }
                 return((double)(i+1));
                 }
@@ -698,8 +747,9 @@ static double xlast(int it)
             nval=split(y,val,m);
             for (i=0; i<nval; ++i)
                 {
-                if (strcmp(val[i],"-")==0) x2[i]=MISSING8;
-                else x2[i]=atof(val[i]);
+                if (strcmp(val[i],"-")==0) { x2[i]=MISSING8;
+                } else { x2[i]=atof(val[i]);
+}
                 }
             alku=0;
             }
@@ -709,13 +759,16 @@ static double xlast(int it)
             {
             if (x[i]==x2[0])
                 {
-                for (j=1; j<nval; ++j) if (x[i+j]!=x2[j]) break;
+                for (j=1; j<nval; ++j) { if (x[i+j]!=x2[j]) { break;
+}
+}
                 if (j<nval) { ++i; continue; }
                 ilast=i+1; i+=nval; continue;
                 }
             ++i;
             }
-        if (ilast==-1) return(MISSING8);
+        if (ilast==-1) { return(MISSING8);
+}
         return((double)ilast);
         }
 
@@ -729,12 +782,15 @@ static double xcyclen(int it)
             f=0;
             for (j=k; j<m; j+=k)
                 {
-                for (h=0; h<k && j+h<m; ++h)
+                for (h=0; h<k && j+h<m; ++h) {
                     if (x[h]!=x[j+h]) { f=1; break; }
+}
                 }
-            if (f==0) break;
+            if (f==0) { break;
+}
             }
-        if (k==m2) k=m;
+        if (k==m2) { k=m;
+}
         return((double)k);
         }
 
@@ -747,9 +803,12 @@ static double xmodeval(int it)
         for (i=0; i<m; ++i)
             {
             a=x[i]; k=0;
-            for (j=0; j<m; ++j)
-                if (a==x[j]) ++k;
-            if (k>max) max=k;
+            for (j=0; j<m; ++j) {
+                if (a==x[j]) { ++k;
+}
+}
+            if (k>max) { max=k;
+}
             }
         return((double)max);
         }
@@ -776,12 +835,14 @@ static double xnumseq(int it)
             nval=split(y,val,m);
             for (i=0; i<nval; ++i)
                 {
-                if (strcmp(val[i],"-")==0) x2[i]=MISSING8;
-                else x2[i]=atof(val[i]);
+                if (strcmp(val[i],"-")==0) { x2[i]=MISSING8;
+                } else { x2[i]=atof(val[i]);
+}
                 }
             alku=0;
             overlap=0;
-            i=spfind("OVERLAP"); if (i>=0) overlap=atoi(spb[i]);
+            i=spfind("OVERLAP"); if (i>=0) { overlap=atoi(spb[i]);
+}
             }
 
         i=0; nseq=0;
@@ -790,10 +851,13 @@ static double xnumseq(int it)
             i0=i;
             if (x[i]==x2[0])
                 {
-                for (j=1; j<nval; ++j) if (x[i+j]!=x2[j]) break;
+                for (j=1; j<nval; ++j) { if (x[i+j]!=x2[j]) { break;
+}
+}
                 if (j<nval) { ++i; continue; }
                 ++nseq;
-                if (overlap) ++i; else i=i0+nval;
+                if (overlap) { ++i; } else { i=i0+nval;
+}
                 continue;
                 }
             ++i;
@@ -821,8 +885,9 @@ static double xnumrun(int it)
             nval=split(y,val,m);
             for (i=0; i<nval; ++i)
                 {
-                if (strcmp(val[i],"-")==0) x2[i]=MISSING8;
-                else x2[i]=atof(val[i]);
+                if (strcmp(val[i],"-")==0) { x2[i]=MISSING8;
+                } else { x2[i]=atof(val[i]);
+}
                 }
             alku=0;
             }
@@ -832,12 +897,17 @@ static double xnumrun(int it)
             {
             if (run)
                 {
-                for (j=0; j<nval; ++j) if (x[i]==x2[j]) break;
-                if (j==nval) run=0;
+                for (j=0; j<nval; ++j) { if (x[i]==x2[j]) { break;
+}
+}
+                if (j==nval) { run=0;
+}
                 }
             else
                 {
-                for (j=0; j<nval; ++j) if (x[i]==x2[j]) break;
+                for (j=0; j<nval; ++j) { if (x[i]==x2[j]) { break;
+}
+}
                 if (j<nval) { run=1; ++nrun; }
                 }
             }
@@ -850,7 +920,8 @@ static double xrun_up_down(int it)
         int i,numrun,up;
 
         numrun=1;
-        if (x[1]>=x[0]) up=1; else up=0;
+        if (x[1]>=x[0]) { up=1; } else { up=0;
+}
         for (i=2; i<m; ++i)
             {
             if (up)
@@ -884,13 +955,16 @@ static double xstddev(int it)
         int j;
         double a,b,c;
 
-        if (m1==0) return(MISSING8);
-        if (m1==1) return(0.0);
+        if (m1==0) { return(MISSING8);
+}
+        if (m1==1) { return(0.0);
+}
         b=0.0; c=sum/(double)m1;
         for (j=0; j<m; ++j)
             {
             a=x[j];
-            if (a==MISSING8) continue;
+            if (a==MISSING8) { continue;
+}
             b+=(a-c)*(a-c);
             }
         return(sqrt(b/(double)(m1-1)));
@@ -898,37 +972,47 @@ static double xstddev(int it)
 
 static double xmax(int it)
         {
-        if (m1==0) return(MISSING8);
-        if (!sort) sort_x();
+        if (m1==0) { return(MISSING8);
+}
+        if (!sort) { sort_x();
+}
         return(x2[m1-1]);
         }
 
 static double xmin(int it)
         {
-        if (m1==0) return(MISSING8);
-        if (!sort) sort_x();
+        if (m1==0) { return(MISSING8);
+}
+        if (!sort) { sort_x();
+}
         return(x2[0]);
         }
 
 static double xrange(int it)
         {
-        if (m1==0) return(MISSING8);
-        if (!sort) sort_x();
+        if (m1==0) { return(MISSING8);
+}
+        if (!sort) { sort_x();
+}
         return(x2[m1-1]-x2[0]);
         }
 
 static double xmedian(int it)
         {
-        if (m1==0) return(MISSING8);
-        if (!sort) sort_x();
+        if (m1==0) { return(MISSING8);
+}
+        if (!sort) { sort_x();
+}
         if (((m1>>1)<<1)==m1)
             {
-            if (npar[it]>0 && tp1[it]!=0.0)
+            if (npar[it]>0 && tp1[it]!=0.0) {
                 return((x2[m1/2-1]+x2[m1/2])/2);
-            else return(x2[m1/2-1]);
+            } else { return(x2[m1/2-1]);
+}
             }
-        else
+        else {
             return(x2[m1/2]);
+}
         }
 
 static int sort_x()
@@ -937,10 +1021,12 @@ static int sort_x()
         int ind;
         double y;
 
-        h=0; for (i=0; i<m; ++i) { if (x[i]==MISSING8) continue;
+        h=0; for (i=0; i<m; ++i) { if (x[i]==MISSING8) { continue;
+}
                                    x2[h]=x[i]; ++h;
                                  }
-        if (m1<=1) return(1);
+        if (m1<=1) { return(1);
+}
         h=m1;
         while (h>1)
             {
@@ -956,7 +1042,8 @@ static int sort_x()
                         ind=0;
                         }
                     }
-                if (ind==1) break;
+                if (ind==1) { break;
+}
                 }
             }
 /*
@@ -979,8 +1066,10 @@ static double xval(int it)
             n=0;
             for (j=0; j<m; ++j)
                 {
-                for (i=0; i<n_list; ++i)
-                    if (x[j]==val_list[i]) ++n;
+                for (i=0; i<n_list; ++i) {
+                    if (x[j]==val_list[i]) { ++n;
+}
+}
                 }
             return((double)n);
             }
@@ -996,11 +1085,13 @@ static double xval(int it)
             //      Rprintf("\nstr=%s|val=%s|",str_x[j],str_val_list[i]);
                     if (str_val_type==1)
                         {
-                        if (strcmp(str_x[j],str_val_list[i])==0) ++n;
+                        if (strcmp(str_x[j],str_val_list[i])==0) { ++n;
+}
                         }
                     else
                         {
-                        if (strstr( str_x[j],str_val_list[i] )!=NULL) ++n;
+                        if (strstr( str_x[j],str_val_list[i] )!=NULL) { ++n;
+}
 // Rprintf("\nn=%d",n);
                         }
                     }
@@ -1019,8 +1110,10 @@ static double xval(int it)
         for (j=0; j<m; ++j)
             {
             c=x[j];
-            if (c==MISSING8) continue;
-            if (c>=a && c<=b) ++n;
+            if (c==MISSING8) { continue;
+}
+            if (c>=a && c<=b) { ++n;
+}
             }
 /* Rprintf("n=%d\n",n); getch();  */
         return((double)n);
@@ -1035,14 +1128,18 @@ static void xdivsum()
         double coeff;
 
         coeff=atof(word[4]); // 19.12.2009
-        if (coeff==0.0) coeff=1.0;
+        if (coeff==0.0) { coeff=1.0;
+}
 
-        if (m1==0) return;
+        if (m1==0) { return;
+}
 
         for (j=0; j<m; ++j)
             {
-            if (x[j]==MISSING8) continue;
-            if (sum==0.0) x[j]=MISSING8; else x[j]=coeff*x[j]/sum;
+            if (x[j]==MISSING8) { continue;
+}
+            if (sum==0.0) { x[j]=MISSING8; } else { x[j]=coeff*x[j]/sum;
+}
             }
         }
 
@@ -1053,15 +1150,20 @@ static void xdivmax()
         double coeff;
 
         coeff=atof(word[4]); // 19.12.2009
-        if (coeff==0.0) coeff=1.0;
+        if (coeff==0.0) { coeff=1.0;
+}
 
-        if (m1==0) return;
-        if (!sort) sort_x();
+        if (m1==0) { return;
+}
+        if (!sort) { sort_x();
+}
         max=x2[m1-1];
         for (j=0; j<m; ++j)
             {
-            if (x[j]==MISSING8) continue;
-            if (max==0.0) x[j]=MISSING8; else x[j]=coeff*x[j]/max;
+            if (x[j]==MISSING8) { continue;
+}
+            if (max==0.0) { x[j]=MISSING8; } else { x[j]=coeff*x[j]/max;
+}
             }
         }
 
@@ -1070,22 +1172,28 @@ static void xnorm()
         int j;
         double k,a,b,c;
 
-        if (m1==0) return;
+        if (m1==0) { return;
+}
         k=2.0; a=1.0;
-        if (npar[0]) k=tp1[0];
-        if (npar[0]>1) a=tp2[0];
+        if (npar[0]) { k=tp1[0];
+}
+        if (npar[0]>1) { a=tp2[0];
+}
         c=0.0;
         for (j=0; j<m; ++j)
             {
             b=x[j];
-            if (b==MISSING8) continue;
+            if (b==MISSING8) { continue;
+}
             c+=pow(fabs(b),k);
             }
         c=pow(c,1.0/k);
-        if (c==0.0) return;
+        if (c==0.0) { return;
+}
         for (j=0; j<m; ++j)
             {
-            if (x[j]==MISSING8) continue;
+            if (x[j]==MISSING8) { continue;
+}
             x[j]*=a/c;
             }
         }
@@ -1095,11 +1203,13 @@ static void xcenter()
         int j;
         double mean;
 
-        if (m1==0) return;
+        if (m1==0) { return;
+}
         mean=sum/(double)m1;
         for (j=0; j<m; ++j)
             {
-            if (x[j]==MISSING8) continue;
+            if (x[j]==MISSING8) { continue;
+}
             x[j]-=mean;
             }
         }
@@ -1109,20 +1219,24 @@ static void xstandard()
         int j;
         double a,mean,stddev;
 
-        if (m1<2) return;
+        if (m1<2) { return;
+}
         mean=sum/(double)m1;
         stddev=0.0;
         for (j=0; j<m; ++j)
             {
-            if (x[j]==MISSING8) continue;
+            if (x[j]==MISSING8) { continue;
+}
             a=x[j]-mean; stddev+=a*a;
             }
         stddev=sqrt(stddev/(double)(m1-1));
         for (j=0; j<m; ++j)
             {
-            if (x[j]==MISSING8) continue;
-            if (stddev==0.0) x[j]=0.0;
-            else x[j]=(x[j]-mean)/stddev;
+            if (x[j]==MISSING8) { continue;
+}
+            if (stddev==0.0) { x[j]=0.0;
+            } else { x[j]=(x[j]-mean)/stddev;
+}
             }
         }
 
@@ -1135,7 +1249,8 @@ static int xarit(int op,int l)
         static double a;
         int j;
 
-        if (m1==0) return(1);
+        if (m1==0) { return(1);
+}
         if (eka)
             {
             if (npar[0]==0)
@@ -1155,15 +1270,18 @@ static int xarit(int op,int l)
                 }
             eka=0;
             }
-        if (iv>=0) data_load(&d,l,iv,&a);
+        if (iv>=0) { data_load(&d,l,iv,&a);
+}
         for (j=0; j<m; ++j)
             {
-            if (x[j]==MISSING8) continue;
+            if (x[j]==MISSING8) { continue;
+}
             if (a==MISSING8) { x[j]=MISSING8; continue; }
             switch (op)
                 {
               case 1: x[j]*=a; break;
-              case 2: if (a==0.0) x[j]=MISSING8; else x[j]/=a; break;
+              case 2: if (a==0.0) { x[j]=MISSING8; } else { x[j]/=a; 
+}break;
               case 3: x[j]+=a; break;
               case 4: x[j]-=a; break;
                 }
@@ -1179,7 +1297,8 @@ static int cumulative_sum()
         sum=0.0;
         for (j=0; j<m; ++j)
             {
-            if (x[j]==MISSING8) continue;
+            if (x[j]==MISSING8) { continue;
+}
             sum+=x[j]; x[j]=sum;
             }
         return(1);

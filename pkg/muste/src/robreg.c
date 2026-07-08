@@ -104,23 +104,38 @@ void muste_robreg(char *argv)
         if (g>2)
             {
             results_line=edline2(word[2],1,1);
-            if (results_line==0) return;
+            if (results_line==0) { return;
+}
             }
-        i=data_read_open(word[1],&d); if (i<0) return;
-        i=spec_init(r1+r-1); if (i<0) return;
-        i=mask(&d); if (i<0) return;
-        i=space_allocation1(); if (i<0) return;
-        i=select_model(); if (i<0) return;
+        i=data_read_open(word[1],&d); if (i<0) { return;
+}
+        i=spec_init(r1+r-1); if (i<0) { return;
+}
+        i=mask(&d); if (i<0) { return;
+}
+        i=space_allocation1(); if (i<0) { return;
+}
+        i=select_model(); if (i<0) { return;
+}
 /*      i=test_scaletypes(); if (i<0) return;     */
-        i=conditions(&d); if (i<0) return;  /* permitted only once */
-        i=space_allocation2(); if (i<0) return;
-        i=read_data(); if (i<0) return;
-        i=read_data2(); if (i<0) return;
-        i=n_of_trials();if (i<0) return;
-        i=space_allocation3(); if (i<0) return;
-        i=trial(); if (i<0) return;
-        i=constant_term(); if (i<0) return;
-        i=residuals();if (i<0) return;
+        i=conditions(&d); if (i<0) { return;  /* permitted only once */
+}
+        i=space_allocation2(); if (i<0) { return;
+}
+        i=read_data(); if (i<0) { return;
+}
+        i=read_data2(); if (i<0) { return;
+}
+        i=n_of_trials();if (i<0) { return;
+}
+        i=space_allocation3(); if (i<0) { return;
+}
+        i=trial(); if (i<0) { return;
+}
+        i=constant_term(); if (i<0) { return;
+}
+        i=residuals();if (i<0) { return;
+}
         printout();
         data_close(&d);
         s_end(argv);
@@ -136,7 +151,8 @@ static int select_model()
         for (i=0; i<d.m_act; ++i)
             {
             vi=d.v[i];
-            if (vi==weight_variable) continue;
+            if (vi==weight_variable) { continue;
+}
             ch=d.vartype[vi][1];
             if (ch=='X')
                 {
@@ -166,7 +182,8 @@ static int select_model()
 
         i=spfind("CONSTANT");
         if (i>=0) {cc=atoi(spb[i]);}
-                  else cc=1;
+                  else { cc=1;
+}
         if (cc>0)  {cc=1;}
         m=nxvar+cc;  /* cc=0 jos ei vakiotermiä mukana */
         return(1);
@@ -227,9 +244,11 @@ static int read_data()
         sur_print("\n");
         for (j=d.l1; j<=d.l2; ++j)
             {
-            if (unsuitable(&d,j)) continue;
+            if (unsuitable(&d,j)) { continue;
+}
             data_load(&d,j,yvar,&yy);
-            if (yy==MISSING8) continue;
+            if (yy==MISSING8) { continue;
+}
             miss=0;
             for (i=0; i<nxvar; ++i)
                 {
@@ -237,7 +256,8 @@ static int read_data()
                 if (a==MISSING8) {miss=1; break; }
                 xx[i]=a;
                 }
-            if (miss==1) continue;
+            if (miss==1) { continue;
+}
 
             ++n;
             fwrite(&yy,sizeof(double),1,datat);
@@ -282,8 +302,9 @@ static int read_data2()
             muste_fread(&yy,sizeof(double),1,datat);
             muste_fread(&xx[0],sizeof(double),nxvar,datat);
             ydata[(int)j]=yy;
-            for (i=0; i<nxvar; ++i)
+            for (i=0; i<nxvar; ++i) {
                 xdata[(int)j*nxvar+i]=xx[i];
+}
             }
         muste_fclose(datat);
 
@@ -295,7 +316,8 @@ static int n_of_trials()      /* palauttaa poimittavien otosten lkm:n, "trials" 
         int i;
         i=spfind("TRIALS");
         if (i<0) {trials=1500;}
-        else trials=atoi(spb[i]);
+        else { trials=atoi(spb[i]);
+}
         return(1);
         }
 /*******************
@@ -326,10 +348,12 @@ static int trial()
         i=spfind("SEED");
         if (i<0) {
                  seed=time(NULL)%32767;    /* asetetaan siemenluku */
-                 if (seed%2==0)
+                 if (seed%2==0) {
                  seed=seed+1;
+}
                  }
-        else seed=atoi(spb[i]);
+        else { seed=atoi(spb[i]);
+}
 
         muste_sprintf(sbuf,"\n        constant=%d",cc);
         sur_print(sbuf);
@@ -372,8 +396,9 @@ static int trial()
               {
               ysample[i]=ydata[sluku[i]];
               xsample[i]=1.0;
-                 for(j=cc;j<m;++j)
+                 for(j=cc;j<m;++j) {
                  xsample[i+m*j]=xdata[sluku[i]*nxvar+j-cc];  // ???
+}
               }
 
 
@@ -428,8 +453,10 @@ static int trial()
             if(sur_kbhit())       /*   pysäytys ja keskeytys    */
               {
               i=sur_getch();
-              if (i=='.') return(1);
-              if (i==' ') sur_getch();
+              if (i=='.') { return(1);
+}
+              if (i==' ') { sur_getch();
+}
               }
            }
 /* looppi loppuu tähän */
@@ -457,9 +484,10 @@ static int constant_term()
                  sort_sample(resid,(int)n);
 
                  pienin_vali=resid[n-1]-resid[0];
-                 if(n%2==0)
+                 if(n%2==0) {
                  g=n/2;
-                 else g=n/2+1;
+                 } else { g=n/2+1;
+}
 
                  for(i=0;i<g;++i)
                     {
@@ -492,16 +520,18 @@ static int residuals()
              }
 
          sort_sample(resid2,(int)n);
-         if(n%2==0)
+         if(n%2==0) {
            med_resid2=(resid2[n/2-1]+resid2[n/2])/2.0;
-           else med_resid2=resid2[n/2];
+           } else { med_resid2=resid2[n/2];
+}
 
          scale_estimate=1.4826*(1.0+5.0/(n-m))*sqrt(med_resid2);
 
          std_residual=activated(&d,'T');
          resvar=activated(&d,'U');
          predvar=activated(&d,'V');
-         if (std_residual<0 && resvar<0 && predvar<0) return(1);
+         if (std_residual<0 && resvar<0 && predvar<0) { return(1);
+}
 
          sur_print("\nSaving ");
          if (resvar>=0)
@@ -521,7 +551,8 @@ static int residuals()
             }
 
 
-         i=data_open(word[1],&d); if (i<0) return(-1);
+         i=data_open(word[1],&d); if (i<0) { return(-1);
+}
 
          for(k=0;k<n;++k)
             {
@@ -529,17 +560,20 @@ static int residuals()
                {
                std_resid[k]=resid[k]/scale_estimate;
                data_save(&d,k+1,std_residual,std_resid[k]);
-               if (i<0) return(-1);
+               if (i<0) { return(-1);
+}
                }
             if (resvar>=0)
                {
                data_save(&d,k+1,resvar,resid[k]);
-               if (i<0) return(-1);
+               if (i<0) { return(-1);
+}
                }
             if (predvar>=0)
                {
                data_save(&d,k+1,predvar,sovite[k]);
-               if (i<0) return(-1);
+               if (i<0) { return(-1);
+}
                }
             }
          return(1);
@@ -587,7 +621,8 @@ static int printout()
 static int print_line(char *line)
         {
         output_line(line,eout,results_line);
-        if (results_line) ++results_line;
+        if (results_line) { ++results_line;
+}
         return(1);
         }
 
@@ -614,7 +649,8 @@ static int sort_sample(double *x_space,int n_total)
                         ind=0;
                         }
                     }
-                if (ind==1) break;
+                if (ind==1) { break;
+}
                 }
             }
         return(1);
@@ -648,7 +684,8 @@ for(;;)
                 {
                 xp2=xp1;xp1=xxx;
                 }
-             else if (xxx < xp2) xp2=xxx;
+             else if (xxx < xp2) { xp2=xxx;
+}
              }
           else if (xxx <= a)
                   {
@@ -657,8 +694,10 @@ for(;;)
                      {
                      xm2=xm1;xm1=xxx;
                      }
-                  else if(xxx > xm2) xm2=xxx; /* xm2=a:ta lähinnä 2. pienin luku */
-                  if (xxx==a) ++na;
+                  else if(xxx > xm2) { xm2=xxx; /* xm2=a:ta lähinnä 2. pienin luku */
+}
+                  if (xxx==a) { ++na;
+}
                   }
           }
       if (order-nm > 2)
@@ -666,7 +705,8 @@ for(;;)
 /*       Rprintf("\na=%g",a);     */
          am=a;
          aa=loops>9 ? xp1: xp1+(order-nm-1)*(xp2-xp1);  /* kasvatetaan a:ta */
-         if (aa > ap) aa=0.5*(a+ap);
+         if (aa > ap) { aa=0.5*(a+ap);
+}
          a=aa;
 /*       Rprintf("\nliian pieni: ");printf("  uusi a=%g",a);  */
          }
@@ -688,7 +728,8 @@ for(;;)
    /* pienennetään a:ta  */
 
               aa=loops>9 ? xm1-eps0: xm1-eps0-(nm-order)*(xm1-xm2);
-              if (aa < am) aa=0.5*(a+am);
+              if (aa < am) { aa=0.5*(a+am);
+}
               a=aa;
 /*            Rprintf("\nliian suuri: "); Rprintf("  uusi a=%g",a);  */
               }
@@ -731,7 +772,8 @@ static int ortho(double *a,int n,int m,double *b,int k,double eps,double *x,int 
         {
         ou=(double *)muste_malloc(m*n*sizeof(double));
         if (ou==NULL) { not_enough_memory(); return(-1); }
-        for (i=0; i<m*n; ++i) ou[i]=a[i];
+        for (i=0; i<m*n; ++i) { ou[i]=a[i];
+}
         op=(double *)muste_malloc(n*sizeof(double));
         if (op==NULL) { not_enough_memory(); return(-1); }
         opx=(double *)muste_malloc(m*sizeof(double));
@@ -742,7 +784,8 @@ static int ortho(double *a,int n,int m,double *b,int k,double eps,double *x,int 
         }
   else
         {
-        for (i=0; i<m*n; ++i) ou[i]=a[i];
+        for (i=0; i<m*n; ++i) { ou[i]=a[i];
+}
         }
 
 
@@ -762,18 +805,21 @@ static int ortho(double *a,int n,int m,double *b,int k,double eps,double *x,int 
             for (g=0; g<k; ++g)
                 {
                 t=0.0;
-                for (j=0; j<n; ++j)
+                for (j=0; j<n; ++j) {
                     t+=op[j]*b[j+n*g];
+}
                 x[i+m*g]=t;
                 }
             for (g=i+1; g<m; ++g)
                 {
                 t=0.0;
-                for (j=0; j<n; ++j)
+                for (j=0; j<n; ++j) {
                     t+=op[j]*ou[j+n*g];
+}
                 oq[++l]=t; t/=s;
-                for (j=0; j<n; ++j)
+                for (j=0; j<n; ++j) {
                     ou[j+n*g]-=op[j]*t;
+}
                 }
             }
         mm=m+2; // ll=l; 
@@ -783,10 +829,12 @@ static int ortho(double *a,int n,int m,double *b,int k,double eps,double *x,int 
             for (j=0; j<k; ++j)
                 {
                 s=x[i+m*j];
-                for (g=i+1; g<m; ++g)
+                for (g=i+1; g<m; ++g) {
                     s-=oq[g+h]*x[g+m*j];
+}
                 x[i+m*j]=s=s/t;
-                if (j==0) opx[i]=s;
+                if (j==0) { opx[i]=s;
+}
                 }
             l+=i+1-mm;
             }

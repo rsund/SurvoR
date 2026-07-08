@@ -106,7 +106,8 @@ void muste_lscal(char *argv)
 
    //   if (argc==1) return;
         s_init(argv);
-        i=spec_init(r1+r-1); if (i<0) return;
+        i=spec_init(r1+r-1); if (i<0) { return;
+}
         if (g<3)
             {
             init_remarks();
@@ -141,36 +142,43 @@ void muste_lscal(char *argv)
         if (g>3)
             {
             results_line=edline2(word[3],1,1);
-            if (results_line==0) return;
+            if (results_line==0) { return;
+}
             }
-        i=sp_init(r1+r-1); if (i<0) return;
+        i=sp_init(r1+r-1); if (i<0) { return;
+}
 
         method=1;
         i=spfind("METHOD");
-        if (i>=0) method=atoi(spb[i]);
+        if (i>=0) { method=atoi(spb[i]);
+}
 
         i=spfind("WEIGHT");
-        if (i<0) i=spfind("WEIGHTS");
+        if (i<0) { i=spfind("WEIGHTS");
+}
         if (i>=0)
             {
             weight=1; method=2;
             strcpy(x,spb[i]);
             i=matrix_load(x,&w,&n,&n3,&rlab,&clab,&lr,&lc,&type,expr);
-            if (i<0) return;
+            if (i<0) { return;
+}
             if (n3!=n)
                 {
                 muste_sprintf(sbuf,"\n%s not a square matrix!",x); sur_print(sbuf); WAIT; return;
                 }
             }
         i=matrix_load(word[1],&dd,&n,&n2,&rlab,&clab,&lr,&lc,&type,expr);
-        if (i<0) return;
+        if (i<0) { return;
+}
 
         if (n2!=n)
             {
             muste_sprintf(sbuf,"\n%s not a square matrix!",word[1]); sur_print(sbuf); WAIT; return;
             }
         i=matrix_load(word[2],&xx,&n2,&m,&rlab,&clab,&lr,&lc,&type,expr);
-        if (i<0) return;
+        if (i<0) { return;
+}
 
         if (n2!=n)
             {
@@ -180,17 +188,21 @@ void muste_lscal(char *argv)
             }
 
         dist_sum=0.0;
-        for (i=0; i<n; ++i) for (j=0; j<n; ++j)
-            if (i!=j && dd[i+n*j]>0.0) dist_sum+=dd[i+n*j];
+        for (i=0; i<n; ++i) { for (j=0; j<n; ++j) {
+            if (i!=j && dd[i+n*j]>0.0) { dist_sum+=dd[i+n*j];
+}
+}
+}
 
         is_symmetric=1;
         i=spfind("SYMMETRIC");
         if (i>=0)
             {
             i=atoi(spb[i]);
-            if (i!=0)
+            if (i!=0) {
                 is_symmetric=test_symmetry(dd,n); // 25.6.2005
-            else is_symmetric=0;
+            } else { is_symmetric=0;
+}
             }
 
         if (weight && n3!=n)
@@ -200,8 +212,10 @@ void muste_lscal(char *argv)
             }
 
         npar=n*m;
-        i=tutki_dtrans(); if (i<0) return;
-        if (dtrans) method=2;
+        i=tutki_dtrans(); if (i<0) { return;
+}
+        if (dtrans) { method=2;
+}
 
         strcpy(metrics,"L2");
         i=spfind("METRICS");
@@ -209,7 +223,8 @@ void muste_lscal(char *argv)
             {
             strcpy(metrics,spb[i]);
             dpower=mitta(metrics);
-            if (dpower!=2.0) method=2;
+            if (dpower!=2.0) { method=2;
+}
             }
         strcpy(criterion,"L2");
         i=spfind("CRITERION");
@@ -217,11 +232,14 @@ void muste_lscal(char *argv)
             {
             strcpy(criterion,spb[i]);
             fitpower=mitta(criterion);
-            if (fitpower!=2.0) method=2;
+            if (fitpower!=2.0) { method=2;
+}
             }
-        if (dpower!=2.0 || fitpower!=2.0) power_not_2=1;
+        if (dpower!=2.0 || fitpower!=2.0) { power_not_2=1;
+}
 
-        i=varaa_tilat(); if (i<0) return;
+        i=varaa_tilat(); if (i<0) { return;
+}
 
         alusta_dtrans();
 
@@ -242,31 +260,38 @@ void muste_lscal(char *argv)
             }
         maxnf=10000L;
         i=spfind("MAXNF");
-        if (i>=0) maxnf=atol(spb[i]);
+        if (i>=0) { maxnf=atol(spb[i]);
+}
 
-        if (dtrans) f=sqrsum2; else f=sqrsum1;
-        if (power_not_2) f=powersum;
+        if (dtrans) { f=sqrsum2; } else { f=sqrsum1;
+}
+        if (power_not_2) { f=powersum;
+}
         y=f(xx);
 
         muste_sprintf(sbuf,"Initial criterion value %g  Dimension=%d",y,m);
         print_line(sbuf);
 
-        for (i=0; i<npar; ++i) step[i]=1.0;
+        for (i=0; i<npar; ++i) { step[i]=1.0;
+}
         i=spfind("STEP");
-        if (i>=0) { y=atof(spb[i]); for (i=0; i<npar; ++i) step[i]=y; }
+        if (i>=0) { y=atof(spb[i]); for (i=0; i<npar; ++i) { step[i]=y; 
+}}
 
         eps=1e-05;
         i=spfind("EPS");
-        if (i>=0) eps=atof(spb[i]);
+        if (i>=0) { eps=atof(spb[i]);
+}
         totnf=0;
 
       if (method==1 || method==12 || method==13)
           {
           bb=(double *)muste_malloc(npar*npar*sizeof(double));
           if (bb==NULL) { not_mem(); return; }
-          if (method==1) lstsqr=1;
-          else if (method==12) lstsqr=2;
-          else lstsqr=3;
+          if (method==1) { lstsqr=1;
+          } else if (method==12) { lstsqr=2;
+          } else { lstsqr=3;
+}
           totnf=frprmn(xx,npar,(double)1e-3,&y,f,grad_sqrsum1);
           }
       else if (method==2)
@@ -274,28 +299,35 @@ void muste_lscal(char *argv)
           xi=(double *)muste_malloc(npar*npar*sizeof(double));
           if (xi==NULL) { not_mem(); return; }
 
-          for (i=0; i<npar; ++i) for (j=0; j<npar; ++j)
-              if (i==j) xi[i+npar*j]=1.0; else xi[i+npar*j]=0.0;
+          for (i=0; i<npar; ++i) { for (j=0; j<npar; ++j) {
+              if (i==j) { xi[i+npar*j]=1.0; } else { xi[i+npar*j]=0.0;
+}
+}
+}
 
           totnf=powell(xx,xi,npar,(double)1e-2,&y,f);
-          if (totnf<0) return;
+          if (totnf<0) { return;
+}
           }
 
-     else
+     else {
         while (1)
             {
             y0=y; stop=0;
             nf=polytope(xx,&y,npar,f,step,1.0,0.5,2.0,maxnf,eps,&stop);
 
             totnf+=nf;
-            if (stop==2) break;
+            if (stop==2) { break;
+}
             if (stop!=1)
                 {
                 dy=(y0-y)/(fabs(y0)+1e-10);
-                if (dy<eps || y<eps) break;
+                if (dy<eps || y<eps) { break;
+}
                 }
             muste_sprintf(sbuf,"\nNew start: f=%g",y); sur_print(sbuf);
             } // while
+}
         mat_center(e,xx,n,m);
         pscal=xx;
         if (m>1 && power_not_2==0)
@@ -317,10 +349,11 @@ void muste_lscal(char *argv)
                 {
               case 1:
                       a=xx[npar-1];
-                      if (a>=0.0)
+                      if (a>=0.0) {
                           muste_sprintf(sbuf+i,"D+%g",a);
-                      else
+                      } else {
                           muste_sprintf(sbuf+i,"D-%g",-a);
+}
                       print_line(sbuf); break;
 
                 }
@@ -349,7 +382,8 @@ static int poista_sp(char *x)
         {
         int i;
 
-        i=strlen(x); while (x[i-1]==' ' && i>0) x[--i]=EOS;
+        i=strlen(x); while (x[i-1]==' ' && i>0) { x[--i]=EOS;
+}
         return(1);
         }
 
@@ -377,11 +411,14 @@ static int test_symmetry(double *dd,int n)
     {
     int i,j;
 
-    for (i=0; i<n; ++i)
-        for (j=1; j<i; ++j)
+    for (i=0; i<n; ++i) {
+        for (j=1; j<i; ++j) {
             if (fabs(dd[i+n*j]-dd[j+n*i])/(1.0+fabs(dd[i+n*j]))
-                       >1e-5)
+                       >1e-5) {
                 return(0);
+}
+}
+}
     return(1);
     }
 
@@ -393,17 +430,20 @@ static double sqrsum1(double *xx)
         s=0.0;
         for (j=0; j<n; ++j)
           {
-        if (is_symmetric) imax=j; else imax=n;
+        if (is_symmetric) { imax=j; } else { imax=n;
+}
         for (i=0; i<imax; ++i)
             {
-            if (i==j) continue;
-            if (dd[i+n*j]<=0.0) continue;
+            if (i==j) { continue;
+}
+            if (dd[i+n*j]<=0.0) { continue;
+}
             a=0;
             for (k=0; k<m; ++k) { b=xx[i+n*k]-xx[j+n*k]; a+=b*b; }
             a=sqrt(a);
             b=dd[i+n*j]-a;
 
-            if (!weight)
+            if (!weight) {
                 switch(lstsqr)
                     {
                   case 1:
@@ -417,11 +457,13 @@ static double sqrsum1(double *xx)
                     s+=b*b/dd[i+n*j];
                     break;
                     }
-            else
+            } else {
                 s+=w[i+n*j]*b*b;
+}
             }
           }
-        if (is_symmetric) s*=2;
+        if (is_symmetric) { s*=2;
+}
 // Rprintf("\n%g",s); getch();
         s/=dist_sum;
         return(s);
@@ -432,13 +474,16 @@ static void grad_sqrsum1(double *xx,double *grad)
     int r,s,k,smax;
     double a,b;
 
-    for (r=0; r<m*n; ++r) grad[r]=0.0;
+    for (r=0; r<m*n; ++r) { grad[r]=0.0;
+}
     for (r=0; r<n; ++r)
       {
-      if (is_symmetric) smax=r; else smax=n;
+      if (is_symmetric) { smax=r; } else { smax=n;
+}
       for (s=0; s<smax; ++s)  // nopeuta (symmetria!)
         {
-        if (s==r) continue;
+        if (s==r) { continue;
+}
         if (dd[r+n*s]<=0.0) { bb[r+n*s]=0.0; continue; }
         a=0.0;
         for (k=0; k<m; ++k) { b=xx[s+n*k]-xx[r+n*k]; a+=b*b; }
@@ -457,7 +502,8 @@ static void grad_sqrsum1(double *xx,double *grad)
             bb[r+n*s]=(a-b)/b/dist_sum/a;
             break;
             }
-        if (is_symmetric) bb[s+n*r]=bb[r+n*s];
+        if (is_symmetric) { bb[s+n*r]=bb[r+n*s];
+}
         }
       }
 
@@ -466,12 +512,14 @@ static void grad_sqrsum1(double *xx,double *grad)
 
     for (r=0; r<n; ++r)
       {
-      for (k=0; k<m; ++k)
+      for (k=0; k<m; ++k) {
         for (s=0; s<n; ++s)
           {
-          if (s==r) continue;
+          if (s==r) { continue;
+}
           grad[r+n*k]+=bb[r+n*s]*(xx[s+n*k]-xx[r+n*k]);
           }
+}
       }
 
 //  mprint(grad,n,m);
@@ -487,16 +535,20 @@ static double sqrsum2(double *xx)
 //      double c_exp;
 
         c_const=0.0;
-        if (dtrans==1) c_const=xx[npar-1];
+        if (dtrans==1) { c_const=xx[npar-1];
+}
 
         s=0.0;
         for (j=0; j<n; ++j)
           {
-        if (is_symmetric) imax=j; else imax=n;
+        if (is_symmetric) { imax=j; } else { imax=n;
+}
         for (i=0; i<imax; ++i)
             {
-            if (i==j) continue;
-            if (dd[i+n*j]<0.0) continue;
+            if (i==j) { continue;
+}
+            if (dd[i+n*j]<0.0) { continue;
+}
             if (dtrans==1)
                 {
                 a=dd[i+n*j]+c_const;
@@ -506,13 +558,15 @@ static double sqrsum2(double *xx)
             for (k=0; k<m; ++k) { b=xx[i+n*k]-xx[j+n*k]; a+=b*b; }
             c=dd[i+n*j];
             b=c+c_const-sqrt(a);
-            if (!weight)
+            if (!weight) {
                 s+=b*b;
-            else
+            } else {
                 s+=w[i+n*j]*b*b;
+}
             }
           }
-        if (is_symmetric) s*=2;
+        if (is_symmetric) { s*=2;
+}
         return(s);
         }
 
@@ -525,16 +579,20 @@ static double powersum(double *xx)
         double ww;
 
         c_const=0.0;
-        if (dtrans==1) c_const=xx[npar-1];
+        if (dtrans==1) { c_const=xx[npar-1];
+}
 
         s=0.0;
         for (j=0; j<n; ++j)
           {
-        if (is_symmetric) imax=j; else imax=n;
+        if (is_symmetric) { imax=j; } else { imax=n;
+}
         for (i=0; i<imax; ++i)
             {
-            if (i==j) continue;
-            if (dd[i+n*j]<0.0) continue;
+            if (i==j) { continue;
+}
+            if (dd[i+n*j]<0.0) { continue;
+}
             if (dtrans==1)
                 {
                 a=dd[i+n*j]+c_const;
@@ -555,7 +613,8 @@ static double powersum(double *xx)
                 for (k=0; k<m; ++k)
                     {
                     b=fabs(xx[i+n*k]-xx[j+n*k]);
-                    if (b>a) a=b;
+                    if (b>a) { a=b;
+}
                     }
                 }
             else
@@ -563,24 +622,30 @@ static double powersum(double *xx)
                 for (k=0; k<m; ++k)
                     {
                     b=fabs(xx[i+n*k]-xx[j+n*k]);
-                    if (dpower!=1.0) b=pow(b,dpower);
+                    if (dpower!=1.0) { b=pow(b,dpower);
+}
                     a+=b;
                     }
-                if (dpower!=1.0) a=pow(a,1.0/dpower);
+                if (dpower!=1.0) { a=pow(a,1.0/dpower);
+}
                 }
             c=dd[i+n*j];
-            if (weight) ww=w[i+n*j]; else ww=1.0;
+            if (weight) { ww=w[i+n*j]; } else { ww=1.0;
+}
             b=fabs(c+c_const-a);
-            if (fitpower==2.0) s+=ww*b*b;
-            else if (fitpower==1.0) s+=ww*b;
-            else if (fitpower==1000.0)
+            if (fitpower==2.0) { s+=ww*b*b;
+            } else if (fitpower==1.0) { s+=ww*b;
+            } else if (fitpower==1000.0)
                 {
-                if (b>s) s=b;
+                if (b>s) { s=b;
+}
                 }
-            else s+=ww*pow(b,fitpower);
+            else { s+=ww*pow(b,fitpower);
+}
             }
           }
-        if (is_symmetric && fitpower!=1000.0) s*=2;
+        if (is_symmetric && fitpower!=1000.0) { s*=2;
+}
         return(s);
         }
 
@@ -589,11 +654,13 @@ static int estim_dist()
         int i,j,k;
         double a,b;
 
-        for (j=0; j<n; ++j)
+        for (j=0; j<n; ++j) {
         for (i=0; i<n; ++i)
             {
-            if (i==j) continue;
-            if (dd[i+n*j]<0.0) continue;
+            if (i==j) { continue;
+}
+            if (dd[i+n*j]<0.0) { continue;
+}
             a=0;
             if (dpower==2.0)
                 {
@@ -606,7 +673,8 @@ static int estim_dist()
                 for (k=0; k<m; ++k)
                     {
                     b=fabs(xx[i+n*k]-xx[j+n*k]);
-                    if (b>a) a=b;
+                    if (b>a) { a=b;
+}
                     }
                 dd[i+n*j]=a;
                 continue;
@@ -618,6 +686,7 @@ static int estim_dist()
                 }
             dd[i+n*j]=pow(a,1.0/dpower);
             }
+}
         return(1);
         }
 
@@ -647,7 +716,8 @@ static int alusta_dtrans()
                   i=spfind("CONSTANT");
                   if (i>=0) { xx[npar-1]=atof(spb[i]); break; }
                   i=spfind("C");
-                  if (i>=0) xx[npar-1]=atof(spb[i]);
+                  if (i>=0) { xx[npar-1]=atof(spb[i]);
+}
                   break;
             }
         return(1);
@@ -657,8 +727,10 @@ static double mitta(char *x)
         {
         double power;
 
-        if (muste_strcmpi(x,"MAD")==0 || muste_strcmpi(x,"ABS")==0) return(1.0);
-        if (muste_strcmpi(x,"MAX")==0) return(1000.0);
+        if (muste_strcmpi(x,"MAD")==0 || muste_strcmpi(x,"ABS")==0) { return(1.0);
+}
+        if (muste_strcmpi(x,"MAX")==0) { return(1000.0);
+}
         power=atof(x+1);
         if (*x!='L' || power<=0.0)
             {
@@ -677,7 +749,8 @@ static int not_mem()
 static int print_line(char *x)
         {
         output_line(x,eout,results_line);
-        if (results_line) ++results_line;
+        if (results_line) { ++results_line;
+}
         return(1);
         }
 /****************************
@@ -730,18 +803,23 @@ static int polytope(double *x,double *py,int nn,double (*f)(double *),
         int dispgap;
         int inote;
 
-        if (!space_allocated) { i=poly_malloc(n); if (i<0) return(-1); }
+        if (!space_allocated) { i=poly_malloc(n); if (i<0) { return(-1); 
+}}
 
         dispgap=100+n;
         nf=0;
-        for (i=0; i<n; ++i) xx[i]=x[i];
-        for (j=0; j<n; ++j)
+        for (i=0; i<n; ++i) { xx[i]=x[i];
+}
+        for (j=0; j<n; ++j) {
             for (i=0; i<n; ++i)
                 {
-                if (i==j) xx[(j+1)*n+i]=x[i]+step[j];
-                else      xx[(j+1)*n+i]=x[i];
+                if (i==j) { xx[(j+1)*n+i]=x[i]+step[j];
+                } else {      xx[(j+1)*n+i]=x[i];
+}
                 }
-        for (i=0; i<n+1; ++i) y11[i]=(*f)(xx+i*n); nf+=n+1;
+}
+        for (i=0; i<n+1; ++i) { y11[i]=(*f)(xx+i*n); 
+}nf+=n+1;
         yy=y11[0]; dy=1.0;
         disp_notice(); inote=0;
 
@@ -751,15 +829,18 @@ static int polytope(double *x,double *py,int nn,double (*f)(double *),
             for (j=2; j<n+1; ++j)
                 {
                 if (y11[j]>y11[jh]) { js=jh; jh=j; }
-                else if (y11[j]>y11[js]) js=j;
-                else if (y11[j]<y11[jl]) jl=j;
+                else if (y11[j]>y11[js]) { js=j;
+                } else if (y11[j]<y11[jl]) { jl=j;
+}
                 }
 
             for (i=0; i<n; ++i)
                 {
                 xc[i]=0.0;
-                for (j=0; j<n+1; ++j)
-                    if (j!=jh) xc[i]+=xx[j*n+i];
+                for (j=0; j<n+1; ++j) {
+                    if (j!=jh) { xc[i]+=xx[j*n+i];
+}
+}
                 xc[i]/=n;
                 }
 
@@ -787,33 +868,39 @@ static int polytope(double *x,double *py,int nn,double (*f)(double *),
 
             if (nf>=maxnf || (dy<eps && nf>5*dispgap) )
                 {
-                for (i=0; i<n; ++i) x[i]=xx[jl*n+i];
+                for (i=0; i<n; ++i) { x[i]=xx[jl*n+i];
+}
                 *py=y11[jl];
                 return(nf);
                 }
 
-            for (i=0; i<n; ++i) x0[i]=(1+alpha)*xc[i]-alpha*xx[jh*n+i];
+            for (i=0; i<n; ++i) { x0[i]=(1+alpha)*xc[i]-alpha*xx[jh*n+i];
+}
             y0=(*f)(x0); ++nf;
 
             if (y11[jl]<=y0 && y0<=y11[js])
                 {
-                for (i=0; i<n; ++i) xx[jh*n+i]=x0[i];
+                for (i=0; i<n; ++i) { xx[jh*n+i]=x0[i];
+}
                 y11[jh]=y0;
                 continue;
                 }
             if (y0<y11[jl])
                 {
-                for (i=0; i<n; ++i) x00[i]=gamma*x0[i]+(1-gamma)*xc[i];
+                for (i=0; i<n; ++i) { x00[i]=gamma*x0[i]+(1-gamma)*xc[i];
+}
                 y00=(*f)(x00); ++nf;
                 if (y00<y11[jl])
                     {
-                    for (i=0; i<n; ++i) xx[jh*n+i]=x00[i];
+                    for (i=0; i<n; ++i) { xx[jh*n+i]=x00[i];
+}
                     y11[jh]=y00;
                     continue;
                     }
                 else
                     {
-                    for (i=0; i<n; ++i) xx[jh*n+i]=x0[i];
+                    for (i=0; i<n; ++i) { xx[jh*n+i]=x0[i];
+}
                     y11[jh]=y0;
                     continue;
                     }
@@ -822,28 +909,34 @@ static int polytope(double *x,double *py,int nn,double (*f)(double *),
             /* y0>ys */
             if (y0<y11[jh])
                 {
-                for (i=0; i<n; ++i) x00[i]=beta*x0[i]+(1-beta)*xc[i];
+                for (i=0; i<n; ++i) { x00[i]=beta*x0[i]+(1-beta)*xc[i];
+}
                 }
             else
                 {
-                for (i=0; i<n; ++i) x00[i]=beta*xx[jh*n+i]+(1-beta)*xc[i];
+                for (i=0; i<n; ++i) { x00[i]=beta*xx[jh*n+i]+(1-beta)*xc[i];
+}
                 }
             y00=(*f)(x00); ++nf;
             if (y00<y11[jh] && y00<y0)
                 {
-                for (i=0; i<n; ++i) xx[jh*n+i]=x00[i];
+                for (i=0; i<n; ++i) { xx[jh*n+i]=x00[i];
+}
                 y11[jh]=y00;
                 continue;
                 }
 
             for (j=0; j<n+1; ++j)
                 {
-                if (j==jl) continue;
-                for (i=0; i<n; ++i) xx[j*n+i]=(xx[j*n+i]+xx[jl*n+i])/2;
+                if (j==jl) { continue;
+}
+                for (i=0; i<n; ++i) { xx[j*n+i]=(xx[j*n+i]+xx[jl*n+i])/2;
+}
                 y11[j]=(*f)(xx+j*n); ++nf;
                 }
             }
-        for (i=0; i<n; ++i) x[i]=xx[jl*n+i];
+        for (i=0; i<n; ++i) { x[i]=xx[jl*n+i];
+}
         *py=y11[jl];
         return(nf);
         }
@@ -902,7 +995,8 @@ static int powell(double *p, double *xi, int n, double ftol, double *fret,
     xit=(double *)muste_malloc(n*sizeof(double));
     if (xit==NULL) { not_mem(); return(-1); }
     *fret=(*func)(p);
-    for (j=0; j<n; ++j) pt[j]=p[j];
+    for (j=0; j<n; ++j) { pt[j]=p[j];
+}
     iter=0; totnf=0;
     while (1)
       {
@@ -912,7 +1006,8 @@ static int powell(double *p, double *xi, int n, double ftol, double *fret,
       del=0.0;
       for (i=0; i<n; ++i)
         {
-        for (j=0; j<n; ++j) xit[j]=xi[j+n*i];
+        for (j=0; j<n; ++j) { xit[j]=xi[j+n*i];
+}
         fptt=(*fret);
         linmin(p,xit,n,fret,func);
 // Rprintf("\n*fret=%g|",*fret);
@@ -927,7 +1022,8 @@ static int powell(double *p, double *xi, int n, double ftol, double *fret,
       if (sur_kbhit())
           {
           i=sur_getch();
-          if (i=='.') stop=1;
+          if (i=='.') { stop=1;
+}
           }
 
 
@@ -1017,7 +1113,8 @@ static double f1dim(double x)
 
     xt=(double *)muste_malloc(ncom*sizeof(double));
 //  if (xt==NULL) { not_mem(); exit(0); }
-    for (j=0; j<ncom; ++j) xt[j]=pcom[j]+x*xicom[j];
+    for (j=0; j<ncom; ++j) { xt[j]=pcom[j]+x*xicom[j];
+}
     f=(*nrfunc)(xt); ++totnf;
     muste_free(xt);
     return(f);
@@ -1057,33 +1154,38 @@ static double brent(double ax,double bx,double cx,double (*f)(double),
         q=(x-v)*(fx-fw);
         p=(x-v)*q-(x-w)*r;
         q=2*(q-r);
-        if (q>0.0) p=-p;
+        if (q>0.0) { p=-p;
+}
         q=fabs(q);
 
         etemp=e;
         e=d;
-        if (fabs(p)>=fabs(0.5*q*etemp) || p<=q*(a-x) || p>=q*(b-x))
+        if (fabs(p)>=fabs(0.5*q*etemp) || p<=q*(a-x) || p>=q*(b-x)) {
             d=CGOLD*(e=(x>=xm ? a-x:b-x));
-        else
+        } else
           {
           d=p/q;
           u=x+d;
-          if (u-a<tol2 || b-u<tol2) d=SIGN(tol1,xm-x);
+          if (u-a<tol2 || b-u<tol2) { d=SIGN(tol1,xm-x);
+}
           }
         }
-      else d=CGOLD*(e=(x>=xm ? a-x:b-x));
+      else { d=CGOLD*(e=(x>=xm ? a-x:b-x));
+}
 
       u=(fabs(d)>=tol1 ? x+d:x+SIGN(tol1,d));
       fu=(*f)(u); ++totnf;
       if (fu<=fx)
         {
-        if (u>=x) a=x; else b=x;
+        if (u>=x) { a=x; } else { b=x;
+}
         SHFT(v,w,x,u)
         SHFT(fv,fw,fx,fu)
         }
       else
         {
-        if (u<x) a=u; else b=u;
+        if (u<x) { a=u; } else { b=u;
+}
         if (fu<=fw || w == x)
             { v=w; w=u; fv=fw; fw=fu; }
         else if (fu<=fv|| v==x || v==w) { v=u; fv=fu; }
@@ -1214,7 +1316,8 @@ static int  frprmn(double *p, int n, double ftol, double *fret,
       if (sur_kbhit())
           {
           j=sur_getch();
-          if (j=='.') stop=1;
+          if (j=='.') { stop=1;
+}
           }
 
       if (stop==1 || 2.0*fabs(fp-(*fret)) <= ftol*(fabs(fp)+fabs(*fret)+EPS))

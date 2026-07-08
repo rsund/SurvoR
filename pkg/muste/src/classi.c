@@ -183,19 +183,32 @@ gg=0;
             s_end(argv);
             return;
             }
-        i=data_open(word[1],&d); if (i<0) return;
-        i=spec_init(r1+r-1); if (i<0) return;
-        i=mask(&d); if (i<0) return;
-        i=conditions(&d); if (i<0) return;
-        i=select_output_vars(); if (i<0) return;
-        i=matrix_names(); if (i<0) return;
-        i=mat_dim(msn_name[0],&p,&k); if (i<0) return;
-        i=space_allocation(); if (i<0) return;
-        i=select_var_post(); if (i<0) return;
-        i=read_matrices(); if (i<0) return;
-        i=select_active_vars(); if (i<0) return;
-        i=priors(); if (i<0) return;
-        i=classify(); if (i<0) return;
+        i=data_open(word[1],&d); if (i<0) { return;
+}
+        i=spec_init(r1+r-1); if (i<0) { return;
+}
+        i=mask(&d); if (i<0) { return;
+}
+        i=conditions(&d); if (i<0) { return;
+}
+        i=select_output_vars(); if (i<0) { return;
+}
+        i=matrix_names(); if (i<0) { return;
+}
+        i=mat_dim(msn_name[0],&p,&k); if (i<0) { return;
+}
+        i=space_allocation(); if (i<0) { return;
+}
+        i=select_var_post(); if (i<0) { return;
+}
+        i=read_matrices(); if (i<0) { return;
+}
+        i=select_active_vars(); if (i<0) { return;
+}
+        i=priors(); if (i<0) { return;
+}
+        i=classify(); if (i<0) { return;
+}
         data_close(&d);
         s_end(argv);
         }
@@ -208,16 +221,22 @@ static int select_output_vars()
         var_bayes1=activated(&d,'B');
         var_bayes2=activated(&d,'b');
 
-        if (var_mahal1>=0) post_type=1;
-        if (var_mahal2>=0) post_type=2;
-        if (var_bayes1>=0) post_type=3;
-        if (var_bayes2>=0) post_type=4;
+        if (var_mahal1>=0) { post_type=1;
+}
+        if (var_mahal2>=0) { post_type=2;
+}
+        if (var_bayes1>=0) { post_type=3;
+}
+        if (var_bayes2>=0) { post_type=4;
+}
 
         ok1=ok2=0;
-        if (var_mahal2>=0 || var_bayes2>=0)
+        if (var_mahal2>=0 || var_bayes2>=0) {
             ok2=1;
-        if (var_mahal1>=0 || var_bayes1>=0)
+}
+        if (var_mahal1>=0 || var_bayes1>=0) {
             ok1=1;
+}
 
         if (!ok1 && !ok2)
             {
@@ -291,7 +310,8 @@ static int cla_mat_name(char *name,char *pathname)
         p=strchr(pathname,':');
         if (p==NULL) { strcpy(pathname,edisk); strcat(pathname,name); }
         p=strchr(pathname,'.');
-        if (p==NULL) strcat(pathname,".MAT");
+        if (p==NULL) { strcat(pathname,".MAT");
+}
         return(1);
         }
 
@@ -360,7 +380,8 @@ static int read_matrices()
             {
 
          i=matrix_load(msn_name[k],&msn,&m,&n,&rlab,&clab,&lr,&lc,&type,expr);
-            if (i<0) return(-1);
+            if (i<0) { return(-1);
+}
             if (m!=p || n!=3)
                 {
                 muste_sprintf(sbuf,"\nIncompatible dimensions (%d,%d) in matrix file %s",
@@ -368,7 +389,8 @@ static int read_matrices()
                 sur_print(sbuf); WAIT; return(-1);
                 }
          i=matrix_load(corr_name[k],&w[k],&m,&n,&rlab,&clab,&lr,&lc,&type,expr);
-            if (i<0) return(-1);
+            if (i<0) { return(-1);
+}
             if (m!=p || n!=p)
                 {
                 muste_sprintf(sbuf,"\nIncompatible dimensions (%d,%d) in matrix file %s",
@@ -379,11 +401,14 @@ static int read_matrices()
             nk[k]=(int)msn[2*p];
             ntot+=nk[k];
 /* Rprintf("\nk=%d n=%d",k,nk[k]); getch();     */
-            for (i=0; i<p; ++i) mean[k][i]=msn[i];
+            for (i=0; i<p; ++i) { mean[k][i]=msn[i];
+}
 
-            for (i=0; i<p; ++i)
-            for (j=0; j<p; ++j)
+            for (i=0; i<p; ++i) {
+            for (j=0; j<p; ++j) {
                 w[k][i+p*j]*=msn[p+i]*msn[p+j];
+}
+}
 
 /* mprint(w[k],p,p);  */
 
@@ -405,7 +430,8 @@ static int select_active_vars()
             coeff_given=1;
             strcpy(x,spb[i]);
             i=matrix_load(x,&coeff,&p1,&n,&rlab,&clab,&lr,&lc,&type,expr);
-            if (i<0) return(-1);
+            if (i<0) { return(-1);
+}
             if (n!=p)
                 {
                 muste_sprintf(sbuf,"\n# (%d) of columns in COEFF file not equal to %d!",
@@ -449,11 +475,13 @@ static int priors()
         int i,k;
         char x[LLENGTH];
 
-        if (var_bayes1<0 && var_bayes2<0) return(1);
+        if (var_bayes1<0 && var_bayes2<0) { return(1);
+}
         i=spfind("PRIORS");
         if (i<0)
             {
-            for (k=0; k<gg; ++k) prior[k]=nk[k];
+            for (k=0; k<gg; ++k) { prior[k]=nk[k];
+}
             return(1);
             }
         strcpy(x,spb[i]); i=split(x,pg,gg);
@@ -477,9 +505,11 @@ static int classify()
 //        extern double mahal();
         double arvo=MISSING8; // RS ADD =MISSING8
 
-        if (ok1==1) { i=compute_wtot(); if (i<0) return(-1); }
+        if (ok1==1) { i=compute_wtot(); if (i<0) { return(-1); 
+}}
 
-        if (coeff_given) nvar=p1; else nvar=p;
+        if (coeff_given) { nvar=p1; } else { nvar=p;
+}
         xx=(double *)muste_malloc(nvar*sizeof(double));
         if (xx==NULL) { not_enough_memory(); return(-1); }
 
@@ -535,7 +565,8 @@ static int classify()
         prind=0; sur_print("\n");
         for (l=d.l1; l<=d.l2; ++l)
             {
-            if (unsuitable(&d,l)) continue;
+            if (unsuitable(&d,l)) { continue;
+}
             miss=0;
             for (i=0; i<nvar; ++i)
                 {
@@ -560,47 +591,57 @@ static int classify()
                     }
                 }
 
-            if (!miss) for (k=0; k<gg; ++k)
+            if (!miss) { for (k=0; k<gg; ++k)
                 {
-                for (i=0; i<p; ++i) x2[i]=px[i]-mean[k][i];
-                if (ok1)
+                for (i=0; i<p; ++i) { x2[i]=px[i]-mean[k][i];
+}
+                if (ok1) {
                      d21[k]=mahal(x2,wtot,p);
-                if (ok2)
+}
+                if (ok2) {
                      d22[k]=mahal(x2,w[k],p);
+}
                 }
-            else arvo=MISSING8;
+            } else { arvo=MISSING8;
+}
 
             if (var_mahal1>=0)
                 {
                 if (!miss) { i=select_group(d21,1); arvo=(double)(i+1); }
                 data_save(&d,l,var_mahal1,arvo);
-                if (post_type==1) save_post(d21,l,0,miss);
+                if (post_type==1) { save_post(d21,l,0,miss);
+}
                 }
             if (var_mahal2>=0)
                 {
                 if (!miss) { i=select_group(d22,1); arvo=(double)(i+1); }
                 data_save(&d,l,var_mahal2,arvo);
-                if (post_type==2) save_post(d22,l,0,miss);
+                if (post_type==2) { save_post(d22,l,0,miss);
+}
                 }
             if (var_bayes1>=0)
                 {
                 if (!miss)
                     {
-                    for (k=0; k<gg; ++k) xg[k]=prior[k]*exp(-d21[k]/2);
+                    for (k=0; k<gg; ++k) { xg[k]=prior[k]*exp(-d21[k]/2);
+}
                     i=select_group(xg,2); arvo=(double)(i+1);
                     }
                 data_save(&d,l,var_bayes1,arvo);
-                if (post_type==3) save_post(xg,l,1,miss);
+                if (post_type==3) { save_post(xg,l,1,miss);
+}
                 }
             if (var_bayes2>=0)
                 {
                 if (!miss)
                     {
-                    for (k=0; k<gg; ++k) xg[k]=prior[k]/sqrt(det[k])*exp(-d22[k]/2);
+                    for (k=0; k<gg; ++k) { xg[k]=prior[k]/sqrt(det[k])*exp(-d22[k]/2);
+}
                     i=select_group(xg,2); arvo=(double)(i+1);
                     }
                 data_save(&d,l,var_bayes2,arvo);
-                if (post_type==4) save_post(xg,l,1,miss);
+                if (post_type==4) { save_post(xg,l,1,miss);
+}
                 }
 
             } // l
@@ -634,8 +675,9 @@ static double mahal(double *x,double *s,int m)
         for (i=0; i<m; ++i)
             {
             d2+=x[i]*x[i]*s[(m+1)*i];
-            for (j=0; j<i; ++j)
+            for (j=0; j<i; ++j) {
                 d2+=2*x[i]*x[j]*s[i+m*j];
+}
             }
         return(d2);
         }
@@ -651,15 +693,19 @@ static int save_post(double *x,int l,int norm,int miss)
             if (norm)
                 {
                 sum=0.0;
-                for (k=0; k<gg; ++k) sum+=x[k];
+                for (k=0; k<gg; ++k) { sum+=x[k];
+}
                 }
-            else sum=1.0;
+            else { sum=1.0;
+}
             }
-        else arvo=MISSING8;
+        else { arvo=MISSING8;
+}
 
         for (k=0; k<gg; ++k)
             {
-            if (!miss) arvo=x[k]/sum;
+            if (!miss) { arvo=x[k]/sum;
+}
             data_save(&d,l,var_post[k],arvo);
             }
         return(1);
@@ -670,7 +716,8 @@ static int invert(double *A,int m,double *pdet)
         int i,k;
 
         k=mat_inv(inv,A,m,pdet);
-        for (i=0; i<m*m; ++i) A[i]=inv[i];
+        for (i=0; i<m*m; ++i) { A[i]=inv[i];
+}
         return(k);
         }
 
@@ -681,10 +728,14 @@ static int compute_wtot()
         wtot=(double *)muste_malloc(p*p*sizeof(double));
         if (wtot==NULL) { not_enough_memory(); return(-1); }
 
-        for (i=0; i<p*p; ++i) wtot[i]=0.0;
-        for (k=0; k<gg; ++k)
-            for (i=0; i<p*p; ++i) wtot[i]+=(nk[k]-1L)*w[k][i];
-        for (i=0; i<p*p; ++i) wtot[i]/=(double)(ntot-(int)gg);
+        for (i=0; i<p*p; ++i) { wtot[i]=0.0;
+}
+        for (k=0; k<gg; ++k) {
+            for (i=0; i<p*p; ++i) { wtot[i]+=(nk[k]-1L)*w[k][i];
+}
+}
+        for (i=0; i<p*p; ++i) { wtot[i]/=(double)(ntot-(int)gg);
+}
         return(1);
         }
 
@@ -745,10 +796,12 @@ T=NULL;
         if (g>2)
             {
             results_line=edline2(word[2],1,1);
-            if (results_line==0) return;
+            if (results_line==0) { return;
+}
             }
 
-        i=data_open(word[1],&d); if (i<0) return;
+        i=data_open(word[1],&d); if (i<0) { return;
+}
         i=spec_init(r1+r-1); if (i<0) { data_close(&d); return; } // RS 9.4.2013 data_close
         i=mask(&d); if (i<0) { data_close(&d); return; } // RS 9.4.2013 data_close
         i=conditions(&d); if (i<0) { data_close(&d); return; } // RS 9.4.2013 data_close
@@ -762,12 +815,16 @@ T=NULL;
         h=0;
         for (i=0; i<d.m_act; ++i)
             {
-            if (d.v[i]==var_mahal) continue;
-            if (d.v[i]==var_c2mahal) continue;
+            if (d.v[i]==var_mahal) { continue;
+}
+            if (d.v[i]==var_c2mahal) { continue;
+}
             d.v[h]=d.v[i];
             ++h;
             }
-        i=0; if (var_mahal>=0) i++; if (var_c2mahal>=0) i++; // RS 9.4.2013   
+        i=0; if (var_mahal>=0) { i++; 
+}if (var_c2mahal>=0) { i++; // RS 9.4.2013   
+}
         m_act=d.m_act-i; // RS 9.4.2013 1 -> i
         i=varaa_tilat(); if (i<0) { data_close(&d); return; } // RS 9.4.2013 data_close
         i=laske_momentit(); if (i<0) { data_close(&d); return; } // RS 9.4.2013 data_close
@@ -821,16 +878,19 @@ static int laske_momentit()
         for (i=0; i<m_act; ++i)
             {
             mah_mean[i]=0.0;
-            for (h=0; h<=i; ++h)
+            for (h=0; h<=i; ++h) {
                 S[i+h*m_act]=0.0;
+}
             }
         for (j=d.l1; j<=d.l2; ++j)
             {
-            if (unsuitable(&d,j)) continue;
+            if (unsuitable(&d,j)) { continue;
+}
             for (i=0; i<m_act; ++i)
                 {
                 data_load(&d,j,d.v[i],&xx[i]);
-                if (xx[i]==MISSING8) break;
+                if (xx[i]==MISSING8) { break;
+}
                 }
 //          if (i<m_act) continue;
 //          if (prind) { muste_sprintf(sbuf," %d",j); sur_print(sbuf); }
@@ -838,8 +898,9 @@ static int laske_momentit()
             for (i=0; i<m_act; ++i)
                 {
                 mah_mean[i]+=xx[i];
-                for (h=0; h<=i; ++h)
+                for (h=0; h<=i; ++h) {
                     S[i+h*m_act]+=xx[i]*xx[h];
+}
                 }
             }  /* j */
 
@@ -849,13 +910,15 @@ static int laske_momentit()
             sur_print("\nCannot compute distances!");
             WAIT; return(-1);
             }
-        for (i=0; i<m_act; ++i) mah_mean[i]/=n;
-        for (i=0; i<m_act; ++i)
+        for (i=0; i<m_act; ++i) { mah_mean[i]/=n;
+}
+        for (i=0; i<m_act; ++i) {
             for (h=0; h<=i; ++h)
                 {
                 S[i+h*m_act]-=n*mah_mean[i]*mah_mean[h];
                 S[h+i*m_act]=S[i+h*m_act]/=(n-1);
                 }
+}
         return (1);
         }
 
@@ -869,29 +932,35 @@ static int laske_mahal()
         maxmahal=0.0; jmaxmahal=0; // RS 9.4.2013 jmaxmahal=0
         for (j=d.l1; j<=d.l2; ++j)
             {
-            if (unsuitable(&d,j)) continue;
+            if (unsuitable(&d,j)) { continue;
+}
             dd=MISSING8;
             for (i=0; i<m_act; ++i)
                 {
                 data_load(&d,j,d.v[i],&xx[i]);
-                if (xx[i]==MISSING8) break;
+                if (xx[i]==MISSING8) { break;
+}
                 }
             if (i==m_act)
                 {
 //              muste_sprintf(sbuf," %d",j); sur_print(sbuf);
-                for (i=0; i<m_act; ++i) xx[i]-=mah_mean[i];
+                for (i=0; i<m_act; ++i) { xx[i]-=mah_mean[i];
+}
                 dd=0.0;
                 for (i=0; i<m_act; ++i)
                     {
-                    for (h=0; h<i; ++h)
+                    for (h=0; h<i; ++h) {
                         dd+=2*T[i+h*m_act]*xx[i]*xx[h];
+}
                     dd+=T[i*(m_act+1)]*xx[i]*xx[i];
                     }
                 if (dd>maxmahal) { maxmahal=dd; jmaxmahal=j; }
                 }
-            if (var_mahal>=0) data_save(&d,j,var_mahal,dd);
-            if (var_c2mahal>=0)
+            if (var_mahal>=0) { data_save(&d,j,var_mahal,dd);
+}
+            if (var_c2mahal>=0) {
                 data_save(&d,j,var_c2mahal,muste_cdf_chi2(dd,(double)m_act,1e-15));
+}
             }  /* j */
         return(1);
         }
@@ -904,14 +973,17 @@ static int tulostus()
         char u[LLENGTH];
 //        extern char *spois();
 
-        i=output_open(eout);  if (i<0) return(1);
+        i=output_open(eout);  if (i<0) { return(1);
+}
         if (jmaxmahal>0) // RS 9.4.2013
             {
             i=muste_sprintf(x,"SURVO 84C data: %s  ",word[1]);
-            if (var_mahal>=0) i+=muste_sprintf(x+i,"Mahalanobis D^2 in %s  ",
+            if (var_mahal>=0) { i+=muste_sprintf(x+i,"Mahalanobis D^2 in %s  ",
                                                            d.varname[var_mahal]);
-            if (var_c2mahal>=0) i+=muste_sprintf(x+i,"P values of D^2 in %s",
+}
+            if (var_c2mahal>=0) { i+=muste_sprintf(x+i,"P values of D^2 in %s",
                                                            d.varname[var_c2mahal]);
+}
             print_line(x);
             fnconv(maxmahal,accuracy,y);
 
@@ -924,7 +996,8 @@ static int tulostus()
                 }
             muste_sprintf(x,"Max.distance=%s in obs. # %d%s",spois(y),jmaxmahal,u);
             }            
-        else muste_sprintf(x,"Missing values in all selected observations of data: %s",word[1]); // RS 9.4.2013
+        else { muste_sprintf(x,"Missing values in all selected observations of data: %s",word[1]); // RS 9.4.2013
+}
         print_line(x);
         output_close(eout);
         return(1);
@@ -933,7 +1006,8 @@ static int tulostus()
 static int print_line(char *line)
         {
         output_line(line,eout,results_line);
-        if (results_line) ++results_line;
+        if (results_line) { ++results_line;
+}
         return(1);
         }
 
@@ -941,7 +1015,8 @@ static char *spois(char *s)
         {
         char *p;
 
-        while (*s==' ') ++s;
+        while (*s==' ') { ++s;
+}
         p=s+strlen(s)-1; while (*p==' ') { *p=EOS; --p; }
         return(s);
         }

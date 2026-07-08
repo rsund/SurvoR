@@ -46,7 +46,8 @@ static void *safe_malloc(size_t size) {
     sur_print("\n?Out of memory."); WAIT;
     return(NULL);
   }
-  else return a;
+  else { return a;
+}
 }
 
 
@@ -91,7 +92,8 @@ int muste_risksimu(int argc, char *argv[]) {
 /*  if (g>2) tulosrivi=edline2(word[2],1,1);  */
 
 
-  i=spec_init(r1+r-1); if (i<0) return -1;
+  i=spec_init(r1+r-1); if (i<0) { return -1;
+}
 
 /* Kuno, potilaiden m„„r„, kunnan asukkaiden m„„r„ */
 
@@ -116,7 +118,8 @@ int muste_risksimu(int argc, char *argv[]) {
 /*  muste_sprintf(sbuf,"\n%i, %i, %i",kuno[j],obspopul[j],popul[j]); sur_print(sbuf); */
 
     obsdata[j]=(double *)safe_malloc((size_t)((unsigned int)((1+obspopul[j]))*sizeof(double)));
-    if (obsdata[j]==NULL) return(-1); // RS 4.5.2014
+    if (obsdata[j]==NULL) { return(-1); // RS 4.5.2014
+}
   }
 
 /* Havaitut hinnat */
@@ -203,7 +206,8 @@ int muste_risksimu(int argc, char *argv[]) {
         if (ferror(fp)) { sur_print("\nOutfile error!");  WAIT; return(-1); }
       }
     }
-    if (rfp!=NULL) muste_fclose(rfp); // RS 8.9.2014
+    if (rfp!=NULL) { muste_fclose(rfp); // RS 8.9.2014
+}
     muste_fclose(fp);
     if (ferror(fp)) { sur_print("\nOutfile error!");  WAIT; return(-1); }
     sur_print("DONE!\n");

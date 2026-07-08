@@ -86,9 +86,12 @@ SEXP muste_survodata2r(char *name,int muste_internal)
     	    nvar=d.m_act; 
     	    all=0; 
     	    } 
-        i=hae_apu("prind",buf); if (i) prind=atoi(buf);
-        if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);  
-        if ((i=spfind("STRIP_WHITE"))>=0) strip_white=atoi(spb[i]);  // RS 17.11.2013       	
+        i=hae_apu("prind",buf); if (i) { prind=atoi(buf);
+}
+        if ((i=spfind("PRIND"))>=0) { prind=atoi(spb[i]);  
+}
+        if ((i=spfind("STRIP_WHITE"))>=0) { strip_white=atoi(spb[i]);  // RS 17.11.2013       	
+}
     	}	
 
 	if (muste_internal)
@@ -96,7 +99,8 @@ SEXP muste_survodata2r(char *name,int muste_internal)
 		i=conditions(&d); if (i<0) { data_close(&d); return(R_NilValue); }
 	    for(j=d.l1,k=0; j<=d.l2; j++)
 	    	{
-            if (unsuitable(&d,j)) continue;
+            if (unsuitable(&d,j)) { continue;
+}
             k++;
             }
         nobs=k;    
@@ -143,7 +147,9 @@ Rprintf("\n%s",buf);
 	for(i = 0; i < nvar; i++)
 		{
 		vi=d.v[i];
-		if (!all) if (d.vartype[vi][1]=='-') continue;
+		if (!all) { if (d.vartype[vi][1]=='-') { continue;
+}
+}
 	    INTEGER(types)[i] = d.varlen[vi];
 	    SET_STRING_ELT(names, i, Rf_mkChar(buf));
 	    
@@ -155,7 +161,8 @@ Rprintf("\n%s",buf);
 	    muste_iconv(buf,"","CP850");
 	    SET_STRING_ELT(tmp, i, Rf_mkChar(buf));
 	    buf[8]=EOS; k=7;
-	    while (buf[k]==' ' && k>0) buf[k--]=EOS;
+	    while (buf[k]==' ' && k>0) { buf[k--]=EOS;
+}
 	    SET_STRING_ELT(names, i, Rf_mkChar(buf));
 	    }
 
@@ -188,7 +195,8 @@ Rprintf("\n%s",buf);
     	{
     	if (muste_internal)
         	{
-            if (unsuitable(&d,j)) continue;
+            if (unsuitable(&d,j)) { continue;
+}
             if (prind) { muste_sprintf(buf,"%d ",j); sur_print(buf); }
           	}
 
@@ -217,9 +225,11 @@ Rprintf("\n%s",buf);
 	    		if (strip_white) // RS 17.11.2013
 	    		    {
 	    		    p=buf+strlen(buf)-1;
-	    		    while (*p==' ' || *p=='\t' || *p=='\r' || *p=='\n') p--;
+	    		    while (*p==' ' || *p=='\t' || *p=='\r' || *p=='\n') { p--;
+}
 	    		    *(p+1)=EOS; p=buf;
-	    		    while (*p==' ' || *p=='\t' || *p=='\r' || *p=='\n') p++;
+	    		    while (*p==' ' || *p=='\t' || *p=='\r' || *p=='\n') { p++;
+}
 	    		    }		    	
 		    	SET_STRING_ELT(VECTOR_ELT(df,i), k, Rf_mkChar(p));
 		    	break;
@@ -257,19 +267,22 @@ SEXP do_readSurvo(SEXP fname)
     extern char sbuf[];
     extern int dsp;
 
-    if (!muste_isValidString(fname))
+    if (!muste_isValidString(fname)) {
 	Rf_error("first argument must be a file name\n");
+}
 
     fp = fopen(R_ExpandFileName(CHAR(STRING_ELT(fname,0))), "rb");
-    if (!fp)
+    if (!fp) {
 	Rf_error("unable to open file: '%s'", strerror(errno));
+}
     fclose(fp);
 
 	muste_sprintf(sbuf,"unknown error");    
     dsp=1; // Global variable disabling error messages
     result = R_LoadSurvoData(fname);
     dsp=0;
-    if (result==R_NilValue) Rf_error("%s",sbuf);
+    if (result==R_NilValue) { Rf_error("%s",sbuf);
+}
     
     return result;
 }
@@ -324,7 +337,8 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
     if (!Rf_inherits(df,"data.frame"))
     	{
 	    if (muste_internal) { sur_print("\nData to be saved must be in a data frame"); WAIT; return(-1); }
-	    else Rf_error("data to be saved must be in a data frame");
+	    else { Rf_error("data to be saved must be in a data frame");
+}
 		}
 
         max_varlen=64;
@@ -335,14 +349,18 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
 
 		if (muste_internal)
 			{		
-			i=sp_init(r1+r-1); if (i<0) return(-1);
-        	i=spfind("VARLEN"); if (i>=0) max_varlen=atoi(spb[i]);
+			i=sp_init(r1+r-1); if (i<0) { return(-1);
+}
+        	i=spfind("VARLEN"); if (i>=0) { max_varlen=atoi(spb[i]);
+}
 //        	muste_sprintf(sbuf,"\nSince Survo data file %s does not exist,",sname); sur_print(sbuf);
 //        	sur_print("\ncreating a new one...");
 
-        	ep4=EP4; i=hae_apu("ep4",sana); if (i) ep4=atoi(sana);
+        	ep4=EP4; i=hae_apu("ep4",sana); if (i) { ep4=atoi(sana);
+}
         	i=spfind("MAXFIELDS");
-        	if (i>=0) ep4=atoi(spb[i]);
+        	if (i>=0) { ep4=atoi(spb[i]);
+}
 //        	ep41=ep4+1;
     	
         	if (nvar>ep4)
@@ -380,8 +398,9 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
 	  enc=STRING_ELT(names, i);
 //	  muste_fieldcopy(p, CHAR(STRING_ELT(names, i)), namelength);
 	  muste_fieldcopy(p, CHAR(enc), namelength);	  
-	  if (muste_is_utf8_string(enc)) muste_iconv(p,"CP850","UTF-8");
-      else muste_iconv(p,"CP850","");	  
+	  if (muste_is_utf8_string(enc)) { muste_iconv(p,"CP850","UTF-8");
+      } else { muste_iconv(p,"CP850","");	  
+}
 	  varname[i]=p;
 	  }
 
@@ -403,10 +422,13 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
 		for(j = 0;j < nobs; j++)
 			{
 //		    k = INTEGER_POINTER(VECTOR_ELT(df, i))[j];
-		    if (INTEGER(VECTOR_ELT(df, i))[j]==NA_INTEGER) k=0;
-		    else k = INTEGER(VECTOR_ELT(df, i))[j];
-		    if (k > max) max=k;
-		    if (k < min) min=k;		    
+		    if (INTEGER(VECTOR_ELT(df, i))[j]==NA_INTEGER) { k=0;
+		    } else { k = INTEGER(VECTOR_ELT(df, i))[j];
+}
+		    if (k > max) { max=k;
+}
+		    if (k < min) { min=k;		    
+}
 			}
 		if (min>0 && max<256) { vartype[i*9+0]='1'; varlen[i]=1; }
 		else if (min>-32000 && max<32000) { vartype[i*9+0]='2';	varlen[i]=2; }
@@ -422,11 +444,13 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
 			{
      	    enc=STRING_ELT(VECTOR_ELT(df, i), j);	// RS 11.2.2013
 			muste_strncpy(jakso,CHAR(enc),120*LLENGTH);			
-			if (muste_is_utf8_string(enc)) muste_iconv(jakso,"CP850","UTF-8");
-    		else muste_iconv(jakso,"CP850","");
+			if (muste_is_utf8_string(enc)) { muste_iconv(jakso,"CP850","UTF-8");
+    		} else { muste_iconv(jakso,"CP850","");
+}
 		    k = strlen(jakso);
 //		    k = strlen(CHAR(STRING_ELT(VECTOR_ELT(df, i),j)));
-		    if (k > charlen) charlen = k;
+		    if (k > charlen) { charlen = k;
+}
 			}
 		vartype[i*9+0]='S'; varlen[i]=charlen;	    
             	
@@ -449,7 +473,8 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
         	sur_print(sbuf);
         	WAIT; return(-1);
         	}
-		else Rf_error("unknown data type");
+		else { Rf_error("unknown data type");
+}
 		break;
 	    }
 	}      
@@ -496,7 +521,8 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
         i=fi_create(sname,filen,fim1,fim,0L,fil,fiextra,fitextn,fitextlen,
                     fitext,varname,varlen,pvartype);
 		UNPROTECT(1); // names
-        if (i<0) return(-1);
+        if (i<0) { return(-1);
+}
         
         data_open(sname,&d2);
 
@@ -512,8 +538,10 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
     for(i=0; i<nobs; i++)
     	{
     	++j2;
-        if (j2>d2.n) d2.n=j2;   // fi_save vaatii j2<=d2.n 
-        if (d2.m>nvar) fi_miss_obs(&d2.d2,j2);	    	
+        if (j2>d2.n) { d2.n=j2;   // fi_save vaatii j2<=d2.n 
+}
+        if (d2.m>nvar) { fi_miss_obs(&d2.d2,j2);	    	
+}
 		for(j=0;j<nvar;j++)
 			{		
 			
@@ -521,8 +549,8 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
 	    		{
 	    		case LGLSXP:
 //		OutDataByteBinary(LOGICAL(VECTOR_ELT(df,j))[i], fp);
-				if (LOGICAL(VECTOR_ELT(df,j))[i]==NA_LOGICAL) fi_miss_save(&d2.d2,j2,j);
-				else
+				if (LOGICAL(VECTOR_ELT(df,j))[i]==NA_LOGICAL) { fi_miss_save(&d2.d2,j2,j);
+				} else
 				{
 				tulos=(double)LOGICAL(VECTOR_ELT(df,j))[i];
                 fi_save(&d2.d2,j2,j,&tulos);
@@ -530,8 +558,8 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
 				break;
 	    		case INTSXP:
 //		OutIntegerBinary(INTEGER(VECTOR_ELT(df,j))[i], fp, 0);
-                if (INTEGER(VECTOR_ELT(df,j))[i]==NA_INTEGER) fi_miss_save(&d2.d2,j2,j);
-				else
+                if (INTEGER(VECTOR_ELT(df,j))[i]==NA_INTEGER) { fi_miss_save(&d2.d2,j2,j);
+				} else
 				{
                 tulos=(double)INTEGER(VECTOR_ELT(df,j))[i];
                 fi_save(&d2.d2,j2,j,&tulos);
@@ -539,8 +567,8 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
 				break;
 	    		case REALSXP:
 //		OutDoubleBinary(REAL(VECTOR_ELT(df,j))[i], fp, 0);
-                if (ISNA(REAL(VECTOR_ELT(df,j))[i])) fi_miss_save(&d2.d2,j2,j);
-				else
+                if (ISNA(REAL(VECTOR_ELT(df,j))[i])) { fi_miss_save(&d2.d2,j2,j);
+				} else
 				{                
                 tulos=(double)REAL(VECTOR_ELT(df,j))[i];
                 fi_save(&d2.d2,j2,j,&tulos);
@@ -550,9 +578,11 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
       	    	enc=STRING_ELT(VECTOR_ELT(df, j), i);	
 //				muste_fieldcopy(jakso,CHAR(STRING_ELT(VECTOR_ELT(df, j), i)),d2.varlen[j]);
 				muste_fieldcopy(jakso,CHAR(enc),3*d2.varlen[j]);  // RS 11.2.2013 ADD 3*			
-				if (muste_is_utf8_string(enc)) muste_iconv(jakso,"CP850","UTF-8");
-      			else muste_iconv(jakso,"CP850","");
-                for (k=strlen(jakso); k<d2.varlen[j]; ++k) jakso[k]=' ';				
+				if (muste_is_utf8_string(enc)) { muste_iconv(jakso,"CP850","UTF-8");
+      			} else { muste_iconv(jakso,"CP850","");
+}
+                for (k=strlen(jakso); k<d2.varlen[j]; ++k) { jakso[k]=' ';				
+}
                 fi_alpha_save(&d2.d2,j2,j,jakso);	
 				break;
 	    		default:
@@ -614,11 +644,13 @@ SEXP do_writeSurvo(SEXP dataf,SEXP svofile,SEXP dfname)
 //    int version;
     extern int dsp;
 
-    if (!Rf_inherits(dataf,"data.frame"))
+    if (!Rf_inherits(dataf,"data.frame")) {
 	Rf_error("data to be saved must be in a data frame");
+}
 
-    if (!muste_isValidString(svofile))
+    if (!muste_isValidString(svofile)) {
 	Rf_error("second argument must be a file name\n");
+}
 
 
     dsp=1; // Global variable disabling error messages

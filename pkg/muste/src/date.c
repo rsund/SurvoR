@@ -240,15 +240,17 @@ static Julian _juldnj(struct tm *bdt, Julian Transition)
                 m += 1 + 12;
                 y--;
                 }
-        else
+        else {
                 m++;
+}
 
         ay = y + 4716;
         jd_julian = ((1461*(Work)ay) >> 2) + (153*(m + 1)/5)
                    + (Work)bdt->tm_mday - 1524;
         jd_gregorian = jd_julian + 2 - y/100 + y/400 - y/4000;
-        if ( jd_gregorian >= Transition ) jd = jd_gregorian;
-        else jd = jd_julian;
+        if ( jd_gregorian >= Transition ) { jd = jd_gregorian;
+        } else { jd = jd_julian;
+}
         return jd;
 }
 
@@ -290,15 +292,16 @@ static struct tm * julcdj (Julian jd, Julian Transition)
 
         memset(&date, 0, sizeof(date));
 
-        if ( jd < Transition ) /* Julian Calendar */
+        if ( jd < Transition ) { /* Julian Calendar */
                 a = (Work)(jd);
-        else /* Gregorian Calendar */
+        } else /* Gregorian Calendar */
                 {
                 aa = jd - 1721120L;
                 ab = 31*(aa/1460969L); aa = aa % 1460969L;
                 ab = ab + 3*(aa/146097L); aa = aa % 146097L;
-                if ( aa == 146096L ) ab = ab + 3;
-                else ab = ab + aa/36524L;
+                if ( aa == 146096L ) { ab = ab + 3;
+                } else { ab = ab + aa/36524L;
+}
                 a = jd + (ab - 2);
                 }
         b = a + 1524;
@@ -309,11 +312,13 @@ static struct tm * julcdj (Julian jd, Julian Transition)
         date.tm_mday = (Day)(ee - 306001L*em/10000L);
 
         m = em - 1;
-        if(m > 12) m -= 12;
+        if(m > 12) { m -= 12;
+}
         date.tm_mon = m - 1;
 
-        if ( m > 2 ) y = ay - 4716;
-        else y = ay - 4715;
+        if ( m > 2 ) { y = ay - 4716;
+        } else { y = ay - 4715;
+}
         date.tm_year = y - 1900;
 
         date.tm_wday = (jd+1)%7;
@@ -357,8 +362,10 @@ static int check_parameters(void)
         return -1;
     }
 
-    i=check_date(); if (i>0) return 1; /* editorial mode */
-    if (suomi) return -1; /* ei data-moodia suomeksi! */
+    i=check_date(); if (i>0) { return 1; /* editorial mode */
+}
+    if (suomi) { return -1; /* ei data-moodia suomeksi! */
+}
     return 2; /* data mode */
 }
 
@@ -368,24 +375,31 @@ static int check_date(void)
     char ch;
 
     if (g<2) { /* no parameter given */
-        if (suomi) strcpy(command_line, "PVM");
-              else strcpy(command_line, "DATE");
+        if (suomi) { strcpy(command_line, "PVM");
+              } else { strcpy(command_line, "DATE");
+}
         time(&tnow); D=localtime(&tnow);
         muste_sprintf(date_str, "%d.%d.%d", D->tm_mday, D->tm_mon+1, D->tm_year);
-        if (suomi) strcpy(sbuf, "PVM ");
-              else strcpy(sbuf, "DATE ");
+        if (suomi) { strcpy(sbuf, "PVM ");
+              } else { strcpy(sbuf, "DATE ");
+}
         strcat(sbuf,date_str); split(sbuf,word,2);
         return 1; /* editorial mode */
     }
     for (i=0; i<strlen(word[1]); i++) {
         ch=word[1][i];
-        if (ch=='.' || ch=='+' || ch=='-') continue;
-        if (!isascii(ch)) return -1;
-        if (ispunct(ch)) return -1;
-        if (isalpha(ch)) return -1;
+        if (ch=='.' || ch=='+' || ch=='-') { continue;
+}
+        if (!isascii(ch)) { return -1;
+}
+        if (ispunct(ch)) { return -1;
+}
+        if (isalpha(ch)) { return -1;
+}
     }
-    if (suomi) muste_sprintf(command_line, "PVM %s", word[1]);
-          else muste_sprintf(command_line, "DATE %s", word[1]);
+    if (suomi) { muste_sprintf(command_line, "PVM %s", word[1]);
+          } else { muste_sprintf(command_line, "DATE %s", word[1]);
+}
     return 1; /* editorial mode */
 }
 
@@ -428,8 +442,10 @@ static int weekno(int d, int m, int y)
 static int Leap_Year(int);
 static int Leap_Year(int year)
 {
-    if (year<200) year+=1900; // 12.2.2001
-    if ((year%4==0 && year%100!=0) || year%400==0) return 1;
+    if (year<200) { year+=1900; // 12.2.2001
+}
+    if ((year%4==0 && year%100!=0) || year%400==0) { return 1;
+}
     return 0;
 }
 
@@ -518,7 +534,8 @@ static void show_dates(void)
             strcpy(date_str, "");
             strftime(tmp, LNAME, "%a", D);
             i=0;
-            while (strcmp(tmp, week[i])) i++;
+            while (strcmp(tmp, week[i])) { i++;
+}
             strcat(date_str, viikko[i]);
             strftime(tmp, LNAME, "%d", D);
             i=atoi(tmp);
@@ -526,7 +543,8 @@ static void show_dates(void)
             strcat(date_str, sbuf);
             strftime(tmp, LNAME, "%b", D);
             i=0;
-            while (strcmp(tmp, year[i])) i++;
+            while (strcmp(tmp, year[i])) { i++;
+}
             strcat(date_str, vuosi[i]);
             strcat(date_str, "ta ");
             strftime(tmp, LNAME, "%Y", D);
@@ -542,13 +560,15 @@ static void show_dates(void)
             i=atoi(tmp);
             muste_sprintf(sbuf, "%d", i);
             strcat(date_str, sbuf);
-            if (Leap_Year(D->tm_year)) strcat(date_str, "/366)");
-            else strcat(date_str, "/365)");
+            if (Leap_Year(D->tm_year)) { strcat(date_str, "/366)");
+            } else { strcat(date_str, "/365)");
+}
         } else {
             strftime(date_str, LNAME, "%A %B %d %Y %H:%M:%S Week=", D);
             i=weekno(D->tm_mday, D->tm_mon+1, D->tm_year+1900); /* 2.1.1998 */
             muste_sprintf(sbuf, "%d", i);
-            if (i<10) strcat(date_str,"0");
+            if (i<10) { strcat(date_str,"0");
+}
             strcat(date_str, sbuf);
             strftime(sbuf, LNAME, " Day=%j", D);
             strcat(date_str, sbuf);
@@ -610,14 +630,19 @@ static int recheck_date(int index)
         }
     }
 
-    if (aDay<1 || aDay>31) return -1;
-    if (aMonth<1 || aMonth>12) return (year_given) ? 0 : -1;
-    if ((aMonth==4||aMonth==6||aMonth==9||aMonth==11)&&aDay>30)
+    if (aDay<1 || aDay>31) { return -1;
+}
+    if (aMonth<1 || aMonth>12) { return (year_given) ? 0 : -1;
+}
+    if ((aMonth==4||aMonth==6||aMonth==9||aMonth==11)&&aDay>30) {
         return (year_given) ? 0 : -1;
+}
     if (D->tm_year>99) { /* Y2K, 2.1.1998 */
-        if (aYear<100) aYear+=100;
+        if (aYear<100) { aYear+=100;
+}
     }
-    if (aYear>199) aYear-=1900; /* tm_year:n suhdeluku */
+    if (aYear>199) { aYear-=1900; /* tm_year:n suhdeluku */
+}
 
   /* HUOM! Vuodet 00-99 tarkoittavat kuluvaa vuosisataa! */
   /* (myös sitten kun vuosituhat on vaihtunut!!) */
@@ -625,8 +650,10 @@ static int recheck_date(int index)
   /* tätä voi muuttaa, mutta se ei koske toimituskenttäjuttuja.  */
 
     if (aMonth==2) {
-        if (aDay>29) return (year_given) ? 0 : -1;
-        if (!Leap_Year(aYear) && aDay==29) return (year_given) ? 0 : -1;
+        if (aDay>29) { return (year_given) ? 0 : -1;
+}
+        if (!Leap_Year(aYear) && aDay==29) { return (year_given) ? 0 : -1;
+}
     }
     D->tm_mon=aMonth-1;
     D->tm_year=aYear;
@@ -635,8 +662,10 @@ static int recheck_date(int index)
         D->tm_mday=aDay;
         juldn(D);
         for (i=0; i<(int)abs(addy); i++) {
-            if (rel_time>0L) D->tm_mday=+INT_MAX;
-            if (rel_time<0L) D->tm_mday=-INT_MAX;
+            if (rel_time>0L) { D->tm_mday=+INT_MAX;
+}
+            if (rel_time<0L) { D->tm_mday=-INT_MAX;
+}
             juldn(D);
         }
         addy=rel_time%INT_MAX;
@@ -697,66 +726,118 @@ static int check_format(char *format)
 {
 /* old formats for DATE specification only! (may be added if desired) */
 /* valid also for IDATE and ODATE as shortcuts! */
-    if (!strcmp(format, "DD.MM.YY"))    return 1;
-    if (!strcmp(format, "DD/MM/YY"))    return 2;
-    if (!strcmp(format, "MM/DD/YY"))    return 3;
-    if (!strcmp(format, "DD.MM.YYYY"))  return 4;
-    if (!strcmp(format, "DD/MM/YYYY"))  return 5;
-    if (!strcmp(format, "MM/DD/YYYY"))  return 6;
-    if (!strcmp(format, "DD-MMM-YYYY")) return 7;
+    if (!strcmp(format, "DD.MM.YY")) {    return 1;
+}
+    if (!strcmp(format, "DD/MM/YY")) {    return 2;
+}
+    if (!strcmp(format, "MM/DD/YY")) {    return 3;
+}
+    if (!strcmp(format, "DD.MM.YYYY")) {  return 4;
+}
+    if (!strcmp(format, "DD/MM/YYYY")) {  return 5;
+}
+    if (!strcmp(format, "MM/DD/YYYY")) {  return 6;
+}
+    if (!strcmp(format, "DD-MMM-YYYY")) { return 7;
+}
 
 /* values 8-19 reserved for extra shortcuts like 7; 20 not in use */
 
 /* whole dates: (for IDATE and ODATE) */
-    if (!strcmp(format, "DDMMYY"))      return 21;
-    if (!strcmp(format, "DDYYMM"))      return 22;
-    if (!strcmp(format, "MMDDYY"))      return 23;
-    if (!strcmp(format, "MMYYDD"))      return 24;
-    if (!strcmp(format, "YYDDMM"))      return 25;
-    if (!strcmp(format, "YYMMDD"))      return 26;
-    if (!strcmp(format, "DDMMMYY"))     return 27;
-    if (!strcmp(format, "DDYYMMM"))     return 28;
-    if (!strcmp(format, "MMMDDYY"))     return 29;
-    if (!strcmp(format, "MMMYYDD"))     return 30;
-    if (!strcmp(format, "YYDDMMM"))     return 31;
-    if (!strcmp(format, "YYMMMDD"))     return 32;
-    if (!strcmp(format, "DDMMYYYY"))    return 33;
-    if (!strcmp(format, "DDYYYYMM"))    return 34;
-    if (!strcmp(format, "MMDDYYYY"))    return 35;
-    if (!strcmp(format, "MMYYYYDD"))    return 36;
-    if (!strcmp(format, "YYYYDDMM"))    return 37;
-    if (!strcmp(format, "YYYYMMDD"))    return 38;
-    if (!strcmp(format, "DDMMMYYYY"))   return 39;
-    if (!strcmp(format, "DDYYYYMMM"))   return 40;
-    if (!strcmp(format, "MMMDDYYYY"))   return 41;
-    if (!strcmp(format, "MMMYYYYDD"))   return 42;
-    if (!strcmp(format, "YYYYDDMMM"))   return 43;
-    if (!strcmp(format, "YYYYMMMDD"))   return 44;
+    if (!strcmp(format, "DDMMYY")) {      return 21;
+}
+    if (!strcmp(format, "DDYYMM")) {      return 22;
+}
+    if (!strcmp(format, "MMDDYY")) {      return 23;
+}
+    if (!strcmp(format, "MMYYDD")) {      return 24;
+}
+    if (!strcmp(format, "YYDDMM")) {      return 25;
+}
+    if (!strcmp(format, "YYMMDD")) {      return 26;
+}
+    if (!strcmp(format, "DDMMMYY")) {     return 27;
+}
+    if (!strcmp(format, "DDYYMMM")) {     return 28;
+}
+    if (!strcmp(format, "MMMDDYY")) {     return 29;
+}
+    if (!strcmp(format, "MMMYYDD")) {     return 30;
+}
+    if (!strcmp(format, "YYDDMMM")) {     return 31;
+}
+    if (!strcmp(format, "YYMMMDD")) {     return 32;
+}
+    if (!strcmp(format, "DDMMYYYY")) {    return 33;
+}
+    if (!strcmp(format, "DDYYYYMM")) {    return 34;
+}
+    if (!strcmp(format, "MMDDYYYY")) {    return 35;
+}
+    if (!strcmp(format, "MMYYYYDD")) {    return 36;
+}
+    if (!strcmp(format, "YYYYDDMM")) {    return 37;
+}
+    if (!strcmp(format, "YYYYMMDD")) {    return 38;
+}
+    if (!strcmp(format, "DDMMMYYYY")) {   return 39;
+}
+    if (!strcmp(format, "DDYYYYMMM")) {   return 40;
+}
+    if (!strcmp(format, "MMMDDYYYY")) {   return 41;
+}
+    if (!strcmp(format, "MMMYYYYDD")) {   return 42;
+}
+    if (!strcmp(format, "YYYYDDMMM")) {   return 43;
+}
+    if (!strcmp(format, "YYYYMMMDD")) {   return 44;
+}
 
 /* values 45-59 reserved; 60 not in use */
 
 /* partial dates: (for ODATE only!) */
-    if (!strcmp(format, "DD"))          return 61;
-    if (!strcmp(format, "MM"))          return 62;
-    if (!strcmp(format, "YY"))          return 63;
-    if (!strcmp(format, "MMM"))         return 64;
-    if (!strcmp(format, "YYYY"))        return 65;
-    if (!strcmp(format, "DDMM"))        return 66;
-    if (!strcmp(format, "DDYY"))        return 67;
-    if (!strcmp(format, "MMDD"))        return 68;
-    if (!strcmp(format, "MMYY"))        return 69;
-    if (!strcmp(format, "YYDD"))        return 70;
-    if (!strcmp(format, "YYMM"))        return 71;
-    if (!strcmp(format, "DDMMM"))       return 72;
-    if (!strcmp(format, "MMMDD"))       return 73;
-    if (!strcmp(format, "MMMYY"))       return 74;
-    if (!strcmp(format, "YYMMM"))       return 75;
-    if (!strcmp(format, "DDYYYY"))      return 76;
-    if (!strcmp(format, "MMYYYY"))      return 77;
-    if (!strcmp(format, "YYYYDD"))      return 78;
-    if (!strcmp(format, "YYYYMM"))      return 79;
-    if (!strcmp(format, "MMMYYYY"))     return 80;
-    if (!strcmp(format, "YYYYMMM"))     return 81;
+    if (!strcmp(format, "DD")) {          return 61;
+}
+    if (!strcmp(format, "MM")) {          return 62;
+}
+    if (!strcmp(format, "YY")) {          return 63;
+}
+    if (!strcmp(format, "MMM")) {         return 64;
+}
+    if (!strcmp(format, "YYYY")) {        return 65;
+}
+    if (!strcmp(format, "DDMM")) {        return 66;
+}
+    if (!strcmp(format, "DDYY")) {        return 67;
+}
+    if (!strcmp(format, "MMDD")) {        return 68;
+}
+    if (!strcmp(format, "MMYY")) {        return 69;
+}
+    if (!strcmp(format, "YYDD")) {        return 70;
+}
+    if (!strcmp(format, "YYMM")) {        return 71;
+}
+    if (!strcmp(format, "DDMMM")) {       return 72;
+}
+    if (!strcmp(format, "MMMDD")) {       return 73;
+}
+    if (!strcmp(format, "MMMYY")) {       return 74;
+}
+    if (!strcmp(format, "YYMMM")) {       return 75;
+}
+    if (!strcmp(format, "DDYYYY")) {      return 76;
+}
+    if (!strcmp(format, "MMYYYY")) {      return 77;
+}
+    if (!strcmp(format, "YYYYDD")) {      return 78;
+}
+    if (!strcmp(format, "YYYYMM")) {      return 79;
+}
+    if (!strcmp(format, "MMMYYYY")) {     return 80;
+}
+    if (!strcmp(format, "YYYYMMM")) {     return 81;
+}
 
     return -1;
 }
@@ -833,7 +914,8 @@ static int check_specifications(void)
  /* DATE */    /* for compatibility (DMY) only, ODATE recommended */
     strcpy(date_format, "DD.MM.YY"); /* default for old-style output */
     j=spfind("DATE");
-    if (j>=0) strcpy(date_format, spb[j]);
+    if (j>=0) { strcpy(date_format, spb[j]);
+}
     Did=check_format(date_format);
     if (Did<0) {
         muste_kv_s_err("Date format %s is unknown!", date_format);
@@ -864,11 +946,14 @@ static int check_specifications(void)
             delch1=*spb[j];
             delch2=delch1;
         }
-        j=spfind("IDEL1"); if (j>=0) delch1=*spb[j];
-        j=spfind("IDEL2"); if (j>=0) delch2=*spb[j];
+        j=spfind("IDEL1"); if (j>=0) { delch1=*spb[j];
+}
+        j=spfind("IDEL2"); if (j>=0) { delch2=*spb[j];
+}
         muste_sprintf(idel1,"%c",delch1); muste_sprintf(idel2,"%c",delch2);
         idellen=strlen(idel1)+strlen(idel2); /* 0,1,2 */
-        iDLen=strlen(indate_format); if (iDid>20) iDLen+=idellen;
+        iDLen=strlen(indate_format); if (iDid>20) { iDLen+=idellen;
+}
         write_format(iDid, indate_format, idel1, idel2);
     }
 
@@ -889,24 +974,29 @@ static int check_specifications(void)
             delch1=*spb[j];
             delch2=delch1;
         }
-        j=spfind("ODEL1"); if (j>=0) delch1=*spb[j];
-        j=spfind("ODEL2"); if (j>=0) delch2=*spb[j];
+        j=spfind("ODEL1"); if (j>=0) { delch1=*spb[j];
+}
+        j=spfind("ODEL2"); if (j>=0) { delch2=*spb[j];
+}
         muste_sprintf(odel1,"%c",delch1); muste_sprintf(odel2,"%c",delch2);
         odellen=strlen(odel1)+strlen(odel2); /* 0,1,2 */
-        oDLen=strlen(outdate_format); if (oDid>20) oDLen+=odellen;
+        oDLen=strlen(outdate_format); if (oDid>20) { oDLen+=odellen;
+}
         write_format(oDid, outdate_format, odel1, odel2);
     }
 
  /* PRIND & prind */
     prind=1;
     j=spfind("PRIND");
-    if (j>=0) prind=atoi(spb[j]);
-    else if (hae_apu("prind",sbuf)) prind=atoi(sbuf);
+    if (j>=0) { prind=atoi(spb[j]);
+    } else if (hae_apu("prind",sbuf)) { prind=atoi(sbuf);
+}
 
  /* SHIFT */ /* 18.1.2001 continuation to century (also sugg, by Reijo) */
     shift=0; // must be checked first, since CENTURY always overrides SHIFT
     j=spfind("SHIFT");
-    if (j>=0) shift=atoi(spb[j]);
+    if (j>=0) { shift=atoi(spb[j]);
+}
     if (shift<0 || shift>99) {
         muste_kv_s_err("Allowed values for SHIFT are 0-99!");
         return -1;
@@ -941,7 +1031,8 @@ static int check_activations(void)
     int i;
     int len1,len2;
 
-    i=mask(&dat); if(i<0) return -1;
+    i=mask(&dat); if(i<0) { return -1;
+}
  // i=conditions(&dat); if(i<0) return -1; // moved 11.2.2005 (!) to cover diff's
 
 /* input variables: */
@@ -960,26 +1051,35 @@ static int check_activations(void)
     day0=0L;
     if ((julday>=0) || (ivar>=0)) {  /* 21.2.2009 (!) */
         i=spfind("JULIAN_DAY0"); /* 13.2.1998 */
-        if (i>=0) day0=atol(spb[i]); else day0=0L;
-        if (day0<1794108L || day0>5373482L) day0=0L;
+        if (i>=0) { day0=atol(spb[i]); } else { day0=0L;
+}
+        if (day0<1794108L || day0>5373482L) { day0=0L;
+}
       /* Supported dates between these: */
       /* DATE 1.1.200,Julian / Tue Jan 01 200 Julian_day=1794108 */
       /* DATE 31.12.9999,Julian / Wed Dec 31 9999 Julian_day=5373482 */
     }
     len1=DLen; len2=DLen;
-    if (iDLen) len1=iDLen;
-    if (oDLen) len2=oDLen;
+    if (iDLen) { len1=iDLen;
+}
+    if (oDLen) { len2=oDLen;
+}
     i=check_vartype(newdate,'d','S',len1,len2,"date");
-    if (i<0) return -1;
+    if (i<0) { return -1;
+}
     i=check_vartype(weekday,'a','S',3,3,"weekday");
-    if (i<0) return -1;
+    if (i<0) { return -1;
+}
     i=check_vartype(dayofyear,'j','N',2,3,"day of year");
-    if (i<0) return -1;
+    if (i<0) { return -1;
+}
     i=check_vartype(weekofyear,'w','N',1,2,"week of year");
-    if (i<0) return -1;
+    if (i<0) { return -1;
+}
     if (!day0) { /* 13.2.1998 if day0 given, 'J' can be of any type */
         i=check_vartype(julday,'J','N',4,7,"Julian day"); /* 12.2.1998 */
-        if (i<0) return -1;
+        if (i<0) { return -1;
+}
     }
     return 1;
 }
@@ -994,7 +1094,8 @@ int check_vartype( int vix,   /* vix = variable index               */
 {
     int some_err=0;
 
-    if (vix<0) return 1; /* variable not found this time */
+    if (vix<0) { return 1; /* variable not found this time */
+}
 
     switch (typ) {
      case 'S':
@@ -1042,7 +1143,8 @@ static int check_input_output(void)
         Datevar=Dvar; /* whole date activated by 'D'   */
         Dvar=-1;
         for (i=0, Dvars=0; i<dat.m_act; i++) {
-            if (dat.vartype[dat.v[i]][1]=='D') Dvars++;
+            if (dat.vartype[dat.v[i]][1]=='D') { Dvars++;
+}
         }
         ivar=-1; /* disable possible ivar in this case */
     }
@@ -1050,8 +1152,9 @@ static int check_input_output(void)
     if (Dvars==0) { /* old D,M,Y method */
         if (ivar>=0) {
             if (Dvar>=0 || Mvar>=0 || Yvar>=0) {
-                if (etu==0)
+                if (etu==0) {
                     muste_kv_s_err("Ignoring D, M, and Y masks, as i mask is present...");
+}
                 Dvar=-1; Mvar=-1; Yvar=-1;
             }
         } else if (Dvar<0 || Mvar<0 || Yvar<0) {
@@ -1120,18 +1223,26 @@ static void data_dates(void)
 {
     int i;
 
-    i=data_open2(word[1],&dat,1,0,0); if(i<0) return;
-    i=conditions(&dat); if(i<0) return; // moved here 11.2.2005 (!) to cover diff's
-    i=check_specifications(); if(i<0) return;
+    i=data_open2(word[1],&dat,1,0,0); if(i<0) { return;
+}
+    i=conditions(&dat); if(i<0) { return; // moved here 11.2.2005 (!) to cover diff's
+}
+    i=check_specifications(); if(i<0) { return;
+}
     if (g>2) { /* differences etc. */
-        i=count_date_rules(); if (i<0) return;
-        i=alloc_date_rules(); if (i<0) return;
-        i=read_date_rules(); if (i<0) return;
+        i=count_date_rules(); if (i<0) { return;
+}
+        i=alloc_date_rules(); if (i<0) { return;
+}
+        i=read_date_rules(); if (i<0) { return;
+}
         apply_date_rules();
         free_date_rules();
     } else { /* original functions */
-        i=check_activations(); if(i<0) return;
-        i=check_input_output(); if(i<0) return;
+        i=check_activations(); if(i<0) { return;
+}
+        i=check_input_output(); if(i<0) { return;
+}
         update_data();
     }
     data_close(&dat);
@@ -1154,10 +1265,12 @@ static int count_date_rules(void)
     rules=0;
     ruleline=i+1;
     while (1) {
-        if (++i==ed2) break;
+        if (++i==ed2) { break;
+}
         edread(rule,i);
         p=rule+1;
-        if ((!strcmp(p,space)) || (!strncmp(p,"END",3))) break;
+        if ((!strcmp(p,space)) || (!strncmp(p,"END",3))) { break;
+}
         rules++;
     }
     if (!rules) {
@@ -1188,27 +1301,35 @@ static int read_date_rules(void)
     for (i=0; i<rules; i++) {
         edread(rule,ruleline+i);
         p0=rule+1;
-        while (*p0!='\0' && *p0==' ') p0++;
+        while (*p0!='\0' && *p0==' ') { p0++;
+}
         p=p0;
-        while (*p!='\0' && *p!=' ') p++; *p='\0';
+        while (*p!='\0' && *p!=' ') { p++; 
+}*p='\0';
         p=p0;
         if (strchr(p,'=')==NULL || strchr(p,'-')==NULL) {
             muste_kv_s_err("Error in %s %s on line %d!",rulestr,word[2],ruleline+i);
             return -1;
         }
         p=p0;
-        while (*p!='\0') p++;
-        while (*p!='-' && p!=p0) p--; p++;
-        j=varfind(&dat,p); if (j<0) return -1;
+        while (*p!='\0') { p++;
+}
+        while (*p!='-' && p!=p0) { p--; 
+}p++;
+        j=varfind(&dat,p); if (j<0) { return -1;
+}
         d1[i]=j;
         p--; *p='\0';
-        while (*p!='=' && p!=p0) p--; p++;
-        j=varfind(&dat,p); if (j<0) return -1;
+        while (*p!='=' && p!=p0) { p--; 
+}p++;
+        j=varfind(&dat,p); if (j<0) { return -1;
+}
         d2[i]=j;
         p--; *p='\0';
         vtyp='2'; vlen=0;
         if (strchr(p0,':')!=NULL) {
-            while (*p!=':') p--; p++;
+            while (*p!=':') { p--; 
+}p++;
             vtyp=*p;
             if (*p=='S') {
                 p++; vlen=atoi(p); p--;
@@ -1219,7 +1340,8 @@ static int read_date_rules(void)
         j=varfind2(&dat,p,0);
         if (j<0) {
             j=create_newvar(&dat,p,vtyp,vlen);
-            if (j<0) return -1;
+            if (j<0) { return -1;
+}
         }
         dd[i]=j;
     }
@@ -1236,9 +1358,11 @@ static void apply_date_rules(void)
 
     bad=0L; muste_kv_s_disp("\nComputing date differences...");
     for (l=dat.l1; l<=dat.l2; l++) {
-        if (unsuitable(&dat,l)) continue;
+        if (unsuitable(&dat,l)) { continue;
+}
         time(&tnow); D=localtime(&tnow); /* siirretty loopin sisään */
-        if (prind) muste_kv_s_disp("%d ",l);
+        if (prind) { muste_kv_s_disp("%d ",l);
+}
      // if (kbhit()) { getch(); if (kbhit()) getch(); prind=1-prind; }
 
         for (i=0; i<rules; i++) {
@@ -1247,12 +1371,14 @@ static void apply_date_rules(void)
             if (valid_date(pv1,kk1,vv1)) {
                 if (vv1<100) {             /* properly not until 26.2.2001 :( */
                     if (shift) {
-                      if (vv1<shift) vv1+=100; /*   YY: shifting if necessary */
+                      if (vv1<shift) { vv1+=100; /*   YY: shifting if necessary */
+}
                     } else {
                       vv1+=century-1900;       /*   YY: increment of 0 or 100 */
                     }
                 }
-                if (vv1>199) vv1-=1900;        /* YYYY: scaling for reference */
+                if (vv1>199) { vv1-=1900;        /* YYYY: scaling for reference */
+}
                 D->tm_year=vv1; D->tm_mon=kk1-1; D->tm_mday=pv1;
                 Jday1=juldn(D);
             }
@@ -1261,12 +1387,14 @@ static void apply_date_rules(void)
             if (valid_date(pv2,kk2,vv2)) {
                 if (vv2<100) {             /* properly not until 26.2.2001 :( */
                     if (shift) {
-                      if (vv2<shift) vv2+=100; /*   YY: shifting if necessary */
+                      if (vv2<shift) { vv2+=100; /*   YY: shifting if necessary */
+}
                     } else {
                       vv2+=century-1900;       /*   YY: increment of 0 or 100 */
                     }
                 }
-                if (vv2>199) vv2-=1900;        /* YYYY: scaling for reference */
+                if (vv2>199) { vv2-=1900;        /* YYYY: scaling for reference */
+}
                 D->tm_year=vv2; D->tm_mon=kk2-1; D->tm_mday=pv2;
                 Jday2=juldn(D);
             }
@@ -1278,9 +1406,10 @@ static void apply_date_rules(void)
                 } else {
                     muste_sprintf(sbuf, "%d", Jday2-Jday1);
                 }
-                if (dat.vartype[dd[i]][0]=='S')
+                if (dat.vartype[dd[i]][0]=='S') {
                     data_alpha_save(&dat,l,dd[i],sbuf);
-                else data_save(&dat,l,dd[i],atof(sbuf));
+                } else { data_save(&dat,l,dd[i],atof(sbuf));
+}
             } else {
                 data_save(&dat,l,dd[i],MISSING8); /* 16.11.1999 */
                 bad++;
@@ -1307,9 +1436,11 @@ static void update_data(void)
 
     bad=0L; muste_kv_s_disp("\nUpdating data...");
     for (l=dat.l1; l<=dat.l2; l++) {
-        if (unsuitable(&dat,l)) continue;
+        if (unsuitable(&dat,l)) { continue;
+}
         time(&tnow); D=localtime(&tnow);
-        if (prind) muste_kv_s_disp("%d ",l);
+        if (prind) { muste_kv_s_disp("%d ",l);
+}
      // if (kbhit()) { getch(); if (kbhit()) getch(); prind=1-prind; }
 
         i=0;
@@ -1323,7 +1454,8 @@ static void update_data(void)
                     }
                     i++;
                 }
-                if (Datevar<0) break; /* no more D's found */
+                if (Datevar<0) { break; /* no more D's found */
+}
                 scan_values(Datevar,l,&pv,&kk,&vv,&hh,&mm,&ss);
             } else { /* old D,M,Y method and Julian day to date conversion */
                 if (ivar>=0) {
@@ -1347,12 +1479,14 @@ static void update_data(void)
             if (valid_date(pv,kk,vv)) {
                 if (vv<100) {              /* properly not until 26.2.2001 :( */
                     if (shift) {
-                      if (vv<shift) vv+=100;   /*   YY: shifting if necessary */
+                      if (vv<shift) { vv+=100;   /*   YY: shifting if necessary */
+}
                     } else {
                       vv+=century-1900;        /*   YY: increment of 0 or 100 */
                     }
                 }
-                if (vv>199) vv-=1900;          /* YYYY: scaling for reference */
+                if (vv>199) { vv-=1900;          /* YYYY: scaling for reference */
+}
                 D->tm_year=vv; D->tm_mon=kk-1; D->tm_mday=pv;
                 Jday=juldn(D); /* let's use Julian routines! */ /* 12.2.1998 */
                 Jday-=day0; /* 13.2.1998 */
@@ -1360,7 +1494,8 @@ static void update_data(void)
             } else {
                 bad++;
             }
-            if (Dvars) continue; else break;
+            if (Dvars) { continue; } else { break;
+}
         }
     }
     if (bad && etu==0) { /* 2.1.1998 */
@@ -1371,12 +1506,17 @@ static void update_data(void)
 
 static int valid_date(int pv, int kk, int vv)
 {
-    if (pv<1 || pv>31) return 0;
-    if (kk<1 || kk>12) return 0;
-    if ((kk==4||kk==6||kk==9||kk==11)&&pv>30) return 0;
+    if (pv<1 || pv>31) { return 0;
+}
+    if (kk<1 || kk>12) { return 0;
+}
+    if ((kk==4||kk==6||kk==9||kk==11)&&pv>30) { return 0;
+}
     if (kk==2) {
-        if (pv>29) return 0;
-        if (!Leap_Year(vv) && pv==29) return 0;
+        if (pv>29) { return 0;
+}
+        if (!Leap_Year(vv) && pv==29) { return 0;
+}
     }
     return 1;
 }
@@ -1392,12 +1532,14 @@ static int scan_values(int var, int obs, int *pv, int *kk, int *vv, int *hh, int
         data_alpha_load(&dat,obs,var,Dstr);
     } else { /* numeric vars, for example "19991012" etc. */
         data_load(&dat,obs,var,&x);
-        if (x==MISSING8) x=0.0;
+        if (x==MISSING8) { x=0.0;
+}
         k=(int)x;
         muste_sprintf(Dstr,"%d",k);
     }
     p=Dstr;
-    while (*p!='\0') p++; p--; while (*p==' ') { *p='\0'; --p; }
+    while (*p!='\0') { p++; 
+}p--; while (*p==' ') { *p='\0'; --p; }
     len=strlen(Dstr);
     p=Dstr;
     *pv=-1; *kk=-1; *vv=-1; /* initial values! */
@@ -1409,24 +1551,30 @@ static int scan_values(int var, int obs, int *pv, int *kk, int *vv, int *hh, int
             case  2:                    /* DD/MM/YY    */
             case  5:                    /* DD/MM/YYYY  */
                     *pv=atoi(p);
-                     while (*p!='\0' && *p!='.' && *p!='/') p++;
+                     while (*p!='\0' && *p!='.' && *p!='/') { p++;
+}
                     *kk=atoi(++p);
-                     while (*p!='\0' && *p!='.' && *p!='/') p++;
+                     while (*p!='\0' && *p!='.' && *p!='/') { p++;
+}
                     *vv=atoi(++p);
                      break;
             case  3:                    /* MM/DD/YY    */
             case  6:                    /* MM/DD/YYYY  */
                     *kk=atoi(p);
-                     while (*p!='\0' && *p!='.' && *p!='/') p++;
+                     while (*p!='\0' && *p!='.' && *p!='/') { p++;
+}
                     *pv=atoi(++p);
-                     while (*p!='\0' && *p!='.' && *p!='/') p++;
+                     while (*p!='\0' && *p!='.' && *p!='/') { p++;
+}
                     *vv=atoi(++p);
                      break;
             case  7:                    /* DD-MMM-YYYY */
                     *pv=atoi(p);
-                     while (*p!='\0' && *p!='-') p++;
+                     while (*p!='\0' && *p!='-') { p++;
+}
                     *kk=montoi(++p);
-                     while (*p!='\0' && *p!='-') p++;
+                     while (*p!='\0' && *p!='-') { p++;
+}
                     *vv=atoi(++p);
                      break;
             default: break;
@@ -1439,103 +1587,128 @@ static int scan_values(int var, int obs, int *pv, int *kk, int *vv, int *hh, int
             case 21:                    /* DD MM YY      */
             case 33:                    /* DD MM YYYY    */
                     *pv=atoi(p);
-                     while (*p!='\0' && *p!=*idel1) p++;
+                     while (*p!='\0' && *p!=*idel1) { p++;
+}
                     *kk=atoi(++p);
-                     while (*p!='\0' && *p!=*idel2) p++;
+                     while (*p!='\0' && *p!=*idel2) { p++;
+}
                     *vv=atoi(++p);
                      break;
             case 27:                    /* DD MMM YY     */
             case 39:                    /* DD MMM YYYY   */
                     *pv=atoi(p);
-                     while (*p!='\0' && *p!=*idel1) p++;
+                     while (*p!='\0' && *p!=*idel1) { p++;
+}
                     *kk=montoi(++p);
-                     while (*p!='\0' && *p!=*idel2) p++;
+                     while (*p!='\0' && *p!=*idel2) { p++;
+}
                     *vv=atoi(++p);
                      break;
             case 22:                    /* DD YY MM      */
             case 34:                    /* DD YYYY MM    */
                     *pv=atoi(p);
-                     while (*p!='\0' && *p!=*idel1) p++;
+                     while (*p!='\0' && *p!=*idel1) { p++;
+}
                     *vv=atoi(++p);
-                     while (*p!='\0' && *p!=*idel2) p++;
+                     while (*p!='\0' && *p!=*idel2) { p++;
+}
                     *kk=atoi(++p);
                      break;
             case 28:                    /* DD YY MMM     */
             case 40:                    /* DD YYYY MMM   */
                     *pv=atoi(p);
-                     while (*p!='\0' && *p!=*idel1) p++;
+                     while (*p!='\0' && *p!=*idel1) { p++;
+}
                     *vv=atoi(++p);
-                     while (*p!='\0' && *p!=*idel2) p++;
+                     while (*p!='\0' && *p!=*idel2) { p++;
+}
                     *kk=montoi(++p);
                      break;
             case 23:                    /* MM DD YY      */
             case 35:                    /* MM DD YYYY    */
                     *kk=atoi(p);
-                     while (*p!='\0' && *p!=*idel1) p++;
+                     while (*p!='\0' && *p!=*idel1) { p++;
+}
                     *pv=atoi(++p);
-                     while (*p!='\0' && *p!=*idel2) p++;
+                     while (*p!='\0' && *p!=*idel2) { p++;
+}
                     *vv=atoi(++p);
                      break;
             case 29:                    /* MMM DD YY     */
             case 41:                    /* MMM DD YYYY   */
                     *kk=montoi(p);
-                     while (*p!='\0' && *p!=*idel1) p++;
+                     while (*p!='\0' && *p!=*idel1) { p++;
+}
                     *pv=atoi(++p);
-                     while (*p!='\0' && *p!=*idel2) p++;
+                     while (*p!='\0' && *p!=*idel2) { p++;
+}
                     *vv=atoi(++p);
                      break;
             case 24:                    /* MM YY DD      */
             case 36:                    /* MM YYYY DD    */
                     *kk=atoi(p);
-                     while (*p!='\0' && *p!=*idel1) p++;
+                     while (*p!='\0' && *p!=*idel1) { p++;
+}
                     *vv=atoi(++p);
-                     while (*p!='\0' && *p!=*idel2) p++;
+                     while (*p!='\0' && *p!=*idel2) { p++;
+}
                     *pv=atoi(++p);
                      break;
             case 30:                    /* MMM YY DD     */
             case 42:                    /* MMM YYYY DD   */
                     *kk=montoi(p);
-                     while (*p!='\0' && *p!=*idel1) p++;
+                     while (*p!='\0' && *p!=*idel1) { p++;
+}
                     *vv=atoi(++p);
-                     while (*p!='\0' && *p!=*idel2) p++;
+                     while (*p!='\0' && *p!=*idel2) { p++;
+}
                     *pv=atoi(++p);
                      break;
             case 25:                    /* YY DD MM      */
             case 37:                    /* YYYY DD MM    */
                     *vv=atoi(p);
-                     while (*p!='\0' && *p!=*idel1) p++;
+                     while (*p!='\0' && *p!=*idel1) { p++;
+}
                     *pv=atoi(++p);
-                     while (*p!='\0' && *p!=*idel2) p++;
+                     while (*p!='\0' && *p!=*idel2) { p++;
+}
                     *kk=atoi(++p);
                      break;
             case 31:                    /* YY DD MMM     */
             case 43:                    /* YYYY DD MMM   */
                     *vv=atoi(p);
-                     while (*p!='\0' && *p!=*idel1) p++;
+                     while (*p!='\0' && *p!=*idel1) { p++;
+}
                     *pv=atoi(++p);
-                     while (*p!='\0' && *p!=*idel2) p++;
+                     while (*p!='\0' && *p!=*idel2) { p++;
+}
                     *kk=montoi(++p);
                      break;
             case 26:                    /* YY MM DD      */
             case 38:                    /* YYYY MM DD    */
                     *vv=atoi(p);
-                     while (*p!='\0' && *p!=*idel1) p++;
+                     while (*p!='\0' && *p!=*idel1) { p++;
+}
                     *kk=atoi(++p);
-                     while (*p!='\0' && *p!=*idel2) p++;
+                     while (*p!='\0' && *p!=*idel2) { p++;
+}
                     *pv=atoi(++p);
                      break;
             case 32:                    /* YY MMM DD     */
             case 44:                    /* YYYY MMM DD   */
                     *vv=atoi(p);
-                     while (*p!='\0' && *p!=*idel1) p++;
+                     while (*p!='\0' && *p!=*idel1) { p++;
+}
                     *kk=montoi(++p);
-                     while (*p!='\0' && *p!=*idel2) p++;
+                     while (*p!='\0' && *p!=*idel2) { p++;
+}
                     *pv=atoi(++p);
                      break;
             default: break;
         }
     } else { /* non-delimited dates */
-        if (len!=iDLen) return -1; /* required for non-delimited! */
+        if (len!=iDLen) { return -1; /* required for non-delimited! */
+}
         switch (iDid) {
             case 21:                    /* DDMMYY      */
             case 33:                    /* DDMMYYYY    */
@@ -1648,11 +1821,14 @@ static int scan_values(int var, int obs, int *pv, int *kk, int *vv, int *hh, int
     if (itime) { /* myöhemmin järjestettävä paremmin */
        *hh=-1; *mm=-1; *ss=-1; /* initial values! */
         p=Dstr; p++;
-        while (*p!='\0') { p++; if (*p==' ') break; }
+        while (*p!='\0') { p++; if (*p==' ') { break; 
+}}
        *hh=atoi(++p);
-        while (*p!='\0' && *p!=':') p++;   /* toistaiseksi vain muoto HH:MM:SS */
+        while (*p!='\0' && *p!=':') { p++;   /* toistaiseksi vain muoto HH:MM:SS */
+}
        *mm=atoi(++p);
-        while (*p!='\0' && *p!=':') p++;
+        while (*p!='\0' && *p!=':') { p++;
+}
        *ss=atoi(++p);
     }
 
@@ -1661,18 +1837,19 @@ static int scan_values(int var, int obs, int *pv, int *kk, int *vv, int *hh, int
 
 static int montoi(char *mon)
 {
-    if (!muste_strnicmp(mon,"Jan",3)) return 1; else
-    if (!muste_strnicmp(mon,"Feb",3)) return 2; else
-    if (!muste_strnicmp(mon,"Mar",3)) return 3; else
-    if (!muste_strnicmp(mon,"Apr",3)) return 4; else
-    if (!muste_strnicmp(mon,"May",3)) return 5; else
-    if (!muste_strnicmp(mon,"Jun",3)) return 6; else
-    if (!muste_strnicmp(mon,"Jul",3)) return 7; else
-    if (!muste_strnicmp(mon,"Aug",3)) return 8; else
-    if (!muste_strnicmp(mon,"Sep",3)) return 9; else
-    if (!muste_strnicmp(mon,"Oct",3)) return 10; else
-    if (!muste_strnicmp(mon,"Nov",3)) return 11; else
-    if (!muste_strnicmp(mon,"Dec",3)) return 12;
+    if (!muste_strnicmp(mon,"Jan",3)) { return 1; } else
+    if (!muste_strnicmp(mon,"Feb",3)) { return 2; } else
+    if (!muste_strnicmp(mon,"Mar",3)) { return 3; } else
+    if (!muste_strnicmp(mon,"Apr",3)) { return 4; } else
+    if (!muste_strnicmp(mon,"May",3)) { return 5; } else
+    if (!muste_strnicmp(mon,"Jun",3)) { return 6; } else
+    if (!muste_strnicmp(mon,"Jul",3)) { return 7; } else
+    if (!muste_strnicmp(mon,"Aug",3)) { return 8; } else
+    if (!muste_strnicmp(mon,"Sep",3)) { return 9; } else
+    if (!muste_strnicmp(mon,"Oct",3)) { return 10; } else
+    if (!muste_strnicmp(mon,"Nov",3)) { return 11; } else
+    if (!muste_strnicmp(mon,"Dec",3)) { return 12;
+}
     return 0; /* */
 }
 
@@ -1686,7 +1863,8 @@ static int read_value(int var, int obs)
         k=atoi(sbuf);
     } else { /* numeric vars */
         data_load(&dat,obs,var,&x);
-        if (x==MISSING8) x=-1.0;     /* oli "0.0" 25.1.2001 */
+        if (x==MISSING8) { x=-1.0;     /* oli "0.0" 25.1.2001 */
+}
         k=(int)x;
     }
     return k;
@@ -1705,7 +1883,8 @@ static void write_values(int obs)
         if (Dvars && oDLen) { /* 16.11.1999 */
             strftime(sbuf, oDLen+1, outdate_format, D);
             data_alpha_save(&dat,obs,Datevar,sbuf); /* TRANSFORM */
-            if (Dvars>1) return; /* no other things at the same time */
+            if (Dvars>1) { return; /* no other things at the same time */
+}
         }
     }
 
@@ -1716,9 +1895,10 @@ static void write_values(int obs)
 
     if (dayofyear>=0) {
         strftime(sbuf, 3+1, "%j", D);
-        if (dat.vartype[dayofyear][0]=='S')
+        if (dat.vartype[dayofyear][0]=='S') {
           data_alpha_save(&dat,obs,dayofyear,sbuf);
-        else data_save(&dat,obs,dayofyear,atof(sbuf));
+        } else { data_save(&dat,obs,dayofyear,atof(sbuf));
+}
     }
 
     if (weekofyear>=0) {
@@ -1726,19 +1906,22 @@ static void write_values(int obs)
         i=weekno(D->tm_mday, D->tm_mon+1, D->tm_year+1900); /* 2.1.1998 */
         muste_sprintf(date_str, "%d", i);
         strcpy(sbuf, "");
-        if (i<10) strcat(sbuf,"0");
+        if (i<10) { strcat(sbuf,"0");
+}
         strcat(sbuf, date_str);
 
-        if (dat.vartype[weekofyear][0]=='S')
+        if (dat.vartype[weekofyear][0]=='S') {
           data_alpha_save(&dat,obs,weekofyear,sbuf);
-        else data_save(&dat,obs,weekofyear,atof(sbuf));
+        } else { data_save(&dat,obs,weekofyear,atof(sbuf));
+}
     }
 
     if (julday>=0) { /* 12.2.1998 */
         muste_sprintf(sbuf, "%d", Jday);
-        if (dat.vartype[julday][0]=='S')
+        if (dat.vartype[julday][0]=='S') {
           data_alpha_save(&dat,obs,julday,sbuf);
-        else data_save(&dat,obs,julday,atof(sbuf));
+        } else { data_save(&dat,obs,julday,atof(sbuf));
+}
     }
 }
 
@@ -1762,11 +1945,13 @@ void muste_date(char *argv)
     s_init(argv);
     tut_init();
     i=spec_init(r1+r-1);
-    if (i<0) return;
+    if (i<0) { return;
+}
 
     setlocale(LC_TIME, "C"); // 8.5.2011
 
-    if (!muste_strcmpi(word[0],"PVM")) suomi=1; /* PVM-komento 11.12.2000 (SM:n ehdotus) */
+    if (!muste_strcmpi(word[0],"PVM")) { suomi=1; /* PVM-komento 11.12.2000 (SM:n ehdotus) */
+}
     i=check_parameters();
     switch (i) {
         case 1: show_dates();
