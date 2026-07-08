@@ -1,25 +1,23 @@
-websurvo <- function()
-{
-# library(httpuv)
-.muste.command(c("Require","httpuv"),force=TRUE)	    	
-if (requireNamespace("RCurl",quietly=TRUE)) {
-
-cat("Starting server on port 8080...\n")
-.muste$webedit<-as.integer(1)
-app <-
-  list(
-  call = function(req) {
-    urlBody <- ifelse(is.null(req$HTTP_HOST), req$SERVER_NAME, req$HTTP_HOST)
-    wsUrl <- paste(sep='','"',"ws://",urlBody,'"')
-    list(
-      status = 200L,
-      headers = list(
-        'Content-Type' = 'text/html'
-      ),
-      body = paste(
-        sep = "\r\n",
-##########################################################################################        
-'        
+websurvo <- function() {
+  # library(httpuv)
+  .muste.command(c("Require", "httpuv"), force = TRUE)
+  if (requireNamespace("RCurl", quietly = TRUE)) {
+    cat("Starting server on port 8080...\n")
+    .muste$webedit <- as.integer(1)
+    app <-
+      list(
+        call = function(req) {
+          urlBody <- ifelse(is.null(req$HTTP_HOST), req$SERVER_NAME, req$HTTP_HOST)
+          wsUrl <- paste(sep = "", '"', "ws://", urlBody, '"')
+          list(
+            status = 200L,
+            headers = list(
+              "Content-Type" = "text/html"
+            ),
+            body = paste(
+              sep = "\r\n",
+              ##########################################################################################
+              '
 <!DOCTYPE html>
 <html>
 <head><meta charset="UTF-8">
@@ -168,21 +166,21 @@ var ctx = canvas.getContext("2d");
 ctx.font = "15px Courier";
 cwidth = ctx.measureText(" ").width;
 ',
-########################################################
-        sprintf("var ws = new WebSocket(%s);", wsUrl),
-########################################################        
-'
+              ########################################################
+              sprintf("var ws = new WebSocket(%s);", wsUrl),
+              ########################################################
+              '
 ws.onmessage = function(msg) {
  connectionStatus(1);
  heartBeatCount = 0;
  if (msg.data==="*SurvoR*") { return; }
  writeText(msg.data,ctx);
  }
- 
+
  ws.onerror = function(error) {
  connectionStatus(0);
  }
- 
+
  ws.onclose = function(event) {
   connectionStatus(0);
  }
@@ -202,7 +200,7 @@ if (e.which == null)
      char=null;
    document.getElementById("demo").innerHTML = char;
    ws.send(char);
-} 
+}
 
 
 var heartBeatCount=0;
@@ -217,14 +215,14 @@ function heartBeatMsg() {
 
 
 function connectionStatus(status) {
-  if (status) { 
+  if (status) {
   document.getElementById("status").innerHTML = "Connected";
   editor.style.opacity = 1;
   }
-  else { 
+  else {
   document.getElementById("status").innerHTML = "Not connected";
   editor.style.opacity = 0.2;
-  setCursorVisibility(0); 
+  setCursorVisibility(0);
   }
 }
 
@@ -275,7 +273,7 @@ function blinkCursor() {
     cursor.style.opacity = cursorOpacity;
   }
 }
-     
+
 
 </script>
 
@@ -286,65 +284,64 @@ function blinkCursor() {
 </body>
 </html>
 '
-##########################################################################################
+              ##########################################################################################
+            )
+          )
+        },
+        onHeaders = function(req) {
+          # Print connection headers
+          # cat("onHeaders:",capture.output(str(as.list(req))), sep = "\n")
+        },
+        onWSOpen = function(ws) {
+          # as.list(.muste$ws$request)$HTTP_SEC_WEBSOCKET_KEY
+          ws$onMessage(function(binary, message) {
+            if (message == "*SurvoR*") {
+              ws$send("*SurvoR*")
+            } else {
+              cat("Server received message:", message, "\n")
+              .muste$event.time <- as.integer(.muste$event.time + 1)
+              .muste$event.type <- as.integer(1) # KEY_EVENT
+              .muste$key.char <- message
+              .muste$key.keysym <- as.integer(0)
+              .muste$key.status <- as.integer(1)
+              # .muste$redraw <- as.integer(2)
+              invisible(.Call("Muste_Eventloop", .muste$eventloopargs, PACKAGE = "muste"))
+              ws$send(.muste$ajaxmsg)
+            }
+          })
+          ws$onClose(function() {
+            .muste$ws <- .muste$ws[sapply(.muste$ws, function(x) !is.null(x$handle))] # Remove closed connections from the list
+            cat("Connection closed. ", length(.muste$ws), "active connection(s).\n")
+          })
+
+          .muste$ws <- append(.muste$ws, ws) # Add new connection to the list
+          cat("Connection opened. ", length(.muste$ws), "active connection(s).\n")
+          #      .muste$ws <- .muste$ws[sapply(.muste$ws, function(x) !is.null(x$handle))] # Remove closed connections from the list
+          .muste$redraw <- as.integer(2)
+          invisible(.Call("Muste_Eventloop", .muste$eventloopargs, PACKAGE = "muste"))
+        }
       )
-    )
-  },
-    onHeaders = function(req) {
-      # Print connection headers
-      # cat("onHeaders:",capture.output(str(as.list(req))), sep = "\n")
-    },
-    onWSOpen = function(ws) {
 
-#as.list(.muste$ws$request)$HTTP_SEC_WEBSOCKET_KEY       
-      ws$onMessage(function(binary, message) {
-      if (message=="*SurvoR*") ws$send("*SurvoR*")
-      else {
-       cat("Server received message:", message, "\n")
-    .muste$event.time<-as.integer(.muste$event.time+1)
-    .muste$event.type<-as.integer(1)  # KEY_EVENT
-    .muste$key.char<-message
-    .muste$key.keysym<-as.integer(0)
-    .muste$key.status<-as.integer(1)
-#.muste$redraw <- as.integer(2)      
-    invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))        
-   ws$send(.muste$ajaxmsg)
-       }
-      })
-      ws$onClose(function() {
-        .muste$ws <- .muste$ws[sapply(.muste$ws, function(x) !is.null(x$handle))] # Remove closed connections from the list
-        cat("Connection closed. ",length(.muste$ws),"active connection(s).\n")
-      })
-   
-      .muste$ws <- append(.muste$ws, ws) # Add new connection to the list
-        cat("Connection opened. ",length(.muste$ws),"active connection(s).\n")  
-#      .muste$ws <- .muste$ws[sapply(.muste$ws, function(x) !is.null(x$handle))] # Remove closed connections from the list
-      .muste$redraw <- as.integer(2)
-      invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste")) 
+    httpuv::stopAllServers()
+    serv <- httpuv::startServer("0.0.0.0", 8080, app)
 
-    }
-  )
-  
-   httpuv::stopAllServers()
-   serv <- httpuv::startServer("0.0.0.0", 8080, app)    
- 
-survobrowser("http://localhost:8080")
-}
+    survobrowser("http://localhost:8080")
+  }
 }
 
-survobrowser <- function(survourl="http://localhost:8080") {
-viewer <- getOption("viewer")
-    if (!is.null(viewer))
-       viewer(survourl)
-    else {  
-        utils::browseURL(survourl)     
-     }
-     }
+survobrowser <- function(survourl = "http://localhost:8080") {
+  viewer <- getOption("viewer")
+  if (!is.null(viewer)) {
+    viewer(survourl)
+  } else {
+    utils::browseURL(survourl)
+  }
+}
 
 .muste$ws <- list()
 
 survo.sendajax <- function() {
-if (length(.muste$ws)>0)
-  for (i in 1:length(.muste$ws)) .muste$ws[[i]]$send(.muste$ajaxmsg)
+  if (length(.muste$ws) > 0) {
+    for (i in 1:length(.muste$ws)) .muste$ws[[i]]$send(.muste$ajaxmsg)
+  }
 }
-

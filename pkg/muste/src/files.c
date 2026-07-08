@@ -5,706 +5,678 @@
 #include "survo.h"
 #include "survolib.h"
 
-
 extern SEXP Muste_EvalRExpr(char *cmd);
 
 static char komento[LLENGTH]; /* 256 */
 
 char filesep[] = "/";
 
-int muste_is_path(char *path)
-	{
-	char *apu;
-	
-	if (*path=='"') { apu=path+1; } else { apu=path;
-}
-	
-    if (strchr(apu,':')!=NULL) { return(1);     
-}
-    if (*apu=='/' || *apu=='\\' || *apu=='~' || *apu=='<') { return(1);
-}
-    if (*apu=='.' && (*(apu+1)=='.' || *(apu+1)=='/' || *(apu+1)=='\\')) { return(1);
-}
-	
-	return(0);
-	}
+int muste_is_path(char *path) {
+    char *apu;
 
-int muste_removequotes(char *path)
-	{
-	int i;
-	if (*path=='"' && *(path+strlen(path)-1)=='"')
-		{
-		for (i=1; i<strlen(path); i++) { path[i-1]=path[i];
-}
-		*(path+strlen(path)-2)=EOS;
-		}
-	return(1);	
-	}
+    if (*path == '"') {
+        apu = path + 1;
+    } else {
+        apu = path;
+    }
 
-int muste_insertquotes(char *path)
-	{
-	int i;
-	
-	if (strchr(path,' ')==NULL) { return(0);
-}
-    for (i=strlen(path); i>0; i--) { path[i]=path[i-1];
-}
-    *(path+strlen(path)+1)=EOS;
-    *(path+strlen(path))='"';
-    *path='"';
-	return(1);	
-	}
+    if (strchr(apu, ':') != NULL) {
+        return (1);
+    }
+    if (*apu == '/' || *apu == '\\' || *apu == '~' || *apu == '<') {
+        return (1);
+    }
+    if (*apu == '.' && (*(apu + 1) == '.' || *(apu + 1) == '/' || *(apu + 1) == '\\')) {
+        return (1);
+    }
 
+    return (0);
+}
 
-int muste_standardize_path(char *path)
-	{
-	int i;
-	
-// RS Changes backward slashes to slashes 
-//        and substitute \032 to space
-    for (i=0; path[i]!='\0'; i++)
-        {
-        if (path[i]=='\\') { path[i]='/';
-}
-        if (path[i]=='\032') { path[i]=' ';       
-}
+int muste_removequotes(char *path) {
+    int i;
+    if (*path == '"' && *(path + strlen(path) - 1) == '"') {
+        for (i = 1; i < strlen(path); i++) {
+            path[i - 1] = path[i];
         }
-     muste_removequotes(path);  
-     return(1);   
-     }   
+        *(path + strlen(path) - 2) = EOS;
+    }
+    return (1);
+}
+
+int muste_insertquotes(char *path) {
+    int i;
+
+    if (strchr(path, ' ') == NULL) {
+        return (0);
+    }
+    for (i = strlen(path); i > 0; i--) {
+        path[i] = path[i - 1];
+    }
+    *(path + strlen(path) + 1) = EOS;
+    *(path + strlen(path)) = '"';
+    *path = '"';
+    return (1);
+}
+
+int muste_standardize_path(char *path) {
+    int i;
+
+    // RS Changes backward slashes to slashes
+    //        and substitute \032 to space
+    for (i = 0; path[i] != '\0'; i++) {
+        if (path[i] == '\\') {
+            path[i] = '/';
+        }
+        if (path[i] == '\032') {
+            path[i] = ' ';
+        }
+    }
+    muste_removequotes(path);
+    return (1);
+}
 
 int muste_standardize_path2(char *path) // RS 15.11.2012
-	{
-	int i;
-	
-    for (i=0; path[i]!='\0'; i++)
-        {
-//        if (path[i]=='\\') path[i]='/';
-        if (path[i]=='\032') { path[i]=' ';       
-}
+{
+    int i;
+
+    for (i = 0; path[i] != '\0'; i++) {
+        //        if (path[i]=='\\') path[i]='/';
+        if (path[i] == '\032') {
+            path[i] = ' ';
         }
-//     muste_removequotes(path);  
-     return(1);   
-     } 
+    }
+    //     muste_removequotes(path);
+    return (1);
+}
 
-int muste_simplify_path(char *path)
-	{
-	muste_standardize_path(path);
-	unsubst_survo_path_in_editor(path);
-	return(1);
-	}
-
-int muste_expand_path(char *path)
-	{
-	subst_survo_path_in_editor(path);
+int muste_simplify_path(char *path) {
     muste_standardize_path(path);
-	return(1);
-	}
+    unsubst_survo_path_in_editor(path);
+    return (1);
+}
 
-int muste_expand_path2(char *path)
-	{
-	extern int subst_survo_path_in_editor2(char *s);
-	subst_survo_path_in_editor2(path);
+int muste_expand_path(char *path) {
+    subst_survo_path_in_editor(path);
+    muste_standardize_path(path);
+    return (1);
+}
+
+int muste_expand_path2(char *path) {
+    extern int subst_survo_path_in_editor2(char *s);
+    subst_survo_path_in_editor2(path);
     muste_standardize_path2(path);
-	return(1);
-	}
+    return (1);
+}
 
 #define EOS '\0'
 
-int muste_removedoublequotes(char *cmd)
-	{
-	int i,j,k;
+int muste_removedoublequotes(char *cmd) {
+    int i, j, k;
 
-//Rprintf("\nrdqin: %s",cmd);	
-	i=1; k=0;
-   	while (cmd[i]!=EOS)
-   		{
-   		if (cmd[i]=='"' && cmd[i-1]=='"')
-   			{
-   			j=0; k=1; 			
-   			while (cmd[i+j]!=EOS)
-   				{
-   				cmd[i-1+j]=cmd[i+j];
-   				j++;
-   				}
-   			cmd[i+j-1]=EOS;	
-   			}
-   		i++;	
-   		}   	
-//Rprintf("\nrdqout: %s",cmd);	   		
-   	return(k);
- 	}
-
-void muste_append_path(char *nimi,char *liite)
-	{
-	int pit,p5,p4,p1;
-	
-	pit=strlen(nimi); // RS 4.11.2013
-	p5=pit-5; p4=pit-4; p1=pit-1;
-	if (p5<0) { p5=0;
-}
-	if (p4<0) { p4=0;
-}
-	if (p1<0) { p1=0;
-}
-	
-	if (*(nimi+p1)=='"')
-        {
-        if (strchr(nimi+p5,'.')==NULL)
-        	{
-        	*(nimi+p1)=EOS;
-        	strcat(nimi,liite);        	
-        	strcat(nimi,"\"");
-			}
+    // Rprintf("\nrdqin: %s",cmd);
+    i = 1;
+    k = 0;
+    while (cmd[i] != EOS) {
+        if (cmd[i] == '"' && cmd[i - 1] == '"') {
+            j = 0;
+            k = 1;
+            while (cmd[i + j] != EOS) {
+                cmd[i - 1 + j] = cmd[i + j];
+                j++;
+            }
+            cmd[i + j - 1] = EOS;
         }
-    else if (strchr(nimi+p4,'.')==NULL) { strcat(nimi,liite);
+        i++;
+    }
+    // Rprintf("\nrdqout: %s",cmd);
+    return (k);
 }
 
+void muste_append_path(char *nimi, char *liite) {
+    int pit, p5, p4, p1;
+
+    pit = strlen(nimi); // RS 4.11.2013
+    p5 = pit - 5;
+    p4 = pit - 4;
+    p1 = pit - 1;
+    if (p5 < 0) {
+        p5 = 0;
     }
+    if (p4 < 0) {
+        p4 = 0;
+    }
+    if (p1 < 0) {
+        p1 = 0;
+    }
+
+    if (*(nimi + p1) == '"') {
+        if (strchr(nimi + p5, '.') == NULL) {
+            *(nimi + p1) = EOS;
+            strcat(nimi, liite);
+            strcat(nimi, "\"");
+        }
+    } else if (strchr(nimi + p4, '.') == NULL) {
+        strcat(nimi, liite);
+    }
+}
 
 char muste_path[LNAME];
 
-char *muste_getapufilepath()
-	{
-//	char path[LNAME];
-	static char *polku;
-	
-	muste_get_R_string(muste_path,".muste$apufile",LNAME);
-	polku=muste_path;
-	return(polku);
-	}
-
-char *muste_getmustepath()
-    {
-//    extern char *edisk;
-  	char path[LNAME];
+char *muste_getapufilepath() {
+    //	char path[LNAME];
     static char *polku;
-//    SEXP ans;
+
+    muste_get_R_string(muste_path, ".muste$apufile", LNAME);
+    polku = muste_path;
+    return (polku);
+}
+
+char *muste_getmustepath() {
+    //    extern char *edisk;
+    char path[LNAME];
+    static char *polku;
+    //    SEXP ans;
     int i;
-//    char ch;
-/*
-    muste_sprintf(komento, ".muste$mustepath <- system.file(package=\"muste\")");
+    //    char ch;
+    /*
+        muste_sprintf(komento, ".muste$mustepath <- system.file(package=\"muste\")");
 
-	i=muste_evalr(komento); 
+        i=muste_evalr(komento);
 
-//    ans=Muste_EvalRExpr(komento);
-//    if (ans==R_NilValue) 
-	 if (i<0)
-        {
+    //    ans=Muste_EvalRExpr(komento);
+    //    if (ans==R_NilValue)
+         if (i<0)
+            {
+            muste_sprintf(komento, "\nCannot get Muste directory!");
+            sur_print(komento); WAIT;
+            return NULL;
+            }
+    */
+    //    polku=(char *)CHAR(STRING_ELT(ans,0));
+
+    muste_get_R_string(path, ".muste$mustepath", LNAME);
+
+    /* RS Get standardized path by changing to the directory */
+    muste_sprintf(komento, "setwd(\"%s\")", path);
+
+    i = muste_evalr(komento);
+
+    //    ans=Muste_EvalRExpr(komento);
+    //    if (ans==R_NilValue)
+    if (i < 0) {
         muste_sprintf(komento, "\nCannot get Muste directory!");
-        sur_print(komento); WAIT;
+        sur_print(komento);
+        WAIT;
         return NULL;
-        }
-*/
-//    polku=(char *)CHAR(STRING_ELT(ans,0));
-    
-    muste_get_R_string(path,".muste$mustepath",LNAME);
-    
-/* RS Get standardized path by changing to the directory */ 
-    muste_sprintf(komento,"setwd(\"%s\")",path);
-    
-	i=muste_evalr(komento); 
-	
-//    ans=Muste_EvalRExpr(komento);
-//    if (ans==R_NilValue)
-	 if (i<0)
-        {
-        muste_sprintf(komento, "\nCannot get Muste directory!");
-        sur_print(komento); WAIT;
-        return NULL;
-        }
-
-    polku=muste_getwd();
-
-/*
-	if (edisk!=NULL) 
-		{
-    	muste_sprintf(komento,"setwd(\"%s\")",edisk); // RS Return back to workpath
-    	ans=Muste_EvalRExpr(komento);
-    	}
- */
- 
- /*   
-    strcpy(komento,polku);
-    ch=komento[strlen(komento)-1];
-    if (ch!='/' && ch!='\\') strcat(komento,filesep);
-*/  
-    return(polku);
     }
 
-char *muste_getwd()
-    {
-//    static char *polku;
+    polku = muste_getwd();
+
+    /*
+        if (edisk!=NULL)
+            {
+            muste_sprintf(komento,"setwd(\"%s\")",edisk); // RS Return back to workpath
+            ans=Muste_EvalRExpr(komento);
+            }
+     */
+
+    /*
+       strcpy(komento,polku);
+       ch=komento[strlen(komento)-1];
+       if (ch!='/' && ch!='\\') strcat(komento,filesep);
+   */
+    return (polku);
+}
+
+char *muste_getwd() {
+    //    static char *polku;
     char ch;
-//    SEXP ans;
-    
+    //    SEXP ans;
+
     muste_sprintf(komento, ".muste.getwd()");
-	muste_evalr(komento);
-/*
-    ans=Muste_EvalRExpr(komento);
-    if (ans==R_NilValue) 
-        {
-        muste_sprintf(komento, "\nCannot get working directory!");
-        sur_print(komento); WAIT;
-        return NULL;
-        }
+    muste_evalr(komento);
+    /*
+        ans=Muste_EvalRExpr(komento);
+        if (ans==R_NilValue)
+            {
+            muste_sprintf(komento, "\nCannot get working directory!");
+            sur_print(komento); WAIT;
+            return NULL;
+            }
 
-    polku=(char *)CHAR(STRING_ELT(ans,0));
-    strcpy(komento,polku);
-*/  
-//    muste_sleep(50); // RS 27.2.2013  
-    muste_get_R_string(komento,".muste$workdir",LLENGTH);
-   
-    ch=komento[strlen(komento)-1];
-    if (ch!='/' && ch!='\\') { strcat(komento,filesep);
-}
-    return(komento);
+        polku=(char *)CHAR(STRING_ELT(ans,0));
+        strcpy(komento,polku);
+    */
+    //    muste_sleep(50); // RS 27.2.2013
+    muste_get_R_string(komento, ".muste$workdir", LLENGTH);
+
+    ch = komento[strlen(komento) - 1];
+    if (ch != '/' && ch != '\\') {
+        strcat(komento, filesep);
     }
-
-void muste_updatewd()
-	{
-    extern char *edisk;	
-	char *polku;
-    polku=muste_getwd();
-    if (polku!=NULL) { strcpy(edisk, polku);	
+    return (komento);
 }
-	}
 
-int muste_setwd()
-    {
+void muste_updatewd() {
+    extern char *edisk;
+    char *polku;
+    polku = muste_getwd();
+    if (polku != NULL) {
+        strcpy(edisk, polku);
+    }
+}
+
+int muste_setwd() {
     extern int g;
     extern char *parm[MAXPARM];
-//    extern char *edisk;
-//    extern char *survo_path;
-	extern char *muste_startpath;
+    //    extern char *edisk;
+    //    extern char *survo_path;
+    extern char *muste_startpath;
 
     int i;
     char path[LNAME];
-//    char *polku;
-//    SEXP ans;
-        
-    if (g<2 || strcmp(parm[1],"-")==0)
-        { // plain CD merely changes to default datapath
+    //    char *polku;
+    //    SEXP ans;
 
-		muste_sprintf(path,"%s",muste_startpath); // RS CHA
-/* RS CHA        
-        i=hae_apu("edisk",path);
-        if (i==0) muste_sprintf(path,"%s",survo_path);
-*/        
-        }
-    else
-        { 
+    if (g < 2 || strcmp(parm[1], "-") == 0) { // plain CD merely changes to default datapath
+
+        muste_sprintf(path, "%s", muste_startpath); // RS CHA
+                                                    /* RS CHA
+                                                            i=hae_apu("edisk",path);
+                                                            if (i==0) muste_sprintf(path,"%s",survo_path);
+                                                    */
+    } else {
         strcpy(path, parm[1]);
+    }
+
+    muste_expand_path(path);
+    // RS CHA    subst_survo_path_in_editor(path); // 27.2.2001
+
+    muste_sprintf(komento, "setwd(\"%s\")", path);
+
+    muste_expand_path(komento);
+
+    if (g >= 2 && strcmp(parm[1], "*") == 0) {
+        //        muste_sprintf(komento,"setwd(tclvalue(tkchooseDirectory()))");
+        muste_sprintf(komento, ".muste.choosedir()");
+    }
+
+    i = muste_evalr(komento);
+    muste_sleep(50); // RS 27.2.2013
+
+    //    ans=Muste_EvalRExpr(komento);
+    //    if (ans==R_NilValue)
+    if (i < 0) {
+        if (g >= 2 && strcmp(parm[1], "*") == 0) {
+            disp();
+            return (-1);
         }
-
-		muste_expand_path(path);
-// RS CHA    subst_survo_path_in_editor(path); // 27.2.2001
-
-    muste_sprintf(komento,"setwd(\"%s\")",path);
-        
-   muste_expand_path(komento);        
-        
-    if (g>=2 && strcmp(parm[1],"*")==0) 
-        { 
-//        muste_sprintf(komento,"setwd(tclvalue(tkchooseDirectory()))");
-        muste_sprintf(komento,".muste.choosedir()");
-        }
-
-	i=muste_evalr(komento);
-    muste_sleep(50); // RS 27.2.2013  
-	
-//    ans=Muste_EvalRExpr(komento);
-//    if (ans==R_NilValue)
- 	if (i<0)
-        {
-        if (g>=2 && strcmp(parm[1],"*")==0) { disp(); return(-1); }
         muste_sprintf(komento, "\nCannot change to %s!", path);
-        sur_print(komento); WAIT;
-//        disp(); // RS lisäys varmuuden vuoksi
+        sur_print(komento);
+        WAIT;
+        //        disp(); // RS lisäys varmuuden vuoksi
         return -1;
-        }
+    }
 
-	muste_updatewd();
-    return(1);
-}  
+    muste_updatewd();
+    return (1);
+}
 
 /* RS Näiden toimintaa ei ole vielä testattu; mitä käy virhetilanteissa??? */
-int sur_delete1(char *s)
-    {
+int sur_delete1(char *s) {
     int i;
     muste_expand_path(s); // RS ADD
-      muste_sprintf(komento,".muste.del(\"%s\")",s);
-      i=muste_evalr(komento)-1;
-	return(i);
+    muste_sprintf(komento, ".muste.del(\"%s\")", s);
+    i = muste_evalr(komento) - 1;
+    return (i);
 
-/*    return(DeleteFile(s)); */
-    }
+    /*    return(DeleteFile(s)); */
+}
 
-int sur_delete(char *s)
-    {
-// RS REM    int i;
-// RS REM    char x[LNAME];
-    
-//    muste_expand_path(s); // RS ADD
+int sur_delete(char *s) {
+    // RS REM    int i;
+    // RS REM    char x[LNAME];
 
-    return(sur_delete1(s));
+    //    muste_expand_path(s); // RS ADD
 
+    return (sur_delete1(s));
 
-// RS REM    if (strchr(s,'*')==NULL && strchr(s,'?')==NULL) // 22.10.2000
-//        return(sur_delete1(s));
-//muste_fixme("\nFIXME: Wild cards not allowed in sur_delete()");
-/* RS NYI
-    while (1)
-        {
-        file_to_be_found=FindFirstFile(s,&find_data);
-        if (file_to_be_found==INVALID_HANDLE_VALUE) break;
-        FindClose(file_to_be_found);
-
-        strcpy(x,find_data.cFileName); // ei polkutunnusta edessä !!?
-        if (strchr(x,'\\')==NULL)
-            {
-            for (i=strlen(s)-1; i>0; --i) if (s[i]=='\\') break;
-            if (i>0)
-                {
-                *x=EOS; strncat(x,s,i+1);
-                strcat(x,find_data.cFileName);
-                }
-            }
-        DeleteFile(x);
-        }
-*/
-    return(1);
-    }
-    
-
-int sur_delete_files(char *s)
-    { 
-        return(sur_delete1(s));
-        
-// RS REM muste_expand_path(s);   
-// RS REM muste_fixme("\nFIXME: sur_delete_files() not yet implemented");   
-/*    
-HANDLE file_to_be_found;
-WIN32_FIND_DATA find_data;
-    int i,k;
-    char x[LNAME];
-// Rprintf("\nfiles: %s|",s); getck();
-    k=0;
-    while (1)
-        {
-        if (k==0)
+    // RS REM    if (strchr(s,'*')==NULL && strchr(s,'?')==NULL) // 22.10.2000
+    //        return(sur_delete1(s));
+    // muste_fixme("\nFIXME: Wild cards not allowed in sur_delete()");
+    /* RS NYI
+        while (1)
             {
             file_to_be_found=FindFirstFile(s,&find_data);
             if (file_to_be_found==INVALID_HANDLE_VALUE) break;
-            k=1; i=1;
-            }
-        else
-            i=FindNextFile(file_to_be_found,&find_data);
-        if (i==0) break;
-        strcpy(x,find_data.cFileName); // ei polkutunnusta edessÑ !!?
-// Rprintf("\nx=%s|",x); getck();
-        if (strchr(x,'\\')==NULL)
-            {
-            for (i=strlen(s)-1; i>0; --i) if (s[i]=='\\') break;
-            if (i>0)
-                {
-                *x=EOS; strncat(x,s,i+1);
-                strcat(x,find_data.cFileName);
-                }
-            }
-// Rprintf("\ndel=%s|",x); getck();
-        DeleteFile(x);
-        }
-    FindClose(file_to_be_found);    
-    return(1);
-*/    
-    }
-    
+            FindClose(file_to_be_found);
 
-int sur_copy_file(char *s,char *d)
-    {
-muste_expand_path(s);
-muste_expand_path(d);
-    muste_sprintf(komento,"file.copy(\"%s\",\"%s\",overwrite=TRUE)",s,d);         
+            strcpy(x,find_data.cFileName); // ei polkutunnusta edessä !!?
+            if (strchr(x,'\\')==NULL)
+                {
+                for (i=strlen(s)-1; i>0; --i) if (s[i]=='\\') break;
+                if (i>0)
+                    {
+                    *x=EOS; strncat(x,s,i+1);
+                    strcat(x,find_data.cFileName);
+                    }
+                }
+            DeleteFile(x);
+            }
+    */
+    return (1);
+}
+
+int sur_delete_files(char *s) {
+    return (sur_delete1(s));
+
+    // RS REM muste_expand_path(s);
+    // RS REM muste_fixme("\nFIXME: sur_delete_files() not yet implemented");
+    /*
+    HANDLE file_to_be_found;
+    WIN32_FIND_DATA find_data;
+        int i,k;
+        char x[LNAME];
+    // Rprintf("\nfiles: %s|",s); getck();
+        k=0;
+        while (1)
+            {
+            if (k==0)
+                {
+                file_to_be_found=FindFirstFile(s,&find_data);
+                if (file_to_be_found==INVALID_HANDLE_VALUE) break;
+                k=1; i=1;
+                }
+            else
+                i=FindNextFile(file_to_be_found,&find_data);
+            if (i==0) break;
+            strcpy(x,find_data.cFileName); // ei polkutunnusta edessÑ !!?
+    // Rprintf("\nx=%s|",x); getck();
+            if (strchr(x,'\\')==NULL)
+                {
+                for (i=strlen(s)-1; i>0; --i) if (s[i]=='\\') break;
+                if (i>0)
+                    {
+                    *x=EOS; strncat(x,s,i+1);
+                    strcat(x,find_data.cFileName);
+                    }
+                }
+    // Rprintf("\ndel=%s|",x); getck();
+            DeleteFile(x);
+            }
+        FindClose(file_to_be_found);
+        return(1);
+    */
+}
+
+int sur_copy_file(char *s, char *d) {
+    muste_expand_path(s);
+    muste_expand_path(d);
+    muste_sprintf(komento, "file.copy(\"%s\",\"%s\",overwrite=TRUE)", s, d);
     muste_evalr(komento);
 
-// RS REM muste_fixme("\nFIXME: sur_copy_file() not yet implemented");
-// RS NYI    return(CopyFile(s,d,FALSE));
-    return(1);
-    }
-
-int sur_make_dir(char *s)
-    {
-    int i;
-muste_expand_path(s);    
-    
-    muste_sprintf(komento,"if (!file.exists(\"%s\")) dir.create(\"%s\")",s,s);         
-    i=muste_evalr(komento);
-    if (i) { return(1);
+    // RS REM muste_fixme("\nFIXME: sur_copy_file() not yet implemented");
+    // RS NYI    return(CopyFile(s,d,FALSE));
+    return (1);
 }
 
-    return(-1);
-    }
-
-int sur_remove_dir(char *s)
-    {
+int sur_make_dir(char *s) {
     int i;
-    
-    i=sur_delete1(s);
-    if (i) { return(1);
-}
-  
-    return(-1);
+    muste_expand_path(s);
+
+    muste_sprintf(komento, "if (!file.exists(\"%s\")) dir.create(\"%s\")", s, s);
+    i = muste_evalr(komento);
+    if (i) {
+        return (1);
     }
 
-int muste_is_directory(char *s)
-{
+    return (-1);
+}
+
+int sur_remove_dir(char *s) {
+    int i;
+
+    i = sur_delete1(s);
+    if (i) {
+        return (1);
+    }
+
+    return (-1);
+}
+
+int muste_is_directory(char *s) {
     int i;
 
     muste_expand_path(s);
 
     muste_sprintf(komento, ".muste$isdir <- as.integer(file_test(\"-d\", \"%s\"))", s);
     muste_evalr(komento);
-    i=muste_get_R_int(".muste$isdir");
+    i = muste_get_R_int(".muste$isdir");
 
-    return(i);
+    return (i);
 }
 
-int muste_is_write_access(char *s)
-{
+int muste_is_write_access(char *s) {
     int i;
 
     muste_expand_path(s);
 
     muste_sprintf(komento, ".muste$iswa <- as.integer((file.access(\"%s\",mode=2)==0))", s);
     muste_evalr(komento);
-    i=muste_get_R_int(".muste$iswa");
+    i = muste_get_R_int(".muste$iswa");
 
-    return(i);
+    return (i);
 }
 
-int sur_is_directory(char *s)
-    {
-	
-//muste_expand_path(s);
-//muste_fixme("\nFIXME: sur_is_directory() not yet implemented");
-/* RS NYI
-    DWORD i;
+int sur_is_directory(char *s) {
 
-    i=GetFileAttributes(s);
-    if (i==0xFFFFFFFF) return(0);
-    if (i & FILE_ATTRIBUTE_DIRECTORY) return(1);
-*/
-    return(muste_is_directory(s));
-    }
+    // muste_expand_path(s);
+    // muste_fixme("\nFIXME: sur_is_directory() not yet implemented");
+    /* RS NYI
+        DWORD i;
 
-int sur_get_file_time(char *tiedosto,char *date,char *time)
-    {
-muste_expand_path(tiedosto);
-muste_fixme("\nFIXME: sur_get_file_time() not yet implemented");
-/* RS NYI
-    {
-    HANDLE hFile;
-    FILETIME ftime,ftime2;
-    SYSTEMTIME sysTime;
-    hFile=CreateFile(tiedosto,GENERIC_READ,0,NULL,
-                 OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
-                 1111111111111
-    if (hFile==INVALID_HANDLE_VALUE)
+        i=GetFileAttributes(s);
+        if (i==0xFFFFFFFF) return(0);
+        if (i & FILE_ATTRIBUTE_DIRECTORY) return(1);
+    */
+    return (muste_is_directory(s));
+}
+
+int sur_get_file_time(char *tiedosto, char *date, char *time) {
+    muste_expand_path(tiedosto);
+    muste_fixme("\nFIXME: sur_get_file_time() not yet implemented");
+    /* RS NYI
         {
-        return(-1);
-        }
-    GetFileTime(hFile,NULL,NULL,&ftimsur_get_filee);
-    FileTimeToLocalFileTime(&ftime,&ftime2);
-    FileTimeToSystemTime(&ftime2,&sysTime);
-    muste_sprintf(date,"%d-%.2d-%.2d",
-                 sysTime.wYear,sysTime.wMonth,sysTime.wDay);
-    muste_sprintf(time,"%d:%.2d:%.2d",
-                 sysTime.wHour,sysTime.wMinute,sysTime.wSecond);
-    CloseHandle(hFile);
-    return(1);
-    }
-
-
-*/
-    muste_sprintf(date,"%d-%.2d-%.2d",
-                 2010,11,11);
-    muste_sprintf(time,"%d:%.2d:%.2d",
-                 10,10,10);
-    return(0);
-    }
-
-
-int sur_find_files(char *s,char *t)
-    {
- muste_fixme("\nFIXME: sur_find_files() not yet implemented");
-/* f_files.c 9.6.2005
-
-#define WIN32_LEAN_AND_MEAN 1
-#include <windows.h>
-#include <stdio.h>
-#include <survo.h>
-HANDLE file_to_be_found;
-WIN32_FIND_DATA find_data;
-
-
-    int i,k,h;
-    char x[LNAME];
-    char attr[10];
-    DWORD a;
-// Rprintf("\nfiles: %s|",s); getck();
-    *t=EOS;
-    k=0; h=0;
-    while (1)
-        {
-        if (k==0)
+        HANDLE hFile;
+        FILETIME ftime,ftime2;
+        SYSTEMTIME sysTime;
+        hFile=CreateFile(tiedosto,GENERIC_READ,0,NULL,
+                     OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
+                     1111111111111
+        if (hFile==INVALID_HANDLE_VALUE)
             {
-            file_to_be_found=FindFirstFile(s,&find_data);
-            if (file_to_be_found==INVALID_HANDLE_VALUE) break;
-            k=1; i=1;
+            return(-1);
             }
-        else
-            i=FindNextFile(file_to_be_found,&find_data);
-        if (i==0) break;
-        strcpy(x,find_data.cFileName); // ei polkutunnusta edessÑ
-// Rprintf("\nx=%s|",x); getck();
-        *attr=EOS;
-        a=find_data.dwFileAttributes;
-        if ( a & FILE_ATTRIBUTE_DIRECTORY) strcat(attr,"D");
-        if ( a & FILE_ATTRIBUTE_HIDDEN) strcat(attr,"H");
-        if ( a & FILE_ATTRIBUTE_ARCHIVE) strcat(attr,"A");
-        if ( a & FILE_ATTRIBUTE_READONLY) strcat(attr,"R");
-        if ( a & FILE_ATTRIBUTE_SYSTEM) strcat(attr,"S");
-        if ( a & FILE_ATTRIBUTE_TEMPORARY) strcat(attr,"T");
-        if (*attr==EOS) strcat(attr,"N");
-        h+=muste_sprintf(t+h,"%s %s\n",x,attr);
-        }
-    FindClose(file_to_be_found);
-*/
-    return(1);
-    }
-
-
-int sur_find_file(char *s)
-    {
-//    int i;
-muste_expand_path(s); 
-muste_sprintf(komento,".muste.checkfile(\"%s\")",s); // RS 12.2.2014
-muste_evalr(komento);
-muste_sleep(50); // RS 12.1.2013
-return(muste_get_R_int(".muste$filestatus"));
-//    return(INTEGER(Muste_EvalRExpr(komento))[0]);
-
-// muste_fixme("\nFIXME: sur_find_file() not yet implemented");
-/*
-HANDLE FindFile;
-WIN32_FIND_DATA FindData;
-sur_find_file(pathname)
-char *pathname;
-    {
-    FindFile=FindFirstFile(pathname,&FindData);
-    if (FindFile==INVALID_HANDLE_VALUE) return(0);
-    FindClose(FindFile);
-*/
-
-//    return(1);
-    }
-
-int sur_file_exists(char *s)
-    {
-    return(sur_find_file(s));
-// muste_fixme("\nFIXME: sur_file_exists() not yet implemented");
-/* RS NYI
-    DWORD i;
-    i=GetFileAttributes(s);
-    if (i==0xFFFFFFFF) return(-1);
-*/
-    }
-
-int sur_find_svo_file(char *nimi,char *pathname)
-        {
-        extern char *edisk;
-        strcpy(pathname,nimi);
-/* RS FIXME: Levytunnus ei ehkä porttautuvaa koodia */
-        if (!muste_is_path(nimi)) 
-            { strcpy(pathname,edisk); strcat(pathname,nimi); }
-        muste_append_path(pathname,".SVO"); // RS CHA if (strchr(pathname+strlen(pathname)-4,'.')==NULL) strcat(pathname,".SVO");
-            
-        if (pathname[strlen(pathname)-1]=='.') { pathname[strlen(pathname)-1]=EOS; // RS ADD
-}
-              
-		return(sur_find_file(pathname));
-		}
-
-
-
-
-int sur_rename(char *s,char *t) // from, to
-    {
-muste_expand_path(s);
-muste_expand_path(t);
-    
-    muste_sprintf(komento,"file.rename(\"%s\",\"%s\")",s,t);
-//    return(INTEGER(Muste_EvalRExpr(komento))[0]);
-	return(muste_evalr(komento)+1);
-
-/*    return(MoveFile(s,t)); */
-    }
-
-int muste_copytofile_core(char *sis,char *tied,int usetemp)
-        {
-        char x[LLENGTH*2], out[LNAME];
-//        unsigned int j;
-//        int k;
-        FILE *ofile;
-        extern char *etmpd;
-//		strcpy(x,tied);
-		
-		if (usetemp) { strcpy(out,etmpd);
-		} else { *out=EOS;
-}
-		
-		strcat(out,tied);
-		muste_strncpy(x,sis,LLENGTH);
-		
-		muste_iconv(x,"","CP850");				
-        ofile=muste_fopen(out,"wt");
-        if (ofile==NULL)
-        	{
-        	muste_sprintf(x,"\nError! Could not open file %s",out);
-        	sur_print(x); WAIT;
-        	return(-1);
-        	}
-        fputs(x,ofile);
-        fputc('\r',ofile);
-        fputc('\n',ofile);
-        muste_fclose(ofile);
+        GetFileTime(hFile,NULL,NULL,&ftimsur_get_filee);
+        FileTimeToLocalFileTime(&ftime,&ftime2);
+        FileTimeToSystemTime(&ftime2,&sysTime);
+        muste_sprintf(date,"%d-%.2d-%.2d",
+                     sysTime.wYear,sysTime.wMonth,sysTime.wDay);
+        muste_sprintf(time,"%d:%.2d:%.2d",
+                     sysTime.wHour,sysTime.wMinute,sysTime.wSecond);
+        CloseHandle(hFile);
         return(1);
         }
 
-int muste_copytofile(char *sis,char *tied)
-    {
-    return(muste_copytofile_core(sis,tied,1));
+
+    */
+    muste_sprintf(date, "%d-%.2d-%.2d", 2010, 11, 11);
+    muste_sprintf(time, "%d:%.2d:%.2d", 10, 10, 10);
+    return (0);
+}
+
+int sur_find_files(char *s, char *t) {
+    muste_fixme("\nFIXME: sur_find_files() not yet implemented");
+    /* f_files.c 9.6.2005
+
+    #define WIN32_LEAN_AND_MEAN 1
+    #include <windows.h>
+    #include <stdio.h>
+    #include <survo.h>
+    HANDLE file_to_be_found;
+    WIN32_FIND_DATA find_data;
+
+
+        int i,k,h;
+        char x[LNAME];
+        char attr[10];
+        DWORD a;
+    // Rprintf("\nfiles: %s|",s); getck();
+        *t=EOS;
+        k=0; h=0;
+        while (1)
+            {
+            if (k==0)
+                {
+                file_to_be_found=FindFirstFile(s,&find_data);
+                if (file_to_be_found==INVALID_HANDLE_VALUE) break;
+                k=1; i=1;
+                }
+            else
+                i=FindNextFile(file_to_be_found,&find_data);
+            if (i==0) break;
+            strcpy(x,find_data.cFileName); // ei polkutunnusta edessÑ
+    // Rprintf("\nx=%s|",x); getck();
+            *attr=EOS;
+            a=find_data.dwFileAttributes;
+            if ( a & FILE_ATTRIBUTE_DIRECTORY) strcat(attr,"D");
+            if ( a & FILE_ATTRIBUTE_HIDDEN) strcat(attr,"H");
+            if ( a & FILE_ATTRIBUTE_ARCHIVE) strcat(attr,"A");
+            if ( a & FILE_ATTRIBUTE_READONLY) strcat(attr,"R");
+            if ( a & FILE_ATTRIBUTE_SYSTEM) strcat(attr,"S");
+            if ( a & FILE_ATTRIBUTE_TEMPORARY) strcat(attr,"T");
+            if (*attr==EOS) strcat(attr,"N");
+            h+=muste_sprintf(t+h,"%s %s\n",x,attr);
+            }
+        FindClose(file_to_be_found);
+    */
+    return (1);
+}
+
+int sur_find_file(char *s) {
+    //    int i;
+    muste_expand_path(s);
+    muste_sprintf(komento, ".muste.checkfile(\"%s\")", s); // RS 12.2.2014
+    muste_evalr(komento);
+    muste_sleep(50); // RS 12.1.2013
+    return (muste_get_R_int(".muste$filestatus"));
+    //    return(INTEGER(Muste_EvalRExpr(komento))[0]);
+
+    // muste_fixme("\nFIXME: sur_find_file() not yet implemented");
+    /*
+    HANDLE FindFile;
+    WIN32_FIND_DATA FindData;
+    sur_find_file(pathname)
+    char *pathname;
+        {
+        FindFile=FindFirstFile(pathname,&FindData);
+        if (FindFile==INVALID_HANDLE_VALUE) return(0);
+        FindClose(FindFile);
+    */
+
+    //    return(1);
+}
+
+int sur_file_exists(char *s) {
+    return (sur_find_file(s));
+    // muste_fixme("\nFIXME: sur_file_exists() not yet implemented");
+    /* RS NYI
+        DWORD i;
+        i=GetFileAttributes(s);
+        if (i==0xFFFFFFFF) return(-1);
+    */
+}
+
+int sur_find_svo_file(char *nimi, char *pathname) {
+    extern char *edisk;
+    strcpy(pathname, nimi);
+    /* RS FIXME: Levytunnus ei ehkä porttautuvaa koodia */
+    if (!muste_is_path(nimi)) {
+        strcpy(pathname, edisk);
+        strcat(pathname, nimi);
+    }
+    muste_append_path(pathname,
+                      ".SVO"); // RS CHA if (strchr(pathname+strlen(pathname)-4,'.')==NULL) strcat(pathname,".SVO");
+
+    if (pathname[strlen(pathname) - 1] == '.') {
+        pathname[strlen(pathname) - 1] = EOS; // RS ADD
     }
 
+    return (sur_find_file(pathname));
+}
 
-int muste_fseek(FILE *stream_pointer, muste_int64 offset, int origin)
-	{
-	int os;
-	os=(int)offset;
-//Rprintf("\nseek offset: %d",os);	
-	return(fseek(stream_pointer,(int)os,origin));
-//	return(fseeko(stream_pointer,offset,origin));
-	}
+int sur_rename(char *s, char *t) // from, to
+{
+    muste_expand_path(s);
+    muste_expand_path(t);
 
-muste_int64 muste_ftell(FILE *stream_pointer)
-	{
+    muste_sprintf(komento, "file.rename(\"%s\",\"%s\")", s, t);
+    //    return(INTEGER(Muste_EvalRExpr(komento))[0]);
+    return (muste_evalr(komento) + 1);
 
-	int os;
-	long pal;
-	os=(int)ftell(stream_pointer);
-	pal=(long)os;
-	return(pal);
+    /*    return(MoveFile(s,t)); */
+}
 
-//	return((muste_int64)ftello(stream_pointer));	
-	}
+int muste_copytofile_core(char *sis, char *tied, int usetemp) {
+    char x[LLENGTH * 2], out[LNAME];
+    //        unsigned int j;
+    //        int k;
+    FILE *ofile;
+    extern char *etmpd;
+    //		strcpy(x,tied);
+
+    if (usetemp) {
+        strcpy(out, etmpd);
+    } else {
+        *out = EOS;
+    }
+
+    strcat(out, tied);
+    muste_strncpy(x, sis, LLENGTH);
+
+    muste_iconv(x, "", "CP850");
+    ofile = muste_fopen(out, "wt");
+    if (ofile == NULL) {
+        muste_sprintf(x, "\nError! Could not open file %s", out);
+        sur_print(x);
+        WAIT;
+        return (-1);
+    }
+    fputs(x, ofile);
+    fputc('\r', ofile);
+    fputc('\n', ofile);
+    muste_fclose(ofile);
+    return (1);
+}
+
+int muste_copytofile(char *sis, char *tied) { return (muste_copytofile_core(sis, tied, 1)); }
+
+int muste_fseek(FILE *stream_pointer, muste_int64 offset, int origin) {
+    int os;
+    os = (int)offset;
+    // Rprintf("\nseek offset: %d",os);
+    return (fseek(stream_pointer, (int)os, origin));
+    //	return(fseeko(stream_pointer,offset,origin));
+}
+
+muste_int64 muste_ftell(FILE *stream_pointer) {
+
+    int os;
+    long pal;
+    os = (int)ftell(stream_pointer);
+    pal = (long)os;
+    return (pal);
+
+    //	return((muste_int64)ftello(stream_pointer));
+}

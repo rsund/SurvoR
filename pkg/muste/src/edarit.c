@@ -1,5 +1,5 @@
 #include "muste.h"
-# define R_NO_REMAP
+#define R_NO_REMAP
 #include <R.h>
 #include <Rinternals.h>
 #include <Rmath.h>
@@ -9,16 +9,13 @@ extern int s_init(char *siirtop);
 extern int s_end(char *siirtop);
 extern int op_arit(void);
 
-SEXP edarit(SEXP session)
-{
-double koe;
+SEXP edarit(SEXP session) {
+    double koe;
 
-koe=dnorm(0.5,0.0,1.0,0);
-Rprintf("\nEntering editorial arithmetics, %f\n",koe);
-s_init("A");
-op_arit(); 
-s_end("A");
-return(session);
+    koe = dnorm(0.5, 0.0, 1.0, 0);
+    Rprintf("\nEntering editorial arithmetics, %f\n", koe);
+    s_init("A");
+    op_arit();
+    s_end("A");
+    return (session);
 }
-
-

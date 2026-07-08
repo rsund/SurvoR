@@ -5,7 +5,7 @@
 /* declared in survos.c (sm.lib) */
 extern char *z;
 extern int ed1, ed2;
-extern int r,r1,r2,r3,c,c1,c2,c3,r_soft;
+extern int r, r1, r2, r3, c, c1, c2, c3, r_soft;
 extern char *edisk, *esysd, *eout;
 extern int etu;
 extern char *etufile;
@@ -35,7 +35,7 @@ extern int sdisp;
 extern int scroll_line;
 extern int space_break;
 extern int ntut;
-extern int move_r1,move_r2;
+extern int move_r1, move_r2;
 extern char *etmpd;
 extern int *psur_seed;
 extern char *sspace;
@@ -44,7 +44,7 @@ extern char *eopen;
 extern char *survo_path;
 extern int phar;
 extern int display_off;
-extern int sur_alarm;  /* RS CHA alarm was reserved */
+extern int sur_alarm; /* RS CHA alarm was reserved */
 extern char *system_name;
 extern short *cur_par;
 extern int shad_off;
@@ -64,4 +64,4 @@ extern int g;
 extern char *word[];
 extern int g_org;
 extern char *word_org[];
-extern char sbuf[LLENGTH*3];
+extern char sbuf[LLENGTH * 3];

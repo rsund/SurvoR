@@ -3,16 +3,17 @@
  */
 
 #define CLS sur_cls(' ')
-#define WAIT sur_print("\nPress any key!"); sur_getch()
+#define WAIT                                                                                                           \
+    sur_print("\nPress any key!");                                                                                     \
+    sur_getch()
 #define EOS '\0'
 #define LNAME 256
 #define LLENGTH 10010
-#define MLENGTH 4*4096
-#define DLENGTH 4*8192
-#define MODLGTH 4*8192
-#define MAXA 50     /* max # of parameters */
-#define MAXC 50     /* max # of constants  */
-#define MAXAC 1000  /* parameter and constant names */
+#define MLENGTH 4 * 4096
+#define DLENGTH 4 * 8192
+#define MODLGTH 4 * 8192
+#define MAXA 50       /* max # of parameters */
+#define MAXC 50       /* max # of constants  */
+#define MAXAC 1000    /* parameter and constant names */
 #define FSPACE 200000 /* functions and derivatives in `Polish' notation */
-#define MAXSAVE 10  /* max # of UPDATE variables */
-
+#define MAXSAVE 10    /* max # of UPDATE variables */
