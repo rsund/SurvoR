@@ -7,6 +7,13 @@
     .muste$ttkframe <- tcltk::tkframe
     .muste$ttkradiobutton <- tcltk::tkradiobutton
     .muste$ttkscrollbar <- function(...) tcltk::tkscrollbar(..., repeatinterval = 5)
+  } else {
+    .muste$ttkbutton <- tcltk::ttkbutton
+    .muste$ttklabel <- tcltk::ttklabel
+    .muste$ttkentry <- tcltk::ttkentry
+    .muste$ttkframe <- tcltk::ttkframe
+    .muste$ttkradiobutton <- tcltk::ttkradiobutton
+    .muste$ttkscrollbar <- tcltk::ttkscrollbar
   }
 }
 
