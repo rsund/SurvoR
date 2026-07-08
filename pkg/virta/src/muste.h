@@ -25,19 +25,16 @@ typedef long muste_int64;
 #include <stdio.h>
 #include <string.h>
 
-static inline int muste_vsnprintf(char *buf, size_t size,
-                                  const char *fmt, ...)
-{
-  va_list ap;
-  int rc;
-  
-  va_start(ap, fmt);
-  rc = vsnprintf(buf, size, fmt, ap);
-  va_end(ap);
-  
-  return rc;
-}
+static inline int muste_vsnprintf(char *buf, size_t size, const char *fmt, ...) {
+    va_list ap;
+    int rc;
 
+    va_start(ap, fmt);
+    rc = vsnprintf(buf, size, fmt, ap);
+    va_end(ap);
+
+    return rc;
+}
 
 #define MUSTE_BUFSIZE(buf) (__builtin_object_size((buf), 1) == (size_t)-1 ? LLENGTH : __builtin_object_size((buf), 1))
 

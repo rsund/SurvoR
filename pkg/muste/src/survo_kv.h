@@ -24,9 +24,9 @@ int sur_locate(int, int);
 int sur_cls(char);
 int sur_wait(long, void(void), int);
 int sur_print(char *);
-int sur_delete(char *); // jokeri k„y (DeleteFile)
-int sur_delete1(char *); // ei jokeri (DeleteFile)
-int sur_rename(char *, char *); // vanha,uusi (MoveFile)
+int sur_delete(char *);            // jokeri k„y (DeleteFile)
+int sur_delete1(char *);           // ei jokeri (DeleteFile)
+int sur_rename(char *, char *);    // vanha,uusi (MoveFile)
 int sur_copy_file(char *, char *); // source,target (CopyFile) (3. false, kirj.p„„lle)
 int split(char *, char **, int);
 int edread(char *, int);

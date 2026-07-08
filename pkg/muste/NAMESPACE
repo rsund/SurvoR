@@ -1,4 +1,4 @@
-useDynLib(muste)
+useDynLib(muste, .registration = TRUE)
 
 # Export all names
 export(survo, muste, websurvo, read.svo, write.svo, muste_ExpandFileName, .muste)

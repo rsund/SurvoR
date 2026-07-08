@@ -24,22 +24,26 @@ static int check_parameters(void);
 static int xall(void);
 static void usage_info(void);
 
-void muste_xall(char *argv)
-{
+void muste_xall(char *argv) {
     int i;
 
     s_init(argv);
-    i=spec_init(r1+r-1); if (i<0) return;
-    i=check_parameters(); if (i<0) return;
+    i = spec_init(r1 + r - 1);
+    if (i < 0) {
+        return;
+    }
+    i = check_parameters();
+    if (i < 0) {
+        return;
+    }
     xall();
     s_end(argv);
     return;
 }
 
-static int check_parameters(void)
-{
-    if (g>3) {
-        if (word[1][0]=='?') {
+static int check_parameters(void) {
+    if (g > 3) {
+        if (word[1][0] == '?') {
             usage_info();
             return -1;
         }
@@ -50,8 +54,7 @@ static int check_parameters(void)
     return 1;
 }
 
-static void usage_info(void)
-{
+static void usage_info(void) {
     init_remarks();
     rem_pr("XALL <data>,<name>,<total>,<extra>");
     rem_pr("moves active observations in given contiguous variables in <data>");
@@ -67,51 +70,74 @@ static void usage_info(void)
     wait_remarks(2);
 }
 
-static int xall(void)
-{
-    int i,j,k;
-    double x,y;
+static int xall(void) {
+    int i, j, k;
+    double x, y;
 
     int var1;
     int vartotal;
     int howmany;
 
-    i=data_open(word[1],&d); if (i<0) return -1;
-    i=mask(&d); if (i<0) return -1;
-    i=conditions(&d); if (i<0) return -1;
-    var1=varfind(&d,word[2]); if (var1<0) return -1;
-    vartotal=atoi(word[3]);
-    if (g>4) howmany=atoi(word[4]); else howmany=1;
-    if (howmany<1) return -1;
+    i = data_open(word[1], &d);
+    if (i < 0) {
+        return -1;
+    }
+    i = mask(&d);
+    if (i < 0) {
+        return -1;
+    }
+    i = conditions(&d);
+    if (i < 0) {
+        return -1;
+    }
+    var1 = varfind(&d, word[2]);
+    if (var1 < 0) {
+        return -1;
+    }
+    vartotal = atoi(word[3]);
+    if (g > 4) {
+        howmany = atoi(word[4]);
+    } else {
+        howmany = 1;
+    }
+    if (howmany < 1) {
+        return -1;
+    }
 
     muste_kv_s_disp("\nConverting \"X ALL\" responses in %d variables...", vartotal);
     muste_kv_s_disp("\nMoving values of %d variables at a time...", howmany);
 
-    if ((var1+howmany*vartotal) > d.m) {
+    if ((var1 + howmany * vartotal) > d.m) {
         muste_kv_s_err("Not enough variables after %s!", word[2]);
         return -1;
     }
 
-    for (j=d.l1; j<=d.l2; j++) {
-        if (unsuitable(&d,j)) continue;
-        muste_kv_s_disp(" %d",j);
-        for (i=(var1+howmany*vartotal-howmany); i>=var1; i-=howmany) {
-            data_load(&d,j,i,&x);
-            if (x==MISSING8) {
-                data_save(&d,j,i,MISSING8); /* (data in edit field) */
-                for (k=1; k<howmany; k++) { /* 31.5.97 */
-                    data_save(&d,j,i+k,MISSING8);
+    for (j = d.l1; j <= d.l2; j++) {
+        if (unsuitable(&d, j)) {
+            continue;
+        }
+        muste_kv_s_disp(" %d", j);
+        for (i = (var1 + howmany * vartotal - howmany); i >= var1; i -= howmany) {
+            data_load(&d, j, i, &x);
+            if (x == MISSING8) {
+                data_save(&d, j, i, MISSING8);  /* (data in edit field) */
+                for (k = 1; k < howmany; k++) { /* 31.5.97 */
+                    data_save(&d, j, i + k, MISSING8);
                 }
                 continue;
             }
-            if (howmany==1 && ((int)x == i)) continue;
-            if (((int)x < 1) || ((int)x > vartotal)) continue; /* 20.5.97 */
-            data_save(&d,j,i,MISSING8);
-            data_save(&d,j,var1+howmany*(int)x-howmany,x);
-            for (k=1; k<howmany; k++) { /* 20.5.97 */
-                data_load(&d,j,i+k,&y);
-                data_save(&d,j,i+k,MISSING8);
-                data_save(&d,j,var1+howmany*(int)x-howmany+k,y);
+            if (howmany == 1 && ((int)x == i)) {
+                continue;
+            }
+            if (((int)x < 1) || ((int)x > vartotal)) {
+                continue; /* 20.5.97 */
+            }
+            data_save(&d, j, i, MISSING8);
+            data_save(&d, j, var1 + howmany * (int)x - howmany, x);
+            for (k = 1; k < howmany; k++) { /* 20.5.97 */
+                data_load(&d, j, i + k, &y);
+                data_save(&d, j, i + k, MISSING8);
+                data_save(&d, j, var1 + howmany * (int)x - howmany + k, y);
             }
         }
     }
