@@ -128,8 +128,17 @@ int muste_checkstack(void)
    return(1);
 }
 */
+#include <Rversion.h>
+
+#define MUSTE_R_VERSION(maj, min, pat) (((maj) << 16) + ((min) << 8) + (pat))
 
 SEXP muste_findVar(SEXP sym, SEXP env) {
+#if R_VERSION < MUSTE_R_VERSION(4, 5, 0)
+
+    return Rf_findVar(sym, env);
+
+#else
+
     while (env != R_EmptyEnv) {
         if (R_existsVarInFrame(env, sym)) {
             return R_getVar(sym, env, FALSE);
@@ -139,6 +148,8 @@ SEXP muste_findVar(SEXP sym, SEXP env) {
     }
 
     return R_UnboundValue;
+
+#endif
 }
 
 int muste_is_utf8_string(SEXP x) {
