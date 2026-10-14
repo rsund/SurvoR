@@ -16,6 +16,8 @@ extern SEXP Muste_Eventloop(SEXP);
 extern SEXP Muste_ExpandPath(SEXP);
 extern SEXP Muste_Selection(SEXP);
 extern SEXP Survo_FindRegFunc(SEXP);
+extern SEXP R_LoadSurvoData2(SEXP);
+extern SEXP R_SaveSurvoData2(SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {{"do_readSurvo", (DL_FUNC)&do_readSurvo, 1},
                                               {"do_writeSurvo", (DL_FUNC)&do_writeSurvo, 3},
@@ -27,7 +29,11 @@ static const R_CallMethodDef CallEntries[] = {{"do_readSurvo", (DL_FUNC)&do_read
                                               {"Muste_ExpandPath", (DL_FUNC)&Muste_ExpandPath, 1},
                                               {"Muste_Selection", (DL_FUNC)&Muste_Selection, 1},
                                               {"Survo_FindRegFunc", (DL_FUNC)&Survo_FindRegFunc, 1},
+                                              {"R_LoadSurvoData2", (DL_FUNC)&R_LoadSurvoData2, 1},
+                                              {"R_SaveSurvoData2", (DL_FUNC)&R_SaveSurvoData2, 2},
                                               {NULL, NULL, 0}};
+
+
 
 void R_init_muste(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
